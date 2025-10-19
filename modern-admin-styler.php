@@ -3,7 +3,7 @@
  * Plugin Name: Modern Admin Styler Enterprise
  * Plugin URI: https://github.com/m3n3sx/MASE
  * Description: Enterprise-grade WordPress admin styling plugin with clean, maintainable architecture. Features: 10 color palettes, 11 templates, advanced visual effects, mobile optimization, import/export, backup/restore, live preview.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Author: MASE Development Team
@@ -14,6 +14,7 @@
  * Domain Path: /languages
  *
  * Changelog:
+ * 1.2.1 - Critical bug fixes: Dark Mode gray circle (MASE-DARK-001), Live Preview aria-checked (MASE-ACC-001)
  * 1.2.0 - Major upgrade with 10 color palettes, 11 templates, visual effects system,
  *         mobile optimization, backup/restore, keyboard shortcuts, accessibility features,
  *         auto palette switching, and comprehensive settings migration from v1.1.0
@@ -30,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'MASE_VERSION', '1.2.0' );
+define( 'MASE_VERSION', '1.2.1' );
 
 /**
  * Plugin directory path.

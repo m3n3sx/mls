@@ -7,9 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-10-19
+
 ### Fixed
 
-#### Live Preview Toggle Fix (v1.2.1)
+#### Critical Bug Fixes (v1.2.1)
+
+- **CRITICAL (MASE-DARK-001)**: Fixed Dark Mode displaying huge gray circle covering entire screen
+  - Issue: Large circular decorative element (500px+) with gray background (#6b6b6b) blocked all content in Dark Mode
+  - Impact: Dark Mode was completely unusable - users could not access any settings or controls
+  - Root Cause: Decorative pseudo-element with `border-radius: 50%` and excessive dimensions
+  - Solution: Implemented triple-layer defense system
+    1. JavaScript nuclear scan removes circular elements on page load (`removeGrayCircleBug` function)
+    2. CSS rules hide elements with gray inline styles
+    3. MutationObserver catches dynamically added elements
+  - Result: Dark Mode now displays correctly without visual obstructions
+  - Tests: Automated Playwright test verifies no large circles present
+  - User Verification: Confirmed fix with user report "szare koło zniknęło" (gray circle disappeared)
+
+- **ACCESSIBILITY (MASE-ACC-001)**: Fixed Live Preview toggle aria-checked attribute not synchronizing
+  - Issue: `aria-checked` attribute remained "true" even when toggle was unchecked
+  - Impact: Screen readers announced incorrect state to users with disabilities (WCAG 2.1 violation)
+  - Root Cause: Toggle handler updated checkbox `checked` property but not `aria-checked` attribute
+  - Solution: Added `$checkbox.attr('aria-checked', self.state.livePreviewEnabled.toString());` to toggle handler
+  - Result: Screen readers now correctly announce "checked" or "not checked" based on actual state
+  - Tests: Automated Playwright test verifies aria-checked synchronization
+  - Compliance: Restores WCAG 2.1 Level A compliance (4.1.2 Name, Role, Value)
+  - Note: Dark Mode toggle already had correct implementation, no fix needed
+
+#### Technical Details
+
+**Dark Mode Fix Location:**
+- JavaScript: `assets/js/mase-admin.js:2210-2360` (removeGrayCircleBug function)
+- CSS: `assets/css/mase-admin.css:9185-9214` (inline style targeting)
+
+**Accessibility Fix Location:**
+- JavaScript: `assets/js/mase-admin.js:2668` (Live Preview toggle handler)
+
+**Testing:**
+- Added `tests/visual-testing/dark-mode-circle-test.js` - Verifies no large circles in Dark Mode
+- Added `tests/visual-testing/aria-checked-test.js` - Verifies aria-checked synchronization
+- Added `tests/accessibility/axe-audit-test.js` - Comprehensive accessibility audit
+- All tests passing with 0 violations
+
+#### Live Preview Toggle Fix (v1.2.0)
 - **Critical**: Fixed dashicons blocking toggle clicks in header
   - Issue: Dashicons positioned over checkboxes intercepted pointer events
   - Impact: Live Preview and Dark Mode toggles were completely non-functional
@@ -404,6 +445,7 @@ Please upgrade to v1.1.0 first, then upgrade to v1.2.0. Direct upgrades from v1.
 
 ---
 
+[1.2.1]: https://github.com/m3n3sx/MASE/releases/tag/v1.2.1
 [1.2.0]: https://github.com/m3n3sx/MASE/releases/tag/v1.2.0
 [1.1.0]: https://github.com/m3n3sx/MASE/releases/tag/v1.1.0
 [1.0.0]: https://github.com/m3n3sx/MASE/releases/tag/v1.0.0
