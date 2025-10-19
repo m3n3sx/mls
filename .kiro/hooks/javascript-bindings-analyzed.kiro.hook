@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "JavaScript Bindings Analyzer",
+  "description": "Analyzes all JavaScript files to find event bindings, detect multiple handlers on same elements, and identify potential race conditions with initialization contexts",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "assets/js/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze all JavaScript files in assets/js/ directory and:\n\n1. Find all event bindings (click, change, input, etc.) in each file\n2. Pay special attention to bindings for #mase-live-preview-toggle selector\n3. Check if bindings use $(document).ready(), window.onload, or immediate execution\n4. Identify potential race conditions where multiple handlers bind to the same selector\n\nFor each binding found, extract:\n- File name and line number\n- Event type (click, change, etc.)\n- Selector used\n- Initialization context ($(document).ready(), window.onload, or immediate)\n\nOutput in JSON format:\n{\n  \"analysis_complete\": true,\n  \"critical_issues\": [\n    {\n      \"selector\": \"#mase-live-preview-toggle\",\n      \"severity\": \"CRITICAL\",\n      \"message\": \"Multiple event handlers for same element\",\n      \"conflict_type\": \"Race condition\",\n      \"bindings\": [\n        {\n          \"file\": \"mase-admin.js\",\n          \"line\": 8500,\n          \"event\": \"change\",\n          \"init_context\": \"$(document).ready()\"\n        }\n      ]\n    }\n  ],\n  \"all_bindings\": {\n    \"mase-admin.js\": [...],\n    \"mase-admin-live-preview.js\": [...],\n    \"mase-accessibility.js\": [...]\n  },\n  \"next_step\": \"Proceed to HTML/CSS analysis\"\n}\n\nFlag as CRITICAL if any selector has more than 1 binding across all files."
+  }
+}

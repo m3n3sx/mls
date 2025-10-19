@@ -136,3 +136,15 @@ This specification addresses critical functionality issues in WOOW-ADMIN v1.2.0 
 3. WHEN the Admin Settings Page loads, THE Live Preview System SHALL set aria-checked attribute to "true"
 4. THE JavaScript Handler SHALL initialize with livePreviewEnabled configuration set to true
 5. THE JavaScript Handler SHALL log the default enabled state to the browser console during initialization
+
+### Requirement 11
+
+**User Story:** As a WordPress administrator, I want the live preview toggle to respond immediately when I click it, so that I can enable or disable live preview without conflicts or race conditions.
+
+#### Acceptance Criteria
+
+1. THE MASE Admin Class SHALL enqueue only one live preview JavaScript file to prevent conflicts
+2. THE Admin Settings Page SHALL render dashicons with pointer-events: none to prevent click blocking
+3. THE Admin Settings Page SHALL structure toggle HTML so clicking the icon triggers the checkbox
+4. WHEN the settings page loads, THE JavaScript Handler SHALL bind to the toggle element exactly once
+5. WHEN the administrator clicks the toggle area, THE Live Preview System SHALL respond within 100 milliseconds without conflicts

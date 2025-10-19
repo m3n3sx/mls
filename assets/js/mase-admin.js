@@ -347,9 +347,15 @@
             handleTemplateApply: function(e) {
                 var self = MASE;
                 
+                // Safety check for event object
+                if (!e || typeof e !== 'object') {
+                    console.warn('MASE: Invalid event object in handleTemplateApply');
+                    return;
+                }
+                
                 // Subtask 3.1: Prevent default event and stop propagation
-                e.preventDefault();
-                e.stopPropagation();
+                if (e.preventDefault) e.preventDefault();
+                if (e.stopPropagation) e.stopPropagation();
                 
                 // Get button element and parent card
                 var $button = $(e.currentTarget);
@@ -1206,6 +1212,13 @@
          */
         toggleDarkMode: function(e) {
             var self = MASE;
+            
+            // Safety check for event object
+            if (!e || !e.target) {
+                console.warn('MASE: Invalid event object in toggleDarkMode');
+                return;
+            }
+            
             var $checkbox = $(e.target);
             var isDark = $checkbox.is(':checked');
             
@@ -1750,13 +1763,19 @@
             handle: function(e) {
                 var self = MASE;
                 
+                // Safety check: ensure event object exists and has required properties
+                if (!e || typeof e !== 'object') {
+                    console.warn('MASE: Invalid event object in keyboard shortcuts handler');
+                    return;
+                }
+                
                 // Check if keyboard shortcuts are enabled (Requirement 12.5)
                 var shortcutsEnabled = $('#keyboard-shortcuts-enabled').is(':checked');
                 if (!shortcutsEnabled) {
                     return;
                 }
                 
-                // Check for Ctrl+Shift combination
+                // Check for Ctrl+Shift combination with safety checks
                 if (!e.ctrlKey || !e.shiftKey) {
                     return;
                 }
@@ -1790,7 +1809,7 @@
                 }
                 
                 // Prevent default browser behavior for handled shortcuts
-                if (handled) {
+                if (handled && e.preventDefault && e.stopPropagation) {
                     e.preventDefault();
                     e.stopPropagation();
                 }
@@ -1957,6 +1976,13 @@
          */
         handlePaletteClick: function(e) {
             var self = this;
+            
+            // Safety check for event object
+            if (!e || !e.currentTarget) {
+                console.warn('MASE: Invalid event object in handlePaletteClick');
+                return;
+            }
+            
             var $card = $(e.currentTarget);
             
             // Extract palette ID from data-palette attribute (Requirement 9.2)
@@ -2116,10 +2142,18 @@
          * @param {Event} e - Keydown event
          */
         handlePaletteKeydown: function(e) {
+            // Safety check for event object
+            if (!e || typeof e !== 'object') {
+                console.warn('MASE: Invalid event object in handlePaletteKeydown');
+                return;
+            }
+            
             // Check if key is Enter or Space (Requirement 9.5)
             if (e.key === 'Enter' || e.key === ' ') {
                 // Prevent default browser behavior (Requirement 9.5)
-                e.preventDefault();
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
                 
                 // Call handlePaletteClick with event (Requirement 9.5)
                 this.handlePaletteClick(e);
@@ -2687,7 +2721,10 @@
          * Handle form submission
          */
         handleSubmit: function(e) {
-            e.preventDefault();
+            // Safety check for event object
+            if (e && e.preventDefault) {
+                e.preventDefault();
+            }
             this.saveSettings();
         },
         

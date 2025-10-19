@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "Repository Structure Analyzed",
+  "description": "Triggers after first repository scan to create a project structure map, identify key directories (includes/, assets/js/, assets/css/, tests/), list all JS/PHP files related to live preview, and save to memory for next steps",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "includes/**/*.php",
+      "assets/js/**/*.js",
+      "assets/css/**/*.css",
+      "tests/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the repository structure and create a comprehensive map in the following JSON format:\n\n{\n  \"php_files\": [\n    \"includes/class-mase-admin.php\",\n    \"includes/admin-settings-page.php\",\n    \"includes/class-mase-settings.php\",\n    \"includes/class-mase-css-generator.php\",\n    \"includes/class-mase-cache.php\",\n    \"includes/class-mase-cachemanager.php\",\n    \"includes/class-mase-migration.php\",\n    \"includes/class-mase-mobile-optimizer.php\",\n    \"includes/visual-effects-section.php\"\n  ],\n  \"js_files\": [\n    \"assets/js/mase-admin.js\",\n    \"assets/js/mase-admin-live-preview.js\",\n    \"assets/js/mase-accessibility.js\"\n  ],\n  \"css_files\": [\n    \"assets/css/mase-admin.css\",\n    \"assets/css/mase-admin-optimized.css\",\n    \"assets/css/mase-accessibility.css\",\n    \"assets/css/mase-palettes.css\",\n    \"assets/css/mase-responsive.css\",\n    \"assets/css/mase-templates.css\",\n    \"assets/css/template-gallery.css\"\n  ],\n  \"test_files\": [\n    \"tests/visual-testing/**/*\",\n    \"tests/integration/**/*\",\n    \"tests/browser-compatibility/**/*\",\n    \"tests/test-task-13-live-preview.html\"\n  ],\n  \"key_directories\": {\n    \"includes\": \"PHP backend classes and admin functionality\",\n    \"assets/js\": \"JavaScript files for admin interface and live preview\",\n    \"assets/css\": \"Stylesheets for admin styling and themes\",\n    \"tests\": \"Testing suites including visual, integration, and browser tests\"\n  },\n  \"live_preview_related\": {\n    \"primary\": \"assets/js/mase-admin-live-preview.js\",\n    \"supporting_js\": \"assets/js/mase-admin.js\",\n    \"php_enqueue\": \"includes/class-mase-admin.php\",\n    \"test_file\": \"tests/test-task-13-live-preview.html\"\n  }\n}\n\nStore this structure in memory and proceed to analyze PHP enqueue mechanisms in includes/class-mase-admin.php to understand how live preview assets are loaded."
+  }
+}

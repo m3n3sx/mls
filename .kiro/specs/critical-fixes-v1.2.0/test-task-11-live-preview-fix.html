@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 11: Live Preview Conflict Fix - Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 40px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-left: 4px solid #2271b1;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checklist li:before {
+            content: "☐";
+            font-size: 20px;
+            margin-right: 10px;
+            color: #2271b1;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #00a32a;
+            color: white;
+        }
+        
+        .status.warning {
+            background: #dba617;
+            color: white;
+        }
+        
+        .status.error {
+            background: #d63638;
+            color: white;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .expected-result {
+            background: #e7f5ff;
+            border-left: 4px solid #0073aa;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .expected-result h3 {
+            margin-top: 0;
+            color: #0073aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Task 11: Live Preview Conflict Fix - Verification</h1>
+        
+        <div class="test-section">
+            <h2>📋 Changes Summary</h2>
+            <p><strong>Problem:</strong> Two live preview systems (mase-admin.js and mase-admin-live-preview.js) were loading simultaneously, causing conflicts and race conditions.</p>
+            
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>✅ Disabled mase-admin-live-preview.js enqueue</li>
+                <li>✅ Added pointer-events: none CSS fix for dashicons</li>
+                <li>✅ Changed hardcoded checked to dynamic PHP value</li>
+                <li>✅ Maintained proper HTML structure (dashicon inside label)</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Manual Testing Checklist</h2>
+            <ul class="checklist">
+                <li>Clear WordPress plugin cache (if using cache plugin)</li>
+                <li>Clear browser cache (Ctrl+Shift+R or Cmd+Shift+R)</li>
+                <li>Navigate to MASE Settings page in WordPress admin</li>
+                <li>Open browser console (F12)</li>
+                <li>Verify only MASE object exists (not MASEAdmin)</li>
+                <li>Click the Live Preview toggle</li>
+                <li>Verify toggle responds immediately</li>
+                <li>Change Admin Bar BG Color</li>
+                <li>Verify color updates in real-time</li>
+                <li>Check console for JavaScript errors</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 Console Diagnostics</h2>
+            <p>Run these commands in browser console to verify the fix:</p>
+            
+            <div class="code-block">
+// 1. Check which systems are loaded
+console.log('MASE loaded:', typeof MASE !== 'undefined');
+console.log('MASEAdmin loaded:', typeof MASEAdmin !== 'undefined');
+
+// Expected: MASE = true, MASEAdmin = false
+            </div>
+
+            <div class="expected-result">
+                <h3>Expected Result:</h3>
+                <code>MASE loaded: true</code><br>
+                <code>MASEAdmin loaded: false</code>
+            </div>
+
+            <div class="code-block">
+// 2. Check pointer-events on dashicon
+const dashicon = $('.mase-header-toggle .dashicons').eq(0);
+console.log('Dashicon pointer-events:', dashicon.css('pointer-events'));
+
+// Expected: "none"
+            </div>
+
+            <div class="expected-result">
+                <h3>Expected Result:</h3>
+                <code>Dashicon pointer-events: none</code>
+            </div>
+
+            <div class="code-block">
+// 3. Check if toggle is accessible
+const toggle = document.getElementById('mase-live-preview-toggle');
+const rect = toggle.getBoundingClientRect();
+const element = document.elementFromPoint(rect.left + 5, rect.top + 5);
+console.log('Element at toggle position:', element);
+
+// Expected: Should return the checkbox input, not dashicon
+            </div>
+
+            <div class="expected-result">
+                <h3>Expected Result:</h3>
+                <code>Element at toggle position: &lt;input type="checkbox" id="mase-live-preview-toggle"...&gt;</code>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Expected Test Results</h2>
+            
+            <h3>Before Fix:</h3>
+            <ul>
+                <li><span class="status error">FAIL</span> Live Preview toggle doesn't respond to clicks</li>
+                <li><span class="status error">FAIL</span> Both MASE and MASEAdmin objects exist</li>
+                <li><span class="status error">FAIL</span> Race condition between two systems</li>
+                <li><span class="status warning">WARN</span> Dashicon blocks checkbox clicks</li>
+            </ul>
+
+            <h3>After Fix:</h3>
+            <ul>
+                <li><span class="status success">PASS</span> Live Preview toggle responds immediately</li>
+                <li><span class="status success">PASS</span> Only MASE object exists</li>
+                <li><span class="status success">PASS</span> No race conditions</li>
+                <li><span class="status success">PASS</span> Dashicon doesn't block clicks</li>
+                <li><span class="status success">PASS</span> Live preview updates work in real-time</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🐛 Troubleshooting</h2>
+            
+            <h3>If toggle still doesn't work:</h3>
+            <ol>
+                <li>Clear all caches (WordPress, browser, CDN)</li>
+                <li>Check if mase-admin-live-preview.js is still loading (Network tab)</li>
+                <li>Verify pointer-events CSS is applied (Inspect element)</li>
+                <li>Check console for JavaScript errors</li>
+            </ol>
+
+            <h3>If MASEAdmin still exists:</h3>
+            <ol>
+                <li>Verify the commented code in class-mase-admin.php</li>
+                <li>Clear WordPress object cache</li>
+                <li>Reload the page with hard refresh</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Files Modified</h2>
+            <ul>
+                <li><code>includes/class-mase-admin.php</code> - Disabled conflicting script, added CSS fix</li>
+                <li><code>includes/admin-settings-page.php</code> - Changed hardcoded checked to dynamic</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>✅ Success Criteria</h2>
+            <p>The fix is successful when:</p>
+            <ul>
+                <li>✓ Only one live preview system (MASE) is loaded</li>
+                <li>✓ Toggle responds to clicks immediately</li>
+                <li>✓ Live preview updates work in real-time</li>
+                <li>✓ No JavaScript errors in console</li>
+                <li>✓ Dashicons don't block interactions</li>
+                <li>✓ Checked state persists based on saved settings</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

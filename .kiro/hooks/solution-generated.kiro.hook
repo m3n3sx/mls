@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "name": "Solution Generated",
+  "description": "Triggers after all analyses are complete to aggregate problems, prioritize by severity, create immediate and long-term fixes, and generate detailed code changes with exact line numbers",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "tests/**/*.md",
+      "tests/**/*.php",
+      "includes/**/*.php",
+      "assets/**/*.js",
+      "assets/**/*.css",
+      "*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "After completing all analyses, aggregate all identified problems and generate a comprehensive solution report with the following structure:\n\n{\n  \"problems\": [\n    {\n      \"id\": 1,\n      \"severity\": \"CRITICAL|HIGH|MEDIUM|LOW\",\n      \"file\": \"exact/file/path.php\",\n      \"line\": 140,\n      \"description\": \"Detailed description of the problem\",\n      \"immediate_fix\": \"Quick fix that can be done in under 30 minutes\",\n      \"code_change\": \"Exact code changes with line numbers and context\"\n    }\n  ],\n  \"estimated_time\": \"30 minutes\",\n  \"success_criteria\": \"Toggle works, tests pass >85%\"\n}\n\nInstructions:\n1. Aggregate all identified problems from the analysis\n2. Prioritize by severity (CRITICAL > HIGH > MEDIUM > LOW)\n3. For each problem, provide:\n   - Exact file path and line number\n   - Clear description\n   - Immediate fix (< 30 min implementation)\n   - Long-term architectural fix\n   - Precise code changes with line numbers\n4. Calculate total estimated time\n5. Define clear success criteria\n6. Present results to the user in a clear, actionable format\n\nFocus on WordPress plugin files in includes/, assets/, and test files that need fixes."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Script Enqueue Analyzer",
+  "description": "Analyzes wp_enqueue_script() calls in class-mase-admin.php to identify duplicate scripts, dependency issues, and potential race conditions, particularly focusing on live-preview functionality conflicts",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "includes/class-mase-admin.php"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the class-mase-admin.php file and perform the following tasks:\n\n1. **Extract all wp_enqueue_script() calls** - List every script being enqueued with its handle, file path, and dependencies\n2. **Identify duplicates** - Check if multiple files handle the same functionality (especially look for \"live-preview\" in filenames)\n3. **Analyze dependencies** - Map out the dependency chain and loading order for all scripts\n4. **Detect race conditions** - Identify potential timing issues where scripts might conflict or load in wrong order\n\n**Critical Check**: Count how many JavaScript files contain \"live-preview\" in their name or handle. If more than 1, this is CRITICAL.\n\nProvide output in this JSON format:\n```json\n{\n  \"conflict_detected\": true/false,\n  \"total_scripts_enqueued\": number,\n  \"live_preview_files_count\": number,\n  \"conflicting_files\": [\n    {\n      \"handle\": \"script-handle\",\n      \"file\": \"path/to/file.js\",\n      \"functionality\": \"description\",\n      \"dependencies\": [\"dep1\", \"dep2\"]\n    }\n  ],\n  \"dependency_issues\": [\n    {\n      \"issue\": \"description\",\n      \"affected_scripts\": [\"handle1\", \"handle2\"]\n    }\n  ],\n  \"race_condition_risks\": [\n    {\n      \"risk\": \"description\",\n      \"scripts_involved\": [\"handle1\", \"handle2\"]\n    }\n  ],\n  \"severity\": \"CRITICAL/HIGH/MEDIUM/LOW\",\n  \"recommended_action\": \"specific action to take\",\n  \"next_step\": \"Przejdź do analizy JavaScript\"\n}\n```\n\nIf live_preview_files_count > 1, set severity to CRITICAL and recommend disabling one of the conflicting files."
+  }
+}

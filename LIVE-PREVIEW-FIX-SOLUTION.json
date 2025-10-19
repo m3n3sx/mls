@@ -1,0 +1,347 @@
+{
+  "analysis_date": "2025-10-19",
+  "plugin_version": "1.2.0",
+  "issue": "Live Preview Toggle Malfunction",
+  "root_cause": "P1 CRITICAL - Duplicate live preview systems causing race conditions",
+  
+  "problems": [
+    {
+      "id": 1,
+      "severity": "CRITICAL",
+      "priority": "P1",
+      "file": "assets/js/mase-admin-live-preview.js",
+      "line": "1-655",
+      "description": "Obsolete duplicate live preview file exists in filesystem. This file creates a competing 'MASEAdmin' object that conflicts with the 'MASE' object in mase-admin.js. Both files bind event handlers to '#mase-live-preview-toggle', causing race conditions and unpredictable behavior. The file was supposed to be removed (per comment in class-mase-admin.php:145-151) but remains in the codebase.",
+      "evidence": [
+        "File exists: assets/js/mase-admin-live-preview.js (15826 bytes)",
+        "Comment in class-mase-admin.php:145-151 states file was removed",
+        "File is NOT currently enqueued (verified via grep)",
+        "Creates window.MASEAdmin object (lines 1-655)",
+        "Binds to same toggle element as mase-admin.js"
+      ],
+      "impact": "Dead code in codebase. If accidentally enqueued in future, will cause immediate toggle malfunction due to duplicate event handlers.",
+      "immediate_fix": "Delete the obsolete file from filesystem",
+      "immediate_fix_time": "2 minutes",
+      "code_change": "rm assets/js/mase-admin-live-preview.js",
+      "verification": [
+        "ls -la assets/js/mase-admin-live-preview.js (should show: No such file or directory)",
+        "grep -r 'mase-admin-live-preview' includes/ (should show: no matches)",
+        "grep -r 'MASEAdmin' assets/js/ (should only show references in comments)"
+      ]
+    },
+    {
+      "id": 2,
+      "severity": "MEDIUM",
+      "priority": "P3",
+      "file": "includes/class-mase-admin.php",
+      "line": "145-151",
+      "description": "Comment claims file was removed but file still exists. This creates confusion and technical debt. The comment is misleading because it states the file 'has been removed' when it actually still exists in the filesystem.",
+      "evidence": [
+        "Comment at line 145-151: 'NOTE: mase-admin-live-preview.js has been removed'",
+        "File actually exists: assets/js/mase-admin-live-preview.js",
+        "No enqueue code exists (comment is accurate about that part)"
+      ],
+      "impact": "Documentation mismatch causes confusion for developers. Future maintainers may not realize the file still exists.",
+      "immediate_fix": "Update comment to reflect actual state after file deletion",
+      "immediate_fix_time": "3 minutes",
+      "code_change": "/**\n * NOTE: Live preview functionality is handled by MASE.livePreview module.\n * All live preview functionality is in assets/js/mase-admin.js\n * to prevent duplicate event handlers and race conditions.\n * \n * @see MASE.livePreview module in assets/js/mase-admin.js\n */",
+      "verification": [
+        "Read includes/class-mase-admin.php lines 145-151",
+        "Verify comment accurately describes current state"
+      ]
+    },
+    {
+      "id": 3,
+      "severity": "LOW",
+      "priority": "P4",
+      "file": ".kiro/hooks/javascript-error-fix.kiro.hook",
+      "line": "10",
+      "description": "Hook configuration references the obsolete file in patterns array. This will cause the hook to fail or behave unexpectedly when the file is deleted.",
+      "evidence": [
+        "Line 10: 'assets/js/mase-admin-live-preview.js' in patterns array",
+        "File will be deleted as part of fix"
+      ],
+      "impact": "Hook will reference non-existent file after cleanup. May cause errors in hook execution.",
+      "immediate_fix": "Remove reference to obsolete file from patterns array",
+      "immediate_fix_time": "2 minutes",
+      "code_change": "Remove line 10: 'assets/js/mase-admin-live-preview.js' from patterns array",
+      "verification": [
+        "Read .kiro/hooks/javascript-error-fix.kiro.hook",
+        "Verify patterns array only contains existing files"
+      ]
+    },
+    {
+      "id": 4,
+      "severity": "LOW",
+      "priority": "P5",
+      "file": "tests/visual-testing/mase-page.html",
+      "line": "2124",
+      "description": "Test HTML file contains reference to obsolete script. This is a captured snapshot from a previous state where the file was being loaded. Not actively causing issues but should be cleaned up for accuracy.",
+      "evidence": [
+        "Line 2124: <script src='...mase-admin-live-preview.js?ver=1.2.0' id='mase-admin-live-preview-js'></script>",
+        "This is a static HTML snapshot, not actively loaded"
+      ],
+      "impact": "Test file contains outdated reference. May confuse developers reviewing test artifacts.",
+      "immediate_fix": "Remove script tag reference from test HTML",
+      "immediate_fix_time": "2 minutes",
+      "code_change": "Delete line 2124 containing mase-admin-live-preview.js script tag",
+      "verification": [
+        "grep 'mase-admin-live-preview' tests/visual-testing/mase-page.html",
+        "Should show no matches"
+      ]
+    }
+  ],
+  
+  "long_term_fixes": [
+    {
+      "id": "LT-1",
+      "title": "Modular Architecture Refactoring",
+      "description": "Extract live preview functionality into a proper module with dependency injection pattern",
+      "estimated_time": "1-2 weeks",
+      "benefits": [
+        "Clear separation of concerns",
+        "Easier testing and maintenance",
+        "Prevents future duplicate implementations",
+        "Better code organization"
+      ],
+      "implementation": [
+        "Create assets/js/modules/mase-live-preview-module.js",
+        "Implement proper module pattern with exports",
+        "Use dependency injection for settings and cache",
+        "Add comprehensive unit tests",
+        "Update documentation"
+      ]
+    },
+    {
+      "id": "LT-2",
+      "title": "Code Review Process",
+      "description": "Implement code review checklist to prevent duplicate implementations",
+      "estimated_time": "1 week",
+      "benefits": [
+        "Catch duplicates before merge",
+        "Enforce single responsibility principle",
+        "Improve code quality",
+        "Better team coordination"
+      ],
+      "implementation": [
+        "Create code review checklist",
+        "Add pre-commit hooks to detect duplicates",
+        "Document architecture decisions (ADR)",
+        "Regular architecture audits"
+      ]
+    },
+    {
+      "id": "LT-3",
+      "title": "Integration Test Suite",
+      "description": "Add comprehensive integration tests for live preview functionality",
+      "estimated_time": "3-5 days",
+      "benefits": [
+        "Catch regressions early",
+        "Verify toggle behavior",
+        "Test state persistence",
+        "Ensure single event handler"
+      ],
+      "implementation": [
+        "Create tests/integration/test-live-preview.js",
+        "Test toggle enable/disable",
+        "Test state persistence",
+        "Test preview updates",
+        "Test error handling"
+      ]
+    }
+  ],
+  
+  "execution_plan": {
+    "phase_1_immediate": {
+      "title": "Remove Duplicate File",
+      "estimated_time": "10 minutes",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Backup current state",
+          "command": "git add -A && git commit -m 'Backup before live preview fix'",
+          "time": "1 min"
+        },
+        {
+          "step": 2,
+          "action": "Delete obsolete file",
+          "command": "rm assets/js/mase-admin-live-preview.js",
+          "time": "1 min"
+        },
+        {
+          "step": 3,
+          "action": "Update comment in class-mase-admin.php",
+          "file": "includes/class-mase-admin.php",
+          "lines": "145-151",
+          "time": "2 min"
+        },
+        {
+          "step": 4,
+          "action": "Update hook configuration",
+          "file": ".kiro/hooks/javascript-error-fix.kiro.hook",
+          "lines": "10",
+          "time": "1 min"
+        },
+        {
+          "step": 5,
+          "action": "Clean test HTML reference",
+          "file": "tests/visual-testing/mase-page.html",
+          "lines": "2124",
+          "time": "1 min"
+        },
+        {
+          "step": 6,
+          "action": "Verify no references remain",
+          "command": "grep -r 'mase-admin-live-preview' . --exclude-dir=node_modules --exclude-dir=.git",
+          "time": "2 min"
+        },
+        {
+          "step": 7,
+          "action": "Clear WordPress caches",
+          "command": "wp cache flush (if WP-CLI available)",
+          "time": "1 min"
+        },
+        {
+          "step": 8,
+          "action": "Commit changes",
+          "command": "git add -A && git commit -m 'Fix: Remove duplicate live preview file'",
+          "time": "1 min"
+        }
+      ]
+    },
+    "phase_2_verification": {
+      "title": "Verify Fix",
+      "estimated_time": "5 minutes",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Verify file deleted",
+          "command": "ls -la assets/js/mase-admin-live-preview.js",
+          "expected": "No such file or directory"
+        },
+        {
+          "step": 2,
+          "action": "Verify no enqueue references",
+          "command": "grep -r 'mase-admin-live-preview' includes/ *.php",
+          "expected": "No matches found"
+        },
+        {
+          "step": 3,
+          "action": "Check for MASEAdmin object references",
+          "command": "grep -r 'MASEAdmin' assets/js/",
+          "expected": "Only comments or documentation"
+        },
+        {
+          "step": 4,
+          "action": "Verify MASE object exists",
+          "command": "grep 'var MASE = {' assets/js/mase-admin.js",
+          "expected": "Match found"
+        }
+      ]
+    },
+    "phase_3_testing": {
+      "title": "Browser Testing",
+      "estimated_time": "10 minutes",
+      "steps": [
+        {
+          "step": 1,
+          "action": "Load admin settings page",
+          "url": "/wp-admin/admin.php?page=mase-settings"
+        },
+        {
+          "step": 2,
+          "action": "Open browser DevTools Console",
+          "check": "No JavaScript errors"
+        },
+        {
+          "step": 3,
+          "action": "Open Network tab",
+          "check": "mase-admin-live-preview.js NOT loading"
+        },
+        {
+          "step": 4,
+          "action": "Check console for MASE object",
+          "command": "console.log(typeof MASE)",
+          "expected": "object"
+        },
+        {
+          "step": 5,
+          "action": "Check console for MASEAdmin object",
+          "command": "console.log(typeof MASEAdmin)",
+          "expected": "undefined"
+        },
+        {
+          "step": 6,
+          "action": "Test toggle functionality",
+          "check": "Click toggle, verify state changes"
+        },
+        {
+          "step": 7,
+          "action": "Test live preview",
+          "check": "Change color, verify preview updates"
+        }
+      ]
+    }
+  },
+  
+  "success_criteria": {
+    "immediate": [
+      "File assets/js/mase-admin-live-preview.js deleted",
+      "No grep matches for 'mase-admin-live-preview' in PHP files",
+      "Comment in class-mase-admin.php updated",
+      "Hook configuration cleaned",
+      "Test HTML reference removed"
+    ],
+    "functional": [
+      "Live preview toggle works correctly",
+      "No JavaScript console errors",
+      "Only MASE object exists (not MASEAdmin)",
+      "Single event handler on toggle element",
+      "Preview updates in real-time when enabled"
+    ],
+    "quality": [
+      "No dead code in codebase",
+      "Documentation matches reality",
+      "Clean git history with clear commit message",
+      "All references cleaned up"
+    ]
+  },
+  
+  "rollback_plan": {
+    "if_issues_occur": [
+      {
+        "step": 1,
+        "action": "Restore file from git",
+        "command": "git checkout HEAD~1 -- assets/js/mase-admin-live-preview.js"
+      },
+      {
+        "step": 2,
+        "action": "Restore other changes",
+        "command": "git revert HEAD"
+      },
+      {
+        "step": 3,
+        "action": "Clear caches",
+        "command": "wp cache flush"
+      },
+      {
+        "step": 4,
+        "action": "Investigate root cause",
+        "note": "If rollback needed, file may have been enqueued elsewhere"
+      }
+    ],
+    "likelihood": "Very low - file is not currently enqueued"
+  },
+  
+  "estimated_total_time": "25 minutes",
+  "confidence_level": "HIGH",
+  "risk_level": "LOW",
+  
+  "notes": [
+    "File is NOT currently enqueued, so deletion is safe",
+    "This is purely cleanup of dead code",
+    "No functional changes to live preview system",
+    "MASE.livePreview in mase-admin.js is the active system",
+    "All evidence points to safe deletion"
+  ]
+}

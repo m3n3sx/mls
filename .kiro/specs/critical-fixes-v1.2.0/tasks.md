@@ -419,3 +419,48 @@
   - Uncheck the toggle and verify live preview stops
   - Reload page and verify live preview is enabled again by default
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+
+- [x] 11. Fix Dual Live Preview System Conflict
+
+  - Remove conflicting mase-admin-live-preview.js enqueue
+  - Add pointer-events CSS fix for dashicons
+  - Fix HTML structure for toggle accessibility
+  - Verify single live preview system works correctly
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+
+- [x] 11.1 Disable conflicting live preview file enqueue
+
+  - Comment out wp_enqueue_script for mase-admin-live-preview.js in class-mase-admin.php
+  - Add TODO comment explaining consolidation plan
+  - Verify only mase-admin.js is loaded on settings page
+  - _Requirements: 1.1_
+
+- [x] 11.2 Add pointer-events CSS fix for dashicons
+
+  - Add wp_add_inline_style after wp_localize_script in class-mase-admin.php
+  - Force pointer-events: none on dashicons within toggle wrappers
+  - Ensure dashicons don't block checkbox clicks
+  - _Requirements: 1.1_
+
+- [x] 11.3 Fix HTML toggle structure for accessibility
+
+  - Move dashicon inside label element in admin-settings-page.php
+  - Ensure clicking dashicon triggers checkbox toggle
+  - Verify ARIA attributes are correct
+  - _Requirements: 1.1, 4.1_
+
+- [x] 11.4 Update checked attribute to use dynamic value
+
+  - Replace hardcoded checked attribute with PHP conditional
+  - Use saved live_preview setting from database
+  - Default to true if setting doesn't exist
+  - _Requirements: 10.1, 10.2_
+
+- [x] 11.5 Test consolidated live preview system
+
+  - Clear browser cache and reload settings page
+  - Verify only MASE object exists (not MASEAdmin)
+  - Click live preview toggle and verify it works
+  - Change color values and verify live preview updates
+  - Check console for any JavaScript errors
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_

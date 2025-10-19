@@ -475,6 +475,113 @@ try {
 - Focus management on modal/notice display
 - Color contrast ratios (WCAG AA)
 
+## Dual Live Preview System Conflict Resolution
+
+### Problem Analysis
+
+The plugin currently loads TWO separate live preview systems simultaneously:
+
+1. **System 1**: `mase-admin.js` creates `MASE.livePreview` object
+2. **System 2**: `mase-admin-live-preview.js` creates `MASEAdmin.livePreview` object
+
+Both systems:
+- Bind to the same `#mase-live-preview-toggle` element
+- Execute in `$(document).ready()` causing race conditions
+- The last system to initialize "wins" and overwrites the previous handler
+
+### Root Causes
+
+1. **Duplicate Enqueue**: Lines 130-148 in `class-mase-admin.php` enqueue both files
+2. **Dashicon Blocking**: Dashicon positioned BEFORE checkbox blocks click events
+3. **Hardcoded State**: `checked` attribute hardcoded in HTML instead of dynamic
+
+### Solution Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Single Live Preview System                 │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ├─── PHP Layer (class-mase-admin.php)
+                              │    ├─ Enqueue ONLY mase-admin.js
+                              │    ├─ Add inline CSS for pointer-events fix
+                              │    └─ Remove mase-admin-live-preview.js enqueue
+                              │
+                              ├─── HTML Layer (admin-settings-page.php)
+                              │    ├─ Move dashicon inside <label>
+                              │    ├─ Dynamic checked attribute from settings
+                              │    └─ Proper ARIA attributes
+                              │
+                              └─── JavaScript Layer (mase-admin.js)
+                                   ├─ Single MASE.livePreview object
+                                   ├─ Bind once to toggle element
+                                   └─ No race conditions
+```
+
+### Implementation Details
+
+#### Step 1: Disable Conflicting File
+In `class-mase-admin.php` (lines ~140-148):
+```php
+/** 
+ * TEMPORARILY DISABLED: Conflicts with MASE.livePreview in mase-admin.js
+ * TODO: Consolidate live preview systems into single implementation
+ */
+/*
+wp_enqueue_script(
+    'mase-admin-live-preview',
+    plugins_url( '../assets/js/mase-admin-live-preview.js', __FILE__ ),
+    array( 'jquery', 'mase-admin' ),
+    MASE_VERSION,
+    true
+);
+*/
+```
+
+#### Step 2: Add Pointer Events Fix
+In `class-mase-admin.php` (after line ~170, after `wp_localize_script`):
+```php
+// Force pointer-events fix for dashicons blocking toggles
+wp_add_inline_style( 
+    'mase-admin', 
+    '.mase-toggle-wrapper .dashicons,
+     .mase-header-toggle .dashicons,
+     [class*="toggle"] .dashicons {
+         pointer-events: none !important;
+     }' 
+);
+```
+
+#### Step 3: Fix HTML Structure
+In `admin-settings-page.php` (lines ~70-80):
+```html
+<!-- BEFORE (problematic): -->
+<div class="mase-header-toggle">
+    <span class="dashicons dashicons-visibility"></span>
+    <input type="checkbox" id="mase-live-preview-toggle" checked />
+    <label for="mase-live-preview-toggle">Live Preview</label>
+</div>
+
+<!-- AFTER (fixed): -->
+<div class="mase-header-toggle">
+    <input type="checkbox" 
+           id="mase-live-preview-toggle" 
+           <?php checked( $settings['master']['live_preview'] ?? true, true ); ?>
+           role="switch"
+           aria-checked="<?php echo esc_attr( $settings['master']['live_preview'] ?? true ? 'true' : 'false' ); ?>"
+           aria-label="<?php esc_attr_e('Toggle live preview mode', 'modern-admin-styler'); ?>" />
+    <label for="mase-live-preview-toggle">
+        <span class="dashicons dashicons-visibility"></span>
+        Live Preview
+    </label>
+</div>
+```
+
+Benefits of new structure:
+- Clicking dashicon = clicking label = toggling checkbox (native HTML behavior)
+- No JavaScript required for icon click handling
+- Better accessibility
+
 ## Default Live Preview Feature
 
 ### Overview
@@ -483,16 +590,16 @@ Live preview will be enabled by default when the settings page loads, providing 
 ### Implementation Approach
 
 #### HTML Changes
-The live preview checkbox in `admin-settings-page.php` will include the `checked` attribute:
+The live preview checkbox in `admin-settings-page.php` will include dynamic `checked` attribute:
 ```html
 <input type="checkbox" 
        class="mase-toggle-input"
        id="mase-live-preview-toggle"
        name="mase_live_preview" 
        value="1"
-       checked
+       <?php checked( $settings['master']['live_preview'] ?? true, true ); ?>
        role="switch"
-       aria-checked="true"
+       aria-checked="<?php echo esc_attr( $settings['master']['live_preview'] ?? true ? 'true' : 'false' ); ?>"
        aria-label="<?php esc_attr_e('Toggle live preview mode', 'modern-admin-styler'); ?>" />
 ```
 

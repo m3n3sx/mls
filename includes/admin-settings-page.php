@@ -63,14 +63,21 @@ $templates    = $settings_obj->get_all_templates();
 				<span><?php esc_html_e( 'Dark Mode', 'modern-admin-styler' ); ?></span>
 			</label>
 			<label class="mase-header-toggle">
+				<?php
+				// Get live preview setting, default to true (enabled by default)
+				// @see Task 11.4 in .kiro/specs/critical-fixes-v1.2.0/tasks.md
+				$live_preview_enabled = isset( $settings['master']['live_preview'] ) 
+					? (bool) $settings['master']['live_preview'] 
+					: true;
+				?>
 				<input 
 					type="checkbox" 
 					id="mase-live-preview-toggle"
 					name="mase_live_preview" 
 					value="1"
-					checked
+					<?php checked( $live_preview_enabled, true ); ?>
 					role="switch"
-					aria-checked="true"
+					aria-checked="<?php echo esc_attr( $live_preview_enabled ? 'true' : 'false' ); ?>"
 					aria-label="<?php esc_attr_e( 'Toggle live preview mode', 'modern-admin-styler' ); ?>"
 				/>
 				<span class="dashicons dashicons-visibility" aria-hidden="true"></span>

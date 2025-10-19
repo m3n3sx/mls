@@ -49,10 +49,13 @@ class MASE_Admin {
 		add_action( 'wp_ajax_mase_restore_backup', array( $this, 'handle_ajax_restore_backup' ) );
 		add_action( 'wp_ajax_mase_get_backups', array( $this, 'handle_ajax_get_backups' ) );
 		
-		// Register mobile optimizer AJAX handlers (Requirement 7.1).
-		$mobile_optimizer = new MASE_Mobile_Optimizer();
-		add_action( 'wp_ajax_mase_store_device_capabilities', array( $mobile_optimizer, 'handle_store_device_capabilities' ) );
-		add_action( 'wp_ajax_mase_store_low_power_detection', array( $mobile_optimizer, 'handle_store_low_power_detection' ) );
+		/**
+		 * REMOVED: Duplicate mobile optimizer AJAX handler registration.
+		 * These handlers are already registered in modern-admin-styler.php mase_init() function.
+		 * Keeping them here caused duplicate execution and race conditions.
+		 * 
+		 * @see modern-admin-styler.php lines 189-192
+		 */
 	}
 
 	public function add_admin_menu() {
@@ -137,14 +140,13 @@ class MASE_Admin {
 			true
 		);
 
-		// Enqueue mase-admin-live-preview.js for live preview functionality (Requirements: 1.1, 1.2, 1.3, 1.4, 1.5).
-		wp_enqueue_script(
-			'mase-admin-live-preview',
-			plugins_url( '../assets/js/mase-admin-live-preview.js', __FILE__ ),
-			array( 'jquery', 'mase-admin' ),
-			MASE_VERSION,
-			true
-		);
+		/**
+		 * NOTE: mase-admin-live-preview.js has been removed.
+		 * All live preview functionality is now handled by mase-admin.js
+		 * to prevent duplicate event handlers and race conditions.
+		 * 
+		 * @see MASE.livePreview module in assets/js/mase-admin.js
+		 */
 
 		// Localize script with data and strings (Requirement 11.4).
 		wp_localize_script(
@@ -174,6 +176,23 @@ class MASE_Admin {
 					'networkError'          => __( 'Network error. Please check your connection and try again.', 'mase' ),
 				),
 			)
+		);
+
+		/**
+		 * Fix pointer-events for dashicons blocking toggle clicks
+		 * 
+		 * Dashicons positioned before checkboxes can block click events.
+		 * This CSS ensures clicks pass through to the underlying checkbox.
+		 * 
+		 * @see Task 11.2 in .kiro/specs/critical-fixes-v1.2.0/tasks.md
+		 */
+		wp_add_inline_style(
+			'mase-admin',
+			'.mase-toggle-wrapper .dashicons,
+			.mase-header-toggle .dashicons,
+			[class*="toggle"] .dashicons {
+				pointer-events: none !important;
+			}'
 		);
 	}
 

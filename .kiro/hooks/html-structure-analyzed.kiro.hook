@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "HTML Structure Analyzer",
+  "description": "Analyzes admin-settings-page.php after changes to detect HTML structure issues with toggle switches, specifically checking for dashicon/input/label ordering and pointer-events blocking problems",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "includes/admin-settings-page.php"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze the HTML structure in includes/admin-settings-page.php focusing on toggle switches. Check:\n\n1. **Element Order Analysis**: Find all toggle switch structures and verify the order of elements (dashicon, input, label)\n2. **Blocking Detection**: Identify if dashicon elements appear BEFORE input elements (POTENTIAL_PROBLEM = true if yes)\n3. **CSS Fix Verification**: Check if pointer-events:none CSS fix exists for dashicons\n4. **Severity Assessment**: If CSS fix exists BUT toggles still fail, mark as HIGH severity\n\nOutput your findings in this JSON format:\n```json\n{\n  \"blocking_detected\": true/false,\n  \"blocking_element\": \"dashicon\" or null,\n  \"css_fix_exists\": true/false,\n  \"css_fix_location\": \"inline/stylesheet/none\",\n  \"element_order\": [\"dashicon\", \"input\", \"label\"],\n  \"severity\": \"HIGH/MEDIUM/LOW\",\n  \"recommendation\": \"Use inline CSS pointer-events:none on dashicon OR restructure HTML to place input before dashicon\"\n}\n```\n\nThen generate a final report summarizing the toggle switch HTML structure analysis and recommended fixes."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "JavaScript Error Fix",
+  "description": "Fixes JavaScript errors related to undefined event objects in MASE admin interface",
+  "version": "1.0.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "assets/js/mase-admin.js",
+      "assets/js/mase-admin-live-preview.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Analyze JavaScript files for potential 'Cannot read properties of undefined' errors. Focus on:\n\n1. Event handler functions that access event.type, event.target, or event.currentTarget\n2. Functions that don't validate event object existence before accessing properties\n3. Missing null/undefined checks in event handlers\n\nProvide fixes for any identified issues by adding proper validation:\n- Check if event object exists before accessing properties\n- Add fallback handling for undefined events\n- Ensure all event handlers are defensive against invalid inputs\n\nReturn a summary of fixes applied and any remaining issues."
+  }
+}

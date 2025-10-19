@@ -1,0 +1,45 @@
+{
+  "project": {
+    "name": "Modern Admin Styler Enterprise",
+    "type": "wordpress-plugin"
+  },
+  "agent": {
+    "name": "LivePreviewAnalyzer",
+    "model": "claude-sonnet-4.5",
+    "temperature": 0.1,
+    "max_iterations": 10,
+    "tools": [
+      "browse_public_web",
+      "get_url_content", 
+      "execute_python",
+      "search_web"
+    ]
+  },
+  "hooks": {
+    "enabled": true,
+    "directory": ".kiro/hooks"
+  },
+  "specs": {
+    "enabled": true,
+    "directory": ".kiro/specs"
+  },
+  "memory": {
+    "enabled": true,
+    "persistence": "session",
+    "key_facts": [
+      "repository_structure",
+      "identified_problems",
+      "evidence_map"
+    ]
+  },
+  "steering": {
+    "enabled": true,
+    "rules_file": ".kiro/steering.md"
+  },
+  "output": {
+    "format": "markdown",
+    "include_code_snippets": true,
+    "max_snippet_length": 50,
+    "citation_style": "[file:line]"
+  }
+}
