@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Complete System Demo - All Components</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background: var(--mase-background, #f0f0f1);
+        }
+        
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .demo-info {
+            background: linear-gradient(135deg, #0073aa 0%, #005a87 100%);
+            color: white;
+            padding: 32px;
+            margin-bottom: 24px;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .demo-info h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .demo-info p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 16px;
+        }
+        
+        .demo-section {
+            background: white;
+            margin: 0 24px 24px 24px;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .demo-section h2 {
+            color: #0073aa;
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 600;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .demo-section h3 {
+            color: #374151;
+            margin: 24px 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .demo-section p {
+            color: #646970;
+            margin: 0 0 16px 0;
+            line-height: 1.6;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+        
+        .component-card {
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+        
+        .component-card h4 {
+            margin: 0 0 12px 0;
+            color: #1f2937;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .component-example {
+            margin-top: 12px;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .color-swatch {
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            padding: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .responsive-demo {
+            border: 2px dashed #d1d5db;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px;
+        }
+        
+        .feature-badge.new {
+            background: #e7f7ed;
+            color: #00a32a;
+        }
+        
+        .feature-badge.updated {
+            background: #e5f5fa;
+            color: #0073aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Demo Header -->
+        <div class="demo-info">
+            <h1>🎨 MASE Complete System Demo</h1>
+            <p>Comprehensive demonstration of all components, layouts, and features in the Modern Admin Styler Enterprise CSS framework</p>
+            <div style="margin-top: 16px;">
+                <span class="feature-badge new">All Components</span>
+                <span class="feature-badge updated">Responsive</span>
+                <span class="feature-badge new">Accessible</span>
+                <span class="feature-badge updated">RTL Ready</span>
+            </div>
+        </div>
+
+        <!-- Section 1: Header Component -->
+        <section class="demo-section">
+            <h2>1. Header Component</h2>
+            <p>Complete header with branding, version badge, live preview toggle, and action buttons</p>
+            
+            <div class="mase-header">
+                <div class="mase-header-left">
+                    <h1 class="mase-header-title">Ultimate WordPress Admin Styler</h1>
+                    <span class="mase-header-badge">v2.0.0</span>
+                </div>
+                <div class="mase-header-right">
+                    <div class="mase-live-preview-toggle">
+                        <label class="mase-toggle">
+                            <input type="checkbox" checked>
+                            <span class="mase-toggle-slider"></span>
+                        </label>
+                        <span class="mase-toggle-label">Live Preview</span>
+                    </div>
+                    <button class="mase-btn mase-btn-secondary">Export</button>
+                    <button class="mase-btn mase-btn-secondary">Import</button>
+                    <button class="mase-btn mase-btn-secondary">Reset</button>
+                    <button class="mase-btn mase-btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Tab Navigation -->
+        <section class="demo-section">
+            <h2>2. Tab Navigation</h2>
+            <p>8 navigation tabs with icons for organizing settings sections</p>
+            
+            <h3>Horizontal Tabs</h3>
+            <nav class="mase-tabs">
+                <button class="mase-tab mase-tab-active" data-tab="general">
+                    <span class="mase-tab-icon">⚙️</span>
+                    <span class="mase-tab-label">General</span>
+                </button>
+                <button class="mase-tab" data-tab="admin-bar">
+                    <span class="mase-tab-icon">📊</span>
+                    <span class="mase-tab-label">Admin Bar</span>
+                </button>
+                <button class="mase-tab" data-tab="menu">
+                    <span class="mase-tab-icon">📋</span>
+                    <span class="mase-tab-label">Menu</span>
+                </button>
+                <button class="mase-tab" data-tab="content">
+                    <span class="mase-tab-icon">📄</span>
+                    <span class="mase-tab-label">Content</span>
+                </button>
+                <button class="mase-tab" data-tab="typography">
+                    <span class="mase-tab-icon">🔤</span>
+                    <span class="mase-tab-label">Typography</span>
+                </button>
+                <button class="mase-tab" data-tab="effects">
+                    <span class="mase-tab-icon">✨</span>
+                    <span class="mase-tab-label">Effects</span>
+                </button>
+                <button class="mase-tab" data-tab="templates">
+                    <span class="mase-tab-icon">📐</span>
+                    <span class="mase-tab-label">Templates</span>
+                </button>
+                <button class="mase-tab" data-tab="advanced">
+                    <span class="mase-tab-icon">🔧</span>
+                    <span class="mase-tab-label">Advanced</span>
+                </button>
+            </nav>
+        </section>
+
+        <!-- Section 3: Form Controls -->
+        <section class="demo-section">
+            <h2>3. Form Controls</h2>
+            <p>All interactive form elements with modern styling</p>
+            
+            <div class="component-grid">
+                <!-- Toggle Switches -->
+                <div class="component-card">
+                    <h4>Toggle Switches (iOS Style)</h4>
+                    <div class="component-example">
+                        <div style="margin-bottom: 12px;">
+                            <label class="mase-toggle">
+                                <input type="checkbox" checked>
+                                <span class="mase-toggle-slider"></span>
+                            </label>
+                            <span style="margin-left: 8px;">Enabled</span>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label class="mase-toggle">
+                                <input type="checkbox">
+                                <span class="mase-toggle-slider"></span>
+                            </label>
+                            <span style="margin-left: 8px;">Disabled</span>
+                        </div>
+                        <div>
+                            <label class="mase-toggle">
+                                <input type="checkbox" disabled>
+                                <span class="mase-toggle-slider"></span>
+                            </label>
+                            <span style="margin-left: 8px; opacity: 0.5;">Disabled State</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sliders -->
+                <div class="component-card">
+                    <h4>Sliders (Material Design)</h4>
+                    <div class="component-example">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Opacity: <span id="slider1-value">75</span>%</label>
+                        <input type="range" class="mase-slider" id="slider1" min="0" max="100" value="75">
+                        
+                        <label style="display: block; margin: 16px 0 8px 0; font-size: 13px;">Border Radius: <span id="slider2-value">8</span>px</label>
+                        <input type="range" class="mase-slider" id="slider2" min="0" max="50" value="8">
+                        
+                        <label style="display: block; margin: 16px 0 8px 0; font-size: 13px;">Font Size: <span id="slider3-value">16</span>px</label>
+                        <input type="range" class="mase-slider" id="slider3" min="12" max="32" value="16">
+                    </div>
+                </div>
+
+                <!-- Color Pickers -->
+                <div class="component-card">
+                    <h4>Color Pickers</h4>
+                    <div class="component-example">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Primary Color</label>
+                        <div class="mase-color-picker">
+                            <input type="color" class="mase-color-input" value="#0073aa">
+                            <input type="text" class="mase-color-hex" value="#0073aa" style="width: 100px;">
+                        </div>
+                        
+                        <label style="display: block; margin: 16px 0 8px 0; font-size: 13px;">Success Color</label>
+                        <div class="mase-color-picker">
+                            <input type="color" class="mase-color-input" value="#00a32a">
+                            <input type="text" class="mase-color-hex" value="#00a32a" style="width: 100px;">
+                        </div>
+                        
+                        <label style="display: block; margin: 16px 0 8px 0; font-size: 13px;">Warning Color</label>
+                        <div class="mase-color-picker">
+                            <input type="color" class="mase-color-input" value="#dba617">
+                            <input type="text" class="mase-color-hex" value="#dba617" style="width: 100px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Inputs -->
+                <div class="component-card">
+                    <h4>Text Inputs</h4>
+                    <div class="component-example">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Site Title</label>
+                        <input type="text" class="mase-input" placeholder="Enter site title" style="width: 100%; margin-bottom: 12px;">
+                        
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Admin Email</label>
+                        <input type="email" class="mase-input" placeholder="admin@example.com" style="width: 100%; margin-bottom: 12px;">
+                        
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Custom CSS</label>
+                        <textarea class="mase-input" rows="3" placeholder="Enter custom CSS..." style="width: 100%; resize: vertical;"></textarea>
+                    </div>
+                </div>
+
+                <!-- Select Dropdowns -->
+                <div class="component-card">
+                    <h4>Select Dropdowns</h4>
+                    <div class="component-example">
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Theme</label>
+                        <select class="mase-select" style="width: 100%; margin-bottom: 12px;">
+                            <option>Default</option>
+                            <option>Dark Mode</option>
+                            <option>High Contrast</option>
+                            <option>Custom</option>
+                        </select>
+                        
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Font Family</label>
+                        <select class="mase-select" style="width: 100%; margin-bottom: 12px;">
+                            <option>System Default</option>
+                            <option>Arial</option>
+                            <option>Helvetica</option>
+                            <option>Georgia</option>
+                        </select>
+                        
+                        <label style="display: block; margin-bottom: 8px; font-size: 13px;">Layout</label>
+                        <select class="mase-select" style="width: 100%;">
+                            <option>Horizontal Tabs</option>
+                            <option>Sidebar Navigation</option>
+                            <option>Compact View</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Buttons -->
+        <section class="demo-section">
+            <h2>4. Buttons</h2>
+            <p>Primary, secondary, and various button states</p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>Button Variants</h4>
+                    <div class="component-example">
+                        <button class="mase-btn mase-btn-primary" style="margin: 4px;">Primary Button</button>
+                        <button class="mase-btn mase-btn-secondary" style="margin: 4px;">Secondary Button</button>
+                        <button class="mase-btn mase-btn-primary" disabled style="margin: 4px;">Disabled Primary</button>
+                        <button class="mase-btn mase-btn-secondary" disabled style="margin: 4px;">Disabled Secondary</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Button Sizes</h4>
+                    <div class="component-example">
+                        <button class="mase-btn mase-btn-primary mase-btn-sm" style="margin: 4px;">Small</button>
+                        <button class="mase-btn mase-btn-primary" style="margin: 4px;">Default</button>
+                        <button class="mase-btn mase-btn-primary mase-btn-lg" style="margin: 4px;">Large</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Icon Buttons</h4>
+                    <div class="component-example">
+                        <button class="mase-btn mase-btn-primary" style="margin: 4px;">💾 Save</button>
+                        <button class="mase-btn mase-btn-secondary" style="margin: 4px;">📤 Export</button>
+                        <button class="mase-btn mase-btn-secondary" style="margin: 4px;">📥 Import</button>
+                        <button class="mase-btn mase-btn-secondary" style="margin: 4px;">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Button Groups</h4>
+                    <div class="component-example">
+                        <div class="mase-btn-group">
+                            <button class="mase-btn mase-btn-secondary">Left</button>
+                            <button class="mase-btn mase-btn-secondary mase-btn-active">Center</button>
+                            <button class="mase-btn mase-btn-secondary">Right</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Cards & Content -->
+        <section class="demo-section">
+            <h2>5. Cards & Content Areas</h2>
+            <p>Organized content sections with card containers</p>
+            
+            <div class="component-grid">
+                <div class="mase-card">
+                    <div class="mase-card-header">
+                        <h3 class="mase-card-title">Basic Card</h3>
+                    </div>
+                    <div class="mase-card-body">
+                        <p>This is a basic card component with header and body sections. Cards provide visual grouping for related content.</p>
+                    </div>
+                </div>
+
+                <div class="mase-card">
+                    <div class="mase-card-header">
+                        <h3 class="mase-card-title">Card with Actions</h3>
+                    </div>
+                    <div class="mase-card-body">
+                        <p>Cards can include action buttons in the footer area for common operations.</p>
+                    </div>
+                    <div class="mase-card-footer">
+                        <button class="mase-btn mase-btn-primary">Apply</button>
+                        <button class="mase-btn mase-btn-secondary">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="mase-card mase-card-interactive">
+                    <div class="mase-card-header">
+                        <h3 class="mase-card-title">Interactive Card</h3>
+                    </div>
+                    <div class="mase-card-body">
+                        <p>This card has hover effects and can be clicked. Useful for selectable options or navigation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Badges & Labels -->
+        <section class="demo-section">
+            <h2>6. Badges & Labels</h2>
+            <p>Status indicators and version badges</p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>Status Badges</h4>
+                    <div class="component-example">
+                        <span class="mase-badge mase-badge-primary">Primary</span>
+                        <span class="mase-badge mase-badge-success">Success</span>
+                        <span class="mase-badge mase-badge-warning">Warning</span>
+                        <span class="mase-badge mase-badge-error">Error</span>
+                        <span class="mase-badge mase-badge-info">Info</span>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Version Badges</h4>
+                    <div class="component-example">
+                        <span class="mase-badge mase-badge-primary">v2.0.0</span>
+                        <span class="mase-badge mase-badge-success">New</span>
+                        <span class="mase-badge mase-badge-warning">Beta</span>
+                        <span class="mase-badge mase-badge-info">Updated</span>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Count Badges</h4>
+                    <div class="component-example">
+                        <button class="mase-btn mase-btn-secondary">
+                            Notifications <span class="mase-badge mase-badge-error" style="margin-left: 8px;">5</span>
+                        </button>
+                        <button class="mase-btn mase-btn-secondary" style="margin-left: 8px;">
+                            Messages <span class="mase-badge mase-badge-primary" style="margin-left: 8px;">12</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Notices & Alerts -->
+        <section class="demo-section">
+            <h2>7. Notices & Alerts</h2>
+            <p>Feedback messages for user actions</p>
+            
+            <div class="mase-notice mase-notice-success" style="margin-bottom: 16px;">
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">Settings saved successfully!</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+
+            <div class="mase-notice mase-notice-info" style="margin-bottom: 16px;">
+                <span class="mase-notice-icon">ℹ</span>
+                <span class="mase-notice-message">Your changes will take effect after page reload.</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+
+            <div class="mase-notice mase-notice-warning" style="margin-bottom: 16px;">
+                <span class="mase-notice-icon">⚠</span>
+                <span class="mase-notice-message">Some settings may conflict with your theme.</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+
+            <div class="mase-notice mase-notice-error">
+                <span class="mase-notice-icon">✕</span>
+                <span class="mase-notice-message">Failed to save settings. Please try again.</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+        </section>
+
+        <!-- Section 8: Design Tokens -->
+        <section class="demo-section">
+            <h2>8. Design Tokens & Color Palette</h2>
+            <p>Complete color system with primary, semantic, and neutral colors</p>
+            
+            <h3>Primary Colors</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: #0073aa;">Primary<br>#0073aa</div>
+                <div class="color-swatch" style="background: #005a87;">Primary Hover<br>#005a87</div>
+                <div class="color-swatch" style="background: #e5f5fa; color: #0073aa;">Primary Light<br>#e5f5fa</div>
+            </div>
+
+            <h3>Semantic Colors</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: #00a32a;">Success<br>#00a32a</div>
+                <div class="color-swatch" style="background: #dba617;">Warning<br>#dba617</div>
+                <div class="color-swatch" style="background: #d63638;">Error<br>#d63638</div>
+                <div class="color-swatch" style="background: #0073aa;">Info<br>#0073aa</div>
+            </div>
+
+            <h3>Neutral Gray Scale</h3>
+            <div class="color-palette">
+                <div class="color-swatch" style="background: #f9fafb; color: #1f2937;">Gray 50<br>#f9fafb</div>
+                <div class="color-swatch" style="background: #f3f4f6; color: #1f2937;">Gray 100<br>#f3f4f6</div>
+                <div class="color-swatch" style="background: #e5e7eb; color: #1f2937;">Gray 200<br>#e5e7eb</div>
+                <div class="color-swatch" style="background: #d1d5db; color: #1f2937;">Gray 300<br>#d1d5db</div>
+                <div class="color-swatch" style="background: #9ca3af;">Gray 400<br>#9ca3af</div>
+                <div class="color-swatch" style="background: #6b7280;">Gray 500<br>#6b7280</div>
+                <div class="color-swatch" style="background: #4b5563;">Gray 600<br>#4b5563</div>
+                <div class="color-swatch" style="background: #374151;">Gray 700<br>#374151</div>
+                <div class="color-swatch" style="background: #1f2937;">Gray 800<br>#1f2937</div>
+                <div class="color-swatch" style="background: #111827;">Gray 900<br>#111827</div>
+            </div>
+        </section>
+
+        <!-- Section 9: Typography -->
+        <section class="demo-section">
+            <h2>9. Typography System</h2>
+            <p>Complete type scale with headings, body text, and utility classes</p>
+            
+            <div style="margin: 24px 0;">
+                <h1 style="margin: 8px 0;">Heading 1 - 32px Bold</h1>
+                <h2 style="margin: 8px 0;">Heading 2 - 24px Semibold</h2>
+                <h3 style="margin: 8px 0;">Heading 3 - 18px Semibold</h3>
+                <h4 style="margin: 8px 0;">Heading 4 - 16px Semibold</h4>
+                <h5 style="margin: 8px 0;">Heading 5 - 14px Semibold</h5>
+                <h6 style="margin: 8px 0;">Heading 6 - 13px Semibold</h6>
+                <p style="margin: 16px 0;">Body text - 14px Regular. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p style="margin: 8px 0; font-size: 13px; color: #646970;">Secondary text - 13px Regular with gray color for less prominent information.</p>
+                <p style="margin: 8px 0; font-size: 12px; color: #9ca3af;">Small text - 12px Regular for captions and helper text.</p>
+            </div>
+        </section>
+
+        <!-- Section 10: Responsive Design -->
+        <section class="demo-section">
+            <h2>10. Responsive Design</h2>
+            <p>Layouts adapt to mobile, tablet, and desktop viewports</p>
+            
+            <div class="responsive-demo">
+                <h3>Breakpoints</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px; margin: 4px 0; background: #f9fafb; border-radius: 4px;">
+                        <strong>Mobile:</strong> &lt; 600px - Single column, stacked layout
+                    </li>
+                    <li style="padding: 8px; margin: 4px 0; background: #f9fafb; border-radius: 4px;">
+                        <strong>Small Tablet:</strong> 600px - 782px - 2 column grid
+                    </li>
+                    <li style="padding: 8px; margin: 4px 0; background: #f9fafb; border-radius: 4px;">
+                        <strong>Tablet:</strong> 782px - 1024px - 2-3 column grid
+                    </li>
+                    <li style="padding: 8px; margin: 4px 0; background: #f9fafb; border-radius: 4px;">
+                        <strong>Desktop:</strong> &gt; 1024px - Full multi-column layout
+                    </li>
+                </ul>
+                
+                <h3 style="margin-top: 24px;">Responsive Features</h3>
+                <ul style="color: #646970; line-height: 1.8;">
+                    <li>Header buttons stack vertically on mobile</li>
+                    <li>Tabs convert to dropdown menu on mobile</li>
+                    <li>Touch targets minimum 44px on mobile</li>
+                    <li>Font sizes scale proportionally</li>
+                    <li>Grid layouts adapt to available space</li>
+                    <li>Sidebar navigation becomes horizontal on mobile</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 11: Utility Classes -->
+        <section class="demo-section">
+            <h2>11. Utility Classes</h2>
+            <p>Helper classes for common styling needs</p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>Visibility</h4>
+                    <div class="component-example">
+                        <p class="mase-hidden">Hidden element (display: none)</p>
+                        <p class="mase-sr-only">Screen reader only text</p>
+                        <p>Visible element</p>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>States</h4>
+                    <div class="component-example">
+                        <button class="mase-btn mase-btn-primary mase-loading">Loading...</button>
+                        <button class="mase-btn mase-btn-secondary mase-disabled" style="margin-left: 8px;">Disabled</button>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Text Utilities</h4>
+                    <div class="component-example">
+                        <p class="mase-truncate" style="max-width: 200px;">This is a very long text that will be truncated with ellipsis</p>
+                        <p class="mase-text-center">Centered text</p>
+                        <p class="mase-text-right">Right aligned text</p>
+                    </div>
+                </div>
+
+                <div class="component-card">
+                    <h4>Spacing</h4>
+                    <div class="component-example">
+                        <div class="mase-mt-sm" style="background: #e5e7eb; padding: 8px; border-radius: 4px;">Margin top small</div>
+                        <div class="mase-mt-md" style="background: #e5e7eb; padding: 8px; border-radius: 4px;">Margin top medium</div>
+                        <div class="mase-mt-lg" style="background: #e5e7eb; padding: 8px; border-radius: 4px;">Margin top large</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 12: Accessibility Features -->
+        <section class="demo-section">
+            <h2>12. Accessibility Features</h2>
+            <p>WCAG 2.1 Level AA compliant with keyboard navigation and screen reader support</p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>Keyboard Navigation</h4>
+                    <ul style="font-size: 13px; color: #646970; line-height: 1.8;">
+                        <li>All elements focusable with Tab</li>
+                        <li>Visible focus indicators (2px outline)</li>
+                        <li>Logical tab order</li>
+                        <li>Skip navigation links</li>
+                        <li>Escape key support</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <h4>Screen Reader Support</h4>
+                    <ul style="font-size: 13px; color: #646970; line-height: 1.8;">
+                        <li>ARIA labels on icon buttons</li>
+                        <li>Live regions for updates</li>
+                        <li>Semantic HTML structure</li>
+                        <li>Alt text for images</li>
+                        <li>Role attributes</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <h4>Color Contrast</h4>
+                    <ul style="font-size: 13px; color: #646970; line-height: 1.8;">
+                        <li>Text: 4.5:1 minimum (WCAG AA)</li>
+                        <li>Large text: 3:1 minimum</li>
+                        <li>UI components: 3:1 minimum</li>
+                        <li>Focus indicators: High contrast</li>
+                        <li>High contrast mode support</li>
+                    </ul>
+                </div>
+
+                <div class="component-card">
+                    <h4>Reduced Motion</h4>
+                    <ul style="font-size: 13px; color: #646970; line-height: 1.8;">
+                        <li>Respects prefers-reduced-motion</li>
+                        <li>Animations disabled when set</li>
+                        <li>Functionality maintained</li>
+                        <li>Instant state changes</li>
+                        <li>Gentle loading indicators</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 13: RTL Support -->
+        <section class="demo-section">
+            <h2>13. RTL (Right-to-Left) Support</h2>
+            <p>Full support for Arabic, Hebrew, and other RTL languages</p>
+            
+            <div class="responsive-demo">
+                <h3>RTL Features</h3>
+                <ul style="color: #646970; line-height: 1.8;">
+                    <li>Automatic layout mirroring with [dir="rtl"]</li>
+                    <li>Text alignment switches to right</li>
+                    <li>Icon directions flip appropriately</li>
+                    <li>Toggle switches animate in reverse</li>
+                    <li>Grid columns reverse order</li>
+                    <li>Spacing and padding maintained</li>
+                    <li>Border positions flip correctly</li>
+                </ul>
+                
+                <h3 style="margin-top: 24px;">Test RTL Mode</h3>
+                <button class="mase-btn mase-btn-primary" onclick="toggleRTL()">
+                    Toggle RTL Mode
+                </button>
+                <p style="margin-top: 12px; font-size: 13px; color: #646970;">
+                    Click the button above to see the entire page in RTL mode
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 14: Performance -->
+        <section class="demo-section">
+            <h2>14. Performance Metrics</h2>
+            <p>Optimized for fast loading and smooth interactions</p>
+            
+            <div class="component-grid">
+                <div class="component-card">
+                    <h4>File Size</h4>
+                    <div style="font-size: 32px; font-weight: 700; color: #0073aa; margin: 16px 0;">&lt;100KB</div>
+                    <p style="font-size: 13px; color: #646970; margin: 0;">Uncompressed CSS file size</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>Load Time</h4>
+                    <div style="font-size: 32px; font-weight: 700; color: #00a32a; margin: 16px 0;">&lt;100ms</div>
+                    <p style="font-size: 13px; color: #646970; margin: 0;">CSS file load time target</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>Animations</h4>
+                    <div style="font-size: 32px; font-weight: 700; color: #0073aa; margin: 16px 0;">60fps</div>
+                    <p style="font-size: 13px; color: #646970; margin: 0;">Smooth 60 frames per second</p>
+                </div>
+
+                <div class="component-card">
+                    <h4>Gzipped</h4>
+                    <div style="font-size: 32px; font-weight: 700; color: #00a32a; margin: 16px 0;">&lt;20KB</div>
+                    <p style="font-size: 13px; color: #646970; margin: 0;">Compressed file size</p>
+                </div>
+            </div>
+
+            <h3>Optimization Techniques</h3>
+            <ul style="color: #646970; line-height: 1.8;">
+                <li>Efficient CSS selectors (max 3 levels)</li>
+                <li>Minimal use of expensive properties</li>
+                <li>CSS containment for performance</li>
+                <li>Hardware-accelerated animations</li>
+                <li>Optimized repaints and reflows</li>
+                <li>Lazy loading for non-critical styles</li>
+            </ul>
+        </section>
+
+        <!-- Section 15: Complete Form Example -->
+        <section class="demo-section">
+            <h2>15. Complete Settings Form</h2>
+            <p>Real-world example combining all components</p>
+            
+            <div class="mase-card">
+                <div class="mase-card-header">
+                    <h3 class="mase-card-title">General Settings</h3>
+                </div>
+                <div class="mase-card-body">
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Enable Custom Styling</label>
+                        <label class="mase-toggle">
+                            <input type="checkbox" checked>
+                            <span class="mase-toggle-slider"></span>
+                        </label>
+                        <span style="margin-left: 8px; color: #646970;">Apply custom styles to admin interface</span>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Primary Color</label>
+                        <div class="mase-color-picker">
+                            <input type="color" class="mase-color-input" value="#0073aa">
+                            <input type="text" class="mase-color-hex" value="#0073aa" style="width: 120px;">
+                        </div>
+                        <p style="margin-top: 4px; font-size: 12px; color: #9ca3af;">Choose your brand color</p>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Border Radius</label>
+                        <input type="range" class="mase-slider" id="demo-slider" min="0" max="20" value="8">
+                        <p style="margin-top: 4px; font-size: 12px; color: #9ca3af;">Adjust corner roundness: <span id="demo-slider-value">8</span>px</p>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Admin Email</label>
+                        <input type="email" class="mase-input" placeholder="admin@example.com" style="width: 100%;">
+                        <p style="margin-top: 4px; font-size: 12px; color: #9ca3af;">Receive notifications at this address</p>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Theme Preset</label>
+                        <select class="mase-select" style="width: 100%;">
+                            <option>Default Light</option>
+                            <option>Dark Mode</option>
+                            <option>High Contrast</option>
+                            <option>Custom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mase-card-footer">
+                    <button class="mase-btn mase-btn-primary">Save Settings</button>
+                    <button class="mase-btn mase-btn-secondary">Reset to Defaults</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <section class="demo-section" style="text-align: center; background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);">
+            <h2>🎉 Demo Complete!</h2>
+            <p>You've seen all components and features of the MASE CSS framework.</p>
+            <div style="margin-top: 24px;">
+                <button class="mase-btn mase-btn-primary" style="margin: 4px;">View Documentation</button>
+                <button class="mase-btn mase-btn-secondary" style="margin: 4px;">Run Tests</button>
+                <button class="mase-btn mase-btn-secondary" style="margin: 4px;">Check Accessibility</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Slider value updates
+        document.querySelectorAll('.mase-slider').forEach(slider => {
+            const valueDisplay = document.getElementById(slider.id + '-value');
+            if (valueDisplay) {
+                slider.addEventListener('input', function() {
+                    valueDisplay.textContent = this.value;
+                });
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.mase-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.mase-tab').forEach(t => t.classList.remove('mase-tab-active'));
+                this.classList.add('mase-tab-active');
+            });
+        });
+
+        // Notice dismiss
+        document.querySelectorAll('.mase-notice-dismiss').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.mase-notice').style.display = 'none';
+            });
+        });
+
+        // RTL toggle
+        function toggleRTL() {
+            const html = document.documentElement;
+            if (html.getAttribute('dir') === 'rtl') {
+                html.removeAttribute('dir');
+            } else {
+                html.setAttribute('dir', 'rtl');
+            }
+        }
+
+        // Log page load performance
+        window.addEventListener('load', function() {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            console.log('Page Load Performance:');
+            console.log('- DOM Content Loaded:', Math.round(perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart), 'ms');
+            console.log('- Load Complete:', Math.round(perfData.loadEventEnd - perfData.loadEventStart), 'ms');
+            
+            // Check for CSS file
+            const cssFiles = performance.getEntriesByType('resource').filter(r => r.name.includes('.css'));
+            cssFiles.forEach(css => {
+                console.log('- CSS Load Time:', Math.round(css.duration), 'ms');
+                console.log('- CSS File Size:', Math.round(css.transferSize / 1024), 'KB');
+            });
+        });
+    </script>
+</body>
+</html>

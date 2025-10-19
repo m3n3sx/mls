@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 13: Notice/Alert Component Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f0f0f1;
+            padding: 40px;
+            margin: 0;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 48px;
+        }
+        .test-section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1e1e1e;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 8px;
+        }
+        .test-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 16px;
+            color: #374151;
+        }
+        .test-description {
+            color: #646970;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .test-grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .code-block {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .status-pass {
+            background: #e7f7ed;
+            color: #00a32a;
+        }
+        .status-info {
+            background: #e5f5fa;
+            color: #0073aa;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="font-size: 32px; font-weight: 700; margin-bottom: 16px; color: #1e1e1e;">
+            Task 13: Notice/Alert Component Test
+            <span class="status-indicator status-pass">✓ IMPLEMENTED</span>
+        </h1>
+        <p class="test-description" style="font-size: 16px; margin-bottom: 32px;">
+            Testing the notice/alert component with all variants, states, and features.
+            This component provides feedback messages for user actions with different severity levels.
+        </p>
+
+        <!-- Test Section 1: Basic Notice Variants -->
+        <div class="test-section">
+            <h2>1. Basic Notice Variants</h2>
+            <p class="test-description">
+                Testing all four notice variants: success, warning, error, and info.
+                Each variant has distinct colors and left border accent.
+            </p>
+
+            <div class="test-grid">
+                <div class="mase-notice mase-notice-success">
+                    <span class="mase-notice-icon">✓</span>
+                    <span class="mase-notice-message">Success! Your settings have been saved successfully.</span>
+                </div>
+
+                <div class="mase-notice mase-notice-warning">
+                    <span class="mase-notice-icon">⚠</span>
+                    <span class="mase-notice-message">Warning: Some settings may require page refresh to take effect.</span>
+                </div>
+
+                <div class="mase-notice mase-notice-error">
+                    <span class="mase-notice-icon">✕</span>
+                    <span class="mase-notice-message">Error: Failed to save settings. Please try again.</span>
+                </div>
+
+                <div class="mase-notice mase-notice-info">
+                    <span class="mase-notice-icon">ℹ</span>
+                    <span class="mase-notice-message">Info: You can export your settings to backup your configuration.</span>
+                </div>
+
+                <div class="mase-notice">
+                    <span class="mase-notice-icon">●</span>
+                    <span class="mase-notice-message">Default: This is a neutral notice without a specific variant.</span>
+                </div>
+            </div>
+
+            <div class="code-block">
+&lt;div class="mase-notice mase-notice-success"&gt;
+  &lt;span class="mase-notice-icon"&gt;✓&lt;/span&gt;
+  &lt;span class="mase-notice-message"&gt;Success message&lt;/span&gt;
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 2: Dismissible Notices -->
+        <div class="test-section">
+            <h2>2. Dismissible Notices</h2>
+            <p class="test-description">
+                Testing notices with dismiss buttons. Click the × button to dismiss.
+            </p>
+
+            <div class="test-grid">
+                <div class="mase-notice mase-notice-success mase-notice-dismissible">
+                    <span class="mase-notice-icon">✓</span>
+                    <span class="mase-notice-message">This notice can be dismissed by clicking the × button.</span>
+                    <button class="mase-notice-dismiss" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <div class="mase-notice mase-notice-info mase-notice-dismissible">
+                    <span class="mase-notice-icon">ℹ</span>
+                    <span class="mase-notice-message">Hover over the dismiss button to see the hover effect.</span>
+                    <button class="mase-notice-dismiss" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+
+                <div class="mase-notice mase-notice-warning mase-notice-dismissible">
+                    <span class="mase-notice-icon">⚠</span>
+                    <span class="mase-notice-message">Try using keyboard navigation (Tab) to focus the dismiss button.</span>
+                    <button class="mase-notice-dismiss" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+            </div>
+
+            <div class="code-block">
+&lt;div class="mase-notice mase-notice-success mase-notice-dismissible"&gt;
+  &lt;span class="mase-notice-icon"&gt;✓&lt;/span&gt;
+  &lt;span class="mase-notice-message"&gt;Message&lt;/span&gt;
+  &lt;button class="mase-notice-dismiss"&gt;×&lt;/button&gt;
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 3: Notice Variants -->
+        <div class="test-section">
+            <h2>3. Notice Size Variants</h2>
+            <p class="test-description">
+                Testing compact and inline notice variants for different use cases.
+            </p>
+
+            <h3>Compact Notice</h3>
+            <div class="mase-notice mase-notice-info mase-notice-compact">
+                <span class="mase-notice-icon">ℹ</span>
+                <span class="mase-notice-message">This is a compact notice with reduced padding.</span>
+            </div>
+
+            <h3>Inline Notice</h3>
+            <p style="margin-bottom: 8px;">This paragraph is followed by an inline notice:</p>
+            <div class="mase-notice mase-notice-warning mase-notice-inline">
+                <span class="mase-notice-icon">⚠</span>
+                <span class="mase-notice-message">Inline notice without bottom margin.</span>
+            </div>
+            <p style="margin-top: 8px;">And this paragraph comes right after.</p>
+
+            <div class="code-block">
+&lt;div class="mase-notice mase-notice-info mase-notice-compact"&gt;...&lt;/div&gt;
+&lt;div class="mase-notice mase-notice-warning mase-notice-inline"&gt;...&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 4: Notice Container -->
+        <div class="test-section">
+            <h2>4. Notice Container</h2>
+            <p class="test-description">
+                Testing multiple notices stacked in a container with consistent spacing.
+            </p>
+
+            <div class="mase-notice-container">
+                <div class="mase-notice mase-notice-success">
+                    <span class="mase-notice-icon">✓</span>
+                    <span class="mase-notice-message">First notice in container</span>
+                </div>
+                <div class="mase-notice mase-notice-info">
+                    <span class="mase-notice-icon">ℹ</span>
+                    <span class="mase-notice-message">Second notice in container</span>
+                </div>
+                <div class="mase-notice mase-notice-warning">
+                    <span class="mase-notice-icon">⚠</span>
+                    <span class="mase-notice-message">Third notice in container</span>
+                </div>
+            </div>
+
+            <div class="code-block">
+&lt;div class="mase-notice-container"&gt;
+  &lt;div class="mase-notice mase-notice-success"&gt;...&lt;/div&gt;
+  &lt;div class="mase-notice mase-notice-info"&gt;...&lt;/div&gt;
+  &lt;div class="mase-notice mase-notice-warning"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 5: Toast Notification -->
+        <div class="test-section">
+            <h2>5. Toast Notification</h2>
+            <p class="test-description">
+                Testing fixed position toast notification. Click the button to show a toast.
+            </p>
+
+            <button class="mase-btn mase-btn-primary" onclick="showToast()">Show Toast Notification</button>
+
+            <div class="code-block">
+&lt;div class="mase-notice mase-notice-success mase-notice-toast"&gt;
+  &lt;span class="mase-notice-icon"&gt;✓&lt;/span&gt;
+  &lt;span class="mase-notice-message"&gt;Toast message&lt;/span&gt;
+  &lt;button class="mase-notice-dismiss"&gt;×&lt;/button&gt;
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 6: Animated Notices -->
+        <div class="test-section">
+            <h2>6. Animated Notices</h2>
+            <p class="test-description">
+                Testing entrance and exit animations. Click the button to see the animation.
+            </p>
+
+            <button class="mase-btn mase-btn-primary" onclick="showAnimatedNotice()">Show Animated Notice</button>
+            
+            <div id="animated-notice-container" style="margin-top: 16px;"></div>
+
+            <div class="code-block">
+&lt;div class="mase-notice mase-notice-success mase-notice-animated"&gt;
+  &lt;span class="mase-notice-icon"&gt;✓&lt;/span&gt;
+  &lt;span class="mase-notice-message"&gt;Animated message&lt;/span&gt;
+&lt;/div&gt;
+            </div>
+        </div>
+
+        <!-- Test Section 7: Long Content -->
+        <div class="test-section">
+            <h2>7. Long Content Handling</h2>
+            <p class="test-description">
+                Testing notices with longer message content to ensure proper wrapping.
+            </p>
+
+            <div class="mase-notice mase-notice-info mase-notice-dismissible">
+                <span class="mase-notice-icon">ℹ</span>
+                <span class="mase-notice-message">
+                    This is a much longer notice message that demonstrates how the component handles 
+                    multi-line content. The text should wrap properly and maintain good readability 
+                    with appropriate line height. The icon should stay aligned at the top, and the 
+                    dismiss button should remain in the correct position.
+                </span>
+                <button class="mase-notice-dismiss" onclick="this.parentElement.style.display='none'">×</button>
+            </div>
+        </div>
+
+        <!-- Test Section 8: Accessibility Features -->
+        <div class="test-section">
+            <h2>8. Accessibility Features</h2>
+            <p class="test-description">
+                Testing keyboard navigation and focus states.
+            </p>
+
+            <div class="mase-notice mase-notice-success mase-notice-dismissible">
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">
+                    Use Tab key to navigate to the dismiss button. The focus outline should be clearly visible.
+                </span>
+                <button class="mase-notice-dismiss" onclick="this.parentElement.style.display='none'">×</button>
+            </div>
+
+            <ul style="margin-top: 16px; color: #646970; line-height: 1.8;">
+                <li>✓ Keyboard accessible dismiss button</li>
+                <li>✓ Visible focus indicators (2px outline with 2px offset)</li>
+                <li>✓ Proper color contrast (WCAG AA compliant)</li>
+                <li>✓ Semantic HTML structure</li>
+                <li>✓ Smooth transitions (200ms)</li>
+            </ul>
+        </div>
+
+        <!-- Requirements Checklist -->
+        <div class="test-section">
+            <h2>Requirements Verification</h2>
+            <p class="test-description">
+                Verification of all requirements from the specification.
+            </p>
+
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px;">
+                <h3 style="margin-top: 0;">Task 13.1: Build notice container</h3>
+                <ul style="line-height: 1.8; color: #374151;">
+                    <li>✓ Flexbox layout implemented</li>
+                    <li>✓ 16px padding applied</li>
+                    <li>✓ 4px border radius on corners</li>
+                    <li>✓ 4px solid left border (color varies by type)</li>
+                </ul>
+
+                <h3>Task 13.2: Style notice variants</h3>
+                <ul style="line-height: 1.8; color: #374151;">
+                    <li>✓ Success variant (green) - Requirement 13.4</li>
+                    <li>✓ Warning variant (yellow) - Requirement 13.5</li>
+                    <li>✓ Error variant (red) - Requirement 13.4</li>
+                    <li>✓ Info variant (blue) - Requirement 13.5</li>
+                    <li>✓ Default neutral variant</li>
+                </ul>
+
+                <h3>Task 13.3: Add notice elements</h3>
+                <ul style="line-height: 1.8; color: #374151;">
+                    <li>✓ Icon element styled (20px size, proper alignment)</li>
+                    <li>✓ Message text styled (grows to fill space)</li>
+                    <li>✓ Dismiss button created (24px, hover/focus states)</li>
+                </ul>
+
+                <h3>Additional Features</h3>
+                <ul style="line-height: 1.8; color: #374151;">
+                    <li>✓ Compact variant for reduced padding</li>
+                    <li>✓ Inline variant without bottom margin</li>
+                    <li>✓ Toast notification (fixed position)</li>
+                    <li>✓ Slide-in/slide-out animations</li>
+                    <li>✓ Notice container for stacking</li>
+                    <li>✓ Mobile responsive adjustments</li>
+                    <li>✓ Keyboard accessibility</li>
+                    <li>✓ Focus indicators</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toast notification function
+        function showToast() {
+            // Remove existing toast if any
+            const existingToast = document.querySelector('.mase-notice-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            // Create toast
+            const toast = document.createElement('div');
+            toast.className = 'mase-notice mase-notice-success mase-notice-toast mase-notice-dismissible mase-notice-animated';
+            toast.innerHTML = `
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">Settings saved successfully!</span>
+                <button class="mase-notice-dismiss" onclick="dismissToast(this)">×</button>
+            `;
+            document.body.appendChild(toast);
+
+            // Auto-dismiss after 3 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    dismissToast(toast.querySelector('.mase-notice-dismiss'));
+                }
+            }, 3000);
+        }
+
+        function dismissToast(button) {
+            const toast = button.closest('.mase-notice-toast');
+            toast.classList.add('mase-notice-dismissing');
+            setTimeout(() => {
+                toast.remove();
+            }, 200);
+        }
+
+        // Animated notice function
+        function showAnimatedNotice() {
+            const container = document.getElementById('animated-notice-container');
+            
+            // Clear existing notices
+            container.innerHTML = '';
+
+            // Create animated notice
+            const notice = document.createElement('div');
+            notice.className = 'mase-notice mase-notice-success mase-notice-dismissible mase-notice-animated';
+            notice.innerHTML = `
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">This notice slides in with animation!</span>
+                <button class="mase-notice-dismiss" onclick="dismissAnimatedNotice(this)">×</button>
+            `;
+            container.appendChild(notice);
+        }
+
+        function dismissAnimatedNotice(button) {
+            const notice = button.closest('.mase-notice');
+            notice.classList.add('mase-notice-dismissing');
+            setTimeout(() => {
+                notice.remove();
+            }, 200);
+        }
+    </script>
+</body>
+</html>

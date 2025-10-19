@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Toggle Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #f0f0f1;
+            color: #1d2327;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Dark mode styles */
+        html[data-theme="dark"] body,
+        body.mase-dark-mode {
+            background: #1d2327;
+            color: #f0f0f1;
+        }
+        
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        html[data-theme="dark"] h1 {
+            color: #f0f0f1;
+            border-bottom-color: #4a90d9;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        html[data-theme="dark"] .test-container {
+            background: #2c3338;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+            border: 1px solid #c3c4c7;
+        }
+        
+        html[data-theme="dark"] .test-section {
+            background: #1d2327;
+            border-color: #50575e;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #1d2327;
+            font-size: 20px;
+            border-bottom: 1px solid #dcdcde;
+            padding-bottom: 10px;
+        }
+        
+        html[data-theme="dark"] .test-section h2 {
+            color: #f0f0f1;
+            border-bottom-color: #50575e;
+        }
+        
+        .test-section h3 {
+            color: #2271b1;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        html[data-theme="dark"] .test-section h3 {
+            color: #4a90d9;
+        }
+        
+        .test-instructions {
+            background: #f0f6fc;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .test-instructions {
+            background: #1a2b3c;
+            border-left-color: #4a90d9;
+        }
+        
+        .test-instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .test-instructions li {
+            margin: 5px 0;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .test-result.pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .test-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        
+        html[data-theme="dark"] .test-controls {
+            background: #1d2327;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        button.primary {
+            background: #2271b1;
+            color: white;
+        }
+        
+        button.primary:hover {
+            background: #135e96;
+        }
+        
+        button.secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+        }
+        
+        button.secondary:hover {
+            background: #dcdcde;
+        }
+        
+        html[data-theme="dark"] button.secondary {
+            background: #50575e;
+            color: #f0f0f1;
+        }
+        
+        html[data-theme="dark"] button.secondary:hover {
+            background: #3c434a;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #c3c4c7;
+        }
+        
+        html[data-theme="dark"] .toggle-container {
+            background: #2c3338;
+            border-color: #50575e;
+        }
+        
+        .mase-header-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .mase-header-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .mase-header-toggle .dashicons {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        html[data-theme="dark"] .info-box {
+            background: #1a2b3c;
+            border-left-color: #4a90d9;
+        }
+        
+        code {
+            background: #f0f0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #d63638;
+        }
+        
+        html[data-theme="dark"] code {
+            background: #1d2327;
+            color: #f86368;
+        }
+        
+        .checklist {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .checklist {
+            background: #1d2327;
+        }
+        
+        .checklist-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+        }
+        
+        html[data-theme="dark"] .checklist-item {
+            background: #2c3338;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        #console-log {
+            background: #1d2327;
+            color: #f0f0f1;
+            border: 1px solid #c3c4c7;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+        
+        .log-entry {
+            margin: 3px 0;
+            padding: 3px 5px;
+            border-radius: 2px;
+        }
+        
+        .log-info {
+            color: #72aee6;
+        }
+        
+        .log-error {
+            color: #f86368;
+            background: rgba(248, 99, 104, 0.1);
+        }
+        
+        .log-success {
+            color: #68de7c;
+        }
+        
+        .log-warning {
+            color: #f0b849;
+        }
+        
+        .mase-notice {
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .mase-notice-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .mase-notice-error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .mase-notice-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        .state-display {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #c3c4c7;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .state-display {
+            background: #2c3338;
+            border-color: #50575e;
+        }
+        
+        .state-display p {
+            margin: 8px 0;
+        }
+        
+        .dashicons {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            line-height: 1;
+            font-family: dashicons;
+            text-decoration: inherit;
+            font-weight: normal;
+            font-style: normal;
+            vertical-align: top;
+            text-align: center;
+        }
+        
+        .dashicons-admin-appearance:before {
+            content: "\f100";
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/dashicons.min.css">
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌙 Dark Mode Toggle Test - Task 6</h1>
+        
+        <div class="info-box">
+            <strong>Test Purpose:</strong> Comprehensive testing of dark mode toggle functionality including header toggle, synchronization, localStorage persistence, accessibility, and keyboard navigation.
+            <br><br>
+            <strong>Requirements Tested:</strong> All requirements (1.1-7.5)
+        </div>
+        
+        <!-- Test Section 1: Header Toggle Click Behavior -->
+        <div class="test-section">
+            <h2>Test 1: Header Toggle Click Behavior</h2>
+            <p><strong>Requirements:</strong> 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 3.1</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Click the header dark mode toggle below</li>
+                    <li>Verify dark mode is applied to entire page</li>
+                    <li>Verify data-theme="dark" attribute on HTML element</li>
+                    <li>Verify mase-dark-mode class on body element</li>
+                    <li>Click again to disable and verify removal</li>
+                </ul>
+            </div>
+            
+            <div class="toggle-container">
+                <label class="mase-header-toggle">
+                    <input 
+                        type="checkbox" 
+                        id="mase-dark-mode-toggle"
+                        name="mase_dark_mode" 
+                        value="1"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Toggle dark mode for entire admin"
+                    />
+                    <span class="dashicons dashicons-admin-appearance" aria-hidden="true"></span>
+                    <span>Dark Mode</span>
+                </label>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-1">
+                    <label for="check-1-1">Header toggle is visible and styled correctly</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-2">
+                    <label for="check-1-2">Clicking toggle applies data-theme="dark" to HTML</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-3">
+                    <label for="check-1-3">Clicking toggle adds mase-dark-mode class to body</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-4">
+                    <label for="check-1-4">Dark mode affects entire page (background, text colors)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-5">
+                    <label for="check-1-5">Clicking again removes dark mode attributes/classes</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-6">
+                    <label for="check-1-6">Notification appears when toggling</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Section 2: Synchronization with General Tab Checkbox -->
+        <div class="test-section">
+            <h2>Test 2: Synchronization with General Tab Checkbox</h2>
+            <p><strong>Requirements:</strong> 3.1, 3.2, 3.3, 3.4, 3.5</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Toggle the header dark mode toggle</li>
+                    <li>Verify General tab checkbox updates to match</li>
+                    <li>Toggle the General tab checkbox</li>
+                    <li>Verify header toggle updates to match</li>
+                    <li>Verify both controls always show the same state</li>
+                </ul>
+            </div>
+            
+            <div class="toggle-container">
+                <label>
+                    <input 
+                        type="checkbox" 
+                        id="master-dark-mode"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="General tab dark mode checkbox"
+                    />
+                    <span>General Tab Dark Mode Checkbox</span>
+                </label>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-1">
+                    <label for="check-2-1">Header toggle change updates General tab checkbox</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-2">
+                    <label for="check-2-2">General tab checkbox change updates header toggle</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-3">
+                    <label for="check-2-3">Both controls maintain synchronization without page reload</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-4">
+                    <label for="check-2-4">aria-checked attributes update on both controls</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Section 3: localStorage Persistence -->
+        <div class="test-section">
+            <h2>Test 3: localStorage Persistence Across Page Reloads</h2>
+            <p><strong>Requirements:</strong> 4.1, 4.2, 4.3, 4.5</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Enable dark mode using the toggle</li>
+                    <li>Click "Reload Page" button below</li>
+                    <li>Verify dark mode is restored after reload</li>
+                    <li>Disable dark mode and reload again</li>
+                    <li>Verify light mode is restored</li>
+                    <li>Click "Clear localStorage" and reload</li>
+                    <li>Verify defaults to light mode</li>
+                </ul>
+            </div>
+            
+            <div class="test-controls">
+                <button class="primary" onclick="reloadPage()">Reload Page</button>
+                <button class="secondary" onclick="clearStorage()">Clear localStorage</button>
+                <button class="secondary" onclick="checkStorage()">Check localStorage Value</button>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-1">
+                    <label for="check-3-1">Dark mode preference saved to localStorage</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-2">
+                    <label for="check-3-2">Dark mode restored after page reload</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-3">
+                    <label for="check-3-3">Light mode restored after disabling and reloading</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-4">
+                    <label for="check-3-4">Both toggles set to correct state on page load</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-5">
+                    <label for="check-3-5">Clearing localStorage defaults to light mode</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Section 4: Dark Mode Application to Entire Admin Interface -->
+        <div class="test-section">
+            <h2>Test 4: Dark Mode Application to Entire Admin Interface</h2>
+            <p><strong>Requirements:</strong> 2.1, 2.2, 2.3, 2.4, 2.5, 7.1, 7.2, 7.3, 7.4, 7.5</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Enable dark mode</li>
+                    <li>Verify all sections below have dark styling</li>
+                    <li>Check text contrast and readability</li>
+                    <li>Verify form controls are visible and usable</li>
+                </ul>
+            </div>
+            
+            <h3>Sample Admin Elements</h3>
+            
+            <div class="state-display">
+                <h4>Sample Card/Panel</h4>
+                <p>This card should have dark background and light text in dark mode.</p>
+                <input type="text" placeholder="Sample text input" style="width: 100%; padding: 8px; margin: 10px 0;">
+                <textarea placeholder="Sample textarea" style="width: 100%; padding: 8px; margin: 10px 0;" rows="3"></textarea>
+                <select style="width: 100%; padding: 8px; margin: 10px 0;">
+                    <option>Sample select option 1</option>
+                    <option>Sample select option 2</option>
+                </select>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-1">
+                    <label for="check-4-1">Page background changes to dark color</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-2">
+                    <label for="check-4-2">Text color changes to light color</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-3">
+                    <label for="check-4-3">Cards/panels have dark backgrounds</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-4">
+                    <label for="check-4-4">Form inputs are visible with proper contrast</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-5">
+                    <label for="check-4-5">All text maintains WCAG AA contrast ratios</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-6">
+                    <label for="check-4-6">Smooth visual transition when toggling</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Section 5: Accessibility Attributes -->
+        <div class="test-section">
+            <h2>Test 5: Accessibility Attributes</h2>
+            <p><strong>Requirements:</strong> 6.1, 6.2, 6.3, 6.4, 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Inspect the header toggle element (right-click → Inspect)</li>
+                    <li>Verify role="switch" attribute exists</li>
+                    <li>Verify aria-checked attribute reflects current state</li>
+                    <li>Verify aria-label provides clear description</li>
+                    <li>Toggle dark mode and verify aria-checked updates</li>
+                </ul>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-1">
+                    <label for="check-5-1">Header toggle has role="switch" attribute</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-2">
+                    <label for="check-5-2">Header toggle has aria-checked attribute</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-3">
+                    <label for="check-5-3">Header toggle has descriptive aria-label</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-4">
+                    <label for="check-5-4">aria-checked updates to "true" when enabled</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-5">
+                    <label for="check-5-5">aria-checked updates to "false" when disabled</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-6">
+                    <label for="check-5-6">General tab checkbox also has proper aria attributes</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Section 6: Keyboard Navigation -->
+        <div class="test-section">
+            <h2>Test 6: Keyboard Navigation (Tab, Space)</h2>
+            <p><strong>Requirements:</strong> 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>Test Steps:</strong>
+                <ul>
+                    <li>Press Tab key to navigate to the header toggle</li>
+                    <li>Verify focus indicator is visible</li>
+                    <li>Press Space or Enter key to toggle dark mode</li>
+                    <li>Verify dark mode toggles correctly</li>
+                    <li>Tab to General tab checkbox and repeat</li>
+                </ul>
+            </div>
+            
+            <div class="test-controls">
+                <button class="secondary" onclick="testKeyboardFocus()">Test Focus Indicator</button>
+                <button class="secondary" onclick="simulateKeyboardToggle()">Simulate Space Key Press</button>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-1">
+                    <label for="check-6-1">Tab key navigates to header toggle</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-2">
+                    <label for="check-6-2">Focus indicator is clearly visible</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-3">
+                    <label for="check-6-3">Space key toggles dark mode</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-4">
+                    <label for="check-6-4">Enter key toggles dark mode</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-5">
+                    <label for="check-6-5">Keyboard navigation works for both toggles</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current State Display -->
+        <div class="test-section">
+            <h2>Current State</h2>
+            <div id="current-state" class="state-display"></div>
+        </div>
+        
+        <!-- Test Results Summary -->
+        <div class="test-section">
+            <h2>Test Results Summary</h2>
+            <div class="test-controls">
+                <button class="primary" onclick="runAllTests()">Run All Tests</button>
+                <button class="secondary" onclick="exportResults()">Export Results</button>
+            </div>
+            <div id="test-results"></div>
+        </div>
+        
+        <!-- Console Log -->
+        <div class="test-section">
+            <h2>Console Log</h2>
+            <div class="test-controls">
+                <button class="secondary" onclick="clearConsoleLog()">Clear Log</button>
+            </div>
+            <div id="console-log"></div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+        const logContainer = document.getElementById('console-log');
+        
+        function addLog(type, ...args) {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            logEntry.textContent = `[${timestamp}] [${type.toUpperCase()}] ${args.join(' ')}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog('info', ...args);
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog('warning', ...args);
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog('error', ...args);
+        };
+        
+        // Mock MASE object with dark mode functionality
+        var MASE = {
+            /**
+             * Toggle Dark Mode
+             * Requirements: 2.1, 2.2, 3.1, 3.2, 4.1, 5.1, 6.1
+             */
+            toggleDarkMode: function(e) {
+                var self = MASE;
+                var $checkbox = $(e.target);
+                var isDark = $checkbox.is(':checked');
+                
+                console.log('MASE: Dark Mode toggled:', isDark ? 'ON' : 'OFF');
+                
+                // Apply to entire admin (Requirement 2.1, 2.2)
+                if (isDark) {
+                    $('html').attr('data-theme', 'dark');
+                    $('body').addClass('mase-dark-mode');
+                    console.log('MASE: Dark mode enabled - applied to entire admin');
+                } else {
+                    $('html').removeAttr('data-theme');
+                    $('body').removeClass('mase-dark-mode');
+                    console.log('MASE: Dark mode disabled');
+                }
+                
+                // Update aria-checked for accessibility (Requirement 6.1, 6.4)
+                $checkbox.attr('aria-checked', isDark ? 'true' : 'false');
+                
+                // Sync with General tab checkbox (Requirement 3.1, 3.2)
+                $('#master-dark-mode')
+                    .prop('checked', isDark)
+                    .attr('aria-checked', isDark ? 'true' : 'false');
+                
+                // Save preference to localStorage (Requirement 4.1, 4.2)
+                try {
+                    localStorage.setItem('mase_dark_mode', isDark ? 'true' : 'false');
+                    console.log('MASE: Dark mode preference saved to localStorage');
+                } catch (error) {
+                    console.warn('MASE: Could not save dark mode to localStorage:', error);
+                }
+                
+                // Show notification (Requirement 5.1, 5.2, 5.4)
+                self.showNotice(
+                    'info',
+                    isDark ? 'Dark mode enabled' : 'Dark mode disabled'
+                );
+                
+                // Update state display
+                updateState();
+            },
+            
+            showNotice: function(type, message) {
+                console.log('Showing notice (' + type + '): ' + message);
+                
+                var $notice = $('<div>')
+                    .addClass('mase-notice')
+                    .addClass('mase-notice-' + type)
+                    .text(message);
+                
+                $('.mase-notice').remove();
+                $('body').prepend($notice);
+                
+                setTimeout(function() {
+                    $notice.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }, 3000);
+            },
+            
+            /**
+             * Initialize and restore dark mode preference
+             * Requirements: 4.2, 4.3, 4.5
+             */
+            init: function() {
+                console.log('MASE: Initializing dark mode...');
+                
+                try {
+                    var darkMode = localStorage.getItem('mase_dark_mode') === 'true';
+                    if (darkMode) {
+                        console.log('MASE: Loading saved dark mode preference');
+                        $('html').attr('data-theme', 'dark');
+                        $('body').addClass('mase-dark-mode');
+                        $('#mase-dark-mode-toggle')
+                            .prop('checked', true)
+                            .attr('aria-checked', 'true');
+                        $('#master-dark-mode')
+                            .prop('checked', true)
+                            .attr('aria-checked', 'true');
+                    } else {
+                        console.log('MASE: No dark mode preference found or dark mode disabled');
+                    }
+                } catch (error) {
+                    console.warn('MASE: Could not load dark mode from localStorage:', error);
+                }
+                
+                console.log('MASE: Dark mode initialization complete');
+                updateState();
+            }
+        };
+        
+        // Bind events
+        $(document).ready(function() {
+            console.log('=== Dark Mode Toggle Test Started ===');
+            
+            // Bind header toggle
+            $('#mase-dark-mode-toggle').on('change', MASE.toggleDarkMode.bind(MASE));
+            
+            // Bind General tab checkbox to sync with header
+            $('#master-dark-mode').on('change', function() {
+                var isChecked = $(this).is(':checked');
+                $('#mase-dark-mode-toggle')
+                    .prop('checked', isChecked)
+                    .trigger('change');
+            });
+            
+            // Initialize
+            MASE.init();
+        });
+        
+        // Test utility functions
+        function updateState() {
+            const stateDiv = document.getElementById('current-state');
+            const storageValue = localStorage.getItem('mase_dark_mode');
+            const htmlTheme = $('html').attr('data-theme');
+            const bodyClass = $('body').hasClass('mase-dark-mode');
+            const headerToggle = $('#mase-dark-mode-toggle').is(':checked');
+            const generalToggle = $('#master-dark-mode').is(':checked');
+            const headerAria = $('#mase-dark-mode-toggle').attr('aria-checked');
+            const generalAria = $('#master-dark-mode').attr('aria-checked');
+            
+            stateDiv.innerHTML = `
+                <p><strong>localStorage value:</strong> <code>${storageValue || 'null'}</code></p>
+                <p><strong>HTML data-theme:</strong> <code>${htmlTheme || 'not set'}</code></p>
+                <p><strong>Body has mase-dark-mode class:</strong> <code>${bodyClass}</code></p>
+                <p><strong>Header toggle checked:</strong> <code>${headerToggle}</code></p>
+                <p><strong>General tab toggle checked:</strong> <code>${generalToggle}</code></p>
+                <p><strong>Header aria-checked:</strong> <code>${headerAria}</code></p>
+                <p><strong>General aria-checked:</strong> <code>${generalAria}</code></p>
+            `;
+        }
+        
+        function reloadPage() {
+            console.log('Reloading page...');
+            location.reload();
+        }
+        
+        function clearStorage() {
+            console.log('MASE: Clearing localStorage...');
+            localStorage.removeItem('mase_dark_mode');
+            MASE.showNotice('info', 'localStorage cleared. Reload page to see effect.');
+            updateState();
+        }
+        
+        function checkStorage() {
+            const value = localStorage.getItem('mase_dark_mode');
+            console.log('localStorage mase_dark_mode:', value);
+            alert('localStorage mase_dark_mode: ' + (value || 'null'));
+        }
+        
+        function clearConsoleLog() {
+            logContainer.innerHTML = '';
+            console.log('Console log cleared');
+        }
+        
+        function testKeyboardFocus() {
+            $('#mase-dark-mode-toggle').focus();
+            console.log('Focus set to header toggle. Check if focus indicator is visible.');
+            MASE.showNotice('info', 'Focus set to header toggle. Check if focus indicator is visible.');
+        }
+        
+        function simulateKeyboardToggle() {
+            const toggle = document.getElementById('mase-dark-mode-toggle');
+            toggle.focus();
+            toggle.click();
+            console.log('Simulated keyboard toggle (Space key press)');
+            MASE.showNotice('info', 'Simulated Space key press on header toggle');
+        }
+        
+        function runAllTests() {
+            console.log('=== Running All Tests ===');
+            const resultsDiv = document.getElementById('test-results');
+            const tests = [];
+            
+            const storageValue = localStorage.getItem('mase_dark_mode');
+            const htmlTheme = $('html').attr('data-theme');
+            const bodyClass = $('body').hasClass('mase-dark-mode');
+            const headerToggle = $('#mase-dark-mode-toggle').is(':checked');
+            const generalToggle = $('#master-dark-mode').is(':checked');
+            const headerAria = $('#mase-dark-mode-toggle').attr('aria-checked');
+            const generalAria = $('#master-dark-mode').attr('aria-checked');
+            const headerRole = $('#mase-dark-mode-toggle').attr('role');
+            const headerLabel = $('#mase-dark-mode-toggle').attr('aria-label');
+            
+            // Test 1: Toggle functionality
+            tests.push({
+                name: 'Test 1.1: Header toggle is visible',
+                pass: $('#mase-dark-mode-toggle').length > 0,
+                message: $('#mase-dark-mode-toggle').length > 0 ? 
+                    '✓ Header toggle element exists' : '✗ Header toggle not found'
+            });
+            
+            // Test 2: Synchronization
+            tests.push({
+                name: 'Test 2.1: Toggles are synchronized',
+                pass: headerToggle === generalToggle,
+                message: headerToggle === generalToggle ? 
+                    '✓ Both toggles show same state' : '✗ Toggles not synchronized'
+            });
+            
+            // Test 3: localStorage
+            tests.push({
+                name: 'Test 3.1: localStorage is accessible',
+                pass: storageValue !== undefined,
+                message: storageValue !== undefined ? 
+                    `✓ localStorage value: ${storageValue}` : '✗ localStorage not accessible'
+            });
+            
+            if (storageValue === 'true') {
+                tests.push({
+                    name: 'Test 3.2: Dark mode applied when preference is true',
+                    pass: htmlTheme === 'dark' && bodyClass,
+                    message: htmlTheme === 'dark' && bodyClass ? 
+                        '✓ Dark mode applied correctly' : '✗ Dark mode not properly applied'
+                });
+            }
+            
+            // Test 4: Dark mode application
+            tests.push({
+                name: 'Test 4.1: data-theme attribute matches state',
+                pass: (headerToggle && htmlTheme === 'dark') || (!headerToggle && !htmlTheme),
+                message: (headerToggle && htmlTheme === 'dark') || (!headerToggle && !htmlTheme) ? 
+                    '✓ data-theme attribute correct' : '✗ data-theme attribute incorrect'
+            });
+            
+            tests.push({
+                name: 'Test 4.2: mase-dark-mode class matches state',
+                pass: (headerToggle && bodyClass) || (!headerToggle && !bodyClass),
+                message: (headerToggle && bodyClass) || (!headerToggle && !bodyClass) ? 
+                    '✓ mase-dark-mode class correct' : '✗ mase-dark-mode class incorrect'
+            });
+            
+            // Test 5: Accessibility
+            tests.push({
+                name: 'Test 5.1: Header toggle has role="switch"',
+                pass: headerRole === 'switch',
+                message: headerRole === 'switch' ? 
+                    '✓ role="switch" attribute present' : '✗ role="switch" missing'
+            });
+            
+            tests.push({
+                name: 'Test 5.2: Header toggle has aria-checked',
+                pass: headerAria === (headerToggle ? 'true' : 'false'),
+                message: headerAria === (headerToggle ? 'true' : 'false') ? 
+                    '✓ aria-checked correct' : '✗ aria-checked incorrect'
+            });
+            
+            tests.push({
+                name: 'Test 5.3: Header toggle has aria-label',
+                pass: headerLabel && headerLabel.length > 0,
+                message: headerLabel && headerLabel.length > 0 ? 
+                    `✓ aria-label: "${headerLabel}"` : '✗ aria-label missing'
+            });
+            
+            tests.push({
+                name: 'Test 5.4: General tab checkbox has aria-checked',
+                pass: generalAria === (generalToggle ? 'true' : 'false'),
+                message: generalAria === (generalToggle ? 'true' : 'false') ? 
+                    '✓ General tab aria-checked correct' : '✗ General tab aria-checked incorrect'
+            });
+            
+            // Render results
+            resultsDiv.innerHTML = '<h3>Automated Test Results</h3>' + tests.map(test => `
+                <div class="test-result ${test.pass ? 'pass' : 'fail'}">
+                    <strong>${test.name}</strong><br>
+                    ${test.message}
+                </div>
+            `).join('');
+            
+            console.log('=== Test Results ===');
+            tests.forEach(test => {
+                console.log(`${test.pass ? '✓' : '✗'} ${test.name}: ${test.message}`);
+            });
+        }
+        
+        function exportResults() {
+            const results = {
+                timestamp: new Date().toISOString(),
+                testSuite: 'Task 6: Dark Mode Toggle Test',
+                tests: {
+                    test1: {
+                        name: 'Header Toggle Click Behavior',
+                        checks: [
+                            { id: 'check-1-1', checked: $('#check-1-1').is(':checked') },
+                            { id: 'check-1-2', checked: $('#check-1-2').is(':checked') },
+                            { id: 'check-1-3', checked: $('#check-1-3').is(':checked') },
+                            { id: 'check-1-4', checked: $('#check-1-4').is(':checked') },
+                            { id: 'check-1-5', checked: $('#check-1-5').is(':checked') },
+                            { id: 'check-1-6', checked: $('#check-1-6').is(':checked') }
+                        ]
+                    },
+                    test2: {
+                        name: 'Synchronization with General Tab',
+                        checks: [
+                            { id: 'check-2-1', checked: $('#check-2-1').is(':checked') },
+                            { id: 'check-2-2', checked: $('#check-2-2').is(':checked') },
+                            { id: 'check-2-3', checked: $('#check-2-3').is(':checked') },
+                            { id: 'check-2-4', checked: $('#check-2-4').is(':checked') }
+                        ]
+                    },
+                    test3: {
+                        name: 'localStorage Persistence',
+                        checks: [
+                            { id: 'check-3-1', checked: $('#check-3-1').is(':checked') },
+                            { id: 'check-3-2', checked: $('#check-3-2').is(':checked') },
+                            { id: 'check-3-3', checked: $('#check-3-3').is(':checked') },
+                            { id: 'check-3-4', checked: $('#check-3-4').is(':checked') },
+                            { id: 'check-3-5', checked: $('#check-3-5').is(':checked') }
+                        ]
+                    },
+                    test4: {
+                        name: 'Dark Mode Application',
+                        checks: [
+                            { id: 'check-4-1', checked: $('#check-4-1').is(':checked') },
+                            { id: 'check-4-2', checked: $('#check-4-2').is(':checked') },
+                            { id: 'check-4-3', checked: $('#check-4-3').is(':checked') },
+                            { id: 'check-4-4', checked: $('#check-4-4').is(':checked') },
+                            { id: 'check-4-5', checked: $('#check-4-5').is(':checked') },
+                            { id: 'check-4-6', checked: $('#check-4-6').is(':checked') }
+                        ]
+                    },
+                    test5: {
+                        name: 'Accessibility Attributes',
+                        checks: [
+                            { id: 'check-5-1', checked: $('#check-5-1').is(':checked') },
+                            { id: 'check-5-2', checked: $('#check-5-2').is(':checked') },
+                            { id: 'check-5-3', checked: $('#check-5-3').is(':checked') },
+                            { id: 'check-5-4', checked: $('#check-5-4').is(':checked') },
+                            { id: 'check-5-5', checked: $('#check-5-5').is(':checked') },
+                            { id: 'check-5-6', checked: $('#check-5-6').is(':checked') }
+                        ]
+                    },
+                    test6: {
+                        name: 'Keyboard Navigation',
+                        checks: [
+                            { id: 'check-6-1', checked: $('#check-6-1').is(':checked') },
+                            { id: 'check-6-2', checked: $('#check-6-2').is(':checked') },
+                            { id: 'check-6-3', checked: $('#check-6-3').is(':checked') },
+                            { id: 'check-6-4', checked: $('#check-6-4').is(':checked') },
+                            { id: 'check-6-5', checked: $('#check-6-5').is(':checked') }
+                        ]
+                    }
+                },
+                currentState: {
+                    localStorage: localStorage.getItem('mase_dark_mode'),
+                    htmlTheme: $('html').attr('data-theme'),
+                    bodyClass: $('body').hasClass('mase-dark-mode'),
+                    headerToggle: $('#mase-dark-mode-toggle').is(':checked'),
+                    generalToggle: $('#master-dark-mode').is(':checked')
+                }
+            };
+            
+            const json = JSON.stringify(results, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dark-mode-toggle-test-results.json';
+            a.click();
+            
+            console.log('Test results exported');
+            MASE.showNotice('success', 'Test results exported successfully');
+        }
+    </script>
+</body>
+</html>

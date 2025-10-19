@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Dark Mode Visual Quality Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        /* WordPress Admin Simulation Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        }
+
+        /* Simulate WordPress admin bar */
+        #wpadminbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: #23282d;
+            color: #eee;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 13px;
+        }
+
+        /* Simulate WordPress admin menu */
+        #adminmenuwrap {
+            position: fixed;
+            top: 32px;
+            left: 0;
+            bottom: 0;
+            width: 160px;
+            background: #23282d;
+            z-index: 9990;
+        }
+
+        #adminmenu {
+            background: #23282d;
+            color: #eee;
+            padding: 0;
+            margin: 0;
+        }
+
+        #adminmenu li {
+            list-style: none;
+            padding: 10px 15px;
+            border-bottom: 1px solid #32373c;
+            cursor: pointer;
+        }
+
+        #adminmenu li:hover {
+            background: #32373c;
+        }
+
+        /* Simulate WordPress content wrapper */
+        #wpwrap {
+            min-height: 100vh;
+            background: #f0f0f1;
+        }
+
+        #wpcontent {
+            margin-left: 160px;
+            padding-top: 32px;
+        }
+
+        #wpbody {
+            padding: 20px;
+        }
+
+        #wpbody-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Test sections */
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .test-section h2 {
+            margin-top: 0;
+            color: #23282d;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #0073aa;
+        }
+
+        .test-item h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #23282d;
+        }
+
+        .test-item p {
+            margin: 5px 0;
+            font-size: 13px;
+            color: #646970;
+        }
+
+        /* Form controls for testing */
+        .form-control {
+            margin: 10px 0;
+        }
+
+        .form-control label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #23282d;
+        }
+
+        .form-control input[type="text"],
+        .form-control input[type="email"],
+        .form-control input[type="number"],
+        .form-control textarea,
+        .form-control select {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px 12px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            color: #2c3338;
+        }
+
+        .form-control input:focus,
+        .form-control textarea:focus,
+        .form-control select:focus {
+            border-color: #0073aa;
+            outline: none;
+            box-shadow: 0 0 0 1px #0073aa;
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            background: #0073aa;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background: #005a87;
+        }
+
+        .button-secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+            border: 1px solid #8c8f94;
+        }
+
+        .button-secondary:hover {
+            background: #e5e5e5;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border: 1px solid #c3c4c7;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #c3c4c7;
+        }
+
+        table th {
+            background: #f6f7f7;
+            font-weight: 600;
+            color: #23282d;
+        }
+
+        /* Control panel */
+        .control-panel {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background: #fff;
+            border: 2px solid #0073aa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100000;
+            min-width: 300px;
+        }
+
+        .control-panel h3 {
+            margin: 0 0 15px 0;
+            color: #0073aa;
+            font-size: 16px;
+        }
+
+        .toggle-button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #0073aa;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .toggle-button:hover {
+            background: #005a87;
+        }
+
+        .status-indicator {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-light {
+            background: #e7f7ed;
+            color: #00a32a;
+            border: 1px solid #00a32a;
+        }
+
+        .status-dark {
+            background: #1a3a24;
+            color: #46d369;
+            border: 1px solid #46d369;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .checklist li:before {
+            content: "☐ ";
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .checklist li.checked:before {
+            content: "☑ ";
+            color: #00a32a;
+        }
+
+        /* Contrast checker */
+        .contrast-sample {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .contrast-sample strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- WordPress Admin Bar Simulation -->
+    <div id="wpadminbar">
+        <span>WordPress Admin Bar</span>
+    </div>
+
+    <!-- WordPress Admin Menu Simulation -->
+    <div id="adminmenuwrap">
+        <ul id="adminmenu">
+            <li>Dashboard</li>
+            <li>Posts</li>
+            <li>Media</li>
+            <li>Pages</li>
+            <li>Comments</li>
+            <li>Appearance</li>
+            <li>Plugins</li>
+            <li>Users</li>
+            <li>Tools</li>
+            <li>Settings</li>
+        </ul>
+    </div>
+
+    <!-- WordPress Content Wrapper -->
+    <div id="wpwrap">
+        <div id="wpcontent">
+            <div id="wpbody">
+                <div id="wpbody-content">
+                    <!-- Control Panel -->
+                    <div class="control-panel">
+                        <h3>🎨 Dark Mode Test Controls</h3>
+                        
+                        <button class="toggle-button" onclick="toggleDarkMode()">
+                            Toggle Dark Mode
+                        </button>
+                        
+                        <div id="status-indicator" class="status-indicator status-light">
+                            Current Mode: LIGHT
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 14px;">Visual Checklist:</h4>
+                            <ul class="checklist" id="checklist">
+                                <li data-check="admin-bar">Admin bar colors</li>
+                                <li data-check="admin-menu">Admin menu colors</li>
+                                <li data-check="content-area">Content area colors</li>
+                                <li data-check="form-controls">Form controls visible</li>
+                                <li data-check="buttons">Buttons visible</li>
+                                <li data-check="cards">Cards styled correctly</li>
+                                <li data-check="tables">Tables readable</li>
+                                <li data-check="contrast">Text contrast good</li>
+                                <li data-check="no-glitches">No visual glitches</li>
+                                <li data-check="smooth-transition">Smooth transition</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h1>MASE Dark Mode Visual Quality Test</h1>
+                    <p>This page tests the visual quality of dark mode across all WordPress admin areas.</p>
+
+                    <!-- Test Section 1: Admin Bar & Menu -->
+                    <div class="test-section">
+                        <h2>1. Admin Bar & Menu Colors</h2>
+                        <div class="test-item">
+                            <h3>Admin Bar (#wpadminbar)</h3>
+                            <p><strong>Expected:</strong> Should have dark background with light text in dark mode</p>
+                            <p><strong>Check:</strong> Look at the top bar - is it styled correctly?</p>
+                        </div>
+                        <div class="test-item">
+                            <h3>Admin Menu (#adminmenu)</h3>
+                            <p><strong>Expected:</strong> Should have dark background with light text in dark mode</p>
+                            <p><strong>Check:</strong> Look at the left sidebar menu - is it styled correctly?</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 2: Content Area -->
+                    <div class="test-section">
+                        <h2>2. Content Area Colors</h2>
+                        <div class="test-item">
+                            <h3>Background Colors</h3>
+                            <p><strong>Expected:</strong> Dark background (#1a1a1a) with dark surface (#2d2d2d)</p>
+                            <p><strong>Check:</strong> Is the page background dark? Are cards darker than background?</p>
+                        </div>
+                        <div class="test-item">
+                            <h3>Text Colors</h3>
+                            <p><strong>Expected:</strong> Light text (#e0e0e0) with good contrast</p>
+                            <p><strong>Check:</strong> Is all text readable? Does it have sufficient contrast?</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 3: Form Controls -->
+                    <div class="test-section">
+                        <h2>3. Form Controls</h2>
+                        <div class="form-control">
+                            <label for="test-input">Text Input</label>
+                            <input type="text" id="test-input" placeholder="Enter text here">
+                        </div>
+                        <div class="form-control">
+                            <label for="test-email">Email Input</label>
+                            <input type="email" id="test-email" placeholder="email@example.com">
+                        </div>
+                        <div class="form-control">
+                            <label for="test-number">Number Input</label>
+                            <input type="number" id="test-number" placeholder="123">
+                        </div>
+                        <div class="form-control">
+                            <label for="test-select">Select Dropdown</label>
+                            <select id="test-select">
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                        <div class="form-control">
+                            <label for="test-textarea">Textarea</label>
+                            <textarea id="test-textarea" rows="4" placeholder="Enter multiple lines of text"></textarea>
+                        </div>
+                        <div class="test-item">
+                            <h3>Form Control Checklist</h3>
+                            <p>☐ Inputs have dark background</p>
+                            <p>☐ Input text is light colored and readable</p>
+                            <p>☐ Placeholder text is visible</p>
+                            <p>☐ Borders are visible</p>
+                            <p>☐ Focus states work correctly</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 4: Buttons -->
+                    <div class="test-section">
+                        <h2>4. Buttons</h2>
+                        <div>
+                            <button class="button">Primary Button</button>
+                            <button class="button-secondary">Secondary Button</button>
+                            <button class="button" disabled>Disabled Button</button>
+                        </div>
+                        <div class="test-item">
+                            <h3>Button Checklist</h3>
+                            <p>☐ Primary buttons visible with good contrast</p>
+                            <p>☐ Secondary buttons visible</p>
+                            <p>☐ Hover states work</p>
+                            <p>☐ Disabled state is clear</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 5: Cards -->
+                    <div class="test-section">
+                        <h2>5. Cards & Panels</h2>
+                        <div class="card">
+                            <h3>Sample Card</h3>
+                            <p>This is a card component. It should have a dark background in dark mode with light text.</p>
+                            <p>Check that borders are visible and the card stands out from the background.</p>
+                        </div>
+                        <div class="card">
+                            <h3>Another Card</h3>
+                            <p>Multiple cards should have consistent styling.</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 6: Tables -->
+                    <div class="test-section">
+                        <h2>6. Tables</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Column 1</th>
+                                    <th>Column 2</th>
+                                    <th>Column 3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Data 1</td>
+                                    <td>Data 2</td>
+                                    <td>Data 3</td>
+                                </tr>
+                                <tr>
+                                    <td>Data 4</td>
+                                    <td>Data 5</td>
+                                    <td>Data 6</td>
+                                </tr>
+                                <tr>
+                                    <td>Data 7</td>
+                                    <td>Data 8</td>
+                                    <td>Data 9</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="test-item">
+                            <h3>Table Checklist</h3>
+                            <p>☐ Table headers visible</p>
+                            <p>☐ Table data readable</p>
+                            <p>☐ Borders visible</p>
+                            <p>☐ Row hover states work</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 7: Contrast Samples -->
+                    <div class="test-section">
+                        <h2>7. WCAG AA Contrast Verification</h2>
+                        <div class="contrast-sample" style="background: var(--mase-background); color: var(--mase-text);">
+                            <strong>Background + Primary Text</strong>
+                            The quick brown fox jumps over the lazy dog. This text should have at least 4.5:1 contrast ratio.
+                        </div>
+                        <div class="contrast-sample" style="background: var(--mase-surface); color: var(--mase-text);">
+                            <strong>Surface + Primary Text</strong>
+                            The quick brown fox jumps over the lazy dog. This text should have at least 4.5:1 contrast ratio.
+                        </div>
+                        <div class="contrast-sample" style="background: var(--mase-surface); color: var(--mase-text-secondary);">
+                            <strong>Surface + Secondary Text</strong>
+                            The quick brown fox jumps over the lazy dog. This text should have at least 4.5:1 contrast ratio.
+                        </div>
+                        <div class="contrast-sample" style="background: var(--mase-primary); color: white;">
+                            <strong>Primary Color + White Text</strong>
+                            The quick brown fox jumps over the lazy dog. This text should have at least 4.5:1 contrast ratio.
+                        </div>
+                    </div>
+
+                    <!-- Test Section 8: Visual Glitches -->
+                    <div class="test-section">
+                        <h2>8. Visual Glitch Check</h2>
+                        <div class="test-item">
+                            <h3>Common Issues to Look For:</h3>
+                            <p>☐ No white flashes when toggling</p>
+                            <p>☐ No color bleeding between elements</p>
+                            <p>☐ No invisible text (white on white or black on black)</p>
+                            <p>☐ No broken borders or outlines</p>
+                            <p>☐ No misaligned elements</p>
+                            <p>☐ Shadows are appropriate for dark mode</p>
+                            <p>☐ Icons are visible</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 9: Transition Quality -->
+                    <div class="test-section">
+                        <h2>9. Transition Smoothness</h2>
+                        <div class="test-item">
+                            <h3>Toggle dark mode multiple times and check:</h3>
+                            <p>☐ Transition is smooth (not jarring)</p>
+                            <p>☐ All elements transition together</p>
+                            <p>☐ No flickering or flashing</p>
+                            <p>☐ Transition completes in reasonable time (&lt;300ms)</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Section 10: High Contrast Mode -->
+                    <div class="test-section">
+                        <h2>10. High Contrast Mode Compatibility</h2>
+                        <div class="test-item">
+                            <h3>Instructions:</h3>
+                            <p>1. Enable your OS high contrast mode:</p>
+                            <p>&nbsp;&nbsp;&nbsp;• Windows: Settings → Ease of Access → High Contrast</p>
+                            <p>&nbsp;&nbsp;&nbsp;• macOS: System Preferences → Accessibility → Display → Increase Contrast</p>
+                            <p>2. Toggle dark mode on and off</p>
+                            <p>3. Verify all elements remain visible and usable</p>
+                            <h3>Checklist:</h3>
+                            <p>☐ All text remains readable</p>
+                            <p>☐ Borders and outlines are visible</p>
+                            <p>☐ Interactive elements are distinguishable</p>
+                            <p>☐ Focus indicators are clear</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle function
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const body = document.body;
+            const statusIndicator = document.getElementById('status-indicator');
+            
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                // Switch to light mode
+                html.removeAttribute('data-theme');
+                body.classList.remove('mase-dark-mode');
+                statusIndicator.textContent = 'Current Mode: LIGHT';
+                statusIndicator.className = 'status-indicator status-light';
+            } else {
+                // Switch to dark mode
+                html.setAttribute('data-theme', 'dark');
+                body.classList.add('mase-dark-mode');
+                statusIndicator.textContent = 'Current Mode: DARK';
+                statusIndicator.className = 'status-indicator status-dark';
+            }
+            
+            console.log('Dark mode toggled:', !isDark ? 'ON' : 'OFF');
+        }
+
+        // Checklist item click handler
+        document.querySelectorAll('.checklist li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('checked');
+            });
+        });
+
+        // Log current CSS variable values
+        function logCSSVariables() {
+            const root = document.documentElement;
+            const computedStyle = getComputedStyle(root);
+            
+            console.group('Current CSS Variables');
+            console.log('Background:', computedStyle.getPropertyValue('--mase-background'));
+            console.log('Surface:', computedStyle.getPropertyValue('--mase-surface'));
+            console.log('Text:', computedStyle.getPropertyValue('--mase-text'));
+            console.log('Text Secondary:', computedStyle.getPropertyValue('--mase-text-secondary'));
+            console.log('Primary:', computedStyle.getPropertyValue('--mase-primary'));
+            console.groupEnd();
+        }
+
+        // Log on page load
+        logCSSVariables();
+
+        // Log after toggle
+        const originalToggle = toggleDarkMode;
+        toggleDarkMode = function() {
+            originalToggle();
+            setTimeout(logCSSVariables, 100);
+        };
+    </script>
+</body>
+</html>

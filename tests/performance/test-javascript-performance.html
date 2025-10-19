@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Performance Test - MASE v1.2.0</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4A90E2;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #4A90E2;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #4A90E2;
+        }
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .metric:last-child {
+            border-bottom: none;
+        }
+        .metric-label {
+            font-weight: 600;
+        }
+        .metric-value {
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #progress {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            display: none;
+        }
+        .summary {
+            background: #fff;
+            padding: 20px;
+            border: 2px solid #4A90E2;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .summary h2 {
+            margin-top: 0;
+            color: #4A90E2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 JavaScript Performance Test</h1>
+        <p>Tests JavaScript execution performance against targets from Requirements 4.3 and 17.3</p>
+        
+        <div>
+            <button onclick="runAllTests()">Run All Tests</button>
+            <button onclick="runIndividualTest('dom')">Test DOM Operations</button>
+            <button onclick="runIndividualTest('css')">Test CSS Generation</button>
+            <button onclick="runIndividualTest('events')">Test Event Handling</button>
+            <button onclick="runIndividualTest('ajax')">Test AJAX Simulation</button>
+            <button onclick="exportResults()">Export Results</button>
+        </div>
+        
+        <div id="progress"></div>
+        
+        <div id="results"></div>
+        
+        <div id="summary" class="summary" style="display: none;">
+            <h2>📊 Summary</h2>
+            <div id="summary-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const performanceResults = {
+            timestamp: new Date().toISOString(),
+            tests: {},
+            overall: {}
+        };
+
+        const targets = {
+            pageLoad: 450, // ms
+            domOperation: 50, // ms
+            cssGeneration: 100, // ms
+            eventHandling: 16, // ms (60fps)
+            ajaxSimulation: 200 // ms
+        };
+
+        function showProgress(message) {
+            const progress = document.getElementById('progress');
+            progress.style.display = 'block';
+            progress.innerHTML = `<strong>⏳ ${message}</strong>`;
+        }
+
+        function hideProgress() {
+            document.getElementById('progress').style.display = 'none';
+        }
+
+        function displayResult(testName, result) {
+            const resultsDiv = document.getElementById('results');
+            
+            const section = document.createElement('div');
+            section.className = 'test-section';
+            section.innerHTML = `
+                <h2>${testName}</h2>
+                <div class="result ${result.status}">
+                    <div class="metric">
+                        <span class="metric-label">Average Time:</span>
+                        <span class="metric-value">${result.avg.toFixed(2)}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Min Time:</span>
+                        <span class="metric-value">${result.min.toFixed(2)}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Max Time:</span>
+                        <span class="metric-value">${result.max.toFixed(2)}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Median:</span>
+                        <span class="metric-value">${result.median.toFixed(2)}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Target:</span>
+                        <span class="metric-value">&lt;${result.target}ms</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Status:</span>
+                        <span class="metric-value">${result.status === 'pass' ? '✅ PASS' : result.status === 'warning' ? '⚠️ WARNING' : '❌ FAIL'}</span>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.appendChild(section);
+        }
+
+        function getStatus(time, target) {
+            if (time < target) return 'pass';
+            if (time < target * 1.1) return 'warning';
+            return 'fail';
+        }
+
+        function calculateStats(times, target) {
+            const sorted = times.slice().sort((a, b) => a - b);
+            const avg = times.reduce((a, b) => a + b, 0) / times.length;
+            const median = sorted[Math.floor(sorted.length / 2)];
+            
+            return {
+                avg,
+                min: Math.min(...times),
+                max: Math.max(...times),
+                median,
+                target,
+                status: getStatus(avg, target)
+            };
+        }
+
+        async function testDOMOperations() {
+            showProgress('Testing DOM Operations...');
+            
+            const iterations = 100;
+            const times = [];
+            
+            for (let i = 0; i < iterations; i++) {
+                const start = performance.now();
+                
+                // Simulate typical DOM operations
+                const container = document.createElement('div');
+                container.className = 'mase-settings-container';
+                
+                for (let j = 0; j < 10; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'mase-input';
+                    input.value = `test-${j}`;
+                    container.appendChild(input);
+                }
+                
+                document.body.appendChild(container);
+                
+                // Query and modify
+                const inputs = container.querySelectorAll('.mase-input');
+                inputs.forEach(input => {
+                    input.value = input.value.toUpperCase();
+                });
+                
+                // Remove
+                document.body.removeChild(container);
+                
+                const end = performance.now();
+                times.push(end - start);
+            }
+            
+            const result = calculateStats(times, targets.domOperation);
+            performanceResults.tests.domOperations = result;
+            displayResult('DOM Operations', result);
+            
+            hideProgress();
+        }
+
+        async function testCSSGeneration() {
+            showProgress('Testing CSS Generation...');
+            
+            const iterations = 50;
+            const times = [];
+            
+            const settings = {
+                adminBar: {
+                    backgroundColor: '#4A90E2',
+                    textColor: '#FFFFFF',
+                    hoverColor: '#357ABD'
+                },
+                adminMenu: {
+                    backgroundColor: '#2C3E50',
+                    textColor: '#ECF0F1'
+                },
+                visualEffects: {
+                    glassmorphism: true,
+                    blurIntensity: 20,
+                    floating: true
+                }
+            };
+            
+            for (let i = 0; i < iterations; i++) {
+                const start = performance.now();
+                
+                // Simulate CSS generation
+                let css = ':root {\n';
+                css += `  --mase-primary: ${settings.adminBar.backgroundColor};\n`;
+                css += `  --mase-text: ${settings.adminBar.textColor};\n`;
+                css += `  --mase-hover: ${settings.adminBar.hoverColor};\n`;
+                css += `  --mase-menu-bg: ${settings.adminMenu.backgroundColor};\n`;
+                css += `  --mase-menu-text: ${settings.adminMenu.textColor};\n`;
+                css += '}\n\n';
+                
+                css += 'body.wp-admin #wpadminbar {\n';
+                css += '  background: var(--mase-primary);\n';
+                css += '  color: var(--mase-text);\n';
+                
+                if (settings.visualEffects.glassmorphism) {
+                    css += `  backdrop-filter: blur(${settings.visualEffects.blurIntensity}px);\n`;
+                    css += '  background: rgba(255, 255, 255, 0.1);\n';
+                }
+                
+                if (settings.visualEffects.floating) {
+                    css += '  margin-top: 8px;\n';
+                    css += '  border-radius: 12px;\n';
+                }
+                
+                css += '}\n\n';
+                
+                css += 'body.wp-admin #adminmenu {\n';
+                css += '  background: var(--mase-menu-bg);\n';
+                css += '  color: var(--mase-menu-text);\n';
+                css += '}\n';
+                
+                const end = performance.now();
+                times.push(end - start);
+            }
+            
+            const result = calculateStats(times, targets.cssGeneration);
+            performanceResults.tests.cssGeneration = result;
+            displayResult('CSS Generation (JavaScript)', result);
+            
+            hideProgress();
+        }
+
+        async function testEventHandling() {
+            showProgress('Testing Event Handling...');
+            
+            const iterations = 100;
+            const times = [];
+            
+            // Create test elements
+            const container = document.createElement('div');
+            for (let i = 0; i < 20; i++) {
+                const button = document.createElement('button');
+                button.className = 'test-button';
+                button.textContent = `Button ${i}`;
+                container.appendChild(button);
+            }
+            document.body.appendChild(container);
+            
+            for (let i = 0; i < iterations; i++) {
+                const start = performance.now();
+                
+                // Simulate event handling
+                const buttons = container.querySelectorAll('.test-button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', function handler(e) {
+                        e.preventDefault();
+                        const value = this.textContent;
+                        this.textContent = value.toUpperCase();
+                        this.removeEventListener('click', handler);
+                    });
+                });
+                
+                // Trigger events
+                buttons.forEach(button => {
+                    button.click();
+                });
+                
+                const end = performance.now();
+                times.push(end - start);
+            }
+            
+            document.body.removeChild(container);
+            
+            const result = calculateStats(times, targets.eventHandling);
+            performanceResults.tests.eventHandling = result;
+            displayResult('Event Handling', result);
+            
+            hideProgress();
+        }
+
+        async function testAJAXSimulation() {
+            showProgress('Testing AJAX Simulation...');
+            
+            const iterations = 20;
+            const times = [];
+            
+            for (let i = 0; i < iterations; i++) {
+                const start = performance.now();
+                
+                // Simulate AJAX request processing
+                const data = {
+                    action: 'mase_save_settings',
+                    nonce: 'test-nonce',
+                    settings: {
+                        adminBar: { backgroundColor: '#4A90E2' },
+                        adminMenu: { backgroundColor: '#2C3E50' }
+                    }
+                };
+                
+                // Simulate serialization
+                const serialized = JSON.stringify(data);
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 50));
+                
+                // Simulate response processing
+                const response = JSON.parse(serialized);
+                
+                const end = performance.now();
+                times.push(end - start);
+            }
+            
+            const result = calculateStats(times, targets.ajaxSimulation);
+            performanceResults.tests.ajaxSimulation = result;
+            displayResult('AJAX Simulation', result);
+            
+            hideProgress();
+        }
+
+        async function runAllTests() {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+            
+            await testDOMOperations();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testCSSGeneration();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testEventHandling();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAJAXSimulation();
+            
+            displaySummary();
+        }
+
+        async function runIndividualTest(testName) {
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+            
+            switch(testName) {
+                case 'dom':
+                    await testDOMOperations();
+                    break;
+                case 'css':
+                    await testCSSGeneration();
+                    break;
+                case 'events':
+                    await testEventHandling();
+                    break;
+                case 'ajax':
+                    await testAJAXSimulation();
+                    break;
+            }
+            
+            displaySummary();
+        }
+
+        function displaySummary() {
+            const summaryDiv = document.getElementById('summary');
+            const summaryContent = document.getElementById('summary-content');
+            
+            const allPassed = Object.values(performanceResults.tests).every(test => test.status === 'pass');
+            const anyWarning = Object.values(performanceResults.tests).some(test => test.status === 'warning');
+            
+            let overallStatus = allPassed ? 'pass' : anyWarning ? 'warning' : 'fail';
+            
+            performanceResults.overall = {
+                status: overallStatus,
+                totalTests: Object.keys(performanceResults.tests).length,
+                passed: Object.values(performanceResults.tests).filter(t => t.status === 'pass').length,
+                warnings: Object.values(performanceResults.tests).filter(t => t.status === 'warning').length,
+                failed: Object.values(performanceResults.tests).filter(t => t.status === 'fail').length
+            };
+            
+            summaryContent.innerHTML = `
+                <div class="result ${overallStatus}">
+                    <div class="metric">
+                        <span class="metric-label">Overall Status:</span>
+                        <span class="metric-value">${overallStatus === 'pass' ? '✅ ALL TESTS PASSED' : overallStatus === 'warning' ? '⚠️ SOME WARNINGS' : '❌ SOME TESTS FAILED'}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Total Tests:</span>
+                        <span class="metric-value">${performanceResults.overall.totalTests}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Passed:</span>
+                        <span class="metric-value">${performanceResults.overall.passed}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Warnings:</span>
+                        <span class="metric-value">${performanceResults.overall.warnings}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Failed:</span>
+                        <span class="metric-value">${performanceResults.overall.failed}</span>
+                    </div>
+                </div>
+            `;
+            
+            summaryDiv.style.display = 'block';
+        }
+
+        function exportResults() {
+            const dataStr = JSON.stringify(performanceResults, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `javascript-performance-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Display instructions on load
+        window.addEventListener('load', () => {
+            console.log('JavaScript Performance Test Ready');
+            console.log('Click "Run All Tests" to begin');
+        });
+    </script>
+</body>
+</html>

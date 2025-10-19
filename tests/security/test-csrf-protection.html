@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE CSRF Protection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-case {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .test-case h3 {
+            margin-top: 0;
+        }
+        code {
+            background: #fff;
+            padding: 2px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MASE CSRF Protection Test Suite</h1>
+    <p><strong>Purpose:</strong> Test for Cross-Site Request Forgery (CSRF) vulnerabilities</p>
+    <p><strong>Requirement:</strong> 14.5 - Test for CSRF vulnerabilities</p>
+
+    <div class="warning">
+        <strong>⚠️ Warning:</strong> These tests should only be run in a development environment.
+        Do not run CSRF tests on production sites.
+    </div>
+
+    <div class="test-case">
+        <h3>Test 1: AJAX Request Without Nonce</h3>
+        <p><strong>Endpoint:</strong> <code>wp-admin/admin-ajax.php?action=mase_save_settings</code></p>
+        <p><strong>Method:</strong> POST</p>
+        <p><strong>Expected Result:</strong> Request should be rejected with 403 error</p>
+        <button onclick="testWithoutNonce()">Run Test</button>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 2: AJAX Request With Invalid Nonce</h3>
+        <p><strong>Endpoint:</strong> <code>wp-admin/admin-ajax.php?action=mase_save_settings</code></p>
+        <p><strong>Method:</strong> POST with invalid nonce</p>
+        <p><strong>Expected Result:</strong> Request should be rejected with 403 error</p>
+        <button onclick="testWithInvalidNonce()">Run Test</button>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 3: AJAX Request With Expired Nonce</h3>
+        <p><strong>Endpoint:</strong> <code>wp-admin/admin-ajax.php?action=mase_save_settings</code></p>
+        <p><strong>Method:</strong> POST with expired nonce</p>
+        <p><strong>Expected Result:</strong> Request should be rejected</p>
+        <p><em>Note: Nonces expire after 24 hours by default</em></p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 4: Cross-Origin Request</h3>
+        <p><strong>Scenario:</strong> Attacker site tries to make request to your WordPress site</p>
+        <p><strong>Expected Result:</strong> Request should be blocked by CORS policy or nonce verification</p>
+        <p><em>Note: This requires setting up a separate test domain</em></p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 5: State-Changing GET Request</h3>
+        <p><strong>Scenario:</strong> Try to change settings via GET request</p>
+        <p><strong>Expected Result:</strong> All state-changing operations should require POST</p>
+        <button onclick="testGetRequest()">Run Test</button>
+        <div id="test5-result"></div>
+    </div>
+
+    <h2>Manual Testing Instructions</h2>
+    <ol>
+        <li>Open browser developer tools (F12)</li>
+        <li>Go to Network tab</li>
+        <li>Click each "Run Test" button above</li>
+        <li>Observe the response status codes</li>
+        <li>Verify that requests without valid nonces are rejected</li>
+        <li>Check that error messages don't leak sensitive information</li>
+    </ol>
+
+    <h2>CSRF Protection Checklist</h2>
+    <ul>
+        <li>✓ All AJAX endpoints verify nonces</li>
+        <li>✓ All AJAX endpoints check user capabilities</li>
+        <li>✓ Nonces are generated with wp_create_nonce()</li>
+        <li>✓ Nonces are verified with check_ajax_referer()</li>
+        <li>✓ State-changing operations require POST method</li>
+        <li>✓ No sensitive operations via GET requests</li>
+        <li>✓ Proper error handling without information leakage</li>
+    </ul>
+
+    <h2>Expected Nonce Verification Flow</h2>
+    <pre style="background: #f5f5f5; padding: 15px; border: 1px solid #ddd;">
+1. Client requests page
+2. Server generates nonce: wp_create_nonce('mase_save_settings')
+3. Nonce included in JavaScript: maseAdmin.nonce
+4. Client makes AJAX request with nonce
+5. Server verifies nonce: check_ajax_referer('mase_save_settings', 'nonce')
+6. If valid: Process request
+7. If invalid: Return 403 error
+    </pre>
+
+    <script>
+        function testWithoutNonce() {
+            const resultDiv = document.getElementById('test1-result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+            
+            fetch('/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=mase_save_settings&settings=' + encodeURIComponent(JSON.stringify({}))
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    resultDiv.innerHTML = '<p style="color: green;">✓ PASS: Request rejected (403)</p>';
+                } else {
+                    resultDiv.innerHTML = '<p style="color: red;">✗ FAIL: Request not rejected (Status: ' + response.status + ')</p>';
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = '<p style="color: orange;">⚠ ERROR: ' + error.message + '</p>';
+            });
+        }
+
+        function testWithInvalidNonce() {
+            const resultDiv = document.getElementById('test2-result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+            
+            fetch('/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=mase_save_settings&nonce=invalid_nonce_12345&settings=' + encodeURIComponent(JSON.stringify({}))
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    resultDiv.innerHTML = '<p style="color: green;">✓ PASS: Invalid nonce rejected (403)</p>';
+                } else {
+                    resultDiv.innerHTML = '<p style="color: red;">✗ FAIL: Invalid nonce accepted (Status: ' + response.status + ')</p>';
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = '<p style="color: orange;">⚠ ERROR: ' + error.message + '</p>';
+            });
+        }
+
+        function testGetRequest() {
+            const resultDiv = document.getElementById('test5-result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+            
+            fetch('/wp-admin/admin-ajax.php?action=mase_save_settings&settings=' + encodeURIComponent(JSON.stringify({})), {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.status === 403 || response.status === 405) {
+                    resultDiv.innerHTML = '<p style="color: green;">✓ PASS: GET request rejected</p>';
+                } else {
+                    resultDiv.innerHTML = '<p style="color: red;">✗ FAIL: GET request accepted (Status: ' + response.status + ')</p>';
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = '<p style="color: orange;">⚠ ERROR: ' + error.message + '</p>';
+            });
+        }
+    </script>
+</body>
+</html>

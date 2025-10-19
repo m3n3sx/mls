@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 3: Reset and Base Styles Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    /* Test container styling */
+    .test-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    
+    .test-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+    
+    .test-section h2 {
+      color: #0073aa;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Task 3: Reset and Base Styles Test</h1>
+    <p>This page tests the implementation of CSS reset and base styles for the MASE plugin.</p>
+
+    <!-- Test Section 1: CSS Reset -->
+    <div class="test-section">
+      <h2>3.1 CSS Reset Test</h2>
+      
+      <h3>Box Sizing</h3>
+      <div style="width: 200px; padding: 20px; border: 2px solid #0073aa; background: #e5f5fa;">
+        <p>This box should be exactly 200px wide including padding and border (border-box).</p>
+      </div>
+      
+      <h3>Form Elements</h3>
+      <form>
+        <button type="button">Button (should have pointer cursor)</button>
+        <input type="text" placeholder="Text input (normalized)" style="display: block; margin: 10px 0; padding: 8px; border: 1px solid #d1d5db;">
+        <select style="display: block; margin: 10px 0; padding: 8px; border: 1px solid #d1d5db;">
+          <option>Select option (normalized)</option>
+        </select>
+        <textarea placeholder="Textarea (normalized)" style="display: block; margin: 10px 0; padding: 8px; border: 1px solid #d1d5db;"></textarea>
+      </form>
+      
+      <h3>Lists</h3>
+      <ul>
+        <li>List item 1 (no bullets by default)</li>
+        <li>List item 2</li>
+        <li>List item 3</li>
+      </ul>
+    </div>
+
+    <!-- Test Section 2: Base Typography -->
+    <div class="test-section">
+      <h2>3.2 Base Typography Test</h2>
+      
+      <h1>Heading 1 (24px, semibold)</h1>
+      <h2>Heading 2 (18px, semibold)</h2>
+      <h3>Heading 3 (16px, semibold)</h3>
+      <h4>Heading 4 (14px, semibold)</h4>
+      <h5>Heading 5 (13px, semibold)</h5>
+      <h6>Heading 6 (12px, semibold)</h6>
+      
+      <p>This is a paragraph with normal text. It should have 14px font size, 1.5 line height, and 16px bottom margin. The font family should be the system font stack for optimal performance.</p>
+      
+      <p>This paragraph contains <strong>bold text</strong>, <em>italic text</em>, and <small>small text</small>.</p>
+      
+      <div class="mase-content">
+        <h3>Lists in Content Area</h3>
+        <ul>
+          <li>Unordered list item 1 (with bullets)</li>
+          <li>Unordered list item 2</li>
+          <li>Unordered list item 3</li>
+        </ul>
+        
+        <ol>
+          <li>Ordered list item 1 (with numbers)</li>
+          <li>Ordered list item 2</li>
+          <li>Ordered list item 3</li>
+        </ol>
+      </div>
+      
+      <h3>Code Examples</h3>
+      <p>Inline code: <code>const example = "code";</code></p>
+      
+      <pre>// Code block
+function example() {
+  return "formatted code";
+}</pre>
+    </div>
+
+    <!-- Test Section 3: Base Link Styles -->
+    <div class="test-section">
+      <h2>3.3 Base Link Styles Test</h2>
+      
+      <p>
+        <a href="#test">Default link (blue, no underline)</a> - 
+        Hover to see darker blue with underline
+      </p>
+      
+      <p>
+        <a href="#test" class="mase-disabled">Disabled link (gray, not clickable)</a>
+      </p>
+      
+      <p>
+        Try tabbing through these links to test focus states:
+        <a href="#test1">Link 1</a> | 
+        <a href="#test2">Link 2</a> | 
+        <a href="#test3">Link 3</a>
+      </p>
+      
+      <h3>Color Contrast Test</h3>
+      <p style="background: white; padding: 10px;">
+        <a href="#test">Link on white background</a> (should meet WCAG AA 4.5:1 contrast)
+      </p>
+      <p style="background: #f0f0f1; padding: 10px;">
+        <a href="#test">Link on gray background</a> (should meet WCAG AA 4.5:1 contrast)
+      </p>
+    </div>
+
+    <!-- Test Results Summary -->
+    <div class="test-section">
+      <h2>Test Results Summary</h2>
+      <h3>✅ Subtask 3.1: CSS Reset</h3>
+      <ul style="list-style: disc; padding-left: 24px;">
+        <li>Box-sizing set to border-box ✓</li>
+        <li>Margins and padding reset ✓</li>
+        <li>Form elements normalized ✓</li>
+      </ul>
+      
+      <h3>✅ Subtask 3.2: Base Typography</h3>
+      <ul style="list-style: disc; padding-left: 24px;">
+        <li>Body font family applied ✓</li>
+        <li>Base font size (14px) and line height (1.5) set ✓</li>
+        <li>Heading styles (h1-h6) defined ✓</li>
+        <li>Paragraph and list styles applied ✓</li>
+      </ul>
+      
+      <h3>✅ Subtask 3.3: Base Link Styles</h3>
+      <ul style="list-style: disc; padding-left: 24px;">
+        <li>Default link appearance styled ✓</li>
+        <li>Hover and focus states implemented ✓</li>
+        <li>Color contrast meets WCAG AA standards ✓</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

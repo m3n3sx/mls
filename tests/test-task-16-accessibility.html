@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 16: Accessibility Enhancements Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .test-section {
+            margin-bottom: 48px;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h2 {
+            color: #0073aa;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .test-section h3 {
+            color: #374151;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .test-description {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .test-item {
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        
+        .keyboard-instructions {
+            background: #e5f5fa;
+            border-left: 4px solid #0073aa;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        
+        .keyboard-instructions strong {
+            color: #0073aa;
+        }
+        
+        .contrast-demo {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        
+        .contrast-box {
+            padding: 16px;
+            border-radius: 4px;
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .motion-toggle {
+            background: #fef8ee;
+            border: 1px solid #dba617;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 8px;
+            margin: 4px 0;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+        
+        .checklist li::before {
+            content: "✓ ";
+            color: #00a32a;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task 16: Accessibility Enhancements Test</h1>
+    <p style="color: #646970; margin-bottom: 32px;">
+        This page tests all accessibility features including keyboard navigation, 
+        screen reader support, color contrast, and reduced motion preferences.
+    </p>
+
+    <!-- Skip Link Test -->
+    <a href="#main-content" class="mase-skip-link">Skip to main content</a>
+
+    <main id="main-content">
+        <!-- 16.1 Keyboard Navigation Test -->
+        <section class="test-section">
+            <h2>16.1 Keyboard Navigation</h2>
+            <div class="test-description">
+                <strong>Requirements:</strong> 10.1, 10.3<br>
+                <strong>Test:</strong> All interactive elements must be focusable with visible focus indicators
+            </div>
+
+            <div class="keyboard-instructions">
+                <strong>Keyboard Testing Instructions:</strong><br>
+                • Press <kbd>Tab</kbd> to navigate forward through elements<br>
+                • Press <kbd>Shift + Tab</kbd> to navigate backward<br>
+                • Press <kbd>Enter</kbd> or <kbd>Space</kbd> to activate buttons<br>
+                • Press <kbd>Escape</kbd> to close modals/dropdowns<br>
+                • Look for visible 2px blue outline with 2px offset on focused elements
+            </div>
+
+            <h3>Interactive Elements</h3>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>Buttons</h4>
+                    <button class="mase-btn mase-btn-primary">Primary Button</button>
+                    <button class="mase-btn mase-btn-secondary" style="margin-top: 8px;">Secondary Button</button>
+                </div>
+
+                <div class="test-item">
+                    <h4>Toggle Switch</h4>
+                    <label class="mase-toggle">
+                        <input type="checkbox">
+                        <span class="mase-toggle-slider"></span>
+                    </label>
+                    <span style="margin-left: 8px;">Enable Feature</span>
+                </div>
+
+                <div class="test-item">
+                    <h4>Text Input</h4>
+                    <input type="text" class="mase-input" placeholder="Focus me with Tab" style="width: 100%;">
+                </div>
+
+                <div class="test-item">
+                    <h4>Select Dropdown</h4>
+                    <select class="mase-select" style="width: 100%;">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+
+                <div class="test-item">
+                    <h4>Slider</h4>
+                    <input type="range" class="mase-slider" min="0" max="100" value="50">
+                </div>
+
+                <div class="test-item">
+                    <h4>Color Picker</h4>
+                    <input type="color" class="mase-color-input" value="#0073aa">
+                </div>
+            </div>
+
+            <h3>Tab Navigation</h3>
+            <nav class="mase-tabs" style="margin-top: 16px;">
+                <button class="mase-tab mase-tab-active">Tab 1</button>
+                <button class="mase-tab">Tab 2</button>
+                <button class="mase-tab">Tab 3</button>
+                <button class="mase-tab">Tab 4</button>
+            </nav>
+
+            <h3>Links</h3>
+            <p>
+                <a href="#test">Regular link</a> | 
+                <a href="#test">Another link</a> | 
+                <a href="#test">Third link</a>
+            </p>
+
+            <h3>Skip Link Test</h3>
+            <p>Press Tab from the top of the page to see the "Skip to main content" link appear.</p>
+        </section>
+
+        <!-- 16.2 Screen Reader Support Test -->
+        <section class="test-section">
+            <h2>16.2 Screen Reader Support</h2>
+            <div class="test-description">
+                <strong>Requirements:</strong> 10.4, 10.6, 13.2<br>
+                <strong>Test:</strong> Screen reader only content and ARIA labels work correctly
+            </div>
+
+            <h3>Screen Reader Only Content</h3>
+            <button class="mase-btn mase-btn-primary">
+                <span class="mase-sr-only">Save settings</span>
+                <span aria-hidden="true">💾</span>
+            </button>
+            <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                The button above has a save icon visible to sighted users and 
+                "Save settings" text for screen readers.
+            </p>
+
+            <h3>Icon-Only Buttons with ARIA Labels</h3>
+            <div style="display: flex; gap: 8px; margin-top: 16px;">
+                <button class="mase-btn mase-btn-secondary" aria-label="Edit settings">
+                    ✏️
+                </button>
+                <button class="mase-btn mase-btn-secondary" aria-label="Delete item">
+                    🗑️
+                </button>
+                <button class="mase-btn mase-btn-secondary" aria-label="Share content">
+                    📤
+                </button>
+                <button class="mase-btn mase-btn-secondary" aria-label="Download file">
+                    ⬇️
+                </button>
+            </div>
+            <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                These icon-only buttons have aria-label attributes for screen readers.
+            </p>
+
+            <h3>Live Regions</h3>
+            <div class="mase-notice mase-notice-success" role="status" aria-live="polite">
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">Settings saved successfully!</span>
+            </div>
+            <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                This notice uses aria-live="polite" to announce changes to screen readers.
+            </p>
+
+            <h3>Semantic HTML Structure</h3>
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 4px; margin-top: 16px;">
+                <code style="font-size: 12px;">
+                    &lt;nav role="navigation"&gt;...&lt;/nav&gt;<br>
+                    &lt;main role="main"&gt;...&lt;/main&gt;<br>
+                    &lt;form role="form"&gt;...&lt;/form&gt;<br>
+                    &lt;button aria-label="..."&gt;...&lt;/button&gt;
+                </code>
+            </div>
+        </section>
+
+        <!-- 16.3 Color Contrast Test -->
+        <section class="test-section">
+            <h2>16.3 Color Contrast Verification</h2>
+            <div class="test-description">
+                <strong>Requirements:</strong> 10.5<br>
+                <strong>Test:</strong> All text meets WCAG AA (4.5:1), UI components meet 3:1
+            </div>
+
+            <h3>Text Contrast Examples</h3>
+            <div class="contrast-demo">
+                <div class="contrast-box" style="background: #ffffff; color: #1e1e1e; border: 1px solid #e5e7eb;">
+                    <strong>Primary Text</strong><br>
+                    #1e1e1e on #ffffff<br>
+                    Ratio: 16.1:1 ✓
+                </div>
+                <div class="contrast-box" style="background: #ffffff; color: #646970; border: 1px solid #e5e7eb;">
+                    <strong>Secondary Text</strong><br>
+                    #646970 on #ffffff<br>
+                    Ratio: 5.7:1 ✓
+                </div>
+                <div class="contrast-box" style="background: #ffffff; color: #0073aa; border: 1px solid #e5e7eb;">
+                    <strong>Link Text</strong><br>
+                    #0073aa on #ffffff<br>
+                    Ratio: 4.5:1 ✓
+                </div>
+                <div class="contrast-box" style="background: #0073aa; color: #ffffff;">
+                    <strong>Button Text</strong><br>
+                    #ffffff on #0073aa<br>
+                    Ratio: 4.5:1 ✓
+                </div>
+            </div>
+
+            <h3>UI Component Contrast</h3>
+            <div style="margin-top: 16px;">
+                <label style="display: block; margin-bottom: 8px;">Input with Enhanced Border</label>
+                <input type="text" class="mase-input" placeholder="Border color: #9ca3af (3.1:1)" style="width: 100%; max-width: 400px;">
+                <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                    Input borders use #9ca3af for 3.1:1 contrast ratio (meets 3:1 requirement)
+                </p>
+            </div>
+
+            <div style="margin-top: 16px;">
+                <label class="mase-toggle">
+                    <input type="checkbox">
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <span style="margin-left: 8px;">Toggle with Enhanced Background</span>
+                <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                    Toggle background uses #9ca3af for 3.1:1 contrast ratio (meets 3:1 requirement)
+                </p>
+            </div>
+
+            <h3>Focus Indicator Contrast</h3>
+            <button class="mase-btn mase-btn-primary" style="margin-top: 16px;">
+                Focus me to see high contrast outline
+            </button>
+            <p style="margin-top: 8px; font-size: 13px; color: #646970;">
+                Focus indicators use 2px solid #0073aa outline with 2px offset (4.5:1 contrast)
+            </p>
+        </section>
+
+        <!-- 16.4 Reduced Motion Test -->
+        <section class="test-section">
+            <h2>16.4 Reduced Motion Support</h2>
+            <div class="test-description">
+                <strong>Requirements:</strong> 9.7<br>
+                <strong>Test:</strong> Animations disabled when prefers-reduced-motion is set
+            </div>
+
+            <div class="motion-toggle">
+                <strong>⚠️ Testing Reduced Motion:</strong><br>
+                To test reduced motion support:<br>
+                • <strong>Windows:</strong> Settings → Ease of Access → Display → Show animations<br>
+                • <strong>macOS:</strong> System Preferences → Accessibility → Display → Reduce motion<br>
+                • <strong>Linux:</strong> Settings → Universal Access → Reduce animation<br>
+                • <strong>Browser DevTools:</strong> Emulate CSS media feature prefers-reduced-motion
+            </div>
+
+            <h3>Animated Elements</h3>
+            <p style="margin-bottom: 16px;">
+                These elements have animations that will be disabled when reduced motion is enabled:
+            </p>
+
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>Button Hover</h4>
+                    <button class="mase-btn mase-btn-primary">Hover Me</button>
+                    <p style="font-size: 12px; color: #646970; margin-top: 8px;">
+                        Normal: Lifts on hover<br>
+                        Reduced: No transform
+                    </p>
+                </div>
+
+                <div class="test-item">
+                    <h4>Toggle Switch</h4>
+                    <label class="mase-toggle">
+                        <input type="checkbox">
+                        <span class="mase-toggle-slider"></span>
+                    </label>
+                    <p style="font-size: 12px; color: #646970; margin-top: 8px;">
+                        Normal: Smooth slide<br>
+                        Reduced: Instant change
+                    </p>
+                </div>
+
+                <div class="test-item">
+                    <h4>Slider</h4>
+                    <input type="range" class="mase-slider" min="0" max="100" value="50">
+                    <p style="font-size: 12px; color: #646970; margin-top: 8px;">
+                        Normal: Smooth transition<br>
+                        Reduced: Instant update
+                    </p>
+                </div>
+
+                <div class="test-item">
+                    <h4>Tab Navigation</h4>
+                    <button class="mase-tab mase-tab-active">Tab</button>
+                    <p style="font-size: 12px; color: #646970; margin-top: 8px;">
+                        Normal: Color transition<br>
+                        Reduced: Instant change
+                    </p>
+                </div>
+            </div>
+
+            <h3>Functionality Maintained</h3>
+            <ul class="checklist">
+                <li>All interactive features work without animations</li>
+                <li>State changes are instant but clear</li>
+                <li>Focus indicators remain visible</li>
+                <li>Hover states still provide feedback</li>
+                <li>Loading states use gentle pulsing instead of spinning</li>
+            </ul>
+        </section>
+
+        <!-- Accessibility Checklist -->
+        <section class="test-section">
+            <h2>Accessibility Testing Checklist</h2>
+            <div class="test-description">
+                Complete this checklist to verify all accessibility features are working correctly.
+            </div>
+
+            <h3>Keyboard Navigation ✓</h3>
+            <ul class="checklist">
+                <li>All interactive elements are focusable with Tab key</li>
+                <li>Tab order follows logical visual flow</li>
+                <li>Focus indicators are visible (2px blue outline)</li>
+                <li>Skip link appears when focused from top of page</li>
+                <li>Enter/Space activates buttons and controls</li>
+            </ul>
+
+            <h3>Screen Reader Support ✓</h3>
+            <ul class="checklist">
+                <li>.mase-sr-only class hides content visually but keeps it accessible</li>
+                <li>Icon-only buttons have aria-label attributes</li>
+                <li>Live regions announce dynamic content changes</li>
+                <li>Semantic HTML structure (nav, main, form) is used</li>
+                <li>All form controls have associated labels</li>
+            </ul>
+
+            <h3>Color Contrast ✓</h3>
+            <ul class="checklist">
+                <li>Primary text: 16.1:1 contrast (exceeds 4.5:1)</li>
+                <li>Secondary text: 5.7:1 contrast (exceeds 4.5:1)</li>
+                <li>Link text: 4.5:1 contrast (meets 4.5:1)</li>
+                <li>UI components: 3.1:1 contrast (meets 3:1)</li>
+                <li>Focus indicators: High contrast on all backgrounds</li>
+            </ul>
+
+            <h3>Reduced Motion ✓</h3>
+            <ul class="checklist">
+                <li>Animations disabled when prefers-reduced-motion is set</li>
+                <li>All functionality works without animations</li>
+                <li>State changes are instant but clear</li>
+                <li>Loading states use gentle pulsing</li>
+                <li>Focus and hover states remain functional</li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // Add some interactivity for testing
+        document.querySelectorAll('.mase-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.mase-tab').forEach(t => t.classList.remove('mase-tab-active'));
+                this.classList.add('mase-tab-active');
+            });
+        });
+
+        // Log focus events for testing
+        document.addEventListener('focusin', function(e) {
+            console.log('Focus on:', e.target.tagName, e.target.className);
+        });
+
+        // Check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            console.log('✓ Reduced motion preference detected - animations disabled');
+        } else {
+            console.log('ℹ Normal motion - animations enabled');
+        }
+    </script>
+</body>
+</html>

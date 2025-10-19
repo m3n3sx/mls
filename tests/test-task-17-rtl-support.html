@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 17: RTL Support Test - Modern Admin Styler</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #0073aa;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .direction-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .comparison-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .comparison-box {
+            flex: 1;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        .comparison-box h3 {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #646970;
+        }
+    </style>
+</head>
+<body>
+    <!-- Direction Toggle Control -->
+    <div class="direction-toggle">
+        <h3 style="margin-bottom: 10px;">اتجاه النص / Text Direction</h3>
+        <button onclick="toggleDirection()" class="mase-btn mase-btn-primary">
+            Toggle LTR/RTL
+        </button>
+        <p style="margin-top: 10px; font-size: 12px; color: #646970;">
+            Current: <strong id="current-dir">RTL</strong>
+        </p>
+    </div>
+
+    <!-- Test Section 1: Header Layout -->
+    <div class="test-section">
+        <h2>1. اختبار تخطيط الرأس / Header Layout Test</h2>
+        <p>Requirements: 11.1, 11.6 - Header should reverse in RTL mode</p>
+        
+        <div class="mase-header">
+            <div class="mase-header-left">
+                <h1 class="mase-header-title">مصمم إدارة ووردبريس الحديث</h1>
+                <span class="mase-header-badge">v2.0.0</span>
+            </div>
+            <div class="mase-header-right">
+                <div class="mase-live-preview-toggle">
+                    <label class="mase-toggle">
+                        <input type="checkbox" class="mase-toggle-input">
+                        <span class="mase-toggle-slider"></span>
+                    </label>
+                    <span class="mase-toggle-label">معاينة مباشرة</span>
+                </div>
+                <button class="mase-btn mase-btn-secondary">تصدير</button>
+                <button class="mase-btn mase-btn-secondary">استيراد</button>
+                <button class="mase-btn mase-btn-secondary">إعادة تعيين</button>
+                <button class="mase-btn mase-btn-primary">حفظ التغييرات</button>
+            </div>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Title and badge on the right</li>
+                    <li>Buttons on the left</li>
+                    <li>Badge appears after title</li>
+                    <li>Button order reversed</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Title and badge on the left</li>
+                    <li>Buttons on the right</li>
+                    <li>Badge appears after title</li>
+                    <li>Normal button order</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 2: Tab Navigation -->
+    <div class="test-section">
+        <h2>2. اختبار التنقل بين التبويبات / Tab Navigation Test</h2>
+        <p>Requirements: 11.1, 11.6 - Tabs should flow right-to-left in RTL</p>
+        
+        <nav class="mase-tabs">
+            <button class="mase-tab mase-tab-active">
+                <span class="mase-tab-icon">⚙️</span>
+                <span class="mase-tab-label">عام</span>
+            </button>
+            <button class="mase-tab">
+                <span class="mase-tab-icon">📊</span>
+                <span class="mase-tab-label">شريط الإدارة</span>
+            </button>
+            <button class="mase-tab">
+                <span class="mase-tab-icon">📋</span>
+                <span class="mase-tab-label">القائمة</span>
+            </button>
+            <button class="mase-tab">
+                <span class="mase-tab-icon">📝</span>
+                <span class="mase-tab-label">المحتوى</span>
+            </button>
+        </nav>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Tabs flow from right to left</li>
+                    <li>Icons appear on the right of labels</li>
+                    <li>First tab on the right</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Tabs flow from left to right</li>
+                    <li>Icons appear on the left of labels</li>
+                    <li>First tab on the left</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 3: Toggle Switch -->
+    <div class="test-section">
+        <h2>3. اختبار مفتاح التبديل / Toggle Switch Test</h2>
+        <p>Requirements: 11.5 - Toggle animation should reverse in RTL</p>
+        
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" id="toggle1">
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span>تفعيل الميزة / Enable Feature</span>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Knob starts on the right (off)</li>
+                    <li>Knob moves to left when on</li>
+                    <li>Animation direction reversed</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Knob starts on the left (off)</li>
+                    <li>Knob moves to right when on</li>
+                    <li>Normal animation direction</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 4: Slider -->
+    <div class="test-section">
+        <h2>4. اختبار شريط التمرير / Slider Test</h2>
+        <p>Requirements: 11.5 - Slider should work right-to-left in RTL</p>
+        
+        <div class="mase-slider-container">
+            <label>حجم الخط / Font Size</label>
+            <input type="range" class="mase-slider" min="0" max="100" value="50">
+            <div class="mase-slider-value">50</div>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Minimum value on the right</li>
+                    <li>Maximum value on the left</li>
+                    <li>Slider fills right-to-left</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Minimum value on the left</li>
+                    <li>Maximum value on the right</li>
+                    <li>Slider fills left-to-right</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 5: Text Alignment -->
+    <div class="test-section">
+        <h2>5. اختبار محاذاة النص / Text Alignment Test</h2>
+        <p>Requirements: 11.3, 11.4, 11.7 - Text should align right in RTL</p>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>عنوان رئيسي / Main Heading</h3>
+            <p>هذا نص تجريبي باللغة العربية لاختبار محاذاة النص في وضع RTL. يجب أن يظهر النص محاذياً إلى اليمين.</p>
+            <p>This is sample text in English to test text alignment in RTL mode. The text should appear right-aligned.</p>
+        </div>
+        
+        <div class="mase-card">
+            <div class="mase-card-body">
+                <label class="mase-form-label">اسم المستخدم / Username</label>
+                <input type="text" class="mase-input" placeholder="أدخل اسم المستخدم">
+                <p class="mase-helper-text">نص مساعد لشرح الحقل / Helper text to explain the field</p>
+            </div>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>All text right-aligned</li>
+                    <li>Input text starts from right</li>
+                    <li>Labels aligned right</li>
+                    <li>Helper text aligned right</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>All text left-aligned</li>
+                    <li>Input text starts from left</li>
+                    <li>Labels aligned left</li>
+                    <li>Helper text aligned left</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 6: Grid Layout -->
+    <div class="test-section">
+        <h2>6. اختبار تخطيط الشبكة / Grid Layout Test</h2>
+        <p>Requirements: 11.6 - Grid columns should reverse in RTL</p>
+        
+        <div class="mase-form-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+            <div class="mase-card" style="padding: 20px; text-align: center;">
+                <h4>العمود 1</h4>
+                <p>Column 1</p>
+            </div>
+            <div class="mase-card" style="padding: 20px; text-align: center;">
+                <h4>العمود 2</h4>
+                <p>Column 2</p>
+            </div>
+            <div class="mase-card" style="padding: 20px; text-align: center;">
+                <h4>العمود 3</h4>
+                <p>Column 3</p>
+            </div>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Column 1 on the right</li>
+                    <li>Column 2 in the middle</li>
+                    <li>Column 3 on the left</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Column 1 on the left</li>
+                    <li>Column 2 in the middle</li>
+                    <li>Column 3 on the right</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 7: Notices -->
+    <div class="test-section">
+        <h2>7. اختبار الإشعارات / Notices Test</h2>
+        <p>Requirements: 11.2, 11.7 - Notice icons and layout should mirror in RTL</p>
+        
+        <div class="mase-notice mase-notice-success" style="margin-bottom: 16px;">
+            <span class="mase-notice-icon">✓</span>
+            <span class="mase-notice-message">تم حفظ الإعدادات بنجاح! / Settings saved successfully!</span>
+            <button class="mase-notice-dismiss">×</button>
+        </div>
+        
+        <div class="mase-notice mase-notice-warning" style="margin-bottom: 16px;">
+            <span class="mase-notice-icon">⚠</span>
+            <span class="mase-notice-message">تحذير: يرجى مراجعة الإعدادات / Warning: Please review settings</span>
+            <button class="mase-notice-dismiss">×</button>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Icon on the right</li>
+                    <li>Message in the middle</li>
+                    <li>Close button on the left</li>
+                    <li>Border accent on the right</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Icon on the left</li>
+                    <li>Message in the middle</li>
+                    <li>Close button on the right</li>
+                    <li>Border accent on the left</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 8: Color Picker -->
+    <div class="test-section">
+        <h2>8. اختبار منتقي الألوان / Color Picker Test</h2>
+        <p>Requirements: 11.1, 11.7 - Color picker elements should reverse in RTL</p>
+        
+        <div class="mase-color-picker">
+            <input type="color" class="mase-color-input" value="#0073aa">
+            <div class="mase-color-swatch" style="background-color: #0073aa;"></div>
+            <input type="text" class="mase-color-hex" value="#0073aa">
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Hex input on the left</li>
+                    <li>Swatch in the middle</li>
+                    <li>Color input on the right</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Color input on the left</li>
+                    <li>Swatch in the middle</li>
+                    <li>Hex input on the right</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 9: Button Groups -->
+    <div class="test-section">
+        <h2>9. اختبار مجموعات الأزرار / Button Groups Test</h2>
+        <p>Requirements: 11.1, 11.7 - Button order should reverse in RTL</p>
+        
+        <div class="mase-button-group" style="display: flex; gap: 8px;">
+            <button class="mase-btn mase-btn-primary">حفظ / Save</button>
+            <button class="mase-btn mase-btn-secondary">إلغاء / Cancel</button>
+            <button class="mase-btn mase-btn-secondary">مساعدة / Help</button>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in RTL:</h3>
+                <ul>
+                    <li>Primary button on the right</li>
+                    <li>Secondary buttons follow</li>
+                    <li>Help button on the left</li>
+                </ul>
+            </div>
+            <div class="comparison-box">
+                <h3>✓ Expected in LTR:</h3>
+                <ul>
+                    <li>Primary button on the left</li>
+                    <li>Secondary buttons follow</li>
+                    <li>Help button on the right</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 10: Centered Content -->
+    <div class="test-section">
+        <h2>10. اختبار المحتوى المتمركز / Centered Content Test</h2>
+        <p>Requirements: 11.4 - Centered text should remain centered in both directions</p>
+        
+        <div class="mase-card" style="padding: 40px;">
+            <h2 class="mase-text-center">عنوان متمركز / Centered Title</h2>
+            <p class="mase-text-center">هذا نص متمركز يجب أن يبقى في المنتصف في كلا الاتجاهين</p>
+            <p class="mase-text-center">This centered text should remain centered in both directions</p>
+        </div>
+        
+        <div class="comparison-container">
+            <div class="comparison-box">
+                <h3>✓ Expected in Both:</h3>
+                <ul>
+                    <li>Title centered</li>
+                    <li>Paragraphs centered</li>
+                    <li>Equal spacing on both sides</li>
+                    <li>No alignment change</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDirection() {
+            const html = document.documentElement;
+            const currentDir = html.getAttribute('dir');
+            const newDir = currentDir === 'rtl' ? 'ltr' : 'rtl';
+            const newLang = newDir === 'rtl' ? 'ar' : 'en';
+            
+            html.setAttribute('dir', newDir);
+            html.setAttribute('lang', newLang);
+            
+            document.getElementById('current-dir').textContent = newDir.toUpperCase();
+        }
+
+        // Add interactivity to toggle switches
+        document.querySelectorAll('.mase-toggle-input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                console.log('Toggle changed:', this.checked);
+            });
+        });
+
+        // Add interactivity to sliders
+        document.querySelectorAll('.mase-slider').forEach(slider => {
+            const valueDisplay = slider.nextElementSibling;
+            slider.addEventListener('input', function() {
+                if (valueDisplay && valueDisplay.classList.contains('mase-slider-value')) {
+                    valueDisplay.textContent = this.value;
+                }
+            });
+        });
+
+        // Log initial state
+        console.log('RTL Support Test Page Loaded');
+        console.log('Current direction:', document.documentElement.getAttribute('dir'));
+    </script>
+</body>
+</html>

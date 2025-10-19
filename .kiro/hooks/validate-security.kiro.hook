@@ -1,0 +1,10 @@
+{
+  "name": "validate-security",
+  "description": "Validates security best practices for MASE WordPress plugin",
+  "version": "1.0.0",
+  "trigger": "onFileSave",
+  "filePattern": "**/*.php",
+  "excludePattern": "**/vendor/**,**/node_modules/**,**/tests/**",
+  "enabled": true,
+  "prompt": "You are performing security validation for MASE v1.2.0 WordPress plugin.\n\n**FILE:** {{filePath}}\n\n**SECURITY CHECKLIST:**\n\n**AJAX Endpoints:**\n- [ ] Nonce verification present (check_ajax_referer)\n- [ ] Capability check present (current_user_can)\n- [ ] Input sanitization (sanitize_text_field, absint, etc.)\n- [ ] Output escaping (esc_html, esc_attr, esc_url)\n\n**Database Queries:**\n- [ ] No direct SQL queries\n- [ ] Using $wpdb->prepare() if needed\n- [ ] No SQL injection vulnerabilities\n\n**File Operations:**\n- [ ] No eval(), exec(), system() calls\n- [ ] No file_get_contents() with user input\n- [ ] Proper file upload validation\n\n**Input Validation:**\n- [ ] All $_POST, $_GET, $_REQUEST sanitized\n- [ ] Type checking (is_array, is_string, etc.)\n- [ ] Range validation for numbers\n- [ ] Format validation for emails, URLs\n\n**Output Escaping:**\n- [ ] All echoed content escaped\n- [ ] Proper context (html, attr, url, js)\n- [ ] No raw user input in output\n\n**YOUR TASK:**\n1. Scan the file for security issues\n2. Check each category above\n3. Report any violations with line numbers\n4. Provide fix suggestions\n\n**OUTPUT FORMAT:**\n```\n✅ PASS / ❌ FAIL: Security Validation\n\nFile: {{fileName}}\n\n[AJAX SECURITY]\n✅/❌ Nonce verification: [status]\n✅/❌ Capability checks: [status]\n✅/❌ Input sanitization: [status]\n\n[ISSUES FOUND]\n1. Line XX: Missing nonce check in ajax_method()\n   Fix: Add check_ajax_referer('mase_nonce', 'nonce');\n\n2. Line YY: Unsanitized $_POST['data']\n   Fix: $data = sanitize_text_field($_POST['data']);\n\n[REQUIRED FIXES]\n[List critical fixes needed before commit]\n\n[RECOMMENDATIONS]\n[List best practice improvements]\n```\n\nBe thorough and specific with line numbers and fix suggestions."
+}

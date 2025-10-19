@@ -1,0 +1,24 @@
+{
+  "name": "mase-visual-testing",
+  "version": "1.0.0",
+  "description": "Automatyczne testy wizualne MASE z Playwright",
+  "main": "playwright-visual-tests.js",
+  "scripts": {
+    "test": "node playwright-visual-tests.js",
+    "test:headed": "HEADLESS=false node playwright-visual-tests.js",
+    "test:debug": "DEBUG=pw:api node playwright-visual-tests.js",
+    "install:browsers": "npx playwright install chromium"
+  },
+  "keywords": [
+    "playwright",
+    "visual-testing",
+    "wordpress",
+    "mase"
+  ],
+  "author": "MASE Development Team",
+  "license": "GPL-2.0-or-later",
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "devDependencies": {}
+}

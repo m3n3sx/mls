@@ -1,0 +1,120 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ✨ MASE Visual Testing v1.1.0                          ║
+║   Nowa wersja z lepszymi zrzutami ekranu!               ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+📅 Data: 19 października 2025, 01:01
+
+───────────────────────────────────────────────────────────
+
+🎯 GŁÓWNA ZMIANA:
+
+  Dodano 3-sekundowe opóźnienie przed każdym zrzutem ekranu
+
+───────────────────────────────────────────────────────────
+
+✨ KORZYŚCI:
+
+  ✅ Lepsze zrzuty ekranu
+     - Pełne zastosowanie zmian CSS
+     - Zakończone animacje
+     - Kompletny rendering
+
+  ✅ Mniej błędów
+     - Więcej czasu na wykonanie JavaScript
+     - Stabilniejsze testy
+     - Bardziej wiarygodne wyniki
+
+  ✅ Lepsza jakość
+     - Zrzuty pokazują finalny stan
+     - Nie ma "w trakcie" animacji
+     - Profesjonalne wyniki
+
+───────────────────────────────────────────────────────────
+
+⏱️ WPŁYW NA CZAS:
+
+  Przed: ~10-12 minut (100 testów)
+  Po:    ~15-18 minut (100 testów)
+  
+  Różnica: +5-6 minut (+50%)
+
+───────────────────────────────────────────────────────────
+
+🔧 SZCZEGÓŁY TECHNICZNE:
+
+  Zmieniona funkcja: testSingleOption()
+  Dodana linia: await page.waitForTimeout(3000);
+  Lokalizacja: playwright-visual-tests.js, linia ~450
+
+───────────────────────────────────────────────────────────
+
+📊 PRZYKŁAD:
+
+  PRZED (bez opóźnienia):
+  1. Kliknij opcję
+  2. Natychmiast zrzut ekranu ← może być w trakcie animacji
+  
+  PO (z opóźnieniem):
+  1. Kliknij opcję
+  2. Poczekaj 3 sekundy
+  3. Zrzut ekranu ← pełne zastosowanie zmian ✓
+
+───────────────────────────────────────────────────────────
+
+🚀 JAK UŻYWAĆ:
+
+  Nic nie musisz zmieniać!
+  
+  Uruchom testy normalnie:
+  ./run-playwright-tests.sh
+  
+  Testy będą trwały trochę dłużej, ale wyniki będą lepsze.
+
+───────────────────────────────────────────────────────────
+
+⚙️ DOSTOSOWANIE (opcjonalne):
+
+  Jeśli chcesz skrócić czas, edytuj:
+  tests/visual-testing/playwright-visual-tests.js
+  
+  Znajdź linię:
+  await page.waitForTimeout(3000);
+  
+  Zmień na:
+  await page.waitForTimeout(1000);  // 1 sekunda
+  await page.waitForTimeout(2000);  // 2 sekundy
+  
+  Ale zalecamy 3 sekundy dla najlepszych wyników!
+
+───────────────────────────────────────────────────────────
+
+📚 WIĘCEJ INFORMACJI:
+
+  cat CHANGELOG.md          - Pełna historia zmian
+  cat PLAYWRIGHT-STATUS.md  - Aktualny status testów
+  cat README.md             - Główna dokumentacja
+
+───────────────────────────────────────────────────────────
+
+✅ KOMPATYBILNOŚĆ:
+
+  ✓ Kompatybilność wsteczna
+  ✓ Wszystkie testy działają
+  ✓ Brak zmian w API
+  ✓ Brak migracji wymaganej
+
+───────────────────────────────────────────────────────────
+
+🎉 PODSUMOWANIE:
+
+  Lepsza jakość zrzutów ekranu za cenę dłuższego czasu
+  wykonania. Warto!
+
+───────────────────────────────────────────────────────────
+
+Wersja: 1.1.0
+Status: ✅ Stabilna
+Data: 19 października 2025

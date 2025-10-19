@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Navigation Test - MASE v1.2.0</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: #1d2327;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #2271b1;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        
+        /* Tab Navigation Styles */
+        .mase-tab-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #c3c4c7;
+        }
+        
+        .mase-tab-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: #50575e;
+            transition: all 0.2s;
+        }
+        
+        .mase-tab-button:hover {
+            color: #2271b1;
+            background: #f0f0f1;
+        }
+        
+        .mase-tab-button.active {
+            color: #2271b1;
+            border-bottom-color: #2271b1;
+            font-weight: 600;
+        }
+        
+        .mase-tab-button:focus {
+            outline: 2px solid #2271b1;
+            outline-offset: -2px;
+        }
+        
+        /* Tab Content Styles */
+        .mase-tab-content {
+            display: none;
+            padding: 20px;
+            background: white;
+            border: 1px solid #c3c4c7;
+            border-radius: 4px;
+        }
+        
+        .mase-tab-content.active {
+            display: block;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-pass {
+            background: #00a32a;
+            color: white;
+        }
+        
+        .status-fail {
+            background: #d63638;
+            color: white;
+        }
+        
+        .test-log {
+            background: #1d2327;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        
+        .test-log div {
+            margin: 2px 0;
+        }
+        
+        button.test-button {
+            padding: 8px 16px;
+            background: #2271b1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button.test-button:hover {
+            background: #135e96;
+        }
+        
+        .keyboard-hint {
+            background: #f0f6fc;
+            border: 1px solid #0969da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        
+        .keyboard-hint strong {
+            color: #0969da;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Tab Navigation System Test - MASE v1.2.0</h1>
+        <p>Testing Requirements: 8.1, 8.2, 8.3, 8.4, 8.5</p>
+        
+        <!-- Test Section 1: Tab Switching -->
+        <div class="test-section">
+            <h2>Test 1: Tab Switching (Requirement 8.1)</h2>
+            <p>Click on tabs to switch between content panels. Should switch within 100ms.</p>
+            
+            <nav class="mase-tab-nav" role="tablist">
+                <button type="button" class="mase-tab-button active" data-tab="general" role="tab" aria-selected="true" tabindex="0">
+                    General
+                </button>
+                <button type="button" class="mase-tab-button" data-tab="admin-bar" role="tab" aria-selected="false" tabindex="-1">
+                    Admin Bar
+                </button>
+                <button type="button" class="mase-tab-button" data-tab="menu" role="tab" aria-selected="false" tabindex="-1">
+                    Menu
+                </button>
+                <button type="button" class="mase-tab-button" data-tab="content" role="tab" aria-selected="false" tabindex="-1">
+                    Content
+                </button>
+            </nav>
+            
+            <div class="mase-tab-content active" data-tab-content="general">
+                <h3>General Tab Content</h3>
+                <p>This is the general settings tab. It should be visible by default.</p>
+            </div>
+            
+            <div class="mase-tab-content" data-tab-content="admin-bar">
+                <h3>Admin Bar Tab Content</h3>
+                <p>This is the admin bar settings tab. Click the Admin Bar tab to see this.</p>
+            </div>
+            
+            <div class="mase-tab-content" data-tab-content="menu">
+                <h3>Menu Tab Content</h3>
+                <p>This is the menu settings tab. Click the Menu tab to see this.</p>
+            </div>
+            
+            <div class="mase-tab-content" data-tab-content="content">
+                <h3>Content Tab Content</h3>
+                <p>This is the content settings tab. Click the Content tab to see this.</p>
+            </div>
+            
+            <div id="test1-result"></div>
+        </div>
+        
+        <!-- Test Section 2: LocalStorage Persistence -->
+        <div class="test-section">
+            <h2>Test 2: Tab Persistence (Requirements 8.2, 8.3)</h2>
+            <p>Active tab should be saved to localStorage and restored on page reload.</p>
+            
+            <button class="test-button" onclick="testLocalStorage()">Test LocalStorage Save</button>
+            <button class="test-button" onclick="testLocalStorageRestore()">Test LocalStorage Restore</button>
+            <button class="test-button" onclick="clearLocalStorage()">Clear LocalStorage</button>
+            <button class="test-button" onclick="location.reload()">Reload Page</button>
+            
+            <div id="test2-result"></div>
+        </div>
+        
+        <!-- Test Section 3: Visual Active States -->
+        <div class="test-section">
+            <h2>Test 3: Visual Active States (Requirement 8.4)</h2>
+            <p>Active tab should have visual indicators (blue border, bold text).</p>
+            
+            <div id="test3-result"></div>
+        </div>
+        
+        <!-- Test Section 4: Keyboard Navigation -->
+        <div class="test-section">
+            <h2>Test 4: Keyboard Navigation (Requirement 8.5)</h2>
+            <p>Test keyboard navigation with arrow keys, Home, and End keys.</p>
+            
+            <div class="keyboard-hint">
+                <strong>Keyboard Shortcuts:</strong><br>
+                • <strong>Arrow Left/Up:</strong> Previous tab<br>
+                • <strong>Arrow Right/Down:</strong> Next tab<br>
+                • <strong>Home:</strong> First tab<br>
+                • <strong>End:</strong> Last tab<br>
+                • <strong>Tab:</strong> Move focus to next element<br>
+                • <strong>Shift+Tab:</strong> Move focus to previous element
+            </div>
+            
+            <button class="test-button" onclick="testKeyboardNavigation()">Run Keyboard Test</button>
+            
+            <div id="test4-result"></div>
+        </div>
+        
+        <!-- Console Log -->
+        <div class="test-section">
+            <h2>Console Log</h2>
+            <div class="test-log" id="console-log"></div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with tab navigation functionality
+        var MASE = {
+            tabNavigation: {
+                switchTab: function(tabId) {
+                    log('Switching to tab: ' + tabId);
+                    
+                    var startTime = performance.now();
+                    
+                    // Remove active state from all tabs
+                    $('.mase-tab-button').removeClass('active')
+                        .attr('aria-selected', 'false')
+                        .attr('tabindex', '-1');
+                    
+                    // Remove active state from all content
+                    $('.mase-tab-content').removeClass('active');
+                    
+                    // Add active state to selected tab
+                    var $tabButton = $('.mase-tab-button[data-tab="' + tabId + '"]');
+                    $tabButton.addClass('active')
+                        .attr('aria-selected', 'true')
+                        .attr('tabindex', '0');
+                    
+                    // Show selected content
+                    var $tabContent = $('.mase-tab-content[data-tab-content="' + tabId + '"]');
+                    $tabContent.addClass('active');
+                    
+                    // Store in localStorage
+                    localStorage.setItem('mase_active_tab', tabId);
+                    
+                    var endTime = performance.now();
+                    var duration = endTime - startTime;
+                    
+                    log('Tab switched in ' + duration.toFixed(2) + 'ms');
+                    
+                    if (duration < 100) {
+                        log('✓ PASS: Switch time < 100ms (Requirement 8.1)', 'success');
+                    } else {
+                        log('✗ FAIL: Switch time >= 100ms', 'error');
+                    }
+                },
+                
+                loadSavedTab: function() {
+                    var savedTab = localStorage.getItem('mase_active_tab');
+                    log('Loading saved tab: ' + (savedTab || 'none'));
+                    
+                    if (savedTab) {
+                        var $tabButton = $('.mase-tab-button[data-tab="' + savedTab + '"]');
+                        if ($tabButton.length > 0) {
+                            this.switchTab(savedTab);
+                            log('✓ PASS: Restored tab from localStorage (Requirement 8.3)', 'success');
+                        } else {
+                            log('✗ FAIL: Saved tab not found', 'error');
+                        }
+                    } else {
+                        log('No saved tab found, using default');
+                    }
+                },
+                
+                bindTabClicks: function() {
+                    var self = this;
+                    $(document).on('click', '.mase-tab-button', function(e) {
+                        e.preventDefault();
+                        var tabId = $(this).data('tab');
+                        self.switchTab(tabId);
+                    });
+                    log('✓ Tab click events bound');
+                },
+                
+                bindKeyboardNavigation: function() {
+                    var self = this;
+                    $(document).on('keydown', '.mase-tab-button', function(e) {
+                        var $currentTab = $(this);
+                        var $allTabs = $('.mase-tab-button');
+                        var currentIndex = $allTabs.index($currentTab);
+                        var $targetTab = null;
+                        
+                        switch(e.key) {
+                            case 'ArrowLeft':
+                            case 'ArrowUp':
+                                e.preventDefault();
+                                if (currentIndex > 0) {
+                                    $targetTab = $allTabs.eq(currentIndex - 1);
+                                } else {
+                                    $targetTab = $allTabs.last();
+                                }
+                                log('Arrow Left/Up pressed - moving to previous tab');
+                                break;
+                                
+                            case 'ArrowRight':
+                            case 'ArrowDown':
+                                e.preventDefault();
+                                if (currentIndex < $allTabs.length - 1) {
+                                    $targetTab = $allTabs.eq(currentIndex + 1);
+                                } else {
+                                    $targetTab = $allTabs.first();
+                                }
+                                log('Arrow Right/Down pressed - moving to next tab');
+                                break;
+                                
+                            case 'Home':
+                                e.preventDefault();
+                                $targetTab = $allTabs.first();
+                                log('Home pressed - moving to first tab');
+                                break;
+                                
+                            case 'End':
+                                e.preventDefault();
+                                $targetTab = $allTabs.last();
+                                log('End pressed - moving to last tab');
+                                break;
+                        }
+                        
+                        if ($targetTab && $targetTab.length > 0) {
+                            var targetTabId = $targetTab.data('tab');
+                            self.switchTab(targetTabId);
+                            $targetTab.focus();
+                        }
+                    });
+                    log('✓ Keyboard navigation bound (Requirement 8.5)', 'success');
+                },
+                
+                init: function() {
+                    this.bindTabClicks();
+                    this.bindKeyboardNavigation();
+                    this.loadSavedTab();
+                    log('✓ Tab navigation initialized');
+                }
+            }
+        };
+        
+        // Console logging
+        function log(message, type) {
+            var $log = $('#console-log');
+            var timestamp = new Date().toLocaleTimeString();
+            var color = type === 'success' ? '#00ff00' : type === 'error' ? '#ff0000' : '#00ff00';
+            $log.append('<div style="color:' + color + '">[' + timestamp + '] ' + message + '</div>');
+            $log.scrollTop($log[0].scrollHeight);
+            console.log(message);
+        }
+        
+        // Test functions
+        function testLocalStorage() {
+            var activeTab = $('.mase-tab-button.active').data('tab');
+            var storedTab = localStorage.getItem('mase_active_tab');
+            
+            if (activeTab === storedTab) {
+                $('#test2-result').html('<span class="status-indicator status-pass">PASS</span> Active tab "' + activeTab + '" is saved to localStorage');
+                log('✓ PASS: LocalStorage save working (Requirement 8.2)', 'success');
+            } else {
+                $('#test2-result').html('<span class="status-indicator status-fail">FAIL</span> Active tab not saved correctly');
+                log('✗ FAIL: LocalStorage save not working', 'error');
+            }
+        }
+        
+        function testLocalStorageRestore() {
+            MASE.tabNavigation.loadSavedTab();
+            $('#test2-result').html('<span class="status-indicator status-pass">PASS</span> Check console log for restore status');
+        }
+        
+        function clearLocalStorage() {
+            localStorage.removeItem('mase_active_tab');
+            log('LocalStorage cleared');
+            $('#test2-result').html('<span class="status-indicator status-pass">CLEARED</span> LocalStorage cleared. Reload page to test default behavior.');
+        }
+        
+        function testKeyboardNavigation() {
+            log('=== Keyboard Navigation Test ===');
+            log('1. Click on the first tab button above');
+            log('2. Press Arrow Right to move to next tab');
+            log('3. Press Arrow Left to move to previous tab');
+            log('4. Press Home to jump to first tab');
+            log('5. Press End to jump to last tab');
+            log('Watch the console log for navigation events');
+            
+            $('#test4-result').html('<span class="status-indicator status-pass">READY</span> Focus a tab button and use arrow keys, Home, or End');
+            
+            // Focus the first tab
+            $('.mase-tab-button').first().focus();
+        }
+        
+        // Initialize on document ready
+        $(document).ready(function() {
+            log('=== MASE Tab Navigation Test Started ===');
+            MASE.tabNavigation.init();
+            
+            // Run initial tests
+            setTimeout(function() {
+                // Test 1: Check if active tab has correct classes
+                var $activeTab = $('.mase-tab-button.active');
+                if ($activeTab.length === 1 && $activeTab.attr('aria-selected') === 'true') {
+                    $('#test1-result').html('<span class="status-indicator status-pass">PASS</span> Active tab has correct classes and ARIA attributes');
+                    log('✓ PASS: Active tab styling correct (Requirement 8.4)', 'success');
+                } else {
+                    $('#test1-result').html('<span class="status-indicator status-fail">FAIL</span> Active tab styling incorrect');
+                    log('✗ FAIL: Active tab styling incorrect', 'error');
+                }
+                
+                // Test 3: Visual active states
+                var hasActiveClass = $activeTab.hasClass('active');
+                var hasAriaSelected = $activeTab.attr('aria-selected') === 'true';
+                var hasTabindex = $activeTab.attr('tabindex') === '0';
+                
+                if (hasActiveClass && hasAriaSelected && hasTabindex) {
+                    $('#test3-result').html('<span class="status-indicator status-pass">PASS</span> All visual active states applied correctly');
+                    log('✓ PASS: Visual active states correct (Requirement 8.4)', 'success');
+                } else {
+                    $('#test3-result').html('<span class="status-indicator status-fail">FAIL</span> Some visual states missing');
+                    log('✗ FAIL: Visual active states incomplete', 'error');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

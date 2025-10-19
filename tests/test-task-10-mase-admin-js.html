@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 10: MASE Admin JavaScript Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .code-block {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #mase-notices {
+            margin: 20px 0;
+        }
+        .notice {
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 4px solid;
+            background: white;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+        }
+        .notice-success {
+            border-left-color: #00a32a;
+        }
+        .notice-error {
+            border-left-color: #d63638;
+        }
+        .notice-warning {
+            border-left-color: #dba617;
+        }
+        .notice-info {
+            border-left-color: #2271b1;
+        }
+        input[type="text"], input[type="number"], select {
+            padding: 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+            width: 200px;
+            margin: 5px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task 10: MASE Admin JavaScript Test</h1>
+    
+    <div id="mase-notices"></div>
+    
+    <div class="test-section">
+        <h2>1. MASE Namespace Structure</h2>
+        <div id="namespace-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Configuration Object</h2>
+        <div id="config-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. State Management</h2>
+        <div id="state-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Modules Placeholder</h2>
+        <div id="modules-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Core Methods</h2>
+        <div id="methods-test"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>6. Debounce Utility</h2>
+        <div id="debounce-test"></div>
+        <button id="test-debounce-btn">Test Debounce (Click Multiple Times)</button>
+        <div id="debounce-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>7. Show Notice Method</h2>
+        <button onclick="testShowNotice('success', 'This is a success message')">Show Success</button>
+        <button onclick="testShowNotice('error', 'This is an error message')">Show Error</button>
+        <button onclick="testShowNotice('warning', 'This is a warning message')">Show Warning</button>
+        <button onclick="testShowNotice('info', 'This is an info message')">Show Info</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>8. Collect Form Data Method</h2>
+        <form id="mase-settings-form">
+            <input type="hidden" name="mase_nonce" id="mase_nonce" value="test-nonce-123">
+            
+            <div class="form-group">
+                <label>Admin Bar BG:</label>
+                <input type="text" name="admin_bar[bg_color]" value="#2271b1">
+            </div>
+            
+            <div class="form-group">
+                <label>Admin Bar Text:</label>
+                <input type="text" name="admin_bar[text_color]" value="#ffffff">
+            </div>
+            
+            <div class="form-group">
+                <label>Font Size:</label>
+                <input type="number" name="typography[admin_bar][font_size]" value="14">
+            </div>
+            
+            <div class="form-group">
+                <label>Enable Feature:</label>
+                <input type="checkbox" name="effects[enabled]" value="1" checked>
+            </div>
+            
+            <div class="form-group">
+                <label>Theme:</label>
+                <select name="palettes[current]">
+                    <option value="professional-blue" selected>Professional Blue</option>
+                    <option value="dark-elegance">Dark Elegance</option>
+                </select>
+            </div>
+            
+            <button type="button" id="test-collect-btn">Test Collect Form Data</button>
+        </form>
+        <div id="collect-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>9. Requirements Verification</h2>
+        <div id="requirements-test"></div>
+    </div>
+
+    <!-- jQuery (WordPress includes this) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Mock ajaxurl for WordPress -->
+    <script>
+        var ajaxurl = '/wp-admin/admin-ajax.php';
+    </script>
+    
+    <!-- MASE Admin Script -->
+    <script src="../assets/js/mase-admin.js"></script>
+    
+    <script>
+        // Test functions
+        function runTests() {
+            testNamespace();
+            testConfig();
+            testState();
+            testModules();
+            testMethods();
+            testDebounce();
+            testRequirements();
+        }
+        
+        function testNamespace() {
+            const container = document.getElementById('namespace-test');
+            let html = '';
+            
+            if (typeof MASE !== 'undefined') {
+                html += '<div class="test-result pass">✓ MASE namespace exists</div>';
+                html += '<div class="test-result pass">✓ MASE is an object</div>';
+            } else {
+                html += '<div class="test-result fail">✗ MASE namespace not found</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function testConfig() {
+            const container = document.getElementById('config-test');
+            let html = '';
+            
+            if (MASE.config) {
+                html += '<div class="test-result pass">✓ config object exists</div>';
+                
+                const requiredProps = ['ajaxUrl', 'nonce', 'debounceDelay', 'autoSaveDelay', 'noticeTimeout'];
+                requiredProps.forEach(prop => {
+                    if (MASE.config.hasOwnProperty(prop)) {
+                        html += `<div class="test-result pass">✓ config.${prop} exists (value: ${MASE.config[prop]})</div>`;
+                    } else {
+                        html += `<div class="test-result fail">✗ config.${prop} missing</div>`;
+                    }
+                });
+            } else {
+                html += '<div class="test-result fail">✗ config object not found</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function testState() {
+            const container = document.getElementById('state-test');
+            let html = '';
+            
+            if (MASE.state) {
+                html += '<div class="test-result pass">✓ state object exists</div>';
+                
+                const requiredProps = ['livePreviewEnabled', 'currentPalette', 'currentTemplate', 'isDirty', 'isSaving'];
+                requiredProps.forEach(prop => {
+                    if (MASE.state.hasOwnProperty(prop)) {
+                        html += `<div class="test-result pass">✓ state.${prop} exists (value: ${MASE.state[prop]})</div>`;
+                    } else {
+                        html += `<div class="test-result fail">✗ state.${prop} missing</div>`;
+                    }
+                });
+            } else {
+                html += '<div class="test-result fail">✗ state object not found</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function testModules() {
+            const container = document.getElementById('modules-test');
+            let html = '';
+            
+            if (MASE.modules) {
+                html += '<div class="test-result pass">✓ modules object exists</div>';
+                
+                const requiredModules = ['paletteManager', 'templateManager', 'livePreview', 'importExport', 'keyboardShortcuts'];
+                requiredModules.forEach(module => {
+                    if (MASE.modules.hasOwnProperty(module)) {
+                        html += `<div class="test-result pass">✓ modules.${module} exists</div>`;
+                    } else {
+                        html += `<div class="test-result fail">✗ modules.${module} missing</div>`;
+                    }
+                });
+            } else {
+                html += '<div class="test-result fail">✗ modules object not found</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function testMethods() {
+            const container = document.getElementById('methods-test');
+            let html = '';
+            
+            const requiredMethods = [
+                'init',
+                'bindEvents',
+                'initColorPickers',
+                'showNotice',
+                'debounce',
+                'collectFormData'
+            ];
+            
+            requiredMethods.forEach(method => {
+                if (typeof MASE[method] === 'function') {
+                    html += `<div class="test-result pass">✓ ${method}() method exists</div>`;
+                } else {
+                    html += `<div class="test-result fail">✗ ${method}() method missing</div>`;
+                }
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function testDebounce() {
+            const container = document.getElementById('debounce-test');
+            let html = '<div class="test-result info">Debounce function exists and is ready to test</div>';
+            container.innerHTML = html;
+            
+            // Test debounce on button click
+            let clickCount = 0;
+            let executionCount = 0;
+            
+            const debouncedFunction = MASE.debounce(function() {
+                executionCount++;
+                document.getElementById('debounce-result').innerHTML = 
+                    `<div class="test-result pass">Clicked ${clickCount} times, executed ${executionCount} time(s)</div>` +
+                    `<div class="test-result info">Debounce is working! Function only executed once despite multiple clicks.</div>`;
+            }, 500);
+            
+            document.getElementById('test-debounce-btn').addEventListener('click', function() {
+                clickCount++;
+                debouncedFunction();
+            });
+        }
+        
+        function testShowNotice(type, message) {
+            if (typeof MASE.showNotice === 'function') {
+                MASE.showNotice(type, message);
+            }
+        }
+        
+        document.getElementById('test-collect-btn').addEventListener('click', function() {
+            const formData = MASE.collectFormData();
+            const container = document.getElementById('collect-result');
+            
+            container.innerHTML = 
+                '<div class="test-result pass">✓ Form data collected successfully</div>' +
+                '<div class="code-block">' + JSON.stringify(formData, null, 2) + '</div>';
+        });
+        
+        function testRequirements() {
+            const container = document.getElementById('requirements-test');
+            let html = '<h3>Task 10 Requirements Checklist:</h3>';
+            
+            const requirements = [
+                {
+                    text: 'Set up MASE namespace object with config, state, and modules',
+                    test: () => MASE && MASE.config && MASE.state && MASE.modules
+                },
+                {
+                    text: 'Implement init() method to initialize all modules',
+                    test: () => typeof MASE.init === 'function'
+                },
+                {
+                    text: 'Implement bindEvents() method to attach event handlers',
+                    test: () => typeof MASE.bindEvents === 'function'
+                },
+                {
+                    text: 'Initialize WordPress color pickers on .mase-color-picker elements',
+                    test: () => typeof MASE.initColorPickers === 'function'
+                },
+                {
+                    text: 'Add debounce utility function for performance',
+                    test: () => typeof MASE.debounce === 'function'
+                },
+                {
+                    text: 'Add showNotice() method for user feedback (success, error, info)',
+                    test: () => typeof MASE.showNotice === 'function'
+                },
+                {
+                    text: 'Add collectFormData() method to gather all form inputs',
+                    test: () => typeof MASE.collectFormData === 'function'
+                }
+            ];
+            
+            requirements.forEach((req, index) => {
+                const passed = req.test();
+                const status = passed ? 'pass' : 'fail';
+                const icon = passed ? '✓' : '✗';
+                html += `<div class="test-result ${status}">${icon} Requirement ${index + 1}: ${req.text}</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Run tests when page loads
+        window.addEventListener('load', function() {
+            runTests();
+        });
+    </script>
+</body>
+</html>

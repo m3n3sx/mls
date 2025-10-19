@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Browser Compatibility Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .browser-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .browser-info h2 {
+            color: #1976d2;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .browser-info p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .test-section {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: #f5f5f5;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .test-header h3 {
+            color: #333;
+            font-size: 16px;
+        }
+
+        .test-content {
+            padding: 20px;
+        }
+
+        .test-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .test-item h4 {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .test-result {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .test-result.pass {
+            background: #4caf50;
+            color: white;
+        }
+
+        .test-result.fail {
+            background: #f44336;
+            color: white;
+        }
+
+        .test-result.warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Test 1: CSS Variables */
+        .css-variables-test {
+            --test-color: #4A90E2;
+            --test-size: 16px;
+            color: var(--test-color);
+            font-size: var(--test-size);
+        }
+
+        /* Test 2: Backdrop Filter */
+        .backdrop-filter-test {
+            position: relative;
+            height: 200px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect fill="%234A90E2" width="200" height="200"/></svg>');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .backdrop-filter-overlay {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+        }
+
+        @supports (backdrop-filter: blur(10px)) {
+            .backdrop-filter-overlay {
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Test 3: Flexbox */
+        .flexbox-test {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flex-item {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+        }
+
+        /* Test 4: Grid Layout */
+        .grid-test {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .grid-item {
+            padding: 15px;
+            background: #f3e5f5;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Test 5: Transforms */
+        .transform-test {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            border-radius: 4px;
+            transition: transform 0.3s;
+        }
+
+        .transform-test:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Test 6: Transitions */
+        .transition-test {
+            width: 100px;
+            height: 100px;
+            background: #ff9800;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .transition-test:hover {
+            background: #f44336;
+            border-radius: 50%;
+        }
+
+        /* Test 7: Box Shadow */
+        .shadow-test {
+            padding: 20px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        /* Test 8: Border Radius */
+        .border-radius-test {
+            padding: 15px;
+            background: #e1bee7;
+            border-radius: 12px;
+        }
+
+        /* Test 9: Media Queries */
+        .media-query-test {
+            padding: 15px;
+            background: #ffccbc;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .media-query-test {
+                background: #c5e1a5;
+            }
+        }
+
+        /* Test 10: Calc() */
+        .calc-test {
+            width: calc(100% - 40px);
+            padding: 15px;
+            background: #b3e5fc;
+            border-radius: 4px;
+        }
+
+        .console-output {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .console-output div {
+            margin: 5px 0;
+        }
+
+        .console-output .error {
+            color: #ef5350;
+        }
+
+        .console-output .success {
+            color: #66bb6a;
+        }
+
+        .console-output .warning {
+            color: #ffa726;
+        }
+
+        .action-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2196f3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976d2;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #388e3c;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 MASE Browser Compatibility Test Suite</h1>
+        <p style="color: #666; margin-bottom: 20px;">Testing Requirements 19.1, 19.2, 19.3, 19.4, 19.5</p>
+
+        <div class="browser-info">
+            <h2>Browser Information</h2>
+            <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+            <p><strong>Browser:</strong> <span id="browserName"></span></p>
+            <p><strong>Version:</strong> <span id="browserVersion"></span></p>
+            <p><strong>Platform:</strong> <span id="platform"></span></p>
+            <p><strong>Screen Resolution:</strong> <span id="screenResolution"></span></p>
+        </div>
+
+        <!-- Test 1: CSS Variables -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 1: CSS Custom Properties (Variables)</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>CSS Variables Support</h4>
+                    <div class="css-variables-test" id="cssVarTest">
+                        This text should be blue (#4A90E2) and 16px
+                    </div>
+                    <div class="test-result" id="cssVarResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Backdrop Filter -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 2: Backdrop Filter (Glassmorphism)</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>Backdrop Filter with Fallback</h4>
+                    <div class="backdrop-filter-test">
+                        <div class="backdrop-filter-overlay" id="backdropTest">
+                            Glassmorphism Effect
+                        </div>
+                    </div>
+                    <div class="test-result" id="backdropResult">Testing...</div>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                        Note: Firefox <103 will show fallback (solid background)
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Flexbox -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 3: Flexbox Layout</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>Flex Container with Gap</h4>
+                    <div class="flexbox-test" id="flexboxTest">
+                        <div class="flex-item">Item 1</div>
+                        <div class="flex-item">Item 2</div>
+                        <div class="flex-item">Item 3</div>
+                    </div>
+                    <div class="test-result" id="flexboxResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: Grid Layout -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 4: CSS Grid Layout</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>Grid with Auto-fit</h4>
+                    <div class="grid-test" id="gridTest">
+                        <div class="grid-item">Grid 1</div>
+                        <div class="grid-item">Grid 2</div>
+                        <div class="grid-item">Grid 3</div>
+                        <div class="grid-item">Grid 4</div>
+                    </div>
+                    <div class="test-result" id="gridResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 5: Transforms -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 5: CSS Transforms</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>Transform on Hover</h4>
+                    <div class="transform-test" id="transformTest">
+                        Hover over me
+                    </div>
+                    <div class="test-result" id="transformResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 6: Transitions -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 6: CSS Transitions</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>Smooth Transitions</h4>
+                    <div class="transition-test" id="transitionTest"></div>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">Hover to see transition</p>
+                    <div class="test-result" id="transitionResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 7: Box Shadow -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 7: Box Shadow</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <div class="shadow-test" id="shadowTest">
+                        This box should have a subtle shadow
+                    </div>
+                    <div class="test-result" id="shadowResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 8: Border Radius -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 8: Border Radius</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <div class="border-radius-test" id="borderRadiusTest">
+                        This box should have rounded corners (12px)
+                    </div>
+                    <div class="test-result" id="borderRadiusResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 9: Media Queries -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 9: Media Queries</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <div class="media-query-test" id="mediaQueryTest">
+                        Resize window to test (orange on desktop, green on mobile)
+                    </div>
+                    <div class="test-result" id="mediaQueryResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 10: Calc() -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Test 10: CSS Calc()</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <div class="calc-test" id="calcTest">
+                        Width calculated with calc(100% - 40px)
+                    </div>
+                    <div class="test-result" id="calcResult">Testing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript Tests -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>JavaScript Feature Tests</h3>
+            </div>
+            <div class="test-content">
+                <div class="test-item">
+                    <h4>JavaScript Features</h4>
+                    <div id="jsFeatures"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Console Output -->
+        <div class="test-section">
+            <div class="test-header">
+                <h3>Console Output & Errors</h3>
+            </div>
+            <div class="test-content">
+                <div class="console-output" id="consoleOutput">
+                    <div class="success">✓ Test suite initialized</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="runAllTests()">Run All Tests</button>
+            <button class="btn btn-success" onclick="exportResults()">Export Results</button>
+            <button class="btn btn-danger" onclick="clearConsole()">Clear Console</button>
+        </div>
+    </div>
+
+    <script>
+        // Browser Detection
+        function detectBrowser() {
+            var ua = navigator.userAgent;
+            var browserName = 'Unknown';
+            var browserVersion = 'Unknown';
+            
+            if (ua.indexOf('Chrome') > -1 && ua.indexOf('Edg') === -1) {
+                browserName = 'Chrome';
+                browserVersion = ua.match(/Chrome\/(\d+)/)[1];
+            } else if (ua.indexOf('Edg') > -1) {
+                browserName = 'Edge';
+                browserVersion = ua.match(/Edg\/(\d+)/)[1];
+            } else if (ua.indexOf('Firefox') > -1) {
+                browserName = 'Firefox';
+                browserVersion = ua.match(/Firefox\/(\d+)/)[1];
+            } else if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) {
+                browserName = 'Safari';
+                browserVersion = ua.match(/Version\/(\d+)/)[1];
+            }
+            
+            return { name: browserName, version: parseInt(browserVersion) };
+        }
+
+        // Display Browser Info
+        function displayBrowserInfo() {
+            var browser = detectBrowser();
+            document.getElementById('userAgent').textContent = navigator.userAgent;
+            document.getElementById('browserName').textContent = browser.name;
+            document.getElementById('browserVersion').textContent = browser.version;
+            document.getElementById('platform').textContent = navigator.platform;
+            document.getElementById('screenResolution').textContent = screen.width + 'x' + screen.height;
+        }
+
+        // Console Logger
+        function log(message, type) {
+            type = type || 'info';
+            var consoleOutput = document.getElementById('consoleOutput');
+            var div = document.createElement('div');
+            div.className = type;
+            
+            var icon = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'warning' ? '⚠' : 'ℹ';
+            div.textContent = icon + ' ' + message;
+            
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        // Clear Console
+        function clearConsole() {
+            document.getElementById('consoleOutput').innerHTML = '<div class="success">✓ Console cleared</div>';
+        }
+
+        // Test 1: CSS Variables
+        function testCSSVariables() {
+            var element = document.getElementById('cssVarTest');
+            var color = window.getComputedStyle(element).color;
+            var fontSize = window.getComputedStyle(element).fontSize;
+            
+            var passed = color === 'rgb(74, 144, 226)' && fontSize === '16px';
+            
+            var result = document.getElementById('cssVarResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('CSS Variables: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 2: Backdrop Filter
+        function testBackdropFilter() {
+            var element = document.getElementById('backdropTest');
+            var style = window.getComputedStyle(element);
+            var backdropFilter = style.backdropFilter || style.webkitBackdropFilter;
+            
+            var supported = backdropFilter && backdropFilter !== 'none';
+            var browser = detectBrowser();
+            var expectedFail = browser.name === 'Firefox' && browser.version < 103;
+            
+            var result = document.getElementById('backdropResult');
+            if (supported) {
+                result.className = 'test-result pass';
+                result.textContent = 'PASS - Backdrop filter supported';
+                log('Backdrop Filter: Supported', 'success');
+            } else if (expectedFail) {
+                result.className = 'test-result warning';
+                result.textContent = 'EXPECTED - Fallback active (Firefox <103)';
+                log('Backdrop Filter: Using fallback (Firefox <103)', 'warning');
+            } else {
+                result.className = 'test-result fail';
+                result.textContent = 'FAIL - No support or fallback';
+                log('Backdrop Filter: Not supported', 'error');
+            }
+            
+            return supported || expectedFail;
+        }
+
+        // Test 3: Flexbox
+        function testFlexbox() {
+            var element = document.getElementById('flexboxTest');
+            var display = window.getComputedStyle(element).display;
+            
+            var passed = display === 'flex';
+            
+            var result = document.getElementById('flexboxResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('Flexbox: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 4: Grid
+        function testGrid() {
+            var element = document.getElementById('gridTest');
+            var display = window.getComputedStyle(element).display;
+            
+            var passed = display === 'grid';
+            
+            var result = document.getElementById('gridResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('CSS Grid: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 5: Transforms
+        function testTransforms() {
+            var element = document.getElementById('transformTest');
+            var transform = window.getComputedStyle(element).transform;
+            
+            var passed = transform !== undefined && transform !== 'none';
+            
+            var result = document.getElementById('transformResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('CSS Transforms: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 6: Transitions
+        function testTransitions() {
+            var element = document.getElementById('transitionTest');
+            var transition = window.getComputedStyle(element).transition;
+            
+            var passed = transition && transition !== 'all 0s ease 0s';
+            
+            var result = document.getElementById('transitionResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('CSS Transitions: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 7: Box Shadow
+        function testBoxShadow() {
+            var element = document.getElementById('shadowTest');
+            var boxShadow = window.getComputedStyle(element).boxShadow;
+            
+            var passed = boxShadow && boxShadow !== 'none';
+            
+            var result = document.getElementById('shadowResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('Box Shadow: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 8: Border Radius
+        function testBorderRadius() {
+            var element = document.getElementById('borderRadiusTest');
+            var borderRadius = window.getComputedStyle(element).borderRadius;
+            
+            var passed = borderRadius && borderRadius !== '0px';
+            
+            var result = document.getElementById('borderRadiusResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('Border Radius: ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 9: Media Queries
+        function testMediaQueries() {
+            var element = document.getElementById('mediaQueryTest');
+            var bgColor = window.getComputedStyle(element).backgroundColor;
+            
+            var isMobile = window.innerWidth <= 768;
+            var expectedColor = isMobile ? 'rgb(197, 225, 165)' : 'rgb(255, 204, 188)';
+            var passed = bgColor === expectedColor;
+            
+            var result = document.getElementById('mediaQueryResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('Media Queries: ' + (passed ? 'Working correctly' : 'Not working'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test 10: Calc()
+        function testCalc() {
+            var element = document.getElementById('calcTest');
+            var width = element.offsetWidth;
+            var parentWidth = element.parentElement.offsetWidth;
+            
+            var expectedWidth = parentWidth - 40;
+            var passed = Math.abs(width - expectedWidth) < 5; // Allow 5px tolerance
+            
+            var result = document.getElementById('calcResult');
+            result.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            result.textContent = passed ? 'PASS' : 'FAIL';
+            
+            log('CSS Calc(): ' + (passed ? 'Supported' : 'Not supported'), passed ? 'success' : 'error');
+            return passed;
+        }
+
+        // Test JavaScript Features
+        function testJavaScriptFeatures() {
+            var features = {
+                'querySelector': typeof document.querySelector === 'function',
+                'addEventListener': typeof document.addEventListener === 'function',
+                'JSON': typeof JSON !== 'undefined',
+                'localStorage': typeof localStorage !== 'undefined',
+                'fetch': typeof fetch === 'function',
+                'Promise': typeof Promise !== 'undefined',
+                'Array.forEach': Array.prototype.forEach !== undefined,
+                'Object.keys': typeof Object.keys === 'function'
+            };
+            
+            var html = '';
+            var allPassed = true;
+            
+            for (var feature in features) {
+                var passed = features[feature];
+                allPassed = allPassed && passed;
+                html += '<div style="margin: 5px 0;">';
+                html += '<span style="color: ' + (passed ? '#4caf50' : '#f44336') + ';">';
+                html += (passed ? '✓' : '✗') + ' ' + feature;
+                html += '</span></div>';
+                
+                log('JavaScript ' + feature + ': ' + (passed ? 'Supported' : 'Not supported'), 
+                    passed ? 'success' : 'error');
+            }
+            
+            document.getElementById('jsFeatures').innerHTML = html;
+            return allPassed;
+        }
+
+        // Run All Tests
+        function runAllTests() {
+            log('Starting comprehensive browser compatibility tests...', 'info');
+            
+            var results = {
+                cssVariables: testCSSVariables(),
+                backdropFilter: testBackdropFilter(),
+                flexbox: testFlexbox(),
+                grid: testGrid(),
+                transforms: testTransforms(),
+                transitions: testTransitions(),
+                boxShadow: testBoxShadow(),
+                borderRadius: testBorderRadius(),
+                mediaQueries: testMediaQueries(),
+                calc: testCalc(),
+                javascript: testJavaScriptFeatures()
+            };
+            
+            var passed = 0;
+            var total = 0;
+            for (var test in results) {
+                total++;
+                if (results[test]) passed++;
+            }
+            
+            log('Tests completed: ' + passed + '/' + total + ' passed', 
+                passed === total ? 'success' : 'warning');
+            
+            return results;
+        }
+
+        // Export Results
+        function exportResults() {
+            var browser = detectBrowser();
+            var results = runAllTests();
+            
+            var report = {
+                timestamp: new Date().toISOString(),
+                browser: browser,
+                platform: navigator.platform,
+                userAgent: navigator.userAgent,
+                screenResolution: screen.width + 'x' + screen.height,
+                tests: results
+            };
+            
+            var blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'mase-browser-test-' + browser.name + '-' + browser.version + '.json';
+            a.click();
+            
+            log('Test results exported', 'success');
+        }
+
+        // Capture Console Errors
+        window.onerror = function(message, source, lineno, colno, error) {
+            log('JavaScript Error: ' + message + ' at line ' + lineno, 'error');
+            return false;
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            displayBrowserInfo();
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

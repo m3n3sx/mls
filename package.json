@@ -1,0 +1,41 @@
+{
+  "name": "modern-admin-styler-enterprise",
+  "version": "1.2.0",
+  "description": "Modern Admin Styler Enterprise - WordPress Admin Customization Plugin",
+  "scripts": {
+    "test": "jest --run",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --run"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testMatch": [
+      "**/tests/unit/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "assets/js/**/*.js",
+      "!assets/js/**/*.min.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jquery": "^3.7.1"
+  },
+  "keywords": [
+    "wordpress",
+    "admin",
+    "customization",
+    "styling"
+  ],
+  "author": "MASE Team",
+  "license": "GPL-2.0-or-later"
+}

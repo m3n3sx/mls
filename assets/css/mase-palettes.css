@@ -1,0 +1,401 @@
+/**
+ * Modern Admin Styler Enterprise (MASE) - Palette Styles
+ * 
+ * Styles for color palette cards, grid layout, and interactive states.
+ * Implements responsive design, accessibility features, and RTL support.
+ * 
+ * @package     Modern Admin Styler Enterprise
+ * @version     1.2.0
+ * @author      Modern Admin Styler Team
+ * @license     GPL-2.0+
+ */
+
+/* ============================================================================
+   PALETTE GRID LAYOUT
+   ============================================================================ */
+
+.mase-palettes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--mase-spacing-lg, 24px);
+    margin-bottom: var(--mase-spacing-xl, 32px);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 767px) {
+    .mase-palettes-grid {
+        grid-template-columns: 1fr;
+        gap: var(--mase-spacing-md, 16px);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .mase-palettes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .mase-palettes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* ============================================================================
+   PALETTE CARD COMPONENT
+   ============================================================================ */
+
+.mase-palette-card {
+    position: relative;
+    background: var(--mase-surface, #ffffff);
+    border: 1px solid var(--mase-border, #e2e8f0);
+    border-radius: var(--mase-radius-lg, 12px);
+    padding: var(--mase-spacing-lg, 24px);
+    cursor: pointer;
+    transition: all var(--mase-transition-normal, 0.2s) var(--mase-timing-ease, ease);
+    overflow: hidden;
+}
+
+/* Hover state */
+.mase-palette-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--mase-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+    border-color: var(--mase-primary, #4A90E2);
+}
+
+/* Focus state for keyboard navigation */
+.mase-palette-card:focus,
+.mase-palette-card:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    border-color: var(--mase-primary, #4A90E2);
+}
+
+/* Active/Selected state */
+.mase-palette-card.active,
+.mase-palette-card.is-active {
+    border: 2px solid var(--mase-primary, #4A90E2);
+    box-shadow: var(--mase-shadow-lg, 0 8px 16px rgba(0, 0, 0, 0.12));
+}
+
+/* Disabled state */
+.mase-palette-card.disabled,
+.mase-palette-card:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================================================
+   PALETTE CARD HEADER
+   ============================================================================ */
+
+.mase-palette-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--mase-spacing-md, 16px);
+}
+
+.mase-palette-name {
+    font-size: var(--mase-font-md, 16px);
+    font-weight: var(--mase-font-semibold, 600);
+    color: var(--mase-text-primary, #1e293b);
+    margin: 0;
+}
+
+/* Active badge */
+.mase-palette-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background: var(--mase-primary, #4A90E2);
+    color: #ffffff;
+    font-size: var(--mase-font-xs, 12px);
+    font-weight: var(--mase-font-medium, 500);
+    border-radius: var(--mase-radius-full, 9999px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================================
+   COLOR SWATCHES
+   ============================================================================ */
+
+.mase-palette-colors {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--mase-spacing-sm, 8px);
+    margin-bottom: var(--mase-spacing-md, 16px);
+}
+
+.mase-color-swatch {
+    aspect-ratio: 1;
+    border-radius: var(--mase-radius-md, 8px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: transform var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
+    position: relative;
+}
+
+.mase-color-swatch:hover {
+    transform: scale(1.05);
+    box-shadow: var(--mase-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+/* Color labels */
+.mase-color-label {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    font-weight: var(--mase-font-medium, 500);
+}
+
+/* ============================================================================
+   PALETTE ACTIONS
+   ============================================================================ */
+
+.mase-palette-actions {
+    display: flex;
+    gap: var(--mase-spacing-sm, 8px);
+    margin-top: var(--mase-spacing-md, 16px);
+}
+
+.mase-palette-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid var(--mase-border, #e2e8f0);
+    border-radius: var(--mase-radius-md, 8px);
+    background: var(--mase-surface, #ffffff);
+    color: var(--mase-text-primary, #1e293b);
+    font-size: var(--mase-font-sm, 14px);
+    font-weight: var(--mase-font-medium, 500);
+    cursor: pointer;
+    transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
+    text-align: center;
+}
+
+.mase-palette-btn:hover {
+    background: var(--mase-gray-50, #f8fafc);
+    border-color: var(--mase-primary, #4A90E2);
+    color: var(--mase-primary, #4A90E2);
+}
+
+.mase-palette-btn:focus,
+.mase-palette-btn:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+}
+
+.mase-palette-btn:active {
+    transform: scale(0.98);
+}
+
+.mase-palette-btn-primary {
+    background: var(--mase-primary, #4A90E2);
+    color: #ffffff;
+    border-color: var(--mase-primary, #4A90E2);
+}
+
+.mase-palette-btn-primary:hover {
+    background: var(--mase-primary-dark, #3a7bc8);
+    border-color: var(--mase-primary-dark, #3a7bc8);
+    color: #ffffff;
+}
+
+/* ============================================================================
+   CUSTOM PALETTE SECTION
+   ============================================================================ */
+
+.mase-custom-palette-section {
+    margin-top: var(--mase-spacing-xl, 32px);
+    padding-top: var(--mase-spacing-xl, 32px);
+    border-top: 1px solid var(--mase-border, #e2e8f0);
+}
+
+.mase-custom-palette-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--mase-spacing-lg, 24px);
+}
+
+.mase-custom-palette-title {
+    font-size: var(--mase-font-lg, 18px);
+    font-weight: var(--mase-font-semibold, 600);
+    color: var(--mase-text-primary, #1e293b);
+    margin: 0;
+}
+
+.mase-add-palette-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--mase-spacing-xs, 4px);
+    padding: 8px 16px;
+    background: var(--mase-primary, #4A90E2);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--mase-radius-md, 8px);
+    font-size: var(--mase-font-sm, 14px);
+    font-weight: var(--mase-font-medium, 500);
+    cursor: pointer;
+    transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
+}
+
+.mase-add-palette-btn:hover {
+    background: var(--mase-primary-dark, #3a7bc8);
+    transform: translateY(-1px);
+    box-shadow: var(--mase-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
+}
+
+.mase-add-palette-btn:focus,
+.mase-add-palette-btn:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+}
+
+/* ============================================================================
+   ACCESSIBILITY FEATURES
+   ============================================================================ */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .mase-palette-card {
+        border-width: 2px;
+    }
+    
+    .mase-palette-card.active,
+    .mase-palette-card.is-active {
+        border-width: 3px;
+    }
+    
+    .mase-color-swatch {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .mase-palette-card,
+    .mase-palette-btn,
+    .mase-color-swatch,
+    .mase-add-palette-btn {
+        transition: none;
+    }
+    
+    .mase-palette-card:hover,
+    .mase-color-swatch:hover {
+        transform: none;
+    }
+}
+
+/* Focus indicators for keyboard navigation */
+.mase-palette-card:focus-visible,
+.mase-palette-btn:focus-visible,
+.mase-add-palette-btn:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+}
+
+/* Screen reader only text */
+.mase-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ============================================================================
+   RTL SUPPORT
+   ============================================================================ */
+
+[dir="rtl"] .mase-palette-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-palette-actions {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-custom-palette-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-add-palette-btn {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-color-label {
+    left: auto;
+    right: 4px;
+}
+
+/* ============================================================================
+   LOADING & EMPTY STATES
+   ============================================================================ */
+
+.mase-palettes-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: var(--mase-text-secondary, #64748b);
+}
+
+.mase-palettes-empty {
+    text-align: center;
+    padding: var(--mase-spacing-2xl, 48px);
+    color: var(--mase-text-secondary, #64748b);
+}
+
+.mase-palettes-empty-icon {
+    font-size: 48px;
+    margin-bottom: var(--mase-spacing-md, 16px);
+    opacity: 0.5;
+}
+
+.mase-palettes-empty-text {
+    font-size: var(--mase-font-md, 16px);
+    margin-bottom: var(--mase-spacing-sm, 8px);
+}
+
+/* ============================================================================
+   MOBILE OPTIMIZATIONS
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    .mase-palette-card {
+        padding: var(--mase-spacing-md, 16px);
+    }
+    
+    .mase-palette-colors {
+        gap: var(--mase-spacing-xs, 4px);
+    }
+    
+    .mase-palette-btn {
+        padding: 8px 12px;
+        font-size: var(--mase-font-xs, 12px);
+        min-height: 44px; /* Touch target size */
+    }
+    
+    .mase-add-palette-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px; /* Touch target size */
+    }
+    
+    .mase-custom-palette-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--mase-spacing-md, 16px);
+    }
+}

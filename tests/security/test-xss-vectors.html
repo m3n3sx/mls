@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE XSS Vulnerability Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-case {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0073aa;
+        }
+        .test-case h3 {
+            margin-top: 0;
+        }
+        .payload {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        .pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>MASE XSS Vulnerability Test Suite</h1>
+    <p><strong>Purpose:</strong> Test for Cross-Site Scripting (XSS) vulnerabilities in MASE plugin</p>
+    <p><strong>Requirement:</strong> 14.5 - Test for XSS vulnerabilities</p>
+
+    <div class="test-case">
+        <h3>Test 1: Basic Script Injection in Custom CSS</h3>
+        <p><strong>Vector:</strong> Custom CSS field</p>
+        <div class="payload">
+&lt;script&gt;alert('XSS')&lt;/script&gt;
+        </div>
+        <p><strong>Expected Result:</strong> Script tags should be stripped by wp_kses_post()</p>
+        <div class="result pass">
+            ✓ If no alert appears, the sanitization is working correctly
+        </div>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 2: Event Handler Injection</h3>
+        <p><strong>Vector:</strong> Custom CSS with event handlers</p>
+        <div class="payload">
+&lt;div onload="alert('XSS')"&gt;test&lt;/div&gt;
+        </div>
+        <p><strong>Expected Result:</strong> Event handlers should be stripped</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 3: JavaScript Protocol in URLs</h3>
+        <p><strong>Vector:</strong> Color values or URLs</p>
+        <div class="payload">
+javascript:alert('XSS')
+        </div>
+        <p><strong>Expected Result:</strong> JavaScript protocol should be rejected</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 4: HTML Entity Encoding Bypass</h3>
+        <p><strong>Vector:</strong> Encoded script tags</p>
+        <div class="payload">
+&amp;lt;script&amp;gt;alert('XSS')&amp;lt;/script&amp;gt;
+        </div>
+        <p><strong>Expected Result:</strong> Should be displayed as text, not executed</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 5: CSS Expression Injection (IE)</h3>
+        <p><strong>Vector:</strong> CSS expressions</p>
+        <div class="payload">
+body { background: expression(alert('XSS')); }
+        </div>
+        <p><strong>Expected Result:</strong> Expression should be stripped or escaped</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 6: SVG Script Injection</h3>
+        <p><strong>Vector:</strong> SVG with embedded script</p>
+        <div class="payload">
+&lt;svg onload="alert('XSS')"&gt;&lt;/svg&gt;
+        </div>
+        <p><strong>Expected Result:</strong> SVG script should be stripped</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 7: Data URI with JavaScript</h3>
+        <p><strong>Vector:</strong> Data URI in CSS</p>
+        <div class="payload">
+background: url(data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4=);
+        </div>
+        <p><strong>Expected Result:</strong> Data URI with script should be blocked</p>
+    </div>
+
+    <div class="test-case">
+        <h3>Test 8: Import Statement Injection</h3>
+        <p><strong>Vector:</strong> CSS @import</p>
+        <div class="payload">
+@import url('http://evil.com/xss.css');
+        </div>
+        <p><strong>Expected Result:</strong> External imports should be blocked or sanitized</p>
+    </div>
+
+    <h2>Manual Testing Instructions</h2>
+    <ol>
+        <li>Navigate to MASE settings page in WordPress admin</li>
+        <li>Go to Advanced tab</li>
+        <li>Try entering each payload above in the Custom CSS field</li>
+        <li>Save settings</li>
+        <li>Check if any JavaScript executes (alerts, console messages, etc.)</li>
+        <li>Inspect the generated CSS in page source</li>
+        <li>Verify that dangerous content is stripped or escaped</li>
+    </ol>
+
+    <h2>Automated Testing</h2>
+    <p>Run the following command to test XSS protection:</p>
+    <pre style="background: #f5f5f5; padding: 10px; border: 1px solid #ddd;">
+php tests/security/test-security-audit.php
+    </pre>
+
+    <h2>Expected Behavior</h2>
+    <ul>
+        <li>All script tags should be stripped</li>
+        <li>Event handlers (onload, onclick, etc.) should be removed</li>
+        <li>JavaScript protocols should be rejected</li>
+        <li>Only safe CSS properties should be allowed</li>
+        <li>External resources should be validated</li>
+    </ul>
+</body>
+</html>

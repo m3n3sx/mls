@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 10: Security and Error Handling Tests</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #f0f0f1;
+        }
+        
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            background: white;
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 1px solid #c3c4c7;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #1d2327;
+            font-size: 20px;
+            border-bottom: 1px solid #dcdcde;
+            padding-bottom: 10px;
+        }
+        
+        .test-section h3 {
+            color: #2271b1;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        
+        .test-instructions {
+            background: #f0f6fc;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .test-instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .test-instructions li {
+            margin: 5px 0;
+        }
+        
+        .mase-template-card {
+            border: 1px solid #c3c4c7;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: opacity 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        
+        .mase-template-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+        
+        .mase-template-card h3 {
+            margin-top: 0;
+            color: #1d2327;
+        }
+        
+        .mase-template-card p {
+            color: #50575e;
+            margin: 10px 0;
+        }
+        
+        .mase-template-apply-btn {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .mase-template-apply-btn:hover:not(:disabled) {
+            background: #135e96;
+        }
+        
+        .mase-template-apply-btn:disabled {
+            background: #c3c4c7;
+            cursor: not-allowed;
+        }
+        
+        .mase-notice {
+            padding: 12px 16px;
+            margin: 15px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .mase-notice-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .mase-notice-error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .mase-notice-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        #console-log {
+            background: #1d2327;
+            color: #f0f0f1;
+            border: 1px solid #c3c4c7;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border-radius: 4px;
+        }
+        
+        .log-entry {
+            margin: 3px 0;
+            padding: 3px 5px;
+            border-radius: 2px;
+        }
+        
+        .log-info {
+            color: #72aee6;
+        }
+        
+        .log-error {
+            color: #f86368;
+            background: rgba(248, 99, 104, 0.1);
+        }
+        
+        .log-success {
+            color: #68de7c;
+        }
+        
+        .log-warning {
+            color: #f0b849;
+        }
+        
+        .test-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        
+        .test-controls button {
+            background: #50575e;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 13px;
+        }
+        
+        .test-controls button:hover {
+            background: #3c434a;
+        }
+        
+        .checklist {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .checklist-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .security-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .security-warning h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .security-controls {
+            background: #f8d7da;
+            border: 1px solid #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        .security-controls h4 {
+            margin-top: 0;
+            color: #721c24;
+        }
+        
+        .security-controls label {
+            display: block;
+            margin: 10px 0;
+        }
+        
+        .security-controls button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .security-controls button:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task 10: Security and Error Handling Tests</h1>
+    <p><strong>Requirements:</strong> 7.2, 7.3, 10.1, 10.2, 10.3, 10.4, 10.5</p>
+    
+    <div class="security-warning">
+        <h4>⚠️ Security Testing Notice</h4>
+        <p>This page tests security features by intentionally triggering error conditions. These tests simulate malicious behavior to verify proper security controls are in place.</p>
+        <p><strong>Do not use these techniques on production systems without authorization.</strong></p>
+    </div>
+    
+    <!-- Subtask 10.1: Test nonce verification -->
+    <div class="test-section">
+        <h2>Subtask 10.1: Test Nonce Verification</h2>
+        <p><strong>Requirements:</strong> 7.2, 10.3</p>
+        
+        <div class="test-instructions">
+            <strong>Test Steps:</strong>
+            <ul>
+                <li>Click "Corrupt Nonce" button to modify the nonce value</li>
+                <li>Click Apply button on the template card</li>
+                <li>Verify 403 error response in console</li>
+                <li>Verify error notification appears</li>
+                <li>Click "Restore Nonce" to reset for other tests</li>
+            </ul>
+        </div>
+        
+        <div class="security-controls">
+            <h4>Nonce Manipulation Controls</h4>
+            <p>Current nonce: <code id="current-nonce">test-nonce-12345</code></p>
+            <button onclick="corruptNonce()">Corrupt Nonce</button>
+            <button onclick="restoreNonce()">Restore Nonce</button>
+        </div>
+        
+        <h3>Test Case 1: Invalid Nonce</h3>
+        <div class="mase-template-card" data-template="professional-blue" data-template-id="professional-blue">
+            <h3>Professional Blue</h3>
+            <p>Test template for nonce verification.</p>
+            <button type="button" class="mase-template-apply-btn" data-template-id="professional-blue">Apply</button>
+        </div>
+        
+        <div class="checklist">
+            <strong>Verification Checklist:</strong>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-1-1">
+                <label for="check-10-1-1">403 error response received</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-1-2">
+                <label for="check-10-1-2">Error notification displays "Insufficient permissions" or security error</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-1-3">
+                <label for="check-10-1-3">Console logs show 403 status code</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-1-4">
+                <label for="check-10-1-4">Button state is restored after error</label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subtask 10.2: Test permission check -->
+    <div class="test-section">
+        <h2>Subtask 10.2: Test Permission Check</h2>
+        <p><strong>Requirements:</strong> 7.3, 10.3</p>
+        
+        <div class="test-instructions">
+            <strong>Test Steps:</strong>
+            <ul>
+                <li>Click "Simulate Insufficient Permissions" button</li>
+                <li>Click Apply button on the template card</li>
+                <li>Verify 403 error response</li>
+                <li>Verify "Insufficient permissions" message appears</li>
+                <li>Click "Restore Permissions" to reset</li>
+            </ul>
+        </div>
+        
+        <div class="security-controls">
+            <h4>Permission Simulation Controls</h4>
+            <p>Current permission level: <span id="permission-status">Administrator (manage_options)</span></p>
+            <button onclick="simulateInsufficientPermissions()">Simulate Insufficient Permissions</button>
+            <button onclick="restorePermissions()">Restore Permissions</button>
+        </div>
+        
+        <h3>Test Case 2: Insufficient Permissions</h3>
+        <div class="mase-template-card" data-template="modern-dark" data-template-id="modern-dark">
+            <h3>Modern Dark</h3>
+            <p>Test template for permission verification.</p>
+            <button type="button" class="mase-template-apply-btn" data-template-id="modern-dark">Apply</button>
+        </div>
+        
+        <div class="checklist">
+            <strong>Verification Checklist:</strong>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-2-1">
+                <label for="check-10-2-1">403 error response received</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-2-2">
+                <label for="check-10-2-2">Error notification displays "Insufficient permissions"</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-2-3">
+                <label for="check-10-2-3">Console logs show permission error details</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-2-4">
+                <label for="check-10-2-4">Button and card state restored after error</label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subtask 10.3: Test invalid template ID -->
+    <div class="test-section">
+        <h2>Subtask 10.3: Test Invalid Template ID</h2>
+        <p><strong>Requirements:</strong> 10.2</p>
+        
+        <div class="test-instructions">
+            <strong>Test Steps:</strong>
+            <ul>
+                <li>Click "Corrupt Template ID" button to modify the data-template attribute</li>
+                <li>Click Apply button on the template card</li>
+                <li>Verify 404 error response</li>
+                <li>Verify "Template not found" message appears</li>
+                <li>Click "Restore Template ID" to reset</li>
+            </ul>
+        </div>
+        
+        <div class="security-controls">
+            <h4>Template ID Manipulation Controls</h4>
+            <p>Current template ID: <code id="current-template-id">minimal-light</code></p>
+            <button onclick="corruptTemplateId()">Corrupt Template ID</button>
+            <button onclick="restoreTemplateId()">Restore Template ID</button>
+        </div>
+        
+        <h3>Test Case 3: Non-existent Template</h3>
+        <div class="mase-template-card" id="test-card-invalid" data-template="minimal-light" data-template-id="minimal-light">
+            <h3>Minimal Light</h3>
+            <p>Test template for invalid ID verification.</p>
+            <button type="button" class="mase-template-apply-btn" data-template-id="minimal-light">Apply</button>
+        </div>
+        
+        <div class="checklist">
+            <strong>Verification Checklist:</strong>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-3-1">
+                <label for="check-10-3-1">404 error response received</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-3-2">
+                <label for="check-10-3-2">Error notification displays "Template not found"</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-3-3">
+                <label for="check-10-3-3">Console logs show 404 status code</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-3-4">
+                <label for="check-10-3-4">Button and card state restored after error</label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subtask 10.4: Test console logging -->
+    <div class="test-section">
+        <h2>Subtask 10.4: Test Console Logging</h2>
+        <p><strong>Requirements:</strong> 8.1, 8.3, 8.4</p>
+        
+        <div class="test-instructions">
+            <strong>Test Steps:</strong>
+            <ul>
+                <li>Open browser console (F12 or Ctrl+Shift+I)</li>
+                <li>Click Apply button on the template card below</li>
+                <li>Verify template ID is logged</li>
+                <li>Verify AJAX request data is logged</li>
+                <li>Verify AJAX response is logged</li>
+                <li>Check the console log output section below</li>
+            </ul>
+        </div>
+        
+        <h3>Test Case 4: Console Logging</h3>
+        <div class="mase-template-card" data-template="elegant-purple" data-template-id="elegant-purple">
+            <h3>Elegant Purple</h3>
+            <p>Test template for console logging verification.</p>
+            <button type="button" class="mase-template-apply-btn" data-template-id="elegant-purple">Apply</button>
+        </div>
+        
+        <div class="checklist">
+            <strong>Verification Checklist:</strong>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-4-1">
+                <label for="check-10-4-1">Template ID logged: "MASE: Apply button clicked for template: elegant-purple"</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-4-2">
+                <label for="check-10-4-2">AJAX request data logged with action, nonce, and template_id</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-4-3">
+                <label for="check-10-4-3">AJAX response logged with success/error details</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-10-4-4">
+                <label for="check-10-4-4">Error details logged with status code and message</label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Console log output -->
+    <div class="test-section">
+        <h2>Console Log Output</h2>
+        <div class="test-controls">
+            <button onclick="clearConsoleLog()">Clear Log</button>
+            <button onclick="exportTestResults()">Export Test Results</button>
+        </div>
+        <div id="console-log"></div>
+    </div>
+    
+    <input type="hidden" id="mase_nonce" value="test-nonce-12345" />
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Store original values
+        var originalNonce = 'test-nonce-12345';
+        var originalTemplateId = 'minimal-light';
+        var simulatePermissionError = false;
+        
+        // Mock MASE object with handleTemplateApply implementation
+        var MASE = {
+            config: {
+                ajaxUrl: '/wp-admin/admin-ajax.php',
+                nonce: 'test-nonce-12345'
+            },
+            
+            state: {
+                currentTemplate: null,
+                isDirty: false
+            },
+            
+            templateManager: {
+                /**
+                 * Handle Template Apply Button Click
+                 * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 6.1, 6.2, 6.3, 6.4, 8.1, 8.2, 8.3, 8.4, 10.5
+                 */
+                handleTemplateApply: function(e) {
+                    var self = MASE;
+                    
+                    // Prevent default event and stop propagation
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Get button element and parent card
+                    var $button = $(e.currentTarget);
+                    var $card = $button.closest('.mase-template-card');
+                    
+                    // Read data-template attribute from card (Requirement 3.5)
+                    var templateId = $card.attr('data-template');
+                    
+                    // Validate template ID exists (Requirement 8.1, 8.4)
+                    if (!templateId) {
+                        logToConsole('ERROR: Template ID not found on card', 'error');
+                        self.showNotice('error', 'Template ID is missing. Cannot apply template.');
+                        return;
+                    }
+                    
+                    // Get template name from card for confirmation
+                    var templateName = $card.find('h3').text();
+                    
+                    // Log template apply action to console (Requirement 8.1, 8.4)
+                    logToConsole('MASE: Apply button clicked for template: ' + templateId, 'info');
+                    console.log('MASE: Apply button clicked for template:', templateId);
+                    
+                    // Implement confirmation dialog (Requirements 6.1, 6.2, 6.3)
+                    var confirmMessage = 'Apply "' + templateName + '" template?\n\n' +
+                        'This will overwrite your current settings including:\n' +
+                        '• Color scheme\n' +
+                        '• Typography\n' +
+                        '• Visual effects\n\n' +
+                        'This action cannot be undone.';
+                    
+                    if (!confirm(confirmMessage)) {
+                        logToConsole('User cancelled template application', 'info');
+                        return;
+                    }
+                    
+                    // Implement loading state (Requirements 2.5, 8.1, 8.2)
+                    $button.prop('disabled', true).text('Applying...');
+                    $card.css('opacity', '0.6');
+                    
+                    var originalText = 'Apply';
+                    
+                    // Implement AJAX request (Requirements 2.2, 2.4, 8.3)
+                    var requestData = {
+                        action: 'mase_apply_template',
+                        nonce: $('#mase_nonce').val(),
+                        template_id: templateId
+                    };
+                    
+                    // Log AJAX request data to console (Requirement 8.3)
+                    logToConsole('MASE: Sending AJAX request - Apply Template: ' + JSON.stringify(requestData), 'info');
+                    console.log('MASE: Sending AJAX request - Apply Template', requestData);
+                    
+                    // Simulate AJAX call with error scenarios
+                    setTimeout(function() {
+                        // Check for simulated permission error
+                        if (simulatePermissionError) {
+                            var xhr = {
+                                status: 403,
+                                statusText: 'Forbidden',
+                                responseJSON: {
+                                    success: false,
+                                    data: {
+                                        message: 'Insufficient permissions'
+                                    }
+                                }
+                            };
+                            handleAjaxError(xhr, $button, $card, originalText, templateName);
+                            return;
+                        }
+                        
+                        // Check for invalid nonce
+                        if ($('#mase_nonce').val() !== originalNonce) {
+                            var xhr = {
+                                status: 403,
+                                statusText: 'Forbidden',
+                                responseJSON: {
+                                    success: false,
+                                    data: {
+                                        message: 'Invalid nonce - Security check failed'
+                                    }
+                                }
+                            };
+                            handleAjaxError(xhr, $button, $card, originalText, templateName);
+                            return;
+                        }
+                        
+                        // Check for invalid template ID
+                        if (templateId === 'invalid-template-xyz-999') {
+                            var xhr = {
+                                status: 404,
+                                statusText: 'Not Found',
+                                responseJSON: {
+                                    success: false,
+                                    data: {
+                                        message: 'Template not found'
+                                    }
+                                }
+                            };
+                            handleAjaxError(xhr, $button, $card, originalText, templateName);
+                            return;
+                        }
+                        
+                        // Success response
+                        var response = {
+                            success: true,
+                            data: {
+                                message: 'Template applied successfully',
+                                template_id: templateId,
+                                template_name: templateName
+                            }
+                        };
+                        
+                        // Log AJAX response (Requirement 8.3)
+                        logToConsole('MASE: AJAX response - Apply Template: ' + JSON.stringify(response), 'success');
+                        console.log('MASE: AJAX response - Apply Template', response);
+                        
+                        // Show success notification
+                        self.showNotice('success', 'Template "' + templateName + '" applied successfully!');
+                        
+                        // Log reload message
+                        logToConsole('Page would reload in 1 second (disabled for testing)', 'info');
+                        
+                        // Restore button after 3 seconds for testing
+                        setTimeout(function() {
+                            $button.prop('disabled', false).text(originalText);
+                            $card.css('opacity', '1');
+                            logToConsole('Button restored (testing mode)', 'info');
+                        }, 3000);
+                        
+                    }, 1500);
+                    
+                    function handleAjaxError(xhr, $button, $card, originalText, templateName) {
+                        // Implement error handler (Requirements 2.5, 8.3, 10.5)
+                        logToConsole('MASE: AJAX error - Status: ' + xhr.status + ', StatusText: ' + xhr.statusText, 'error');
+                        console.error('MASE: AJAX error - Apply Template', {
+                            status: xhr.status,
+                            statusText: xhr.statusText,
+                            responseText: xhr.responseJSON
+                        });
+                        
+                        // Parse error message from response
+                        var errorMessage = 'Failed to apply template.';
+                        
+                        if (xhr.status === 403) {
+                            errorMessage = xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message 
+                                ? xhr.responseJSON.data.message 
+                                : 'Insufficient permissions';
+                        } else if (xhr.status === 404) {
+                            errorMessage = 'Template not found';
+                        } else if (xhr.status === 500) {
+                            errorMessage = 'Server error. Please try again later.';
+                        } else if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                            errorMessage = xhr.responseJSON.data.message;
+                        }
+                        
+                        // Show error notification with message
+                        self.showNotice('error', errorMessage);
+                        
+                        // Restore button state (enable, original text)
+                        $button.prop('disabled', false).text(originalText);
+                        
+                        // Restore card opacity to 1
+                        $card.css('opacity', '1');
+                        
+                        logToConsole('Button and card state restored after error', 'info');
+                    }
+                }
+            },
+            
+            showNotice: function(type, message) {
+                logToConsole('Showing notice (' + type + '): ' + message, type === 'error' ? 'error' : 'success');
+                
+                var $notice = $('<div>')
+                    .addClass('mase-notice')
+                    .addClass('mase-notice-' + type)
+                    .text(message);
+                
+                $('.mase-notice').remove();
+                $('body').prepend($notice);
+                
+                if (type === 'success') {
+                    setTimeout(function() {
+                        $notice.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }, 4000);
+                }
+            }
+        };
+        
+        // Security test control functions
+        function corruptNonce() {
+            $('#mase_nonce').val('corrupted-nonce-invalid');
+            $('#current-nonce').text('corrupted-nonce-invalid');
+            logToConsole('Nonce corrupted for testing', 'warning');
+        }
+        
+        function restoreNonce() {
+            $('#mase_nonce').val(originalNonce);
+            $('#current-nonce').text(originalNonce);
+            logToConsole('Nonce restored', 'info');
+        }
+        
+        function simulateInsufficientPermissions() {
+            simulatePermissionError = true;
+            $('#permission-status').text('Subscriber (no manage_options)');
+            logToConsole('Simulating insufficient permissions', 'warning');
+        }
+        
+        function restorePermissions() {
+            simulatePermissionError = false;
+            $('#permission-status').text('Administrator (manage_options)');
+            logToConsole('Permissions restored', 'info');
+        }
+        
+        function corruptTemplateId() {
+            $('#test-card-invalid').attr('data-template', 'invalid-template-xyz-999');
+            $('#current-template-id').text('invalid-template-xyz-999');
+            logToConsole('Template ID corrupted for testing', 'warning');
+        }
+        
+        function restoreTemplateId() {
+            $('#test-card-invalid').attr('data-template', originalTemplateId);
+            $('#current-template-id').text(originalTemplateId);
+            logToConsole('Template ID restored', 'info');
+        }
+        
+        // Console logging function
+        function logToConsole(message, type) {
+            type = type || 'info';
+            var $log = $('#console-log');
+            var timestamp = new Date().toLocaleTimeString();
+            var $entry = $('<div class="log-entry log-' + type + '">')
+                .text('[' + timestamp + '] ' + message);
+            $log.append($entry);
+            $log.scrollTop($log[0].scrollHeight);
+        }
+        
+        function clearConsoleLog() {
+            $('#console-log').empty();
+            logToConsole('Console log cleared', 'info');
+        }
+        
+        function exportTestResults() {
+            var results = {
+                timestamp: new Date().toISOString(),
+                testSuite: 'Task 10: Security and Error Handling Tests',
+                subtasks: {
+                    '10.1': {
+                        name: 'Test nonce verification',
+                        checks: [
+                            { id: 'check-10-1-1', label: '403 error response received', checked: $('#check-10-1-1').is(':checked') },
+                            { id: 'check-10-1-2', label: 'Error notification displays security error', checked: $('#check-10-1-2').is(':checked') },
+                            { id: 'check-10-1-3', label: 'Console logs show 403 status', checked: $('#check-10-1-3').is(':checked') },
+                            { id: 'check-10-1-4', label: 'Button state restored', checked: $('#check-10-1-4').is(':checked') }
+                        ]
+                    },
+                    '10.2': {
+                        name: 'Test permission check',
+                        checks: [
+                            { id: 'check-10-2-1', label: '403 error response received', checked: $('#check-10-2-1').is(':checked') },
+                            { id: 'check-10-2-2', label: 'Insufficient permissions message', checked: $('#check-10-2-2').is(':checked') },
+                            { id: 'check-10-2-3', label: 'Console logs permission error', checked: $('#check-10-2-3').is(':checked') },
+                            { id: 'check-10-2-4', label: 'State restored after error', checked: $('#check-10-2-4').is(':checked') }
+                        ]
+                    },
+                    '10.3': {
+                        name: 'Test invalid template ID',
+                        checks: [
+                            { id: 'check-10-3-1', label: '404 error response received', checked: $('#check-10-3-1').is(':checked') },
+                            { id: 'check-10-3-2', label: 'Template not found message', checked: $('#check-10-3-2').is(':checked') },
+                            { id: 'check-10-3-3', label: 'Console logs 404 status', checked: $('#check-10-3-3').is(':checked') },
+                            { id: 'check-10-3-4', label: 'State restored after error', checked: $('#check-10-3-4').is(':checked') }
+                        ]
+                    },
+                    '10.4': {
+                        name: 'Test console logging',
+                        checks: [
+                            { id: 'check-10-4-1', label: 'Template ID logged', checked: $('#check-10-4-1').is(':checked') },
+                            { id: 'check-10-4-2', label: 'AJAX request data logged', checked: $('#check-10-4-2').is(':checked') },
+                            { id: 'check-10-4-3', label: 'AJAX response logged', checked: $('#check-10-4-3').is(':checked') },
+                            { id: 'check-10-4-4', label: 'Error details logged', checked: $('#check-10-4-4').is(':checked') }
+                        ]
+                    }
+                }
+            };
+            
+            console.log('Test Results:', results);
+            logToConsole('Test results exported to browser console', 'success');
+            
+            // Create downloadable JSON
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "task-10-test-results.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+        
+        // Register event handler (Subtask 3.7)
+        $(document).ready(function() {
+            // Bind template apply handler using event delegation
+            $(document).on('click', '.mase-template-apply-btn', MASE.templateManager.handleTemplateApply.bind(MASE));
+            
+            logToConsole('Security and error handling test page loaded', 'info');
+            logToConsole('Event handlers registered for template apply buttons', 'info');
+        });
+    </script>
+</body>
+</html>

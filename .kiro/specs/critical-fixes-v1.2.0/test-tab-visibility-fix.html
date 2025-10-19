@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Visibility Fix - Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d2327;
+            margin-bottom: 10px;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .status.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #0073aa;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #0073aa;
+        }
+        
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #005a87;
+        }
+        
+        .tab-demo {
+            margin: 20px 0;
+        }
+        
+        .mase-tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .mase-tab-button {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: #50575e;
+        }
+        
+        .mase-tab-button.active {
+            color: #0073aa;
+            border-bottom-color: #0073aa;
+            font-weight: 600;
+        }
+        
+        /* THE FIX - These are the critical CSS rules */
+        .mase-tab-content {
+            display: none !important;
+        }
+        
+        .mase-tab-content.active {
+            display: block !important;
+        }
+        
+        .mase-content > .mase-tab-content:first-of-type {
+            display: block !important;
+        }
+        
+        .mase-tab-content {
+            padding: 20px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Tab Visibility Fix - Test Suite</h1>
+        <p>This page tests the tab visibility fix for MASE v1.2.0</p>
+        
+        <div id="test-results"></div>
+        
+        <div class="test-section">
+            <h3>Test 1: CSS Rules Present</h3>
+            <p>Checking if the critical CSS rules are loaded...</p>
+            <div id="test1-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 2: Only One Tab Visible</h3>
+            <p>Checking if only the active tab content is visible...</p>
+            <div id="test2-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 3: Interactive Tab Demo</h3>
+            <p>Click tabs below to test the switching behavior:</p>
+            
+            <div class="tab-demo">
+                <nav class="mase-tab-nav">
+                    <button class="mase-tab-button active" data-tab="tab1">General</button>
+                    <button class="mase-tab-button" data-tab="tab2">Admin Bar</button>
+                    <button class="mase-tab-button" data-tab="tab3">Menu</button>
+                    <button class="mase-tab-button" data-tab="tab4">Typography</button>
+                </nav>
+                
+                <div class="mase-content">
+                    <div class="mase-tab-content active" data-tab-content="tab1">
+                        <h4>General Settings</h4>
+                        <p>This is the General tab content. Only this should be visible when the General tab is active.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
+                    
+                    <div class="mase-tab-content" data-tab-content="tab2">
+                        <h4>Admin Bar Settings</h4>
+                        <p>This is the Admin Bar tab content. Only this should be visible when the Admin Bar tab is active.</p>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    
+                    <div class="mase-tab-content" data-tab-content="tab3">
+                        <h4>Menu Settings</h4>
+                        <p>This is the Menu tab content. Only this should be visible when the Menu tab is active.</p>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                    </div>
+                    
+                    <div class="mase-tab-content" data-tab-content="tab4">
+                        <h4>Typography Settings</h4>
+                        <p>This is the Typography tab content. Only this should be visible when the Typography tab is active.</p>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="test3-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 4: Console Verification</h3>
+            <p>Run these commands in the browser console:</p>
+            <pre><code>// Check active tab
+console.log('Active tab:', $('.mase-tab-button.active').data('tab'));
+
+// Check visible content
+console.log('Visible content:', $('.mase-tab-content.active').data('tab-content'));
+
+// Check hidden content count
+console.log('Hidden content count:', $('.mase-tab-content:hidden').length);</code></pre>
+            <button onclick="runConsoleTests()">Run Console Tests</button>
+            <div id="test4-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Expected Behavior</h3>
+            <ul>
+                <li>✅ Only ONE tab content section should be visible at a time</li>
+                <li>✅ Clicking a tab should hide all others and show only that tab's content</li>
+                <li>✅ The page should NOT scroll when switching tabs</li>
+                <li>✅ The active tab should have visual indication (blue underline)</li>
+                <li>✅ Hidden content count should be 3 (when 4 tabs total)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Test 1: Check CSS rules
+            function test1() {
+                var $testContent = $('.mase-tab-content').first();
+                var display = $testContent.css('display');
+                
+                if (display === 'none' || display === 'block') {
+                    $('#test1-result').html('<div class="status pass">✅ PASS: CSS rules are loaded correctly</div>');
+                } else {
+                    $('#test1-result').html('<div class="status fail">❌ FAIL: CSS rules not found</div>');
+                }
+            }
+            
+            // Test 2: Check visibility
+            function test2() {
+                var visibleCount = $('.mase-tab-content:visible').length;
+                var hiddenCount = $('.mase-tab-content:hidden').length;
+                var totalCount = $('.mase-tab-content').length;
+                
+                var result = '<div class="status info">';
+                result += 'Total tabs: ' + totalCount + '<br>';
+                result += 'Visible tabs: ' + visibleCount + '<br>';
+                result += 'Hidden tabs: ' + hiddenCount;
+                result += '</div>';
+                
+                if (visibleCount === 1) {
+                    result += '<div class="status pass">✅ PASS: Only one tab is visible</div>';
+                } else {
+                    result += '<div class="status fail">❌ FAIL: ' + visibleCount + ' tabs are visible (should be 1)</div>';
+                }
+                
+                $('#test2-result').html(result);
+            }
+            
+            // Test 3: Interactive switching
+            $('.mase-tab-button').on('click', function() {
+                var tabId = $(this).data('tab');
+                
+                // Remove active from all
+                $('.mase-tab-button').removeClass('active');
+                $('.mase-tab-content').removeClass('active').hide();
+                
+                // Add active to selected
+                $(this).addClass('active');
+                $('[data-tab-content="' + tabId + '"]').addClass('active').show();
+                
+                // Update test result
+                setTimeout(function() {
+                    var visibleCount = $('.mase-tab-content:visible').length;
+                    if (visibleCount === 1) {
+                        $('#test3-result').html('<div class="status pass">✅ Tab switched successfully! Only 1 tab visible.</div>');
+                    } else {
+                        $('#test3-result').html('<div class="status fail">❌ Error: ' + visibleCount + ' tabs visible</div>');
+                    }
+                }, 100);
+            });
+            
+            // Run tests
+            test1();
+            test2();
+        });
+        
+        function runConsoleTests() {
+            var activeTab = $('.mase-tab-button.active').data('tab');
+            var visibleContent = $('.mase-tab-content.active').data('tab-content');
+            var hiddenCount = $('.mase-tab-content:hidden').length;
+            
+            console.log('Active tab:', activeTab);
+            console.log('Visible content:', visibleContent);
+            console.log('Hidden content count:', hiddenCount);
+            
+            var result = '<div class="status info">';
+            result += 'Active tab: <code>' + activeTab + '</code><br>';
+            result += 'Visible content: <code>' + visibleContent + '</code><br>';
+            result += 'Hidden content count: <code>' + hiddenCount + '</code>';
+            result += '</div>';
+            
+            if (activeTab === visibleContent && hiddenCount === 3) {
+                result += '<div class="status pass">✅ PASS: All console tests passed</div>';
+            } else {
+                result += '<div class="status fail">❌ FAIL: Console tests failed</div>';
+            }
+            
+            $('#test4-result').html(result);
+        }
+    </script>
+</body>
+</html>

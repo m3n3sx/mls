@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE AJAX Settings Save Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            margin-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #2271b1;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-item h3 {
+            margin: 0 0 10px 0;
+            color: #1d2327;
+            font-size: 16px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .status.pass {
+            background: #00a32a;
+            color: white;
+        }
+        .status.fail {
+            background: #d63638;
+            color: white;
+        }
+        .status.pending {
+            background: #dba617;
+            color: white;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        .notice {
+            padding: 12px 20px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            border-radius: 4px;
+        }
+        .notice.success {
+            background: #edfaef;
+            border-color: #00a32a;
+            color: #00a32a;
+        }
+        .notice.error {
+            background: #fcf0f1;
+            border-color: #d63638;
+            color: #d63638;
+        }
+        .notice.info {
+            background: #f0f6fc;
+            border-color: #2271b1;
+            color: #2271b1;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>MASE AJAX Settings Save - Test Suite</h1>
+        <p>This test suite verifies that the AJAX settings save functionality is working correctly.</p>
+
+        <!-- Test Section 1: JavaScript Methods -->
+        <div class="test-section">
+            <h2>1. JavaScript Methods Verification</h2>
+            
+            <div class="test-item">
+                <h3>1.1 saveSettings() Method <span class="status pending" id="status-1-1">PENDING</span></h3>
+                <p>Verify that the saveSettings() method exists in the MASE object.</p>
+                <button onclick="testSaveSettingsMethod()">Run Test</button>
+                <div id="result-1-1"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>1.2 collectFormData() Method <span class="status pending" id="status-1-2">PENDING</span></h3>
+                <p>Verify that the collectFormData() method exists and can collect form data.</p>
+                <button onclick="testCollectFormDataMethod()">Run Test</button>
+                <div id="result-1-2"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>1.3 showNotice() Method <span class="status pending" id="status-1-3">PENDING</span></h3>
+                <p>Verify that the showNotice() method exists and can display notifications.</p>
+                <button onclick="testShowNoticeMethod()">Run Test</button>
+                <div id="result-1-3"></div>
+            </div>
+        </div>
+
+        <!-- Test Section 2: Event Bindings -->
+        <div class="test-section">
+            <h2>2. Event Bindings Verification</h2>
+            
+            <div class="test-item">
+                <h3>2.1 Save Button Click Handler <span class="status pending" id="status-2-1">PENDING</span></h3>
+                <p>Verify that clicking the save button triggers the saveSettings() method.</p>
+                <button onclick="testSaveButtonBinding()">Run Test</button>
+                <div id="result-2-1"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>2.2 Form Submit Handler <span class="status pending" id="status-2-2">PENDING</span></h3>
+                <p>Verify that form submission is handled by the saveSettings() method.</p>
+                <button onclick="testFormSubmitBinding()">Run Test</button>
+                <div id="result-2-2"></div>
+            </div>
+        </div>
+
+        <!-- Test Section 3: AJAX Request -->
+        <div class="test-section">
+            <h2>3. AJAX Request Verification</h2>
+            
+            <div class="test-item">
+                <h3>3.1 AJAX Configuration <span class="status pending" id="status-3-1">PENDING</span></h3>
+                <p>Verify that AJAX URL and nonce are properly configured.</p>
+                <button onclick="testAjaxConfiguration()">Run Test</button>
+                <div id="result-3-1"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>3.2 Loading State <span class="status pending" id="status-3-2">PENDING</span></h3>
+                <p>Verify that the save button shows loading state during save.</p>
+                <button onclick="testLoadingState()">Run Test</button>
+                <div id="result-3-2"></div>
+            </div>
+        </div>
+
+        <!-- Test Section 4: Notification System -->
+        <div class="test-section">
+            <h2>4. Notification System Verification</h2>
+            
+            <div class="test-item">
+                <h3>4.1 Success Notification <span class="status pending" id="status-4-1">PENDING</span></h3>
+                <p>Test displaying a success notification.</p>
+                <button onclick="testSuccessNotification()">Run Test</button>
+                <div id="result-4-1"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>4.2 Error Notification <span class="status pending" id="status-4-2">PENDING</span></h3>
+                <p>Test displaying an error notification.</p>
+                <button onclick="testErrorNotification()">Run Test</button>
+                <div id="result-4-2"></div>
+            </div>
+
+            <div class="test-item">
+                <h3>4.3 Auto-dismiss <span class="status pending" id="status-4-3">PENDING</span></h3>
+                <p>Verify that success notifications auto-dismiss after 3 seconds.</p>
+                <button onclick="testAutoDismiss()">Run Test</button>
+                <div id="result-4-3"></div>
+            </div>
+        </div>
+
+        <!-- Test Results Summary -->
+        <div class="test-section">
+            <h2>Test Results Summary</h2>
+            <div id="summary">
+                <p>Run tests to see results...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test helper functions
+        function updateStatus(testId, status) {
+            const statusEl = document.getElementById(`status-${testId}`);
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = status.toUpperCase();
+        }
+
+        function showResult(testId, message, isSuccess) {
+            const resultEl = document.getElementById(`result-${testId}`);
+            resultEl.innerHTML = `<div class="notice ${isSuccess ? 'success' : 'error'}">${message}</div>`;
+        }
+
+        function showCode(testId, code) {
+            const resultEl = document.getElementById(`result-${testId}`);
+            resultEl.innerHTML += `<div class="code-block">${code}</div>`;
+        }
+
+        // Test 1.1: saveSettings() Method
+        function testSaveSettingsMethod() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.saveSettings === 'function') {
+                    updateStatus('1-1', 'pass');
+                    showResult('1-1', '✓ saveSettings() method exists and is a function', true);
+                    showCode('1-1', 'typeof MASE.saveSettings === "function" // true');
+                } else {
+                    updateStatus('1-1', 'fail');
+                    showResult('1-1', '✗ saveSettings() method not found or not a function', false);
+                }
+            } catch (error) {
+                updateStatus('1-1', 'fail');
+                showResult('1-1', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 1.2: collectFormData() Method
+        function testCollectFormDataMethod() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.collectFormData === 'function') {
+                    updateStatus('1-2', 'pass');
+                    showResult('1-2', '✓ collectFormData() method exists and is a function', true);
+                    showCode('1-2', 'typeof MASE.collectFormData === "function" // true');
+                } else {
+                    updateStatus('1-2', 'fail');
+                    showResult('1-2', '✗ collectFormData() method not found or not a function', false);
+                }
+            } catch (error) {
+                updateStatus('1-2', 'fail');
+                showResult('1-2', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 1.3: showNotice() Method
+        function testShowNoticeMethod() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.showNotice === 'function') {
+                    updateStatus('1-3', 'pass');
+                    showResult('1-3', '✓ showNotice() method exists and is a function', true);
+                    showCode('1-3', 'typeof MASE.showNotice === "function" // true');
+                } else {
+                    updateStatus('1-3', 'fail');
+                    showResult('1-3', '✗ showNotice() method not found or not a function', false);
+                }
+            } catch (error) {
+                updateStatus('1-3', 'fail');
+                showResult('1-3', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 2.1: Save Button Click Handler
+        function testSaveButtonBinding() {
+            try {
+                const saveButton = document.getElementById('mase-save-settings');
+                if (saveButton) {
+                    updateStatus('2-1', 'pass');
+                    showResult('2-1', '✓ Save button exists with ID "mase-save-settings"', true);
+                    showCode('2-1', 'document.getElementById("mase-save-settings") !== null // true');
+                } else {
+                    updateStatus('2-1', 'fail');
+                    showResult('2-1', '✗ Save button with ID "mase-save-settings" not found', false);
+                }
+            } catch (error) {
+                updateStatus('2-1', 'fail');
+                showResult('2-1', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 2.2: Form Submit Handler
+        function testFormSubmitBinding() {
+            try {
+                const form = document.getElementById('mase-settings-form');
+                if (form) {
+                    updateStatus('2-2', 'pass');
+                    showResult('2-2', '✓ Settings form exists with ID "mase-settings-form"', true);
+                    showCode('2-2', 'document.getElementById("mase-settings-form") !== null // true');
+                } else {
+                    updateStatus('2-2', 'fail');
+                    showResult('2-2', '✗ Settings form with ID "mase-settings-form" not found', false);
+                }
+            } catch (error) {
+                updateStatus('2-2', 'fail');
+                showResult('2-2', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 3.1: AJAX Configuration
+        function testAjaxConfiguration() {
+            try {
+                if (typeof MASE !== 'undefined' && MASE.config) {
+                    const hasAjaxUrl = MASE.config.ajaxUrl && MASE.config.ajaxUrl.length > 0;
+                    const hasNonce = MASE.config.nonce && MASE.config.nonce.length > 0;
+                    
+                    if (hasAjaxUrl && hasNonce) {
+                        updateStatus('3-1', 'pass');
+                        showResult('3-1', '✓ AJAX URL and nonce are properly configured', true);
+                        showCode('3-1', `MASE.config.ajaxUrl: "${MASE.config.ajaxUrl}"\nMASE.config.nonce: "${MASE.config.nonce.substring(0, 10)}..."`);
+                    } else {
+                        updateStatus('3-1', 'fail');
+                        showResult('3-1', `✗ Missing configuration - ajaxUrl: ${hasAjaxUrl}, nonce: ${hasNonce}`, false);
+                    }
+                } else {
+                    updateStatus('3-1', 'fail');
+                    showResult('3-1', '✗ MASE.config not found', false);
+                }
+            } catch (error) {
+                updateStatus('3-1', 'fail');
+                showResult('3-1', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 3.2: Loading State
+        function testLoadingState() {
+            try {
+                if (typeof MASE !== 'undefined' && MASE.state) {
+                    updateStatus('3-2', 'pass');
+                    showResult('3-2', '✓ MASE.state object exists for tracking loading state', true);
+                    showCode('3-2', `MASE.state.isSaving: ${MASE.state.isSaving}`);
+                } else {
+                    updateStatus('3-2', 'fail');
+                    showResult('3-2', '✗ MASE.state not found', false);
+                }
+            } catch (error) {
+                updateStatus('3-2', 'fail');
+                showResult('3-2', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 4.1: Success Notification
+        function testSuccessNotification() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.showNotice === 'function') {
+                    MASE.showNotice('success', 'Test success notification - This is a test message!');
+                    updateStatus('4-1', 'pass');
+                    showResult('4-1', '✓ Success notification displayed (check above for the notification)', true);
+                } else {
+                    updateStatus('4-1', 'fail');
+                    showResult('4-1', '✗ showNotice() method not available', false);
+                }
+            } catch (error) {
+                updateStatus('4-1', 'fail');
+                showResult('4-1', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 4.2: Error Notification
+        function testErrorNotification() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.showNotice === 'function') {
+                    MASE.showNotice('error', 'Test error notification - This is a test error message!');
+                    updateStatus('4-2', 'pass');
+                    showResult('4-2', '✓ Error notification displayed (check above for the notification)', true);
+                } else {
+                    updateStatus('4-2', 'fail');
+                    showResult('4-2', '✗ showNotice() method not available', false);
+                }
+            } catch (error) {
+                updateStatus('4-2', 'fail');
+                showResult('4-2', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Test 4.3: Auto-dismiss
+        function testAutoDismiss() {
+            try {
+                if (typeof MASE !== 'undefined' && typeof MASE.showNotice === 'function') {
+                    MASE.showNotice('info', 'This notification should auto-dismiss in 3 seconds...');
+                    updateStatus('4-3', 'pass');
+                    showResult('4-3', '✓ Auto-dismiss test started - notification should disappear in 3 seconds', true);
+                    
+                    // Verify after 3.5 seconds
+                    setTimeout(() => {
+                        const notices = document.querySelectorAll('#mase-notices .notice');
+                        if (notices.length === 0) {
+                            showResult('4-3', '✓ Auto-dismiss working correctly - notification was removed', true);
+                        } else {
+                            updateStatus('4-3', 'fail');
+                            showResult('4-3', '✗ Auto-dismiss failed - notification still visible', false);
+                        }
+                    }, 3500);
+                } else {
+                    updateStatus('4-3', 'fail');
+                    showResult('4-3', '✗ showNotice() method not available', false);
+                }
+            } catch (error) {
+                updateStatus('4-3', 'fail');
+                showResult('4-3', `✗ Error: ${error.message}`, false);
+            }
+        }
+
+        // Run all tests
+        function runAllTests() {
+            testSaveSettingsMethod();
+            testCollectFormDataMethod();
+            testShowNoticeMethod();
+            testSaveButtonBinding();
+            testFormSubmitBinding();
+            testAjaxConfiguration();
+            testLoadingState();
+            testSuccessNotification();
+            testErrorNotification();
+            testAutoDismiss();
+        }
+
+        // Add notice container if it doesn't exist
+        if (!document.getElementById('mase-notices')) {
+            const noticeContainer = document.createElement('div');
+            noticeContainer.id = 'mase-notices';
+            noticeContainer.style.cssText = 'position: fixed; top: 32px; right: 20px; z-index: 9999; max-width: 400px;';
+            document.body.appendChild(noticeContainer);
+        }
+    </script>
+</body>
+</html>

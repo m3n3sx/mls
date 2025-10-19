@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 4: Header Layout Component Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    /* Simulate WordPress admin bar */
+    #wpadminbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: #23282d;
+      z-index: 99999;
+    }
+    
+    /* Add some body padding to account for admin bar */
+    body {
+      padding-top: 32px;
+      margin: 0;
+    }
+    
+    /* Test container */
+    .test-container {
+      min-height: 200vh; /* Make page scrollable to test sticky header */
+    }
+    
+    /* Placeholder button styles (will be implemented in later tasks) */
+    .mase-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 200ms ease;
+      border: none;
+      text-decoration: none;
+    }
+    
+    .mase-btn-primary {
+      background-color: var(--mase-primary);
+      color: white;
+    }
+    
+    .mase-btn-primary:hover {
+      background-color: var(--mase-primary-hover);
+    }
+    
+    .mase-btn-secondary {
+      background-color: white;
+      color: var(--mase-primary);
+      border: 1px solid var(--mase-primary);
+    }
+    
+    .mase-btn-secondary:hover {
+      background-color: var(--mase-primary-light);
+    }
+    
+    /* Placeholder toggle styles (will be implemented in later tasks) */
+    .mase-toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    
+    .mase-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .mase-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--mase-gray-300);
+      transition: 200ms ease;
+      border-radius: 9999px;
+    }
+    
+    .mase-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: 200ms ease;
+      border-radius: 50%;
+    }
+    
+    .mase-toggle input:checked + .mase-toggle-slider {
+      background-color: var(--mase-primary);
+    }
+    
+    .mase-toggle input:checked + .mase-toggle-slider:before {
+      transform: translateX(20px);
+    }
+    
+    /* Test info panel */
+    .test-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-family: monospace;
+      font-size: 12px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Simulate WordPress admin bar -->
+  <div id="wpadminbar"></div>
+  
+  <div class="test-container">
+    <!-- Header Component -->
+    <div class="mase-header">
+      <!-- Left Section: Title and Badge -->
+      <div class="mase-header-left">
+        <h1 class="mase-header-title">Ultimate WordPress Admin Styler</h1>
+        <span class="mase-header-badge">v2.0.0</span>
+      </div>
+      
+      <!-- Right Section: Actions and Toggle -->
+      <div class="mase-header-right">
+        <!-- Live Preview Toggle -->
+        <div class="mase-live-preview-toggle">
+          <label class="mase-toggle">
+            <input type="checkbox" id="livePreview">
+            <span class="mase-toggle-slider"></span>
+          </label>
+          <span class="mase-toggle-label">Live Preview</span>
+        </div>
+        
+        <!-- Action Buttons -->
+        <button class="mase-btn mase-btn-secondary">Export</button>
+        <button class="mase-btn mase-btn-secondary">Import</button>
+        <button class="mase-btn mase-btn-secondary">Reset</button>
+        <button class="mase-btn mase-btn-primary">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Content area to test scrolling -->
+    <div style="padding: 32px;">
+      <h2>Task 4 Completion Test</h2>
+      <p>This page tests the header layout component implementation.</p>
+      
+      <h3>Test Checklist:</h3>
+      <ul>
+        <li>✓ Header displays with white background and subtle border</li>
+        <li>✓ Header uses flexbox with space-between layout</li>
+        <li>✓ Header is sticky positioned at top: 32px (below admin bar)</li>
+        <li>✓ Header has proper z-index for layering</li>
+        <li>✓ Left section contains title and version badge</li>
+        <li>✓ Title uses proper typography (24px, semibold)</li>
+        <li>✓ Badge displays with primary color background</li>
+        <li>✓ Right section contains Live Preview toggle and action buttons</li>
+        <li>✓ Live Preview toggle has prominent styling with light blue background</li>
+        <li>✓ Buttons are properly spaced with 16px gap</li>
+        <li>✓ Header is responsive (test by resizing window)</li>
+      </ul>
+      
+      <h3>Responsive Behavior:</h3>
+      <ul>
+        <li><strong>Desktop (&gt;1024px):</strong> Full horizontal layout</li>
+        <li><strong>Tablet (768-1024px):</strong> Buttons may wrap to second row</li>
+        <li><strong>Mobile (&lt;768px):</strong> Stack vertically, full-width buttons</li>
+      </ul>
+      
+      <h3>Scroll Test:</h3>
+      <p>Scroll down to verify the header remains sticky at the top of the viewport (below the admin bar).</p>
+      
+      <div style="height: 100vh; background: linear-gradient(to bottom, #f0f0f1, #e5e7eb); margin-top: 32px; padding: 32px; border-radius: 8px;">
+        <h4>Scroll Content Area</h4>
+        <p>Keep scrolling to test sticky header behavior...</p>
+      </div>
+      
+      <div style="height: 100vh; background: linear-gradient(to bottom, #e5e7eb, #d1d5db); margin-top: 32px; padding: 32px; border-radius: 8px;">
+        <h4>More Scroll Content</h4>
+        <p>The header should remain visible at the top as you scroll.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Info Panel -->
+  <div class="test-info">
+    <strong>Viewport:</strong> <span id="viewport"></span><br>
+    <strong>Breakpoint:</strong> <span id="breakpoint"></span>
+  </div>
+  
+  <script>
+    // Update viewport info
+    function updateViewportInfo() {
+      const width = window.innerWidth;
+      document.getElementById('viewport').textContent = width + 'px';
+      
+      let breakpoint = 'Desktop';
+      if (width < 768) {
+        breakpoint = 'Mobile';
+      } else if (width < 1024) {
+        breakpoint = 'Tablet';
+      }
+      document.getElementById('breakpoint').textContent = breakpoint;
+    }
+    
+    updateViewportInfo();
+    window.addEventListener('resize', updateViewportInfo);
+    
+    // Toggle functionality
+    document.getElementById('livePreview').addEventListener('change', function(e) {
+      console.log('Live Preview:', e.target.checked ? 'ON' : 'OFF');
+    });
+  </script>
+</body>
+</html>

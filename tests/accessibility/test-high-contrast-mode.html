@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE - High Contrast Mode Test (Requirement 13.1)</title>
+    <link rel="stylesheet" href="../../assets/css/mase-accessibility.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f0f0f1;
+        }
+        
+        .header {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #1e293b;
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #4A90E2;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+        
+        .instructions ul {
+            margin: 8px 0 0 20px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .test-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s;
+        }
+        
+        .test-card:hover {
+            border-color: #4A90E2;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+        }
+        
+        .test-card h3 {
+            margin-top: 0;
+            color: #1e293b;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        
+        .button-primary {
+            background: #4A90E2;
+            color: #ffffff;
+            border-color: #4A90E2;
+        }
+        
+        .button-secondary {
+            background: #64748b;
+            color: #ffffff;
+            border-color: #64748b;
+        }
+        
+        .button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin: 16px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px;
+        }
+        
+        .status-active {
+            background: #46b450;
+            color: #ffffff;
+        }
+        
+        .status-inactive {
+            background: #cbd5e1;
+            color: #475569;
+        }
+        
+        .contrast-demo {
+            padding: 20px;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+        
+        .contrast-demo.normal {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .contrast-demo.high {
+            background: #000000;
+            color: #ffffff;
+            border: 3px solid #ffffff;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-left: 3px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        .checklist li input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .checklist li.checked {
+            background: #d4edda;
+            border-left-color: #46b450;
+        }
+        
+        /* High Contrast Mode Simulation */
+        .simulate-high-contrast {
+            filter: contrast(2) brightness(1.2);
+        }
+        
+        .simulate-high-contrast * {
+            border-width: 2px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔆 High Contrast Mode Test</h1>
+        <p><strong>Requirement 13.1:</strong> Increase color contrast ratios to meet WCAG AAA standards (7:1)</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>How to Enable High Contrast Mode</h2>
+        
+        <div class="instructions">
+            <h3>Windows 10/11:</h3>
+            <ul>
+                <li>Press <kbd>Left Alt + Left Shift + Print Screen</kbd></li>
+                <li>Or: Settings → Ease of Access → High Contrast</li>
+                <li>Choose a high contrast theme</li>
+            </ul>
+        </div>
+        
+        <div class="instructions">
+            <h3>macOS:</h3>
+            <ul>
+                <li>System Preferences → Accessibility → Display</li>
+                <li>Check "Increase contrast"</li>
+                <li>Optionally enable "Reduce transparency"</li>
+            </ul>
+        </div>
+        
+        <div class="instructions">
+            <h3>Linux (GNOME):</h3>
+            <ul>
+                <li>Settings → Universal Access → Seeing</li>
+                <li>Enable "High Contrast"</li>
+            </ul>
+        </div>
+        
+        <button class="button button-primary" id="btn-simulate">
+            Simulate High Contrast Mode
+        </button>
+        <button class="button button-secondary" id="btn-reset">
+            Reset to Normal
+        </button>
+    </div>
+    
+    <div class="test-section" id="test-container">
+        <h2>Test 1: Text Contrast</h2>
+        <p>All text should be clearly readable with enhanced contrast.</p>
+        
+        <div class="contrast-demo normal">
+            <h3>Normal Contrast (4.5:1)</h3>
+            <p>This text has standard contrast suitable for most users.</p>
+            <p style="font-size: 14px; color: #64748b;">Secondary text with lower contrast.</p>
+        </div>
+        
+        <div class="contrast-demo high">
+            <h3>High Contrast (7:1+)</h3>
+            <p>This text has enhanced contrast for users with low vision.</p>
+            <p style="font-size: 14px;">All text maintains high contrast in this mode.</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: UI Components</h2>
+        <p>Buttons, inputs, and other UI elements should have enhanced borders and contrast.</p>
+        
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Buttons</h3>
+                <button class="button button-primary">Primary Button</button>
+                <button class="button button-secondary">Secondary Button</button>
+                <button class="button">Default Button</button>
+            </div>
+            
+            <div class="test-card">
+                <h3>Form Inputs</h3>
+                <div class="form-group">
+                    <label for="test-input">Text Input:</label>
+                    <input type="text" id="test-input" placeholder="Enter text">
+                </div>
+                <div class="form-group">
+                    <label for="test-select">Select:</label>
+                    <select id="test-select">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Status Indicators</h3>
+                <div>
+                    <span class="status-indicator status-active">Active</span>
+                    <span class="status-indicator status-inactive">Inactive</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Focus Indicators</h2>
+        <p>Focus indicators should be more prominent (3px outline with 3px offset).</p>
+        
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <p>Tab through these elements and verify enhanced focus indicators:</p>
+            <button class="button">Button 1</button>
+            <button class="button">Button 2</button>
+            <button class="button">Button 3</button>
+            <input type="text" placeholder="Input field" style="margin: 5px;">
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Border Visibility</h2>
+        <p>All borders should be thicker (2px minimum) for better visibility.</p>
+        
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Card 1</h3>
+                <p>This card should have a visible 2px border.</p>
+            </div>
+            <div class="test-card">
+                <h3>Card 2</h3>
+                <p>Borders help define boundaries between elements.</p>
+            </div>
+            <div class="test-card">
+                <h3>Card 3</h3>
+                <p>Enhanced borders improve visual structure.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Checklist</h2>
+        <p>Verify the following with high contrast mode enabled:</p>
+        
+        <ul class="checklist">
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    All text is clearly readable with enhanced contrast
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Buttons have visible borders (2px minimum)
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Form inputs have visible borders (2px minimum)
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Focus indicators are more prominent (3px outline, 3px offset)
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Cards and containers have visible borders
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Color contrast meets WCAG AAA (7:1 ratio)
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    No information is conveyed by color alone
+                </label>
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" class="test-check">
+                    Status indicators are distinguishable
+                </label>
+            </li>
+        </ul>
+        
+        <div style="margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px;">
+            <strong>Progress:</strong> <span id="progress">0/8</span> tests passed
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>CSS Media Query Test</h2>
+        <p>Testing <code>@media (prefers-contrast: high)</code> support:</p>
+        
+        <div id="media-query-test" style="padding: 16px; border-radius: 8px; background: #f8f9fa; border: 1px solid #e2e8f0;">
+            <p><strong>Status:</strong> <span id="mq-status">Checking...</span></p>
+            <p id="mq-result"></p>
+        </div>
+    </div>
+    
+    <script>
+        // Simulate high contrast mode
+        const btnSimulate = document.getElementById('btn-simulate');
+        const btnReset = document.getElementById('btn-reset');
+        const testContainer = document.getElementById('test-container');
+        
+        btnSimulate.addEventListener('click', () => {
+            document.body.classList.add('simulate-high-contrast');
+            btnSimulate.disabled = true;
+            btnReset.disabled = false;
+        });
+        
+        btnReset.addEventListener('click', () => {
+            document.body.classList.remove('simulate-high-contrast');
+            btnSimulate.disabled = false;
+            btnReset.disabled = true;
+        });
+        
+        // Checklist tracking
+        const checkboxes = document.querySelectorAll('.test-check');
+        const progress = document.getElementById('progress');
+        
+        function updateProgress() {
+            const checked = document.querySelectorAll('.test-check:checked').length;
+            progress.textContent = `${checked}/${checkboxes.length}`;
+            
+            checkboxes.forEach(cb => {
+                const li = cb.closest('li');
+                if (cb.checked) {
+                    li.classList.add('checked');
+                } else {
+                    li.classList.remove('checked');
+                }
+            });
+        }
+        
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateProgress);
+        });
+        
+        // Media query test
+        const mqTest = document.getElementById('media-query-test');
+        const mqStatus = document.getElementById('mq-status');
+        const mqResult = document.getElementById('mq-result');
+        
+        if (window.matchMedia) {
+            const highContrastMQ = window.matchMedia('(prefers-contrast: high)');
+            
+            function checkHighContrast() {
+                if (highContrastMQ.matches) {
+                    mqStatus.textContent = 'High Contrast Mode Detected ✓';
+                    mqStatus.style.color = '#46b450';
+                    mqResult.textContent = 'The browser reports that high contrast mode is enabled. Enhanced styles should be applied.';
+                    mqTest.style.background = '#d4edda';
+                    mqTest.style.borderColor = '#46b450';
+                } else {
+                    mqStatus.textContent = 'Normal Contrast Mode';
+                    mqStatus.style.color = '#64748b';
+                    mqResult.textContent = 'High contrast mode is not detected. Enable it in your system settings to test.';
+                }
+            }
+            
+            checkHighContrast();
+            highContrastMQ.addListener(checkHighContrast);
+        } else {
+            mqStatus.textContent = 'Not Supported';
+            mqStatus.style.color = '#dc3232';
+            mqResult.textContent = 'Your browser does not support the prefers-contrast media query.';
+        }
+        
+        updateProgress();
+    </script>
+</body>
+</html>

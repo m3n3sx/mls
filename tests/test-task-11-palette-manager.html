@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 11: Palette Manager JavaScript Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        /* Palette Card Styles */
+        .mase-palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .mase-palette-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mase-palette-card.selected {
+            border-color: #2271b1;
+            border-width: 2px;
+        }
+        .mase-palette-card.active {
+            background: #f0f6fc;
+        }
+        .mase-palette-preview {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .mase-palette-color {
+            flex: 1;
+            height: 40px;
+            border-radius: 4px;
+        }
+        .mase-palette-info {
+            margin-bottom: 10px;
+        }
+        .mase-palette-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+        .mase-active-badge {
+            display: inline-block;
+            background: #00a32a;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .mase-palette-actions {
+            display: flex;
+            gap: 5px;
+        }
+        .mase-palette-actions button {
+            flex: 1;
+            margin: 0;
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        /* Notice Styles */
+        #mase-notices {
+            margin: 20px 0;
+        }
+        .notice {
+            padding: 12px;
+            margin: 10px 0;
+            border-left: 4px solid;
+            background: white;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+        }
+        .notice-success {
+            border-left-color: #00a32a;
+        }
+        .notice-error {
+            border-left-color: #d63638;
+        }
+        .notice-info {
+            border-left-color: #2271b1;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input {
+            padding: 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task 11: Palette Manager JavaScript Test</h1>
+    
+    <div id="mase-notices"></div>
+    
+    <!-- Test Section 1: Palette Manager Module Exists -->
+    <div class="test-section">
+        <h2>Test 1: Palette Manager Module Structure</h2>
+        <div id="test1-results"></div>
+        <button onclick="runTest1()">Run Test 1</button>
+    </div>
+    
+    <!-- Test Section 2: Apply Palette Functionality -->
+    <div class="test-section">
+        <h2>Test 2: Apply Palette (Mock AJAX)</h2>
+        <p>This test simulates applying a palette with mocked AJAX response.</p>
+        
+        <div class="mase-palette-grid">
+            <div class="mase-palette-card" data-palette-id="professional-blue">
+                <div class="mase-palette-preview">
+                    <span class="mase-palette-color" style="background-color: #4A90E2"></span>
+                    <span class="mase-palette-color" style="background-color: #50C9C3"></span>
+                    <span class="mase-palette-color" style="background-color: #7B68EE"></span>
+                    <span class="mase-palette-color" style="background-color: #F8FAFC"></span>
+                </div>
+                <div class="mase-palette-info">
+                    <h3 class="mase-palette-name">Professional Blue</h3>
+                </div>
+                <div class="mase-palette-actions">
+                    <button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="professional-blue">Preview</button>
+                    <button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="professional-blue">Apply</button>
+                </div>
+            </div>
+            
+            <div class="mase-palette-card active" data-palette-id="energetic-green">
+                <div class="mase-palette-preview">
+                    <span class="mase-palette-color" style="background-color: #10B981"></span>
+                    <span class="mase-palette-color" style="background-color: #34D399"></span>
+                    <span class="mase-palette-color" style="background-color: #6EE7B7"></span>
+                    <span class="mase-palette-color" style="background-color: #F0FDF4"></span>
+                </div>
+                <div class="mase-palette-info">
+                    <h3 class="mase-palette-name">Energetic Green</h3>
+                    <span class="mase-active-badge">Active</span>
+                </div>
+                <div class="mase-palette-actions">
+                    <button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="energetic-green">Preview</button>
+                    <button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="energetic-green">Apply</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="test2-results"></div>
+    </div>
+    
+    <!-- Test Section 3: Save Custom Palette -->
+    <div class="test-section">
+        <h2>Test 3: Save Custom Palette</h2>
+        <p>Test saving a custom palette with name and colors.</p>
+        
+        <div class="form-group">
+            <label for="custom-palette-name">Palette Name:</label>
+            <input type="text" id="custom-palette-name" placeholder="My Custom Palette" value="Test Palette">
+        </div>
+        
+        <div class="form-group">
+            <label>Colors (simulated):</label>
+            <input type="hidden" id="palette-primary-color" value="#FF5733">
+            <input type="hidden" id="palette-secondary-color" value="#33FF57">
+            <input type="hidden" id="palette-accent-color" value="#3357FF">
+            <input type="hidden" id="palette-background-color" value="#FFFFFF">
+            <input type="hidden" id="palette-text-color" value="#000000">
+            <input type="hidden" id="palette-text-secondary-color" value="#666666">
+            <p style="color: #666;">Primary: #FF5733, Secondary: #33FF57, Accent: #3357FF</p>
+        </div>
+        
+        <button id="mase-save-custom-palette-btn">Save Custom Palette</button>
+        <div id="test3-results"></div>
+    </div>
+    
+    <!-- Test Section 4: Delete Custom Palette -->
+    <div class="test-section">
+        <h2>Test 4: Delete Custom Palette</h2>
+        <p>Test deleting a custom palette with confirmation.</p>
+        
+        <div class="mase-palette-grid">
+            <div class="mase-palette-card" data-palette-id="custom-palette-1">
+                <div class="mase-palette-preview">
+                    <span class="mase-palette-color" style="background-color: #FF5733"></span>
+                    <span class="mase-palette-color" style="background-color: #33FF57"></span>
+                    <span class="mase-palette-color" style="background-color: #3357FF"></span>
+                    <span class="mase-palette-color" style="background-color: #FFFFFF"></span>
+                </div>
+                <div class="mase-palette-info">
+                    <h3 class="mase-palette-name">Custom Palette 1</h3>
+                </div>
+                <div class="mase-palette-actions">
+                    <button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="custom-palette-1">Apply</button>
+                    <button type="button" class="button button-secondary mase-palette-delete-btn" data-palette-id="custom-palette-1">Delete</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="test4-results"></div>
+    </div>
+    
+    <!-- Test Section 5: Update Active Badge -->
+    <div class="test-section">
+        <h2>Test 5: Update Active Badge</h2>
+        <p>Test that active badge updates correctly when palette is applied.</p>
+        <button onclick="runTest5()">Run Test 5</button>
+        <div id="test5-results"></div>
+    </div>
+    
+    <!-- Test Section 6: Hover Effects -->
+    <div class="test-section">
+        <h2>Test 6: Hover Effects (Requirement 1.5)</h2>
+        <p>Hover over the palette cards above to test the translateY(-2px) transform and enhanced shadow.</p>
+        <div id="test6-results"></div>
+        <button onclick="runTest6()">Verify Hover Handlers</button>
+    </div>
+    
+    <!-- Test Section 7: Card Selection -->
+    <div class="test-section">
+        <h2>Test 7: Card Selection (Requirement 1.2)</h2>
+        <p>Click on palette cards above to test the 2px primary-colored border selection.</p>
+        <div id="test7-results"></div>
+        <button onclick="runTest7()">Verify Selection Handlers</button>
+    </div>
+
+    <!-- jQuery (required dependency) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- MASE Admin JavaScript -->
+    <script src="../assets/js/mase-admin.js"></script>
+    
+    <script>
+        // Mock AJAX for testing
+        var originalAjax = jQuery.ajax;
+        
+        function mockAjaxSuccess(action) {
+            jQuery.ajax = function(options) {
+                console.log('Mock AJAX called:', options.data.action);
+                
+                setTimeout(function() {
+                    if (options.data.action === action) {
+                        options.success({
+                            success: true,
+                            data: {
+                                message: 'Mock success for ' + action
+                            }
+                        });
+                    }
+                }, 500);
+            };
+        }
+        
+        function restoreAjax() {
+            jQuery.ajax = originalAjax;
+        }
+        
+        // Test 1: Check module structure
+        function runTest1() {
+            var results = document.getElementById('test1-results');
+            results.innerHTML = '';
+            
+            var tests = [
+                {
+                    name: 'MASE object exists',
+                    pass: typeof MASE !== 'undefined'
+                },
+                {
+                    name: 'paletteManager module exists',
+                    pass: typeof MASE.paletteManager !== 'undefined'
+                },
+                {
+                    name: 'paletteManager.apply method exists',
+                    pass: typeof MASE.paletteManager.apply === 'function'
+                },
+                {
+                    name: 'paletteManager.save method exists',
+                    pass: typeof MASE.paletteManager.save === 'function'
+                },
+                {
+                    name: 'paletteManager.delete method exists',
+                    pass: typeof MASE.paletteManager.delete === 'function'
+                },
+                {
+                    name: 'paletteManager.updateActiveBadge method exists',
+                    pass: typeof MASE.paletteManager.updateActiveBadge === 'function'
+                },
+                {
+                    name: 'paletteManager.collectColors method exists',
+                    pass: typeof MASE.paletteManager.collectColors === 'function'
+                }
+            ];
+            
+            tests.forEach(function(test) {
+                var div = document.createElement('div');
+                div.className = 'test-result ' + (test.pass ? 'pass' : 'fail');
+                div.textContent = (test.pass ? '✓ ' : '✗ ') + test.name;
+                results.appendChild(div);
+            });
+        }
+        
+        // Test 5: Update active badge
+        function runTest5() {
+            var results = document.getElementById('test5-results');
+            results.innerHTML = '';
+            
+            // Test updating active badge
+            MASE.paletteManager.updateActiveBadge('professional-blue');
+            
+            var professionalCard = document.querySelector('[data-palette-id="professional-blue"]');
+            var energeticCard = document.querySelector('[data-palette-id="energetic-green"]');
+            
+            var tests = [
+                {
+                    name: 'Professional Blue card has active class',
+                    pass: professionalCard.classList.contains('active')
+                },
+                {
+                    name: 'Professional Blue card has active badge',
+                    pass: professionalCard.querySelector('.mase-active-badge') !== null
+                },
+                {
+                    name: 'Energetic Green card does not have active class',
+                    pass: !energeticCard.classList.contains('active')
+                },
+                {
+                    name: 'Energetic Green card does not have active badge',
+                    pass: energeticCard.querySelector('.mase-active-badge') === null
+                }
+            ];
+            
+            tests.forEach(function(test) {
+                var div = document.createElement('div');
+                div.className = 'test-result ' + (test.pass ? 'pass' : 'fail');
+                div.textContent = (test.pass ? '✓ ' : '✗ ') + test.name;
+                results.appendChild(div);
+            });
+        }
+        
+        // Test 6: Verify hover handlers
+        function runTest6() {
+            var results = document.getElementById('test6-results');
+            results.innerHTML = '';
+            
+            var div = document.createElement('div');
+            div.className = 'test-result info';
+            div.textContent = 'ℹ Hover handlers are bound via event delegation. Hover over palette cards to test visually.';
+            results.appendChild(div);
+        }
+        
+        // Test 7: Verify selection handlers
+        function runTest7() {
+            var results = document.getElementById('test7-results');
+            results.innerHTML = '';
+            
+            var div = document.createElement('div');
+            div.className = 'test-result info';
+            div.textContent = 'ℹ Selection handlers are bound via event delegation. Click on palette cards to test the 2px border selection.';
+            results.appendChild(div);
+        }
+        
+        // Initialize MASE with mock config
+        jQuery(document).ready(function($) {
+            // Set up mock configuration
+            MASE.config.ajaxUrl = '/wp-admin/admin-ajax.php';
+            MASE.config.nonce = 'mock-nonce-12345';
+            
+            // Initialize event bindings
+            MASE.bindPaletteEvents();
+            
+            // Mock AJAX for apply palette
+            $(document).on('click', '.mase-palette-apply-btn', function(e) {
+                mockAjaxSuccess('mase_apply_palette');
+            });
+            
+            // Mock AJAX for save custom palette
+            $(document).on('click', '#mase-save-custom-palette-btn', function(e) {
+                mockAjaxSuccess('mase_save_custom_palette');
+            });
+            
+            // Mock AJAX for delete custom palette
+            $(document).on('click', '.mase-palette-delete-btn', function(e) {
+                mockAjaxSuccess('mase_delete_custom_palette');
+            });
+            
+            // Auto-run Test 1
+            runTest1();
+        });
+    </script>
+</body>
+</html>

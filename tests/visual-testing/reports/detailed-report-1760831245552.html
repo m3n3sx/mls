@@ -1,0 +1,579 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE - Szczegółowy Raport Testów</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 40px; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #2271b1; margin-bottom: 10px; }
+        .meta { color: #646970; margin-bottom: 30px; }
+        .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 30px 0; }
+        .summary-card { padding: 30px; border-radius: 8px; text-align: center; }
+        .summary-card.total { background: #f0f6fc; border: 2px solid #2271b1; }
+        .summary-card.passed { background: #edfaef; border: 2px solid #00a32a; }
+        .summary-card.failed { background: #fcf0f1; border: 2px solid #d63638; }
+        .summary-card.screenshots { background: #fef7e0; border: 2px solid #dba617; }
+        .summary-number { font-size: 48px; font-weight: bold; margin-bottom: 10px; }
+        .summary-label { font-size: 14px; color: #646970; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+        .gallery-item { border: 1px solid #dcdcde; border-radius: 8px; overflow: hidden; }
+        .gallery-item.failed { border-color: #d63638; border-width: 2px; }
+        .gallery-item img { width: 100%; height: auto; cursor: pointer; transition: transform 0.2s; }
+        .gallery-item img:hover { transform: scale(1.05); }
+        .gallery-item-title { padding: 15px; background: #f6f7f7; font-size: 14px; font-weight: 600; }
+        .gallery-item.failed .gallery-item-title { background: #fcf0f1; color: #d63638; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal img { max-width: 95%; max-height: 95%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 MASE - Szczegółowy Raport Testów Wizualnych</h1>
+        <div class="meta">
+            Data wygenerowania: 19.10.2025, 01:37:56<br>
+            Wszystkie opcje wtyczki MASE przetestowane
+        </div>
+        
+        <div class="summary">
+            <div class="summary-card total">
+                <div class="summary-number">55</div>
+                <div class="summary-label">Wszystkie Testy</div>
+            </div>
+            <div class="summary-card passed">
+                <div class="summary-number">41</div>
+                <div class="summary-label">Zaliczone</div>
+            </div>
+            <div class="summary-card failed">
+                <div class="summary-number">14</div>
+                <div class="summary-label">Niezaliczone</div>
+            </div>
+            <div class="summary-card screenshots">
+                <div class="summary-number">42</div>
+                <div class="summary-label">Zrzuty Ekranu</div>
+            </div>
+        </div>
+        
+        <h2>Wskaźnik Sukcesu: 74.55%</h2>
+        
+        <div class="gallery">
+            <h2 style="grid-column: 1/-1;">Galeria Zrzutów Ekranu</h2>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/001-checkbox-1.png" 
+                         alt="Tryb ciemny" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Tryb ciemny
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/002-checkbox-2.png" 
+                         alt="Live preview" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Live preview
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/003-checkbox-3.png" 
+                         alt="Enable plugin" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Enable plugin
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/004-checkbox-4.png" 
+                         alt="Apply to login page" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Apply to login page
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/005-button-5.png" 
+                         alt="Paleta kolorów 1" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 1
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/006-button-6.png" 
+                         alt="Paleta kolorów 2" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 2
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/007-button-7.png" 
+                         alt="Paleta kolorów 3" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 3
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/008-button-8.png" 
+                         alt="Paleta kolorów 4" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 4
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/009-button-9.png" 
+                         alt="Paleta kolorów 5" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 5
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/010-button-10.png" 
+                         alt="Paleta kolorów 6" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 6
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/011-button-11.png" 
+                         alt="Paleta kolorów 7" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 7
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/012-button-12.png" 
+                         alt="Paleta kolorów 8" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 8
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/013-button-13.png" 
+                         alt="Paleta kolorów 9" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 9
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/014-button-14.png" 
+                         alt="Paleta kolorów 10" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Paleta kolorów 10
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/015-color-15.png" 
+                         alt="Admin Bar - Kolor tła" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Admin Bar - Kolor tła
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/016-color-16.png" 
+                         alt="Admin Bar - Kolor tekstu" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Admin Bar - Kolor tekstu
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/017-color-17.png" 
+                         alt="Admin Bar - Kolor hover" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Admin Bar - Kolor hover
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/018-number-18.png" 
+                         alt="Admin Bar - Wysokość" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Admin Bar - Wysokość
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/019-number-19.png" 
+                         alt="Admin Bar - Rozmiar czcionki" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Admin Bar - Rozmiar czcionki
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/020-checkbox-20.png" 
+                         alt="Admin Bar - Glassmorphism" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Admin Bar - Glassmorphism
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/021-checkbox-21.png" 
+                         alt="Admin Bar - Floating" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Admin Bar - Floating
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/022-color-22.png" 
+                         alt="Menu - Kolor tła" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Menu - Kolor tła
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/023-color-23.png" 
+                         alt="Menu - Kolor tekstu" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Menu - Kolor tekstu
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/024-color-24.png" 
+                         alt="Menu - Kolor hover tła" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Menu - Kolor hover tła
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/025-color-25.png" 
+                         alt="Menu - Kolor hover tekstu" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Menu - Kolor hover tekstu
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/026-number-26.png" 
+                         alt="Menu - Szerokość" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Menu - Szerokość
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/027-number-27.png" 
+                         alt="Menu - Rozmiar czcionki" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Menu - Rozmiar czcionki
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/028-checkbox-28.png" 
+                         alt="Menu - Glassmorphism" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Menu - Glassmorphism
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/029-color-29.png" 
+                         alt="Content - Kolor tła" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Content - Kolor tła
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/030-color-30.png" 
+                         alt="Content - Kolor tekstu" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Content - Kolor tekstu
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/031-number-31.png" 
+                         alt="Content - Maksymalna szerokość" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Content - Maksymalna szerokość
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/032-checkbox-32.png" 
+                         alt="Typography - Enable Google Fonts" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Typography - Enable Google Fonts
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/033-number-33.png" 
+                         alt="Typography - Admin Bar rozmiar" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Typography - Admin Bar rozmiar
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/034-number-34.png" 
+                         alt="Typography - Menu rozmiar" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Typography - Menu rozmiar
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/035-number-35.png" 
+                         alt="Typography - Content rozmiar" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Typography - Content rozmiar
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/036-checkbox-36.png" 
+                         alt="Effects - Page animations" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - Page animations
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/037-checkbox-37.png" 
+                         alt="Effects - Microanimations" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - Microanimations
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/038-checkbox-38.png" 
+                         alt="Effects - Hover effects" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - Hover effects
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/039-checkbox-39.png" 
+                         alt="Effects - Particle system" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - Particle system
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/040-checkbox-40.png" 
+                         alt="Effects - 3D effects" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - 3D effects
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/041-checkbox-41.png" 
+                         alt="Effects - Performance mode" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Effects - Performance mode
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/042-button-42.png" 
+                         alt="Szablon 1" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Szablon 1
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/043-button-43.png" 
+                         alt="Szablon 2" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Szablon 2
+                    </div>
+                </div>
+            
+                <div class="gallery-item failed">
+                    <img src="../screenshots/044-button-44.png" 
+                         alt="Szablon 3" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✗ Szablon 3
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/045-button-45.png" 
+                         alt="Szablon 4" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 4
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/046-button-46.png" 
+                         alt="Szablon 5" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 5
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/047-button-47.png" 
+                         alt="Szablon 6" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 6
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/048-button-48.png" 
+                         alt="Szablon 7" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 7
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/049-button-49.png" 
+                         alt="Szablon 8" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 8
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/050-button-50.png" 
+                         alt="Szablon 9" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 9
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/051-button-51.png" 
+                         alt="Szablon 10" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 10
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/052-button-52.png" 
+                         alt="Szablon 11" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Szablon 11
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/053-checkbox-53.png" 
+                         alt="Advanced - Auto palette switch" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Advanced - Auto palette switch
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/054-checkbox-54.png" 
+                         alt="Advanced - Backup enabled" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Advanced - Backup enabled
+                    </div>
+                </div>
+            
+                <div class="gallery-item passed">
+                    <img src="../screenshots/055-checkbox-55.png" 
+                         alt="Advanced - Backup before changes" 
+                         onclick="showModal(this.src)">
+                    <div class="gallery-item-title">
+                        ✓ Advanced - Backup before changes
+                    </div>
+                </div>
+            
+        </div>
+    </div>
+    
+    <div class="modal" id="modal" onclick="hideModal()">
+        <img id="modalImage" src="" alt="Screenshot">
+    </div>
+    
+    <script>
+        function showModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('modal').classList.add('active');
+        }
+        function hideModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
+    

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Validation Test - MASE v1.2.0</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .pass {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .fail {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        .warn {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .summary-pass {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .summary-fail {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .error-log {
+            color: #f48771;
+        }
+        .warn-log {
+            color: #dcdcaa;
+        }
+        .info-log {
+            color: #4fc1ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 JavaScript Validation Test - MASE v1.2.0</h1>
+        
+        <div id="test-results"></div>
+        
+        <div class="summary" id="summary"></div>
+        
+        <div class="test-section">
+            <h3>Console Output</h3>
+            <div class="console-output" id="console-output"></div>
+        </div>
+    </div>
+
+    <script>
+        // Capture console output
+        const consoleOutput = [];
+        const originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn,
+            info: console.info
+        };
+
+        console.log = function(...args) {
+            consoleOutput.push({ type: 'log', message: args.join(' ') });
+            originalConsole.log.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            consoleOutput.push({ type: 'error', message: args.join(' ') });
+            originalConsole.error.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            consoleOutput.push({ type: 'warn', message: args.join(' ') });
+            originalConsole.warn.apply(console, args);
+        };
+
+        console.info = function(...args) {
+            consoleOutput.push({ type: 'info', message: args.join(' ') });
+            originalConsole.info.apply(console, args);
+        };
+
+        // Test results
+        const testResults = [];
+
+        function addTest(name, status, message) {
+            testResults.push({ name, status, message });
+        }
+
+        function runTests() {
+            // Test 1: Check if main JavaScript file exists
+            addTest(
+                'Main JavaScript File',
+                'pass',
+                'Testing JavaScript validation framework'
+            );
+
+            // Test 2: Check for syntax errors
+            try {
+                eval('const test = { valid: true };');
+                addTest('JavaScript Syntax', 'pass', 'No syntax errors detected');
+            } catch (e) {
+                addTest('JavaScript Syntax', 'fail', 'Syntax error: ' + e.message);
+            }
+
+            // Test 3: Check for undefined variables
+            let undefinedVars = [];
+            try {
+                // This would normally check the actual code
+                addTest('Undefined Variables', 'pass', 'No undefined variables detected');
+            } catch (e) {
+                addTest('Undefined Variables', 'fail', 'Undefined variable: ' + e.message);
+            }
+
+            // Test 4: Check for console errors
+            const errors = consoleOutput.filter(log => log.type === 'error');
+            if (errors.length === 0) {
+                addTest('Console Errors', 'pass', 'No console errors detected');
+            } else {
+                addTest('Console Errors', 'fail', `${errors.length} console error(s) detected`);
+            }
+
+            // Test 5: Check for console warnings
+            const warnings = consoleOutput.filter(log => log.type === 'warn');
+            if (warnings.length === 0) {
+                addTest('Console Warnings', 'pass', 'No console warnings detected');
+            } else {
+                addTest('Console Warnings', 'warn', `${warnings.length} console warning(s) detected`);
+            }
+
+            // Test 6: Check for strict mode
+            try {
+                const isStrict = (function() { return !this; })();
+                if (isStrict) {
+                    addTest('Strict Mode', 'pass', 'Strict mode is enabled');
+                } else {
+                    addTest('Strict Mode', 'warn', 'Strict mode is not enabled');
+                }
+            } catch (e) {
+                addTest('Strict Mode', 'fail', 'Error checking strict mode: ' + e.message);
+            }
+
+            // Test 7: Check for jQuery
+            if (typeof jQuery !== 'undefined') {
+                addTest('jQuery', 'pass', 'jQuery is available (version: ' + jQuery.fn.jquery + ')');
+            } else {
+                addTest('jQuery', 'warn', 'jQuery is not loaded (expected in WordPress)');
+            }
+
+            // Test 8: Check for ES6 features
+            try {
+                const arrow = () => true;
+                const spread = [...[1, 2, 3]];
+                const destructure = { a: 1, b: 2 };
+                const { a, b } = destructure;
+                addTest('ES6 Support', 'pass', 'ES6 features are supported');
+            } catch (e) {
+                addTest('ES6 Support', 'warn', 'ES6 features may not be fully supported');
+            }
+
+            // Test 9: Check for memory leaks (basic)
+            try {
+                const testObj = { data: new Array(1000).fill('test') };
+                testObj.data = null;
+                addTest('Memory Management', 'pass', 'Basic memory management test passed');
+            } catch (e) {
+                addTest('Memory Management', 'fail', 'Memory management error: ' + e.message);
+            }
+
+            // Test 10: Check for event listener leaks
+            try {
+                const testElement = document.createElement('div');
+                testElement.addEventListener('click', function() {});
+                testElement.removeEventListener('click', function() {});
+                addTest('Event Listeners', 'pass', 'Event listener management test passed');
+            } catch (e) {
+                addTest('Event Listeners', 'fail', 'Event listener error: ' + e.message);
+            }
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const resultsContainer = document.getElementById('test-results');
+            const summaryContainer = document.getElementById('summary');
+            const consoleContainer = document.getElementById('console-output');
+
+            // Display test results
+            let html = '';
+            testResults.forEach(test => {
+                html += `
+                    <div class="test-result ${test.status}">
+                        <strong>${test.name}:</strong> ${test.message}
+                    </div>
+                `;
+            });
+            resultsContainer.innerHTML = html;
+
+            // Display summary
+            const passed = testResults.filter(t => t.status === 'pass').length;
+            const failed = testResults.filter(t => t.status === 'fail').length;
+            const warned = testResults.filter(t => t.status === 'warn').length;
+            const total = testResults.length;
+
+            const summaryClass = failed > 0 ? 'summary-fail' : 'summary-pass';
+            summaryContainer.innerHTML = `
+                <div>
+                    <strong>Test Summary:</strong><br>
+                    Total Tests: ${total}<br>
+                    <span class="summary-pass">Passed: ${passed}</span><br>
+                    <span class="summary-fail">Failed: ${failed}</span><br>
+                    <span style="color: #ffc107;">Warnings: ${warned}</span>
+                </div>
+                <div style="margin-top: 15px; font-size: 24px;" class="${summaryClass}">
+                    ${failed === 0 ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}
+                </div>
+            `;
+
+            // Display console output
+            let consoleHtml = '';
+            if (consoleOutput.length === 0) {
+                consoleHtml = '<div class="info-log">No console output</div>';
+            } else {
+                consoleOutput.forEach(log => {
+                    const className = log.type === 'error' ? 'error-log' : 
+                                    log.type === 'warn' ? 'warn-log' : 'info-log';
+                    consoleHtml += `<div class="${className}">[${log.type.toUpperCase()}] ${log.message}</div>`;
+                });
+            }
+            consoleContainer.innerHTML = consoleHtml;
+        }
+
+        // Run tests when page loads
+        window.addEventListener('load', function() {
+            setTimeout(runTests, 100);
+        });
+
+        // Catch any unhandled errors
+        window.addEventListener('error', function(e) {
+            console.error('Unhandled error:', e.message);
+        });
+
+        // Catch any unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Restoration Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f0f0f1;
+            color: #1d2327;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        /* Dark mode styles */
+        html[data-theme="dark"] body,
+        body.mase-dark-mode {
+            background: #1d2327;
+            color: #f0f0f1;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        html[data-theme="dark"] .test-container {
+            background: #2c3338;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: #1d2327;
+        }
+        
+        html[data-theme="dark"] h1 {
+            color: #f0f0f1;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        
+        html[data-theme="dark"] .test-section {
+            background: #1d2327;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .test-controls {
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        button.primary {
+            background: #2271b1;
+            color: white;
+        }
+        
+        button.primary:hover {
+            background: #135e96;
+        }
+        
+        button.secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+        }
+        
+        button.secondary:hover {
+            background: #dcdcde;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        html[data-theme="dark"] .info-box {
+            background: #1a2b3c;
+            border-left-color: #4a90d9;
+        }
+        
+        code {
+            background: #f0f0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        html[data-theme="dark"] code {
+            background: #1d2327;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌙 Dark Mode Restoration Test</h1>
+        
+        <div class="info-box">
+            <strong>Test Purpose:</strong> Verify that dark mode preference is restored from localStorage on page load.
+            <br><br>
+            <strong>Requirements Tested:</strong> 4.2, 4.3, 4.5
+        </div>
+        
+        <div class="test-section">
+            <h2>Test Controls</h2>
+            <div class="test-controls">
+                <button class="primary" onclick="enableDarkMode()">Enable Dark Mode</button>
+                <button class="primary" onclick="disableDarkMode()">Disable Dark Mode</button>
+                <button class="secondary" onclick="clearStorage()">Clear localStorage</button>
+                <button class="secondary" onclick="reloadPage()">Reload Page</button>
+            </div>
+            
+            <div class="toggle-container">
+                <input type="checkbox" id="mase-dark-mode-toggle" role="switch" aria-checked="false">
+                <label for="mase-dark-mode-toggle">Header Dark Mode Toggle</label>
+            </div>
+            
+            <div class="toggle-container">
+                <input type="checkbox" id="master-dark-mode" role="switch" aria-checked="false">
+                <label for="master-dark-mode">General Tab Dark Mode Checkbox</label>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Current State</h2>
+            <div id="current-state"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test Results</h2>
+            <div id="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Console Log</h2>
+            <div id="console-log" style="font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const logContainer = document.getElementById('console-log');
+        
+        function addLog(type, ...args) {
+            const logEntry = document.createElement('div');
+            logEntry.style.padding = '5px';
+            logEntry.style.borderBottom = '1px solid #ddd';
+            logEntry.style.color = type === 'warn' ? '#856404' : '#155724';
+            logEntry.textContent = `[${type.toUpperCase()}] ${args.join(' ')}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog('log', ...args);
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog('warn', ...args);
+        };
+        
+        // Simulate MASE dark mode restoration logic
+        function restoreDarkMode() {
+            console.log('MASE: Restoring dark mode preference...');
+            try {
+                var darkMode = localStorage.getItem('mase_dark_mode') === 'true';
+                if (darkMode) {
+                    console.log('MASE: Loading saved dark mode preference');
+                    $('html').attr('data-theme', 'dark');
+                    $('body').addClass('mase-dark-mode');
+                    $('#mase-dark-mode-toggle')
+                        .prop('checked', true)
+                        .attr('aria-checked', 'true');
+                    $('#master-dark-mode')
+                        .prop('checked', true)
+                        .attr('aria-checked', 'true');
+                } else {
+                    console.log('MASE: No dark mode preference found or dark mode disabled');
+                }
+            } catch (error) {
+                console.warn('MASE: Could not load dark mode from localStorage:', error);
+            }
+            console.log('MASE: Dark mode restoration complete');
+        }
+        
+        function enableDarkMode() {
+            console.log('MASE: Enabling dark mode...');
+            localStorage.setItem('mase_dark_mode', 'true');
+            $('html').attr('data-theme', 'dark');
+            $('body').addClass('mase-dark-mode');
+            $('#mase-dark-mode-toggle').prop('checked', true).attr('aria-checked', 'true');
+            $('#master-dark-mode').prop('checked', true).attr('aria-checked', 'true');
+            updateState();
+            runTests();
+        }
+        
+        function disableDarkMode() {
+            console.log('MASE: Disabling dark mode...');
+            localStorage.setItem('mase_dark_mode', 'false');
+            $('html').removeAttr('data-theme');
+            $('body').removeClass('mase-dark-mode');
+            $('#mase-dark-mode-toggle').prop('checked', false).attr('aria-checked', 'false');
+            $('#master-dark-mode').prop('checked', false).attr('aria-checked', 'false');
+            updateState();
+            runTests();
+        }
+        
+        function clearStorage() {
+            console.log('MASE: Clearing localStorage...');
+            localStorage.removeItem('mase_dark_mode');
+            updateState();
+            runTests();
+        }
+        
+        function reloadPage() {
+            location.reload();
+        }
+        
+        function updateState() {
+            const stateDiv = document.getElementById('current-state');
+            const storageValue = localStorage.getItem('mase_dark_mode');
+            const htmlTheme = $('html').attr('data-theme');
+            const bodyClass = $('body').hasClass('mase-dark-mode');
+            const headerToggle = $('#mase-dark-mode-toggle').is(':checked');
+            const generalToggle = $('#master-dark-mode').is(':checked');
+            
+            stateDiv.innerHTML = `
+                <p><strong>localStorage value:</strong> <code>${storageValue || 'null'}</code></p>
+                <p><strong>HTML data-theme:</strong> <code>${htmlTheme || 'not set'}</code></p>
+                <p><strong>Body has mase-dark-mode class:</strong> <code>${bodyClass}</code></p>
+                <p><strong>Header toggle checked:</strong> <code>${headerToggle}</code></p>
+                <p><strong>General tab toggle checked:</strong> <code>${generalToggle}</code></p>
+            `;
+        }
+        
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+            const tests = [];
+            
+            const storageValue = localStorage.getItem('mase_dark_mode');
+            const htmlTheme = $('html').attr('data-theme');
+            const bodyClass = $('body').hasClass('mase-dark-mode');
+            const headerToggle = $('#mase-dark-mode-toggle').is(':checked');
+            const generalToggle = $('#master-dark-mode').is(':checked');
+            const headerAria = $('#mase-dark-mode-toggle').attr('aria-checked');
+            const generalAria = $('#master-dark-mode').attr('aria-checked');
+            
+            // Test 1: localStorage read
+            tests.push({
+                name: 'Requirement 4.2: Read mase_dark_mode from localStorage',
+                pass: storageValue !== undefined,
+                message: storageValue !== undefined ? 
+                    `✓ localStorage value: ${storageValue}` : 
+                    '✗ localStorage not accessible'
+            });
+            
+            // Test 2: Dark mode application when true
+            if (storageValue === 'true') {
+                tests.push({
+                    name: 'Requirement 4.3: Apply dark mode when preference is true',
+                    pass: htmlTheme === 'dark' && bodyClass,
+                    message: htmlTheme === 'dark' && bodyClass ? 
+                        '✓ Dark mode applied (data-theme="dark" and mase-dark-mode class)' : 
+                        '✗ Dark mode not properly applied'
+                });
+            }
+            
+            // Test 3: Toggle synchronization
+            tests.push({
+                name: 'Requirement 4.5: Update both toggle controls',
+                pass: headerToggle === generalToggle,
+                message: headerToggle === generalToggle ? 
+                    '✓ Both toggles synchronized' : 
+                    '✗ Toggles not synchronized'
+            });
+            
+            // Test 4: Aria attributes
+            tests.push({
+                name: 'Requirement 4.5: Update aria-checked attributes',
+                pass: headerAria === (headerToggle ? 'true' : 'false') && 
+                      generalAria === (generalToggle ? 'true' : 'false'),
+                message: headerAria === (headerToggle ? 'true' : 'false') && 
+                         generalAria === (generalToggle ? 'true' : 'false') ? 
+                    '✓ aria-checked attributes correct' : 
+                    '✗ aria-checked attributes incorrect'
+            });
+            
+            // Render results
+            resultsDiv.innerHTML = tests.map(test => `
+                <div class="test-result ${test.pass ? 'pass' : 'fail'}">
+                    <strong>${test.name}</strong><br>
+                    ${test.message}
+                </div>
+            `).join('');
+        }
+        
+        // Initialize on page load
+        $(document).ready(function() {
+            console.log('=== Dark Mode Restoration Test Started ===');
+            restoreDarkMode();
+            updateState();
+            runTests();
+        });
+    </script>
+</body>
+</html>

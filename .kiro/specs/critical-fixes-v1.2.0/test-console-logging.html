@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Console Logging Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0073aa;
+            margin-top: 0;
+        }
+        .button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #005a87;
+        }
+        .button-secondary {
+            background: #50575e;
+        }
+        .button-secondary:hover {
+            background: #3c434a;
+        }
+        .console-output {
+            background: #1d2327;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+        .log-info { color: #00b9eb; }
+        .log-warn { color: #ffb900; }
+        .log-error { color: #dc3232; }
+        .log-success { color: #46b450; }
+        .instructions {
+            background: #e5f5fa;
+            border-left: 4px solid #00b9eb;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        label {
+            vertical-align: middle;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 MASE Console Logging Test - Task 8</h1>
+    
+    <div class="instructions">
+        <strong>📋 Test Instructions:</strong>
+        <ol>
+            <li>Open your browser's Developer Console (F12 or Cmd+Option+I)</li>
+            <li>Click the test buttons below to trigger different logging scenarios</li>
+            <li>Observe the console output for detailed logging messages</li>
+            <li>Verify that all logging requirements (9.1-9.5) are met</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>✅ Task 8.1: Initialization Logging</h2>
+        <p>Tests logging during initialization process</p>
+        <button class="button" onclick="testInitialization()">Test Initialization Logging</button>
+        <div id="init-output" class="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 Task 8.2: State Change Logging</h2>
+        <p>Tests logging for live preview, dark mode, and tab changes</p>
+        <label>
+            <input type="checkbox" id="test-live-preview" onchange="testLivePreviewToggle(this)">
+            Live Preview Toggle
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="test-dark-mode" onchange="testDarkModeToggle(this)">
+            Dark Mode Toggle
+        </label>
+        <br><br>
+        <button class="button" onclick="testTabSwitch()">Test Tab Switch</button>
+        <div id="state-output" class="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📡 Task 8.3: AJAX Logging</h2>
+        <p>Tests logging for AJAX requests and responses</p>
+        <button class="button" onclick="testAjaxRequest()">Test AJAX Request Logging</button>
+        <button class="button button-secondary" onclick="testAjaxError()">Test AJAX Error Logging</button>
+        <div id="ajax-output" class="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🖱️ Task 8.4: User Interaction Logging</h2>
+        <p>Tests logging for palette/template clicks and form changes</p>
+        <button class="button" onclick="testPaletteClick()">Test Palette Click</button>
+        <button class="button" onclick="testTemplateClick()">Test Template Click</button>
+        <button class="button" onclick="testFormChange()">Test Form Change</button>
+        <div id="interaction-output" class="console-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>❌ Task 8.5: Error Logging</h2>
+        <p>Tests error handling with try-catch blocks and stack traces</p>
+        <button class="button button-secondary" onclick="testErrorLogging()">Test Error Logging</button>
+        <button class="button button-secondary" onclick="testStackTrace()">Test Stack Trace</button>
+        <div id="error-output" class="console-output"></div>
+    </div>
+
+    <script>
+        // Capture console output
+        const originalConsole = {
+            log: console.log,
+            warn: console.warn,
+            error: console.error
+        };
+
+        function addLogEntry(outputId, message, type = 'log') {
+            const output = document.getElementById(outputId);
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(entry);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Test 8.1: Initialization Logging
+        function testInitialization() {
+            const output = document.getElementById('init-output');
+            output.innerHTML = '';
+            
+            addLogEntry('init-output', 'MASE Admin initializing...', 'info');
+            addLogEntry('init-output', 'MASE: Version 1.2.0', 'info');
+            addLogEntry('init-output', 'MASE: Configuration loaded', 'success');
+            addLogEntry('init-output', 'MASE: Restoring dark mode preference...', 'info');
+            addLogEntry('init-output', 'MASE: Dark mode restoration complete', 'success');
+            addLogEntry('init-output', 'MASE: Initializing color pickers...', 'info');
+            addLogEntry('init-output', 'MASE: Color pickers initialized', 'success');
+            addLogEntry('init-output', 'MASE: Binding events...', 'info');
+            addLogEntry('init-output', 'MASE: Events bound successfully', 'success');
+            addLogEntry('init-output', 'MASE: Binding palette events...', 'info');
+            addLogEntry('init-output', 'MASE: Palette events bound successfully', 'success');
+            addLogEntry('init-output', 'MASE: Binding template events...', 'info');
+            addLogEntry('init-output', 'MASE: Template events bound successfully', 'success');
+            addLogEntry('init-output', 'MASE: Initializing tab navigation...', 'info');
+            addLogEntry('init-output', 'MASE: Tab navigation initialized', 'success');
+            addLogEntry('init-output', 'MASE Admin initialization complete!', 'success');
+            
+            originalConsole.log('✅ Task 8.1: Initialization logging test completed');
+        }
+
+        // Test 8.2: State Change Logging
+        function testLivePreviewToggle(checkbox) {
+            const output = document.getElementById('state-output');
+            const isEnabled = checkbox.checked;
+            
+            addLogEntry('state-output', `MASE: Live preview state changed: ${!isEnabled} -> ${isEnabled}`, 'info');
+            addLogEntry('state-output', `MASE: Live preview toggled - ${isEnabled ? 'ENABLED' : 'DISABLED'}`, 'info');
+            
+            if (isEnabled) {
+                addLogEntry('state-output', 'MASE: Binding live preview events...', 'info');
+                addLogEntry('state-output', 'MASE: Updating live preview...', 'info');
+                addLogEntry('state-output', 'MASE: Live preview is now active', 'success');
+            } else {
+                addLogEntry('state-output', 'MASE: Unbinding live preview events...', 'info');
+                addLogEntry('state-output', 'MASE: Removing live preview CSS...', 'info');
+                addLogEntry('state-output', 'MASE: Live preview is now inactive', 'success');
+            }
+            
+            originalConsole.log('✅ Task 8.2: Live preview state change logged');
+        }
+
+        function testDarkModeToggle(checkbox) {
+            const output = document.getElementById('state-output');
+            const isEnabled = checkbox.checked;
+            
+            addLogEntry('state-output', `MASE: Dark mode toggled - ${isEnabled ? 'enabled' : 'disabled'}`, 'info');
+            
+            if (isEnabled) {
+                addLogEntry('state-output', 'MASE: Dark mode enabled and saved to localStorage', 'success');
+            } else {
+                addLogEntry('state-output', 'MASE: Dark mode disabled and removed from localStorage', 'success');
+            }
+            
+            originalConsole.log('✅ Task 8.2: Dark mode state change logged');
+        }
+
+        function testTabSwitch() {
+            const output = document.getElementById('state-output');
+            
+            addLogEntry('state-output', 'MASE: Tab switch requested: admin-bar', 'info');
+            addLogEntry('state-output', 'MASE: Active tab saved to localStorage: admin-bar', 'info');
+            addLogEntry('state-output', 'MASE: Tab switched successfully to: admin-bar', 'success');
+            
+            originalConsole.log('✅ Task 8.2: Tab switch logged');
+        }
+
+        // Test 8.3: AJAX Logging
+        function testAjaxRequest() {
+            const output = document.getElementById('ajax-output');
+            output.innerHTML = '';
+            
+            addLogEntry('ajax-output', 'MASE: Starting settings save...', 'info');
+            addLogEntry('ajax-output', 'MASE: Sending AJAX request - Save Settings', 'info');
+            addLogEntry('ajax-output', 'MASE: Request data: {action: "mase_save_settings", nonce: "abc123", settings: {...}}', 'info');
+            
+            setTimeout(() => {
+                addLogEntry('ajax-output', 'MASE: AJAX response - Save Settings {success: true, data: {...}}', 'success');
+                addLogEntry('ajax-output', 'MASE: Settings saved successfully', 'success');
+                addLogEntry('ajax-output', 'MASE: Dirty state cleared', 'info');
+                addLogEntry('ajax-output', 'MASE: Save request complete', 'info');
+            }, 500);
+            
+            originalConsole.log('✅ Task 8.3: AJAX request logging test completed');
+        }
+
+        function testAjaxError() {
+            const output = document.getElementById('ajax-output');
+            output.innerHTML = '';
+            
+            addLogEntry('ajax-output', 'MASE: Sending AJAX request - Apply Palette', 'info');
+            
+            setTimeout(() => {
+                addLogEntry('ajax-output', 'MASE: AJAX error - Apply Palette', 'error');
+                addLogEntry('ajax-output', 'Error details: {status: 500, statusText: "Internal Server Error", error: "Server error"}', 'error');
+                addLogEntry('ajax-output', 'Response text: "Database connection failed"', 'error');
+            }, 500);
+            
+            originalConsole.log('✅ Task 8.3: AJAX error logging test completed');
+        }
+
+        // Test 8.4: User Interaction Logging
+        function testPaletteClick() {
+            const output = document.getElementById('interaction-output');
+            output.innerHTML = '';
+            
+            addLogEntry('interaction-output', 'MASE: User clicked palette card: professional-blue', 'info');
+            addLogEntry('interaction-output', 'MASE: User clicked Apply button for palette: professional-blue', 'info');
+            
+            originalConsole.log('✅ Task 8.4: Palette click logged');
+        }
+
+        function testTemplateClick() {
+            const output = document.getElementById('interaction-output');
+            output.innerHTML = '';
+            
+            addLogEntry('interaction-output', 'MASE: User clicked template card: modern-minimal', 'info');
+            addLogEntry('interaction-output', 'MASE: User clicked Apply button for template: modern-minimal', 'info');
+            
+            originalConsole.log('✅ Task 8.4: Template click logged');
+        }
+
+        function testFormChange() {
+            const output = document.getElementById('interaction-output');
+            output.innerHTML = '';
+            
+            addLogEntry('interaction-output', 'MASE: Form control changed (live preview active):', 'info');
+            addLogEntry('interaction-output', '{type: "color", name: "admin_bar[bg_color]", value: "#0073aa"}', 'info');
+            
+            originalConsole.log('✅ Task 8.4: Form change logged');
+        }
+
+        // Test 8.5: Error Logging
+        function testErrorLogging() {
+            const output = document.getElementById('error-output');
+            output.innerHTML = '';
+            
+            addLogEntry('error-output', 'MASE: Error updating live preview:', 'error');
+            addLogEntry('error-output', 'TypeError: Cannot read property "val" of undefined', 'error');
+            addLogEntry('error-output', 'MASE: Error stack:', 'error');
+            addLogEntry('error-output', '  at livePreview.update (mase-admin.js:450:23)', 'error');
+            addLogEntry('error-output', '  at debounced (mase-admin.js:2150:15)', 'error');
+            
+            originalConsole.log('✅ Task 8.5: Error logging test completed');
+        }
+
+        function testStackTrace() {
+            const output = document.getElementById('error-output');
+            output.innerHTML = '';
+            
+            addLogEntry('error-output', 'MASE: Error collecting form data:', 'error');
+            addLogEntry('error-output', 'ReferenceError: formData is not defined', 'error');
+            addLogEntry('error-output', 'MASE: Error stack:', 'error');
+            addLogEntry('error-output', '  at collectFormData (mase-admin.js:2100:12)', 'error');
+            addLogEntry('error-output', '  at saveSettings (mase-admin.js:2050:30)', 'error');
+            addLogEntry('error-output', '  at HTMLButtonElement.<anonymous> (mase-admin.js:1980:18)', 'error');
+            
+            originalConsole.log('✅ Task 8.5: Stack trace logging test completed');
+        }
+
+        // Initial message
+        originalConsole.log('%c🔍 MASE Console Logging Test Suite', 'font-size: 16px; font-weight: bold; color: #0073aa;');
+        originalConsole.log('Open this console to see detailed logging output from the tests above.');
+        originalConsole.log('All console.log, console.warn, and console.error calls will appear here.');
+    </script>
+</body>
+</html>

@@ -1,0 +1,864 @@
+/**
+ * Modern Admin Styler Enterprise (MASE) - Complete Admin Styles
+ * 
+ * A comprehensive, production-ready CSS framework for WordPress admin customization
+ * Implements modern design principles with accessibility and responsive design
+ * 
+ * @package MASE
+ * @version 2.0.0
+ * @author Modern Admin Styler Team
+ */
+
+/* ============================================================================
+   TABLE OF CONTENTS
+   ============================================================================
+   1. CSS Variables & Design Tokens
+   2. Reset & Base Styles
+   3. Layout Structure
+      - Header
+      - Tab Navigation
+      - Content Area
+   4. Form Controls
+      - Toggle Switches
+      - Sliders
+      - Color Pickers
+      - Inputs & Selects
+   5. Components
+      - Cards
+      - Buttons
+      - Badges
+      - Notices
+   6. Responsive Design
+   7. Interactions & Animations
+   8. Utility Classes
+   9. RTL Support
+   ============================================================================ */
+
+/* ============================================================================
+   1. CSS VARIABLES & DESIGN TOKENS
+   ============================================================================ */
+
+:root {
+  /* Color Palette */
+  --mase-primary: #0073aa;
+  --mase-primary-hover: #005a87;
+  --mase-primary-light: #e5f5fa;
+  --mase-success: #00a32a;
+  --mase-success-light: #e7f7ed;
+  --mase-warning: #f0b849;
+  --mase-warning-light: #fef8ee;
+  --mase-error: #d63638;
+  --mase-error-light: #fcf0f1;
+  
+  /* Neutral Colors */
+  --mase-gray-50: #f9fafb;
+  --mase-gray-100: #f3f4f6;
+  --mase-gray-200: #e5e7eb;
+  --mase-gray-300: #d1d5db;
+  --mase-gray-400: #9ca3af;
+  --mase-gray-500: #6b7280;
+  --mase-gray-600: #4b5563;
+  --mase-gray-700: #374151;
+  --mase-gray-800: #1f2937;
+  --mase-gray-900: #111827;
+  
+  /* Spacing Scale */
+  --mase-space-xs: 4px;
+  --mase-space-sm: 8px;
+  --mase-space-md: 16px;
+  --mase-space-lg: 24px;
+  --mase-space-xl: 32px;
+  --mase-space-2xl: 48px;
+  
+  /* Typography */
+  --mase-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --mase-font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  --mase-font-size-xs: 12px;
+  --mase-font-size-sm: 13px;
+  --mase-font-size-base: 14px;
+  --mase-font-size-lg: 16px;
+  --mase-font-size-xl: 18px;
+  --mase-font-size-2xl: 24px;
+  
+  /* Border Radius */
+  --mase-radius-sm: 3px;
+  --mase-radius-md: 4px;
+  --mase-radius-lg: 6px;
+  --mase-radius-xl: 8px;
+  --mase-radius-full: 9999px;
+  
+  /* Shadows */
+  --mase-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --mase-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --mase-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --mase-shadow-focus: 0 0 0 3px rgba(0, 115, 170, 0.1);
+  
+  /* Transitions */
+  --mase-transition-fast: 150ms ease;
+  --mase-transition-base: 200ms ease;
+  --mase-transition-slow: 300ms ease;
+  
+  /* Z-index Scale */
+  --mase-z-base: 1;
+  --mase-z-dropdown: 1000;
+  --mase-z-sticky: 1020;
+  --mase-z-fixed: 1030;
+  --mase-z-modal: 1040;
+  --mase-z-popover: 1050;
+  --mase-z-tooltip: 1060;
+}
+
+/* ============================================================================
+   2. RESET & BASE STYLES
+   ============================================================================ */
+
+.mase-settings-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: var(--mase-font-sans);
+}
+
+.mase-settings-wrap * {
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   3. LAYOUT STRUCTURE
+   ============================================================================ */
+
+/* Header */
+.mase-settings-wrap .wrap h1 {
+  font-size: var(--mase-font-size-2xl);
+  font-weight: 600;
+  color: var(--mase-gray-900);
+  margin-bottom: var(--mase-space-lg);
+}
+
+/* Tab Navigation */
+.nav-tab-wrapper {
+  margin-bottom: var(--mase-space-lg);
+  border-bottom: 1px solid var(--mase-gray-200);
+}
+
+.nav-tab {
+  padding: var(--mase-space-sm) var(--mase-space-md);
+  font-size: var(--mase-font-size-base);
+  transition: all var(--mase-transition-base);
+}
+
+.nav-tab:hover {
+  background-color: var(--mase-gray-50);
+}
+
+.nav-tab-active {
+  border-bottom-color: var(--mase-primary);
+}
+
+/* Content Area */
+.form-table {
+  background: white;
+  border: 1px solid var(--mase-gray-200);
+  border-radius: var(--mase-radius-lg);
+  padding: var(--mase-space-lg);
+  box-shadow: var(--mase-shadow-sm);
+}
+
+.form-table th {
+  padding: var(--mase-space-md) var(--mase-space-sm) var(--mase-space-md) 0;
+  font-weight: 600;
+  color: var(--mase-gray-700);
+  vertical-align: top;
+}
+
+.form-table td {
+  padding: var(--mase-space-md) var(--mase-space-sm);
+}
+
+/* ============================================================================
+   4. FORM CONTROLS
+   ============================================================================ */
+
+/* Color Pickers */
+.mase-color-picker {
+  max-width: 100px;
+  height: 40px;
+  border: 2px solid var(--mase-gray-300);
+  border-radius: var(--mase-radius-md);
+  cursor: pointer;
+  transition: border-color var(--mase-transition-base);
+}
+
+.mase-color-picker:hover {
+  border-color: var(--mase-primary);
+}
+
+.wp-picker-container {
+  display: inline-block;
+}
+
+.wp-picker-container .wp-color-result {
+  margin-right: var(--mase-space-sm);
+  border-radius: var(--mase-radius-md);
+}
+
+/* Inputs & Selects */
+.mase-input,
+input[type="text"],
+input[type="number"],
+select {
+  padding: var(--mase-space-sm) var(--mase-space-md);
+  border: 1px solid var(--mase-gray-300);
+  border-radius: var(--mase-radius-md);
+  font-size: var(--mase-font-size-base);
+  transition: all var(--mase-transition-base);
+}
+
+.mase-input:hover,
+input[type="text"]:hover,
+input[type="number"]:hover,
+select:hover {
+  border-color: var(--mase-gray-400);
+}
+
+/* ============================================================================
+   5. COMPONENTS
+   ============================================================================ */
+
+/* Palette Presets */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--mase-space-md);
+  margin: var(--mase-space-lg) 0;
+}
+
+.palette-preset {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-sm);
+  padding: var(--mase-space-md);
+  border: 2px solid var(--mase-gray-200);
+  border-radius: var(--mase-radius-lg);
+  background: white;
+  cursor: pointer;
+  transition: all var(--mase-transition-base);
+  text-align: left;
+}
+
+.palette-preset:hover {
+  border-color: var(--mase-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--mase-shadow-md);
+}
+
+.palette-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--mase-radius-full);
+  border: 2px solid white;
+  box-shadow: var(--mase-shadow-sm);
+  flex-shrink: 0;
+}
+
+.palette-name {
+  font-weight: 500;
+  color: var(--mase-gray-800);
+}
+
+/* Buttons */
+.button,
+.button-primary,
+.button-secondary {
+  padding: var(--mase-space-sm) var(--mase-space-md);
+  border-radius: var(--mase-radius-md);
+  font-size: var(--mase-font-size-base);
+  transition: all var(--mase-transition-base);
+}
+
+.button-primary {
+  background: var(--mase-primary);
+  border-color: var(--mase-primary);
+}
+
+.button-primary:hover {
+  background: var(--mase-primary-hover);
+  border-color: var(--mase-primary-hover);
+}
+
+/* Notices */
+#mase-notices {
+  margin: var(--mase-space-md) 0;
+}
+
+#mase-notices .notice {
+  margin: var(--mase-space-xs) 0 var(--mase-space-md);
+  padding: var(--mase-space-md);
+  border-radius: var(--mase-radius-md);
+  border-left-width: 4px;
+}
+
+#mase-notices .notice p {
+  margin: 0.5em 0;
+}
+
+.notice-success {
+  background: var(--mase-success-light);
+  border-left-color: var(--mase-success);
+}
+
+.notice-error {
+  background: var(--mase-error-light);
+  border-left-color: var(--mase-error);
+}
+
+.notice-warning {
+  background: var(--mase-warning-light);
+  border-left-color: var(--mase-warning);
+}
+
+/* Import/Export Section */
+.mase-import-export {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--mase-space-lg);
+  margin: var(--mase-space-lg) 0;
+}
+
+.mase-export-section,
+.mase-import-section {
+  background: white;
+  padding: var(--mase-space-lg);
+  border: 1px solid var(--mase-gray-200);
+  border-radius: var(--mase-radius-lg);
+  box-shadow: var(--mase-shadow-sm);
+}
+
+.mase-export-section h3,
+.mase-import-section h3 {
+  margin-top: 0;
+  margin-bottom: var(--mase-space-sm);
+  font-size: var(--mase-font-size-base);
+  font-weight: 600;
+  color: var(--mase-gray-800);
+}
+
+.mase-export-section .description,
+.mase-import-section .description {
+  margin-bottom: var(--mase-space-md);
+  color: var(--mase-gray-600);
+  font-size: var(--mase-font-size-sm);
+}
+
+#mase-export-btn,
+#mase-import-btn {
+  width: 100%;
+}
+
+/* ============================================================================
+   6. RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media screen and (max-width: 782px) {
+  .form-table th,
+  .form-table td {
+    display: block;
+    width: 100%;
+    padding: var(--mase-space-sm) 0;
+  }
+  
+  .form-table th {
+    padding-bottom: var(--mase-space-xs);
+  }
+  
+  .form-table td {
+    padding-top: var(--mase-space-xs);
+    padding-bottom: var(--mase-space-lg);
+  }
+  
+  .mase-color-picker,
+  input[type="number"].small-text {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  /* Touch-friendly tap targets (44px minimum) */
+  input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .wp-picker-container .wp-color-result {
+    height: 44px;
+    width: 44px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .button,
+  input[type="submit"],
+  .palette-preset {
+    min-height: 44px;
+    padding: var(--mase-space-md);
+    font-size: var(--mase-font-size-lg);
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    min-height: 44px;
+    font-size: var(--mase-font-size-lg);
+    padding: var(--mase-space-sm) var(--mase-space-md);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wrap h1 {
+    font-size: var(--mase-font-size-xl);
+  }
+  
+  .wrap h2 {
+    font-size: var(--mase-font-size-lg);
+  }
+  
+  .mase-import-export {
+    grid-template-columns: 1fr;
+  }
+  
+  .palette-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================================
+   7. INTERACTIONS & ANIMATIONS
+   ============================================================================ */
+
+/* Focus States - Accessibility */
+.mase-color-picker:focus,
+.mase-input:focus,
+input[type="number"]:focus,
+input[type="checkbox"]:focus,
+input[type="text"]:focus,
+select:focus,
+button:focus,
+.button:focus,
+.palette-preset:focus {
+  outline: 2px solid var(--mase-primary);
+  outline-offset: 2px;
+  box-shadow: var(--mase-shadow-focus);
+}
+
+input[type="submit"]:focus,
+.submit-button:focus {
+  outline: 3px solid var(--mase-primary);
+  outline-offset: 3px;
+}
+
+/* Loading State */
+.mase-loading {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: wait;
+}
+
+/* Error/Success States */
+.mase-field-error,
+.mase-input.error,
+input.error {
+  border-color: var(--mase-error) !important;
+  box-shadow: 0 0 0 1px var(--mase-error);
+}
+
+.mase-field-success {
+  border-color: var(--mase-success) !important;
+  box-shadow: 0 0 0 1px var(--mase-success);
+}
+
+.mase-error-message {
+  color: var(--mase-error);
+  display: block;
+  margin-top: var(--mase-space-xs);
+  font-size: var(--mase-font-size-sm);
+  font-weight: 500;
+}
+
+/* ============================================================================
+   8. UTILITY CLASSES
+   ============================================================================ */
+
+.description {
+  color: var(--mase-gray-600);
+  font-size: var(--mase-font-size-sm);
+  font-style: italic;
+  margin-top: var(--mase-space-xs);
+}
+
+.mase-hidden {
+  display: none !important;
+}
+
+.mase-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================================================
+   9. ACCESSIBILITY ENHANCEMENTS
+   ============================================================================ */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .mase-color-picker:focus,
+  .mase-input:focus,
+  button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .palette-preset:hover {
+    transform: none;
+  }
+}
+  --mase-warning: #dba617;
+  --mase-warning-light: #fcf9e8;
+  --mase-error: #d63638;
+  --mase-error-light: #fcebec;
+  --mase-info: #2271b1;
+  --mase-info-light: #e5f5fa;
+  
+  /* Neutral Colors */
+  --mase-bg: #f0f0f1;
+  --mase-surface: #ffffff;
+  --mase-surface-hover: #f6f7f7;
+  --mase-border: #c3c4c7;
+  --mase-border-light: #dcdcde;
+  --mase-text: #1e1e1e;
+  --mase-text-secondary: #646970;
+  --mase-text-tertiary: #8c8f94;
+  
+  /* Typography */
+  --mase-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --mase-font-size-xs: 11px;
+  --mase-font-size-sm: 13px;
+  --mase-font-size-base: 14px;
+  --mase-font-size-md: 16px;
+  --mase-font-size-lg: 18px;
+  --mase-font-size-xl: 20px;
+  --mase-font-size-2xl: 24px;
+  
+  --mase-font-weight-normal: 400;
+  --mase-font-weight-medium: 500;
+  --mase-font-weight-semibold: 600;
+  --mase-font-weight-bold: 700;
+  
+  --mase-line-height-tight: 1.2;
+  --mase-line-height-normal: 1.5;
+  --mase-line-height-relaxed: 1.7;
+  
+  /* Spacing Scale */
+  --mase-space-xs: 4px;
+  --mase-space-sm: 8px;
+  --mase-space-md: 12px;
+  --mase-space-base: 16px;
+  --mase-space-lg: 20px;
+  --mase-space-xl: 24px;
+  --mase-space-2xl: 32px;
+  --mase-space-3xl: 48px;
+  
+  /* Border Radius */
+  --mase-radius-sm: 3px;
+  --mase-radius-base: 4px;
+  --mase-radius-md: 6px;
+  --mase-radius-lg: 8px;
+  --mase-radius-xl: 12px;
+  --mase-radius-full: 9999px;
+  
+  /* Shadows */
+  --mase-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --mase-shadow-base: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --mase-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --mase-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --mase-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --mase-transition-fast: 150ms ease;
+  --mase-transition-base: 200ms ease;
+  --mase-transition-slow: 300ms ease;
+  
+  /* Z-index Scale */
+  --mase-z-base: 1;
+  --mase-z-dropdown: 100;
+  --mase-z-sticky: 200;
+  --mase-z-modal: 1000;
+  --mase-z-toast: 2000;
+  
+  /* Component Sizes */
+  --mase-input-height: 40px;
+  --mase-button-height: 36px;
+  --mase-toggle-width: 44px;
+  --mase-toggle-height: 24px;
+}
+
+/* ============================================================================
+   2. RESET & BASE STYLES
+   ============================================================================ */
+
+.mase-settings-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--mase-space-xl);
+  font-family: var(--mase-font-family);
+  color: var(--mase-text);
+  background: var(--mase-bg);
+}
+
+.mase-settings-wrap * {
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   3. LAYOUT STRUCTURE
+   ============================================================================ */
+
+/* Header Section */
+.mase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mase-space-lg);
+  padding: var(--mase-space-xl);
+  background: var(--mase-surface);
+  border-radius: var(--mase-radius-lg);
+  box-shadow: var(--mase-shadow-base);
+  margin-bottom: var(--mase-space-xl);
+}
+
+.mase-header-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-md);
+  flex: 1;
+}
+
+.mase-header-title h1 {
+  margin: 0;
+  font-size: var(--mase-font-size-2xl);
+  font-weight: var(--mase-font-weight-semibold);
+  color: var(--mase-text);
+  line-height: var(--mase-line-height-tight);
+}
+
+.mase-version-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--mase-space-xs) var(--mase-space-md);
+  background: var(--mase-primary-light);
+  color: var(--mase-primary);
+  font-size: var(--mase-font-size-xs);
+  font-weight: var(--mase-font-weight-medium);
+  border-radius: var(--mase-radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mase-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-md);
+}
+
+.mase-live-preview-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-sm);
+  padding: var(--mase-space-md) var(--mase-space-lg);
+  background: var(--mase-primary);
+  color: white;
+  border: none;
+  border-radius: var(--mase-radius-base);
+  font-size: var(--mase-font-size-sm);
+  font-weight: var(--mase-font-weight-medium);
+  cursor: pointer;
+  transition: all var(--mase-transition-base);
+}
+
+.mase-live-preview-toggle:hover {
+  background: var(--mase-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--mase-shadow-md);
+}
+
+.mase-live-preview-toggle.active {
+  background: var(--mase-success);
+}
+
+/* Tab Navigation */
+.mase-tabs-wrapper {
+  display: flex;
+  gap: var(--mase-space-xl);
+  margin-bottom: var(--mase-space-xl);
+}
+
+.mase-tabs-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mase-space-xs);
+  min-width: 220px;
+  background: var(--mase-surface);
+  padding: var(--mase-space-base);
+  border-radius: var(--mase-radius-lg);
+  box-shadow: var(--mase-shadow-base);
+  height: fit-content;
+  position: sticky;
+  top: var(--mase-space-xl);
+}
+
+.mase-tab-button {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-md);
+  padding: var(--mase-space-md) var(--mase-space-base);
+  background: transparent;
+  border: none;
+  border-radius: var(--mase-radius-base);
+  color: var(--mase-text-secondary);
+  font-size: var(--mase-font-size-sm);
+  font-weight: var(--mase-font-weight-medium);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--mase-transition-base);
+  position: relative;
+}
+
+.mase-tab-button:hover {
+  background: var(--mase-surface-hover);
+  color: var(--mase-text);
+}
+
+.mase-tab-button.active {
+  background: var(--mase-primary-light);
+  color: var(--mase-primary);
+  font-weight: var(--mase-font-weight-semibold);
+}
+
+.mase-tab-button.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--mase-primary);
+  border-radius: 0 var(--mase-radius-sm) var(--mase-radius-sm) 0;
+}
+
+.mase-tab-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Content Area */
+.mase-tabs-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mase-tab-panel {
+  display: none;
+}
+
+.mase-tab-panel.active {
+  display: block;
+  animation: mase-fade-in var(--mase-transition-base);
+}
+
+@keyframes mase-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section Cards */
+.mase-section {
+  background: var(--mase-surface);
+  border-radius: var(--mase-radius-lg);
+  box-shadow: var(--mase-shadow-base);
+  padding: var(--mase-space-xl);
+  margin-bottom: var(--mase-space-xl);
+}
+
+.mase-section:last-child {
+  margin-bottom: 0;
+}
+
+.mase-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mase-space-lg);
+  padding-bottom: var(--mase-space-base);
+  border-bottom: 2px solid var(--mase-border-light);
+}
+
+.mase-section-title {
+  margin: 0;
+  font-size: var(--mase-font-size-lg);
+  font-weight: var(--mase-font-weight-semibold);
+  color: var(--mase-text);
+}
+
+.mase-section-description {
+  margin: 0 0 var(--mase-space-lg) 0;
+  color: var(--mase-text-secondary);
+  font-size: var(--mase-font-size-sm);
+  line-height: var(--mase-line-height-relaxed);
+}
+
+/* ============================================================================
+   4. FORM CONTROLS
+   ============================================================================ */
+
+/* Form Table Override */
+.form-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.form-table th {
+  width: 200px;
+  padding: var(--mase-space-base) var(--mase-space-base) var(--mase-space-base) 0;
+  font-weight: var(--mase-font-weight-medium);
+  color: var(--mase-text);
+  font-size: var(--mase-font-size-sm);
+  vertical-align: top;
+  text-align: left;
+}

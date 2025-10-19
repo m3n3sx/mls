@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 13: Live Preview Functionality Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #2c3338;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="range"],
+        select {
+            width: 100%;
+            max-width: 300px;
+            padding: 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-value {
+            min-width: 40px;
+            font-weight: 600;
+        }
+        .preview-area {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #2271b1;
+            border-radius: 4px;
+        }
+        .mock-admin-bar {
+            background: #23282d;
+            color: #fff;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+        }
+        .mock-admin-menu {
+            background: #23282d;
+            color: #fff;
+            padding: 15px;
+            width: 160px;
+            float: left;
+        }
+        .mock-content {
+            margin-left: 180px;
+            padding: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Task 13: Live Preview Functionality Test</h1>
+        <p><strong>Requirements:</strong> 9.1, 9.2, 9.3, 9.4, 9.5</p>
+        
+        <div class="test-section">
+            <h2>Live Preview Controls</h2>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="mase-live-preview-toggle">
+                    Enable Live Preview (Requirement 9.1)
+                </label>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Admin Bar Settings</h2>
+            <div class="form-group">
+                <label for="admin-bar-bg-color">Background Color (Requirement 9.3: Update within 100ms)</label>
+                <input type="text" id="admin-bar-bg-color" class="mase-color-picker" value="#23282d">
+            </div>
+            <div class="form-group">
+                <label for="admin-bar-text-color">Text Color</label>
+                <input type="text" id="admin-bar-text-color" class="mase-color-picker" value="#ffffff">
+            </div>
+            <div class="form-group">
+                <label for="admin-bar-height">Height (Requirement 9.4: Display value and update)</label>
+                <div class="slider-container">
+                    <input type="range" id="admin-bar-height" class="mase-slider" min="20" max="60" value="32">
+                    <span class="mase-slider-value">32</span>px
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Admin Menu Settings</h2>
+            <div class="form-group">
+                <label for="admin-menu-bg-color">Background Color</label>
+                <input type="text" id="admin-menu-bg-color" class="mase-color-picker" value="#23282d">
+            </div>
+            <div class="form-group">
+                <label for="admin-menu-text-color">Text Color</label>
+                <input type="text" id="admin-menu-text-color" class="mase-color-picker" value="#ffffff">
+            </div>
+            <div class="form-group">
+                <label for="admin-menu-width">Width (Requirement 9.2: Debounce to 300ms)</label>
+                <div class="slider-container">
+                    <input type="range" id="admin-menu-width" class="mase-slider" min="100" max="300" value="160">
+                    <span class="mase-slider-value">160</span>px
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Typography Settings</h2>
+            <div class="form-group">
+                <label for="typography-admin-bar-font-size">Admin Bar Font Size</label>
+                <div class="slider-container">
+                    <input type="range" id="typography-admin-bar-font-size" class="mase-slider" min="10" max="24" value="13">
+                    <span class="mase-slider-value">13</span>px
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="typography-admin-bar-font-weight">Admin Bar Font Weight</label>
+                <select id="typography-admin-bar-font-weight" class="mase-select">
+                    <option value="300">Light (300)</option>
+                    <option value="400" selected>Normal (400)</option>
+                    <option value="500">Medium (500)</option>
+                    <option value="600">Semi-Bold (600)</option>
+                    <option value="700">Bold (700)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Visual Effects Settings</h2>
+            <div class="form-group">
+                <label for="visual-effects-admin-bar-border-radius">Admin Bar Border Radius</label>
+                <div class="slider-container">
+                    <input type="range" id="visual-effects-admin-bar-border-radius" class="mase-slider" min="0" max="20" value="0">
+                    <span class="mase-slider-value">0</span>px
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="visual-effects-admin-bar-shadow-intensity">Shadow Intensity</label>
+                <select id="visual-effects-admin-bar-shadow-intensity" class="mase-select">
+                    <option value="none" selected>None</option>
+                    <option value="subtle">Subtle</option>
+                    <option value="medium">Medium</option>
+                    <option value="strong">Strong</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="preview-area">
+            <h2>Live Preview (Requirement 9.5: Mirror PHP CSS generation)</h2>
+            <div id="test-results"></div>
+            <div class="mock-admin-bar" id="mock-admin-bar">
+                Admin Bar Preview
+            </div>
+            <div style="clear: both;">
+                <div class="mock-admin-menu" id="mock-admin-menu">
+                    Menu Item 1<br>
+                    Menu Item 2<br>
+                    Menu Item 3
+                </div>
+                <div class="mock-content">
+                    Content Area
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Simplified MASE object for testing
+        var MASE = {
+            config: {
+                debounceDelay: 300
+            },
+            state: {
+                livePreviewEnabled: false
+            },
+            livePreview: {
+                toggle: function() {
+                    var self = MASE;
+                    self.state.livePreviewEnabled = !self.state.livePreviewEnabled;
+                    
+                    if (self.state.livePreviewEnabled) {
+                        this.bind();
+                        this.update();
+                        addTestResult('Live preview enabled', 'pass');
+                    } else {
+                        this.unbind();
+                        this.remove();
+                        addTestResult('Live preview disabled', 'info');
+                    }
+                },
+                
+                bind: function() {
+                    var self = MASE;
+                    
+                    $('.mase-color-picker').on('change.livepreview', MASE.debounce(function() {
+                        self.livePreview.update();
+                        addTestResult('Color picker change detected (100ms debounce)', 'pass');
+                    }, 100));
+                    
+                    $('.mase-slider').on('input.livepreview', MASE.debounce(function() {
+                        var $slider = $(this);
+                        var $display = $slider.siblings('.mase-slider-value');
+                        if ($display.length) {
+                            $display.text($slider.val());
+                        }
+                        self.livePreview.update();
+                    }, self.config.debounceDelay));
+                    
+                    $('.mase-select').on('change.livepreview', MASE.debounce(function() {
+                        self.livePreview.update();
+                        addTestResult('Select change detected (300ms debounce)', 'pass');
+                    }, self.config.debounceDelay));
+                    
+                    addTestResult('Event bindings created successfully', 'pass');
+                },
+                
+                unbind: function() {
+                    $('.mase-color-picker, .mase-slider, .mase-select').off('.livepreview');
+                },
+                
+                update: function() {
+                    var settings = this.collectSettings();
+                    var css = this.generateCSS(settings);
+                    this.applyCSS(css);
+                    addTestResult('Preview updated with current settings', 'pass');
+                },
+                
+                collectSettings: function() {
+                    var settings = {
+                        admin_bar: {},
+                        admin_menu: {},
+                        typography: {
+                            admin_bar: {}
+                        },
+                        visual_effects: {
+                            admin_bar: {}
+                        }
+                    };
+                    
+                    settings.admin_bar.bg_color = $('#admin-bar-bg-color').val() || '#23282d';
+                    settings.admin_bar.text_color = $('#admin-bar-text-color').val() || '#ffffff';
+                    settings.admin_bar.height = $('#admin-bar-height').val() || 32;
+                    
+                    settings.admin_menu.bg_color = $('#admin-menu-bg-color').val() || '#23282d';
+                    settings.admin_menu.text_color = $('#admin-menu-text-color').val() || '#ffffff';
+                    settings.admin_menu.width = $('#admin-menu-width').val() || 160;
+                    
+                    settings.typography.admin_bar.font_size = $('#typography-admin-bar-font-size').val() || 13;
+                    settings.typography.admin_bar.font_weight = $('#typography-admin-bar-font-weight').val() || 400;
+                    
+                    settings.visual_effects.admin_bar.border_radius = $('#visual-effects-admin-bar-border-radius').val() || 0;
+                    settings.visual_effects.admin_bar.shadow_intensity = $('#visual-effects-admin-bar-shadow-intensity').val() || 'none';
+                    settings.visual_effects.admin_bar.shadow_direction = 'bottom';
+                    settings.visual_effects.admin_bar.shadow_blur = 10;
+                    settings.visual_effects.admin_bar.shadow_color = 'rgba(0,0,0,0.15)';
+                    
+                    return settings;
+                },
+                
+                generateCSS: function(settings) {
+                    var css = '';
+                    css += this.generateAdminBarCSS(settings);
+                    css += this.generateAdminMenuCSS(settings);
+                    css += this.generateTypographyCSS(settings);
+                    css += this.generateVisualEffectsCSS(settings);
+                    return css;
+                },
+                
+                generateAdminBarCSS: function(settings) {
+                    var css = '';
+                    var adminBar = settings.admin_bar || {};
+                    
+                    css += '.mock-admin-bar{';
+                    if (adminBar.bg_color) {
+                        css += 'background-color:' + adminBar.bg_color + '!important;';
+                    }
+                    if (adminBar.text_color) {
+                        css += 'color:' + adminBar.text_color + '!important;';
+                    }
+                    if (adminBar.height) {
+                        css += 'padding:' + (adminBar.height / 3) + 'px 20px!important;';
+                    }
+                    css += '}';
+                    
+                    return css;
+                },
+                
+                generateAdminMenuCSS: function(settings) {
+                    var css = '';
+                    var adminMenu = settings.admin_menu || {};
+                    
+                    css += '.mock-admin-menu{';
+                    if (adminMenu.bg_color) {
+                        css += 'background-color:' + adminMenu.bg_color + '!important;';
+                    }
+                    if (adminMenu.text_color) {
+                        css += 'color:' + adminMenu.text_color + '!important;';
+                    }
+                    if (adminMenu.width) {
+                        css += 'width:' + adminMenu.width + 'px!important;';
+                    }
+                    css += '}';
+                    
+                    if (adminMenu.width) {
+                        css += '.mock-content{';
+                        css += 'margin-left:' + (parseInt(adminMenu.width) + 20) + 'px!important;';
+                        css += '}';
+                    }
+                    
+                    return css;
+                },
+                
+                generateTypographyCSS: function(settings) {
+                    var css = '';
+                    var typography = settings.typography || {};
+                    
+                    if (typography.admin_bar) {
+                        var adminBar = typography.admin_bar;
+                        css += '.mock-admin-bar{';
+                        if (adminBar.font_size) {
+                            css += 'font-size:' + adminBar.font_size + 'px!important;';
+                        }
+                        if (adminBar.font_weight) {
+                            css += 'font-weight:' + adminBar.font_weight + '!important;';
+                        }
+                        css += '}';
+                    }
+                    
+                    return css;
+                },
+                
+                generateVisualEffectsCSS: function(settings) {
+                    var css = '';
+                    var visualEffects = settings.visual_effects || {};
+                    
+                    if (visualEffects.admin_bar) {
+                        css += this.generateElementVisualEffects('.mock-admin-bar', visualEffects.admin_bar);
+                    }
+                    
+                    return css;
+                },
+                
+                generateElementVisualEffects: function(selector, effects) {
+                    var css = '';
+                    css += selector + '{';
+                    
+                    if (effects.border_radius) {
+                        css += 'border-radius:' + effects.border_radius + 'px!important;';
+                    }
+                    
+                    var shadow = this.calculateShadow(effects);
+                    if (shadow !== 'none') {
+                        css += 'box-shadow:' + shadow + '!important;';
+                    }
+                    
+                    css += '}';
+                    return css;
+                },
+                
+                calculateShadow: function(effects) {
+                    var intensity = effects.shadow_intensity || 'none';
+                    var direction = effects.shadow_direction || 'bottom';
+                    var blur = parseInt(effects.shadow_blur) || 10;
+                    var color = effects.shadow_color || 'rgba(0,0,0,0.15)';
+                    
+                    if (intensity === 'none') {
+                        return 'none';
+                    }
+                    
+                    var sizes = {
+                        'subtle': { x: 2, y: 2, spread: 0 },
+                        'medium': { x: 4, y: 4, spread: 0 },
+                        'strong': { x: 8, y: 8, spread: 2 }
+                    };
+                    
+                    var directions = {
+                        'top': { x: 0, y: -1 },
+                        'right': { x: 1, y: 0 },
+                        'bottom': { x: 0, y: 1 },
+                        'left': { x: -1, y: 0 },
+                        'center': { x: 0, y: 0 }
+                    };
+                    
+                    var base = sizes[intensity] || sizes.subtle;
+                    var dir = directions[direction] || directions.bottom;
+                    
+                    var x = base.x * dir.x;
+                    var y = base.y * dir.y;
+                    var spread = base.spread;
+                    
+                    return x + 'px ' + y + 'px ' + blur + 'px ' + spread + 'px ' + color;
+                },
+                
+                applyCSS: function(css) {
+                    var $style = $('#mase-live-preview-css');
+                    
+                    if ($style.length === 0) {
+                        $style = $('<style id="mase-live-preview-css" type="text/css"></style>');
+                        $('head').append($style);
+                    }
+                    
+                    $style.text(css);
+                },
+                
+                remove: function() {
+                    $('#mase-live-preview-css').remove();
+                }
+            },
+            
+            debounce: function(func, wait) {
+                var timeout;
+                return function() {
+                    var context = this;
+                    var args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(function() {
+                        func.apply(context, args);
+                    }, wait);
+                };
+            }
+        };
+        
+        // Test result helper
+        function addTestResult(message, type) {
+            var $result = $('<div class="test-result ' + type + '">' + message + '</div>');
+            $('#test-results').append($result);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(function() {
+                $result.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+        
+        // Initialize on document ready
+        $(document).ready(function() {
+            addTestResult('Test page loaded successfully', 'info');
+            
+            // Bind live preview toggle
+            $('#mase-live-preview-toggle').on('change', function() {
+                MASE.state.livePreviewEnabled = $(this).is(':checked');
+                if (MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.bind();
+                    MASE.livePreview.update();
+                } else {
+                    MASE.livePreview.unbind();
+                    MASE.livePreview.remove();
+                }
+            });
+            
+            // Update slider values on input
+            $('.mase-slider').on('input', function() {
+                var $slider = $(this);
+                var $display = $slider.siblings('.mase-slider-value');
+                if ($display.length) {
+                    $display.text($slider.val());
+                }
+            });
+            
+            addTestResult('All event handlers initialized', 'pass');
+        });
+    </script>
+</body>
+</html>

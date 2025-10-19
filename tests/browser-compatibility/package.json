@@ -1,0 +1,31 @@
+{
+  "name": "mase-browser-compatibility-tests",
+  "version": "1.0.0",
+  "description": "Browser compatibility tests for MASE v1.2.0",
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:edge": "playwright test --project=edge",
+    "test:mobile": "playwright test --project=mobile-safari --project=mobile-chrome",
+    "test:tablet": "playwright test --project=tablet-ipad",
+    "test:all": "playwright test --project=chromium --project=firefox --project=webkit --project=edge",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report test-results/html-report",
+    "install:browsers": "playwright install"
+  },
+  "keywords": [
+    "browser-compatibility",
+    "testing",
+    "playwright",
+    "mase"
+  ],
+  "author": "MASE Development Team",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Palette Selector - Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      padding: 40px;
+      background-color: #f9fafb;
+    }
+    .test-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 32px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-bottom: 32px;
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Color Palette Selector Component</h1>
+    
+    <!-- Palette Selector Component -->
+    <div class="mase-palette-selector">
+      <div class="mase-palette-grid">
+        
+        <!-- Palette 1: Ocean Blue (Active) -->
+        <div class="mase-palette-card active" data-palette-id="ocean-blue">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Ocean Blue</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #0ea5e9;"></div>
+            <div class="mase-palette-color" style="background-color: #3b82f6;"></div>
+            <div class="mase-palette-color" style="background-color: #1e40af;"></div>
+            <div class="mase-palette-color" style="background-color: #0c4a6e;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 2: Forest Green -->
+        <div class="mase-palette-card" data-palette-id="forest-green">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Forest Green</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #10b981;"></div>
+            <div class="mase-palette-color" style="background-color: #059669;"></div>
+            <div class="mase-palette-color" style="background-color: #047857;"></div>
+            <div class="mase-palette-color" style="background-color: #065f46;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 3: Sunset Orange -->
+        <div class="mase-palette-card" data-palette-id="sunset-orange">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Sunset Orange</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #f97316;"></div>
+            <div class="mase-palette-color" style="background-color: #ea580c;"></div>
+            <div class="mase-palette-color" style="background-color: #c2410c;"></div>
+            <div class="mase-palette-color" style="background-color: #9a3412;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 4: Royal Purple -->
+        <div class="mase-palette-card" data-palette-id="royal-purple">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Royal Purple</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #a855f7;"></div>
+            <div class="mase-palette-color" style="background-color: #9333ea;"></div>
+            <div class="mase-palette-color" style="background-color: #7e22ce;"></div>
+            <div class="mase-palette-color" style="background-color: #6b21a8;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 5: Cherry Red -->
+        <div class="mase-palette-card" data-palette-id="cherry-red">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Cherry Red</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #ef4444;"></div>
+            <div class="mase-palette-color" style="background-color: #dc2626;"></div>
+            <div class="mase-palette-color" style="background-color: #b91c1c;"></div>
+            <div class="mase-palette-color" style="background-color: #991b1b;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 6: Slate Gray -->
+        <div class="mase-palette-card" data-palette-id="slate-gray">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Slate Gray</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #64748b;"></div>
+            <div class="mase-palette-color" style="background-color: #475569;"></div>
+            <div class="mase-palette-color" style="background-color: #334155;"></div>
+            <div class="mase-palette-color" style="background-color: #1e293b;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 7: Amber Gold -->
+        <div class="mase-palette-card" data-palette-id="amber-gold">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Amber Gold</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #f59e0b;"></div>
+            <div class="mase-palette-color" style="background-color: #d97706;"></div>
+            <div class="mase-palette-color" style="background-color: #b45309;"></div>
+            <div class="mase-palette-color" style="background-color: #92400e;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 8: Teal Cyan -->
+        <div class="mase-palette-card" data-palette-id="teal-cyan">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Teal Cyan</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #14b8a6;"></div>
+            <div class="mase-palette-color" style="background-color: #0d9488;"></div>
+            <div class="mase-palette-color" style="background-color: #0f766e;"></div>
+            <div class="mase-palette-color" style="background-color: #115e59;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 9: Rose Pink -->
+        <div class="mase-palette-card" data-palette-id="rose-pink">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Rose Pink</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #f43f5e;"></div>
+            <div class="mase-palette-color" style="background-color: #e11d48;"></div>
+            <div class="mase-palette-color" style="background-color: #be123c;"></div>
+            <div class="mase-palette-color" style="background-color: #9f1239;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+        <!-- Palette 10: Indigo Night -->
+        <div class="mase-palette-card" data-palette-id="indigo-night">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Indigo Night</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="mase-palette-colors">
+            <div class="mase-palette-color" style="background-color: #6366f1;"></div>
+            <div class="mase-palette-color" style="background-color: #4f46e5;"></div>
+            <div class="mase-palette-color" style="background-color: #4338ca;"></div>
+            <div class="mase-palette-color" style="background-color: #3730a3;"></div>
+          </div>
+          <button class="mase-palette-apply-btn">Apply Palette</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple demo script to handle palette selection
+    document.querySelectorAll('.mase-palette-apply-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all cards
+        document.querySelectorAll('.mase-palette-card').forEach(card => {
+          card.classList.remove('active');
+        });
+        
+        // Add active class to clicked card
+        const card = this.closest('.mase-palette-card');
+        card.classList.add('active');
+        
+        // Get palette ID
+        const paletteId = card.dataset.paletteId;
+        console.log('Applied palette:', paletteId);
+      });
+    });
+  </script>
+</body>
+</html>

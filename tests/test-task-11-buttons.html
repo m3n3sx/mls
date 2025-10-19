@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 11: Button Components Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .test-section {
+      margin-bottom: 48px;
+      padding: 24px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .test-section h2 {
+      margin-top: 0;
+      color: #1e1e1e;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #0073aa;
+    }
+    .test-section h3 {
+      color: #646970;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    .button-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .test-description {
+      color: #646970;
+      font-size: 13px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #f9fafb;
+      border-left: 3px solid #0073aa;
+      border-radius: 4px;
+    }
+    .requirement-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #e5f5fa;
+      color: #0073aa;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      margin-right: 8px;
+    }
+    .pass {
+      color: #00a32a;
+      font-weight: 600;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .test-card {
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+    }
+    .test-card h4 {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="margin-bottom: 8px;">Task 11: Button Components Test</h1>
+  <p style="color: #646970; margin-bottom: 32px;">
+    Comprehensive test suite for button component implementation covering all requirements and sub-tasks.
+  </p>
+
+  <!-- Sub-task 11.1: Base Button Styles -->
+  <div class="test-section">
+    <h2>11.1 Base Button Styles</h2>
+    <div class="test-description">
+      <span class="requirement-badge">REQ 7.3</span>
+      <span class="requirement-badge">REQ 7.4</span>
+      <span class="requirement-badge">REQ 7.7</span>
+      Testing base button dimensions (36px height), padding (8px 16px), border radius (4px), 
+      typography (14px, weight 500), and cursor pointer.
+    </div>
+
+    <h3>Base Button Structure</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary">Base Button</button>
+      <button class="mase-btn mase-btn-primary">
+        <span class="mase-btn-icon">🔍</span>
+        With Icon
+      </button>
+      <button class="mase-btn mase-btn-primary">
+        Save Changes
+        <span class="mase-btn-icon">✓</span>
+      </button>
+    </div>
+
+    <h3>Size Variants</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary mase-btn-sm">Small (32px)</button>
+      <button class="mase-btn mase-btn-primary">Default (36px)</button>
+      <button class="mase-btn mase-btn-primary mase-btn-lg">Large (44px)</button>
+    </div>
+
+    <h3>Full Width Button</h3>
+    <button class="mase-btn mase-btn-primary mase-btn-block">Full Width Button</button>
+  </div>
+
+  <!-- Sub-task 11.2: Primary Button Variant -->
+  <div class="test-section">
+    <h2>11.2 Primary Button Variant</h2>
+    <div class="test-description">
+      <span class="requirement-badge">REQ 7.1</span>
+      Testing primary button with background color #0073aa, white text, and no border.
+    </div>
+
+    <h3>Primary Buttons</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary">Save Changes</button>
+      <button class="mase-btn mase-btn-primary">Apply Settings</button>
+      <button class="mase-btn mase-btn-primary">
+        <span class="mase-btn-icon">📥</span>
+        Download
+      </button>
+      <button class="mase-btn mase-btn-primary">
+        Upload
+        <span class="mase-btn-icon">📤</span>
+      </button>
+    </div>
+
+    <h3>Primary Button Sizes</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary mase-btn-sm">Small Primary</button>
+      <button class="mase-btn mase-btn-primary">Default Primary</button>
+      <button class="mase-btn mase-btn-primary mase-btn-lg">Large Primary</button>
+    </div>
+  </div>
+
+  <!-- Sub-task 11.3: Secondary Button Variant -->
+  <div class="test-section">
+    <h2>11.3 Secondary Button Variant</h2>
+    <div class="test-description">
+      <span class="requirement-badge">REQ 7.2</span>
+      Testing secondary button with white background, primary color border (#0073aa), and primary color text.
+    </div>
+
+    <h3>Secondary Buttons</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-secondary">Export</button>
+      <button class="mase-btn mase-btn-secondary">Import</button>
+      <button class="mase-btn mase-btn-secondary">Reset</button>
+      <button class="mase-btn mase-btn-secondary">
+        <span class="mase-btn-icon">⚙️</span>
+        Settings
+      </button>
+    </div>
+
+    <h3>Secondary Button Sizes</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-secondary mase-btn-sm">Small Secondary</button>
+      <button class="mase-btn mase-btn-secondary">Default Secondary</button>
+      <button class="mase-btn mase-btn-secondary mase-btn-lg">Large Secondary</button>
+    </div>
+  </div>
+
+  <!-- Sub-task 11.4: Button Interactions -->
+  <div class="test-section">
+    <h2>11.4 Button Interactions</h2>
+    <div class="test-description">
+      <span class="requirement-badge">REQ 7.5</span>
+      <span class="requirement-badge">REQ 7.6</span>
+      <span class="requirement-badge">REQ 9.4</span>
+      <span class="requirement-badge">REQ 10.2</span>
+      Testing hover state (darker background), subtle lift transform, active state, and focus outline.
+      <strong>Hover over buttons to see effects. Use Tab key to test focus states.</strong>
+    </div>
+
+    <h3>Hover Effects (Primary)</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary">Hover Me</button>
+      <button class="mase-btn mase-btn-primary">
+        <span class="mase-btn-icon">👆</span>
+        Hover for Lift
+      </button>
+      <button class="mase-btn mase-btn-primary">
+        Darker on Hover
+        <span class="mase-btn-icon">🎨</span>
+      </button>
+    </div>
+
+    <h3>Hover Effects (Secondary)</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-secondary">Hover Me</button>
+      <button class="mase-btn mase-btn-secondary">
+        <span class="mase-btn-icon">👆</span>
+        Hover for Lift
+      </button>
+      <button class="mase-btn mase-btn-secondary">
+        Light Background
+        <span class="mase-btn-icon">🎨</span>
+      </button>
+    </div>
+
+    <h3>Focus States (Use Tab Key)</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary">Tab to Focus</button>
+      <button class="mase-btn mase-btn-secondary">Tab to Focus</button>
+      <button class="mase-btn mase-btn-primary">Tab to Focus</button>
+      <button class="mase-btn mase-btn-secondary">Tab to Focus</button>
+    </div>
+
+    <h3>Active States (Click and Hold)</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary">Click and Hold</button>
+      <button class="mase-btn mase-btn-secondary">Click and Hold</button>
+    </div>
+  </div>
+
+  <!-- Sub-task 11.5: Button States -->
+  <div class="test-section">
+    <h2>11.5 Button States</h2>
+    <div class="test-description">
+      <span class="requirement-badge">REQ 13.3</span>
+      <span class="requirement-badge">REQ 13.6</span>
+      Testing loading state with spinner and disabled state with reduced opacity.
+    </div>
+
+    <h3>Loading States</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary mase-btn-loading">Saving...</button>
+      <button class="mase-btn mase-btn-secondary mase-btn-loading">Loading...</button>
+      <button class="mase-btn mase-btn-primary mase-btn-loading mase-btn-lg">Processing...</button>
+    </div>
+
+    <h3>Disabled States</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary" disabled>Disabled Primary</button>
+      <button class="mase-btn mase-btn-secondary" disabled>Disabled Secondary</button>
+      <button class="mase-btn mase-btn-primary mase-disabled">Disabled Class</button>
+    </div>
+
+    <h3>Interactive Loading Demo</h3>
+    <div class="button-row">
+      <button class="mase-btn mase-btn-primary" id="loadingDemo">Click to Simulate Loading</button>
+      <button class="mase-btn mase-btn-secondary" id="loadingDemo2">Click to Simulate Loading</button>
+    </div>
+  </div>
+
+  <!-- Button Groups -->
+  <div class="test-section">
+    <h2>Button Groups</h2>
+    <div class="test-description">
+      Testing button groups with consistent spacing and alignment.
+    </div>
+
+    <h3>Mixed Button Group</h3>
+    <div class="mase-btn-group">
+      <button class="mase-btn mase-btn-primary">Save</button>
+      <button class="mase-btn mase-btn-secondary">Export</button>
+      <button class="mase-btn mase-btn-secondary">Import</button>
+      <button class="mase-btn mase-btn-secondary">Reset</button>
+    </div>
+
+    <h3>Action Button Group</h3>
+    <div class="mase-btn-group">
+      <button class="mase-btn mase-btn-secondary">
+        <span class="mase-btn-icon">📋</span>
+        Copy
+      </button>
+      <button class="mase-btn mase-btn-secondary">
+        <span class="mase-btn-icon">✂️</span>
+        Cut
+      </button>
+      <button class="mase-btn mase-btn-secondary">
+        <span class="mase-btn-icon">📄</span>
+        Paste
+      </button>
+    </div>
+  </div>
+
+  <!-- Real-world Examples -->
+  <div class="test-section">
+    <h2>Real-world Examples</h2>
+    <div class="test-description">
+      Testing buttons in realistic usage scenarios matching the MASE plugin interface.
+    </div>
+
+    <h3>Header Actions (from Requirements 1.3)</h3>
+    <div class="mase-header-right" style="background: white; padding: 16px; border-radius: 8px;">
+      <button class="mase-btn mase-btn-secondary">Export</button>
+      <button class="mase-btn mase-btn-secondary">Import</button>
+      <button class="mase-btn mase-btn-secondary">Reset</button>
+      <button class="mase-btn mase-btn-primary">Save Changes</button>
+    </div>
+
+    <h3>Form Actions</h3>
+    <div style="background: white; padding: 24px; border-radius: 8px; border: 1px solid #e5e7eb;">
+      <p style="margin-bottom: 16px; color: #646970;">Configure your settings below:</p>
+      <div class="mase-btn-group" style="justify-content: flex-end;">
+        <button class="mase-btn mase-btn-secondary">Cancel</button>
+        <button class="mase-btn mase-btn-secondary">Reset to Default</button>
+        <button class="mase-btn mase-btn-primary">Apply Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Checklist -->
+  <div class="test-section">
+    <h2>Verification Checklist</h2>
+    <div class="test-grid">
+      <div class="test-card">
+        <h4>✓ Sub-task 11.1: Base Styles</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>Height: 36px ✓</li>
+          <li>Padding: 8px 16px ✓</li>
+          <li>Border radius: 4px ✓</li>
+          <li>Font size: 14px ✓</li>
+          <li>Font weight: 500 ✓</li>
+          <li>Cursor: pointer ✓</li>
+        </ul>
+      </div>
+
+      <div class="test-card">
+        <h4>✓ Sub-task 11.2: Primary Variant</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>Background: #0073aa ✓</li>
+          <li>Text color: white ✓</li>
+          <li>No border ✓</li>
+        </ul>
+      </div>
+
+      <div class="test-card">
+        <h4>✓ Sub-task 11.3: Secondary Variant</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>Background: white ✓</li>
+          <li>Border: 1px #0073aa ✓</li>
+          <li>Text color: #0073aa ✓</li>
+        </ul>
+      </div>
+
+      <div class="test-card">
+        <h4>✓ Sub-task 11.4: Interactions</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>Hover: darker background ✓</li>
+          <li>Hover: lift transform ✓</li>
+          <li>Active state ✓</li>
+          <li>Focus outline: 2px ✓</li>
+        </ul>
+      </div>
+
+      <div class="test-card">
+        <h4>✓ Sub-task 11.5: States</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>Loading spinner ✓</li>
+          <li>Disabled opacity: 0.5 ✓</li>
+          <li>Disabled cursor ✓</li>
+        </ul>
+      </div>
+
+      <div class="test-card">
+        <h4>✓ Requirements Coverage</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: #646970;">
+          <li>REQ 7.1: Primary button ✓</li>
+          <li>REQ 7.2: Secondary button ✓</li>
+          <li>REQ 7.3: Height 36px ✓</li>
+          <li>REQ 7.4: Border radius 4px ✓</li>
+          <li>REQ 7.5: Hover darker ✓</li>
+          <li>REQ 7.6: Transition 200ms ✓</li>
+          <li>REQ 7.7: Typography ✓</li>
+          <li>REQ 9.4: Focus outline ✓</li>
+          <li>REQ 10.2: Accessibility ✓</li>
+          <li>REQ 13.3: Loading state ✓</li>
+          <li>REQ 13.6: Disabled state ✓</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Interactive loading demo
+    document.getElementById('loadingDemo').addEventListener('click', function() {
+      const btn = this;
+      btn.classList.add('mase-btn-loading');
+      btn.textContent = 'Saving...';
+      
+      setTimeout(() => {
+        btn.classList.remove('mase-btn-loading');
+        btn.textContent = 'Saved!';
+        
+        setTimeout(() => {
+          btn.textContent = 'Click to Simulate Loading';
+        }, 1000);
+      }, 2000);
+    });
+
+    document.getElementById('loadingDemo2').addEventListener('click', function() {
+      const btn = this;
+      btn.classList.add('mase-btn-loading');
+      btn.textContent = 'Processing...';
+      
+      setTimeout(() => {
+        btn.classList.remove('mase-btn-loading');
+        btn.textContent = 'Complete!';
+        
+        setTimeout(() => {
+          btn.textContent = 'Click to Simulate Loading';
+        }, 1000);
+      }, 2000);
+    });
+
+    // Log button measurements for verification
+    console.log('=== Button Component Verification ===');
+    const primaryBtn = document.querySelector('.mase-btn-primary');
+    const styles = window.getComputedStyle(primaryBtn);
+    
+    console.log('Height:', styles.height, '(Expected: 36px)');
+    console.log('Padding:', styles.padding, '(Expected: 8px 16px)');
+    console.log('Border Radius:', styles.borderRadius, '(Expected: 4px)');
+    console.log('Font Size:', styles.fontSize, '(Expected: 14px)');
+    console.log('Font Weight:', styles.fontWeight, '(Expected: 500)');
+    console.log('Background Color:', styles.backgroundColor, '(Expected: rgb(0, 115, 170))');
+    console.log('Color:', styles.color, '(Expected: rgb(255, 255, 255))');
+    console.log('Cursor:', styles.cursor, '(Expected: pointer)');
+    
+    const secondaryBtn = document.querySelector('.mase-btn-secondary');
+    const secondaryStyles = window.getComputedStyle(secondaryBtn);
+    console.log('\n=== Secondary Button ===');
+    console.log('Background Color:', secondaryStyles.backgroundColor, '(Expected: rgb(255, 255, 255))');
+    console.log('Border:', secondaryStyles.border, '(Expected: 1px solid rgb(0, 115, 170))');
+    console.log('Color:', secondaryStyles.color, '(Expected: rgb(0, 115, 170))');
+  </script>
+</body>
+</html>

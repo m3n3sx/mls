@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Accessibility Test - Task 8</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f0f0f1;
+            color: #1d2327;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        html[data-theme="dark"] body,
+        body.mase-dark-mode {
+            background: #1d2327;
+            color: #f0f0f1;
+        }
+        
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        html[data-theme="dark"] h1 {
+            color: #f0f0f1;
+            border-bottom-color: #4a90d9;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        html[data-theme="dark"] .test-container {
+            background: #2c3338;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+            border: 1px solid #c3c4c7;
+        }
+        
+        html[data-theme="dark"] .test-section {
+            background: #1d2327;
+            border-color: #50575e;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #1d2327;
+            font-size: 20px;
+        }
+        
+        html[data-theme="dark"] .test-section h2 {
+            color: #f0f0f1;
+        }
+        
+        .test-instructions {
+            background: #f0f6fc;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .test-instructions {
+            background: #1a2b3c;
+            border-left-color: #4a90d9;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            border: 2px solid #c3c4c7;
+        }
+        
+        html[data-theme="dark"] .toggle-container {
+            background: #2c3338;
+            border-color: #50575e;
+        }
+        
+        .mase-header-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .mase-header-toggle:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        
+        html[data-theme="dark"] .mase-header-toggle:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .mase-header-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .mase-header-toggle input[type="checkbox"]:focus {
+            outline: 2px solid #2271b1;
+            outline-offset: 2px;
+        }
+        
+        html[data-theme="dark"] .mase-header-toggle input[type="checkbox"]:focus {
+            outline-color: #4a90d9;
+        }
+        
+        .dashicons {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        button.primary {
+            background: #2271b1;
+            color: white;
+        }
+        
+        .checklist {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .checklist {
+            background: #1d2327;
+        }
+        
+        .checklist-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+        }
+        
+        html[data-theme="dark"] .checklist-item {
+            background: #2c3338;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2271b1;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        html[data-theme="dark"] .info-box {
+            background: #1a2b3c;
+            border-left-color: #4a90d9;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/dashicons.min.css">
+</head>
+<body>
+    <div class="test-container">
+        <h1>♿ Dark Mode Accessibility Test - Task 8</h1>
+        
+        <div class="info-box">
+            <strong>Test Purpose:</strong> Comprehensive accessibility testing for dark mode toggle including keyboard navigation, screen reader support, focus indicators, and ARIA attributes.
+            <br><br>
+            <strong>Requirements Tested:</strong> 6.1, 6.2, 6.3, 6.4, 6.5
+        </div>
+        
+        <!-- Test 1: Keyboard Navigation -->
+        <div class="test-section">
+            <h2>Test 1: Keyboard Navigation to Toggle</h2>
+            <p><strong>Requirements:</strong> 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps:</strong>
+                <ol>
+                    <li>Press <kbd>Tab</kbd> key repeatedly to navigate through the page</li>
+                    <li>Verify you can reach the dark mode toggle with Tab</li>
+                    <li>Verify focus indicator is clearly visible</li>
+                    <li>Verify focus indicator has sufficient contrast</li>
+                </ol>
+            </div>
+            
+            <div class="toggle-container">
+                <label class="mase-header-toggle">
+                    <input 
+                        type="checkbox" 
+                        id="mase-dark-mode-toggle"
+                        name="mase_dark_mode" 
+                        value="1"
+                        role="switch"
+                        aria-checked="false"
+                        aria-label="Toggle dark mode for entire admin"
+                    />
+                    <span class="dashicons dashicons-admin-appearance" aria-hidden="true"></span>
+                    <span>Dark Mode</span>
+                </label>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-1">
+                    <label for="check-1-1">Tab key navigates to dark mode toggle</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-2">
+                    <label for="check-1-2">Focus indicator is clearly visible</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-1-3">
+                    <label for="check-1-3">Focus indicator has sufficient contrast (visible in both light and dark modes)</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 2: Space/Enter Key Toggle -->
+        <div class="test-section">
+            <h2>Test 2: Space/Enter Key to Toggle Dark Mode</h2>
+            <p><strong>Requirements:</strong> 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps:</strong>
+                <ol>
+                    <li>Tab to the dark mode toggle (or click button below to focus it)</li>
+                    <li>Press <kbd>Space</kbd> key to toggle dark mode</li>
+                    <li>Verify dark mode is enabled/disabled</li>
+                    <li>Press <kbd>Space</kbd> again to toggle back</li>
+                    <li>Repeat test with <kbd>Enter</kbd> key</li>
+                </ol>
+            </div>
+            
+            <button class="primary" onclick="focusToggle()">Focus Dark Mode Toggle</button>
+            <button class="primary" onclick="simulateSpaceKey()">Simulate Space Key</button>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-1">
+                    <label for="check-2-1">Space key toggles dark mode on/off</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-2">
+                    <label for="check-2-2">Enter key toggles dark mode on/off</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-3">
+                    <label for="check-2-3">Visual feedback occurs immediately when toggling</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-2-4">
+                    <label for="check-2-4">No JavaScript errors in console when using keyboard</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 3: Focus Indicator Visibility -->
+        <div class="test-section">
+            <h2>Test 3: Focus Indicator Visibility</h2>
+            <p><strong>Requirements:</strong> 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps:</strong>
+                <ol>
+                    <li>Tab to the dark mode toggle</li>
+                    <li>Verify focus indicator is visible in light mode</li>
+                    <li>Enable dark mode</li>
+                    <li>Tab away and back to the toggle</li>
+                    <li>Verify focus indicator is visible in dark mode</li>
+                    <li>Check contrast ratio meets WCAG AA (3:1 minimum)</li>
+                </ol>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-1">
+                    <label for="check-3-1">Focus indicator visible in light mode</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-2">
+                    <label for="check-3-2">Focus indicator visible in dark mode</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-3">
+                    <label for="check-3-3">Focus indicator has minimum 3:1 contrast ratio</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-3-4">
+                    <label for="check-3-4">Focus indicator is at least 2px thick or has sufficient area</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 4: Screen Reader Announcements -->
+        <div class="test-section">
+            <h2>Test 4: Screen Reader Announcements</h2>
+            <p><strong>Requirements:</strong> 6.1, 6.2, 6.3, 6.4</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps (with Screen Reader):</strong>
+                <ol>
+                    <li>Enable screen reader (NVDA on Windows, JAWS, or VoiceOver on Mac)</li>
+                    <li>Navigate to the dark mode toggle</li>
+                    <li>Listen for the announcement</li>
+                    <li>Verify it announces: role (switch), label, and state (checked/not checked)</li>
+                    <li>Toggle dark mode and verify state change is announced</li>
+                </ol>
+                <p><strong>Expected Announcement:</strong> "Toggle dark mode for entire admin, switch, not checked" (or similar)</p>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-1">
+                    <label for="check-4-1">Screen reader announces the control as a "switch"</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-2">
+                    <label for="check-4-2">Screen reader announces the aria-label text</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-3">
+                    <label for="check-4-3">Screen reader announces current state (checked/not checked)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-4-4">
+                    <label for="check-4-4">State change is announced when toggling</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 5: ARIA Attributes Verification -->
+        <div class="test-section">
+            <h2>Test 5: Verify aria-checked Updates Correctly</h2>
+            <p><strong>Requirements:</strong> 6.1, 6.2, 6.4</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps:</strong>
+                <ol>
+                    <li>Open browser DevTools (F12)</li>
+                    <li>Inspect the dark mode toggle checkbox element</li>
+                    <li>Verify <code>aria-checked="false"</code> when unchecked</li>
+                    <li>Click the toggle to enable dark mode</li>
+                    <li>Verify <code>aria-checked="true"</code> when checked</li>
+                    <li>Click again to disable</li>
+                    <li>Verify <code>aria-checked="false"</code> again</li>
+                </ol>
+            </div>
+            
+            <div id="aria-status" style="padding: 15px; background: #f0f6fc; border-radius: 4px; margin: 15px 0;">
+                <strong>Current ARIA Attributes:</strong>
+                <ul id="aria-list"></ul>
+            </div>
+            
+            <button class="primary" onclick="checkAriaAttributes()">Check ARIA Attributes</button>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-1">
+                    <label for="check-5-1">aria-checked is "false" when toggle is unchecked</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-2">
+                    <label for="check-5-2">aria-checked is "true" when toggle is checked</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-3">
+                    <label for="check-5-3">aria-checked updates immediately when toggling</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-5-4">
+                    <label for="check-5-4">aria-checked value is a string ("true" or "false"), not boolean</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 6: ARIA Label Verification -->
+        <div class="test-section">
+            <h2>Test 6: Verify aria-label Provides Clear Description</h2>
+            <p><strong>Requirements:</strong> 6.3</p>
+            
+            <div class="test-instructions">
+                <strong>Manual Test Steps:</strong>
+                <ol>
+                    <li>Inspect the dark mode toggle in DevTools</li>
+                    <li>Verify <code>aria-label</code> attribute exists</li>
+                    <li>Verify the label text is descriptive and clear</li>
+                    <li>Verify it describes the purpose (toggle dark mode for entire admin)</li>
+                </ol>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-1">
+                    <label for="check-6-1">aria-label attribute exists on toggle</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-2">
+                    <label for="check-6-2">aria-label text is descriptive and clear</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-3">
+                    <label for="check-6-3">aria-label describes the action (toggle dark mode)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-6-4">
+                    <label for="check-6-4">aria-label mentions scope (entire admin)</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test 7: NVDA/JAWS Screen Reader Testing -->
+        <div class="test-section">
+            <h2>Test 7: Test with NVDA/JAWS Screen Readers</h2>
+            <p><strong>Requirements:</strong> 6.1, 6.2, 6.3, 6.4, 6.5</p>
+            
+            <div class="test-instructions">
+                <strong>NVDA Testing (Windows):</strong>
+                <ol>
+                    <li>Download and install NVDA (free): <a href="https://www.nvaccess.org/" target="_blank">nvaccess.org</a></li>
+                    <li>Start NVDA (Ctrl+Alt+N)</li>
+                    <li>Navigate to this page</li>
+                    <li>Use Tab to navigate to dark mode toggle</li>
+                    <li>Listen for announcement</li>
+                    <li>Press Space to toggle</li>
+                    <li>Verify state change is announced</li>
+                </ol>
+                
+                <strong>JAWS Testing (Windows):</strong>
+                <ol>
+                    <li>Start JAWS screen reader</li>
+                    <li>Navigate to this page</li>
+                    <li>Use Tab to navigate to dark mode toggle</li>
+                    <li>Listen for announcement</li>
+                    <li>Press Space to toggle</li>
+                    <li>Verify state change is announced</li>
+                </ol>
+                
+                <strong>VoiceOver Testing (Mac):</strong>
+                <ol>
+                    <li>Enable VoiceOver (Cmd+F5)</li>
+                    <li>Navigate to this page</li>
+                    <li>Use VoiceOver navigation (Ctrl+Option+Arrow keys)</li>
+                    <li>Navigate to dark mode toggle</li>
+                    <li>Listen for announcement</li>
+                    <li>Press Space to toggle</li>
+                    <li>Verify state change is announced</li>
+                </ol>
+            </div>
+            
+            <div class="checklist">
+                <strong>Verification Checklist:</strong>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-7-1">
+                    <label for="check-7-1">NVDA announces toggle correctly</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-7-2">
+                    <label for="check-7-2">JAWS announces toggle correctly</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-7-3">
+                    <label for="check-7-3">VoiceOver announces toggle correctly (if testing on Mac)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-7-4">
+                    <label for="check-7-4">All screen readers announce state changes</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check-7-5">
+                    <label for="check-7-5">Toggle is operable with screen reader commands</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Results Summary -->
+        <div class="test-section">
+            <h2>Automated Test Results</h2>
+            <button class="primary" onclick="runAutomatedTests()">Run Automated Tests</button>
+            <div id="test-results" style="margin-top: 15px;"></div>
+        </div>
+        
+        <!-- Export Results -->
+        <div class="test-section">
+            <h2>Export Test Results</h2>
+            <button class="primary" onclick="exportResults()">Export Results as JSON</button>
+            <p style="margin-top: 10px; color: #666;">Export your manual test checklist results for documentation.</p>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with dark mode functionality
+        var MASE = {
+            toggleDarkMode: function(e) {
+                var $checkbox = $(e.target);
+                var isDark = $checkbox.is(':checked');
+                
+                console.log('MASE: Dark Mode toggled:', isDark ? 'ON' : 'OFF');
+                
+                if (isDark) {
+                    $('html').attr('data-theme', 'dark');
+                    $('body').addClass('mase-dark-mode');
+                } else {
+                    $('html').removeAttr('data-theme');
+                    $('body').removeClass('mase-dark-mode');
+                }
+                
+                $checkbox.attr('aria-checked', isDark ? 'true' : 'false');
+                
+                console.log('MASE: aria-checked updated to:', isDark ? 'true' : 'false');
+            },
+            
+            init: function() {
+                console.log('MASE: Initializing...');
+                try {
+                    var darkMode = localStorage.getItem('mase_dark_mode') === 'true';
+                    if (darkMode) {
+                        $('html').attr('data-theme', 'dark');
+                        $('body').addClass('mase-dark-mode');
+                        $('#mase-dark-mode-toggle')
+                            .prop('checked', true)
+                            .attr('aria-checked', 'true');
+                    }
+                } catch (error) {
+                    console.warn('MASE: Could not load dark mode from localStorage:', error);
+                }
+            }
+        };
+        
+        // Initialize on page load
+        $(document).ready(function() {
+            console.log('=== Dark Mode Accessibility Test Started ===');
+            $('#mase-dark-mode-toggle').on('change', MASE.toggleDarkMode.bind(MASE));
+            MASE.init();
+            checkAriaAttributes();
+        });
+        
+        // Test utility functions
+        function focusToggle() {
+            $('#mase-dark-mode-toggle').focus();
+            console.log('Focus set to dark mode toggle');
+        }
+        
+        function simulateSpaceKey() {
+            var toggle = document.getElementById('mase-dark-mode-toggle');
+            toggle.focus();
+            toggle.click();
+            console.log('Simulated Space key press');
+        }
+        
+        function checkAriaAttributes() {
+            var $toggle = $('#mase-dark-mode-toggle');
+            var attributes = {
+                'role': $toggle.attr('role'),
+                'aria-checked': $toggle.attr('aria-checked'),
+                'aria-label': $toggle.attr('aria-label'),
+                'checked': $toggle.is(':checked')
+            };
+            
+            var html = '';
+            for (var key in attributes) {
+                html += '<li><strong>' + key + ':</strong> <code>' + attributes[key] + '</code></li>';
+            }
+            
+            $('#aria-list').html(html);
+            console.log('ARIA Attributes:', attributes);
+        }
+        
+        function runAutomatedTests() {
+            var results = [];
+            var $toggle = $('#mase-dark-mode-toggle');
+            
+            // Test 1: Role attribute
+            results.push({
+                name: 'Toggle has role="switch"',
+                pass: $toggle.attr('role') === 'switch',
+                message: $toggle.attr('role') === 'switch' ? 
+                    '✓ role="switch" present' : '✗ role="switch" missing or incorrect'
+            });
+            
+            // Test 2: aria-checked attribute
+            var ariaChecked = $toggle.attr('aria-checked');
+            results.push({
+                name: 'Toggle has aria-checked attribute',
+                pass: ariaChecked !== undefined,
+                message: ariaChecked !== undefined ? 
+                    '✓ aria-checked="' + ariaChecked + '"' : '✗ aria-checked missing'
+            });
+            
+            // Test 3: aria-checked matches checked state
+            var isChecked = $toggle.is(':checked');
+            var expectedAria = isChecked ? 'true' : 'false';
+            results.push({
+                name: 'aria-checked matches checked state',
+                pass: ariaChecked === expectedAria,
+                message: ariaChecked === expectedAria ? 
+                    '✓ aria-checked correctly set to "' + expectedAria + '"' : 
+                    '✗ aria-checked is "' + ariaChecked + '" but should be "' + expectedAria + '"'
+            });
+            
+            // Test 4: aria-label attribute
+            var ariaLabel = $toggle.attr('aria-label');
+            results.push({
+                name: 'Toggle has aria-label attribute',
+                pass: ariaLabel && ariaLabel.length > 0,
+                message: ariaLabel && ariaLabel.length > 0 ? 
+                    '✓ aria-label="' + ariaLabel + '"' : '✗ aria-label missing or empty'
+            });
+            
+            // Test 5: aria-label is descriptive
+            var isDescriptive = ariaLabel && (
+                ariaLabel.toLowerCase().includes('dark mode') || 
+                ariaLabel.toLowerCase().includes('toggle')
+            );
+            results.push({
+                name: 'aria-label is descriptive',
+                pass: isDescriptive,
+                message: isDescriptive ? 
+                    '✓ aria-label describes the control' : '✗ aria-label not descriptive enough'
+            });
+            
+            // Test 6: Focus indicator
+            $toggle.focus();
+            var hasFocusStyle = $toggle.is(':focus');
+            results.push({
+                name: 'Toggle can receive focus',
+                pass: hasFocusStyle,
+                message: hasFocusStyle ? 
+                    '✓ Toggle can be focused' : '✗ Toggle cannot receive focus'
+            });
+            
+            // Test 7: Icon has aria-hidden
+            var $icon = $toggle.siblings('.dashicons');
+            var iconHidden = $icon.attr('aria-hidden') === 'true';
+            results.push({
+                name: 'Decorative icon has aria-hidden="true"',
+                pass: iconHidden,
+                message: iconHidden ? 
+                    '✓ Icon properly hidden from screen readers' : 
+                    '✗ Icon should have aria-hidden="true"'
+            });
+            
+            // Render results
+            var html = '<h3>Automated Test Results</h3>';
+            results.forEach(function(test) {
+                html += '<div class="test-result ' + (test.pass ? 'pass' : 'fail') + '">';
+                html += '<strong>' + test.name + '</strong><br>';
+                html += test.message;
+                html += '</div>';
+            });
+            
+            $('#test-results').html(html);
+            
+            console.log('=== Automated Test Results ===');
+            results.forEach(function(test) {
+                console.log((test.pass ? '✓' : '✗') + ' ' + test.name + ': ' + test.message);
+            });
+        }
+        
+        function exportResults() {
+            var results = {
+                timestamp: new Date().toISOString(),
+                testSuite: 'Task 8: Dark Mode Accessibility Test',
+                tests: {
+                    test1: {
+                        name: 'Keyboard Navigation to Toggle',
+                        checks: [
+                            { id: 'check-1-1', checked: $('#check-1-1').is(':checked'), label: 'Tab key navigates to dark mode toggle' },
+                            { id: 'check-1-2', checked: $('#check-1-2').is(':checked'), label: 'Focus indicator is clearly visible' },
+                            { id: 'check-1-3', checked: $('#check-1-3').is(':checked'), label: 'Focus indicator has sufficient contrast' }
+                        ]
+                    },
+                    test2: {
+                        name: 'Space/Enter Key Toggle',
+                        checks: [
+                            { id: 'check-2-1', checked: $('#check-2-1').is(':checked'), label: 'Space key toggles dark mode' },
+                            { id: 'check-2-2', checked: $('#check-2-2').is(':checked'), label: 'Enter key toggles dark mode' },
+                            { id: 'check-2-3', checked: $('#check-2-3').is(':checked'), label: 'Visual feedback occurs immediately' },
+                            { id: 'check-2-4', checked: $('#check-2-4').is(':checked'), label: 'No JavaScript errors' }
+                        ]
+                    },
+                    test3: {
+                        name: 'Focus Indicator Visibility',
+                        checks: [
+                            { id: 'check-3-1', checked: $('#check-3-1').is(':checked'), label: 'Focus indicator visible in light mode' },
+                            { id: 'check-3-2', checked: $('#check-3-2').is(':checked'), label: 'Focus indicator visible in dark mode' },
+                            { id: 'check-3-3', checked: $('#check-3-3').is(':checked'), label: 'Focus indicator has 3:1 contrast ratio' },
+                            { id: 'check-3-4', checked: $('#check-3-4').is(':checked'), label: 'Focus indicator is at least 2px thick' }
+                        ]
+                    },
+                    test4: {
+                        name: 'Screen Reader Announcements',
+                        checks: [
+                            { id: 'check-4-1', checked: $('#check-4-1').is(':checked'), label: 'Announces as switch' },
+                            { id: 'check-4-2', checked: $('#check-4-2').is(':checked'), label: 'Announces aria-label text' },
+                            { id: 'check-4-3', checked: $('#check-4-3').is(':checked'), label: 'Announces current state' },
+                            { id: 'check-4-4', checked: $('#check-4-4').is(':checked'), label: 'Announces state changes' }
+                        ]
+                    },
+                    test5: {
+                        name: 'aria-checked Updates',
+                        checks: [
+                            { id: 'check-5-1', checked: $('#check-5-1').is(':checked'), label: 'aria-checked is false when unchecked' },
+                            { id: 'check-5-2', checked: $('#check-5-2').is(':checked'), label: 'aria-checked is true when checked' },
+                            { id: 'check-5-3', checked: $('#check-5-3').is(':checked'), label: 'aria-checked updates immediately' },
+                            { id: 'check-5-4', checked: $('#check-5-4').is(':checked'), label: 'aria-checked is string type' }
+                        ]
+                    },
+                    test6: {
+                        name: 'aria-label Description',
+                        checks: [
+                            { id: 'check-6-1', checked: $('#check-6-1').is(':checked'), label: 'aria-label exists' },
+                            { id: 'check-6-2', checked: $('#check-6-2').is(':checked'), label: 'aria-label is descriptive' },
+                            { id: 'check-6-3', checked: $('#check-6-3').is(':checked'), label: 'aria-label describes action' },
+                            { id: 'check-6-4', checked: $('#check-6-4').is(':checked'), label: 'aria-label mentions scope' }
+                        ]
+                    },
+                    test7: {
+                        name: 'NVDA/JAWS Testing',
+                        checks: [
+                            { id: 'check-7-1', checked: $('#check-7-1').is(':checked'), label: 'NVDA announces correctly' },
+                            { id: 'check-7-2', checked: $('#check-7-2').is(':checked'), label: 'JAWS announces correctly' },
+                            { id: 'check-7-3', checked: $('#check-7-3').is(':checked'), label: 'VoiceOver announces correctly' },
+                            { id: 'check-7-4', checked: $('#check-7-4').is(':checked'), label: 'All announce state changes' },
+                            { id: 'check-7-5', checked: $('#check-7-5').is(':checked'), label: 'Operable with screen reader' }
+                        ]
+                    }
+                },
+                currentState: {
+                    role: $('#mase-dark-mode-toggle').attr('role'),
+                    ariaChecked: $('#mase-dark-mode-toggle').attr('aria-checked'),
+                    ariaLabel: $('#mase-dark-mode-toggle').attr('aria-label'),
+                    checked: $('#mase-dark-mode-toggle').is(':checked')
+                }
+            };
+            
+            var json = JSON.stringify(results, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'dark-mode-accessibility-test-results.json';
+            a.click();
+            
+            console.log('Test results exported');
+            alert('Test results exported successfully!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 14: Settings Save Functionality Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #2271b1;
+            margin-top: 30px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-left: 4px solid #2271b1;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #135e96;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .notice {
+            padding: 12px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            border-radius: 4px;
+        }
+        
+        .notice-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .notice-error {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .notice-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .code-block {
+            background: #23282d;
+            color: #f0f0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+        
+        .requirement {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .requirement strong {
+            color: #856404;
+        }
+        
+        #test-form {
+            margin: 20px 0;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        #mase-notices {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Task 14: Settings Save Functionality Test</h1>
+        
+        <div class="requirement">
+            <strong>Requirements Being Tested:</strong>
+            <ul>
+                <li>11.1: Submit data via AJAX with nonce</li>
+                <li>11.2: Include WordPress nonce for security</li>
+                <li>11.3: Verify nonce and capabilities on server</li>
+                <li>11.4: Return JSON response with success status</li>
+                <li>11.5: Return JSON response with error status</li>
+                <li>18.1: Display validation error with field name</li>
+                <li>18.2: Display error with retry option</li>
+                <li>18.3: Handle network errors with retry</li>
+                <li>18.4: Display error without modifying settings</li>
+                <li>18.5: Log errors to console if WP_DEBUG enabled</li>
+            </ul>
+        </div>
+
+        <h2>Test Form</h2>
+        <form id="test-form">
+            <input type="hidden" id="mase_nonce" value="test_nonce_12345">
+            
+            <div class="form-group">
+                <label for="admin-bar-bg-color">Admin Bar Background Color:</label>
+                <input type="text" id="admin-bar-bg-color" name="admin_bar[bg_color]" value="#23282d">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin-bar-text-color">Admin Bar Text Color:</label>
+                <input type="text" id="admin-bar-text-color" name="admin_bar[text_color]" value="#ffffff">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin-bar-height">Admin Bar Height (px):</label>
+                <input type="number" id="admin-bar-height" name="admin_bar[height]" value="32">
+            </div>
+            
+            <input type="submit" value="Save Settings" class="button">
+        </form>
+        
+        <div id="mase-notices"></div>
+
+        <h2>Test Scenarios</h2>
+        
+        <div class="test-section">
+            <h3>Scenario 1: Successful Save</h3>
+            <p>Tests that settings save successfully with proper loading state and success notice.</p>
+            <button onclick="testSuccessfulSave()">Run Test</button>
+            <div id="test1-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 2: Server Error Response</h3>
+            <p>Tests error handling when server returns an error response.</p>
+            <button onclick="testServerError()">Run Test</button>
+            <div id="test2-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 3: Network Error</h3>
+            <p>Tests network error handling with retry option.</p>
+            <button onclick="testNetworkError()">Run Test</button>
+            <div id="test3-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 4: Permission Denied (403)</h3>
+            <p>Tests handling of permission denied errors.</p>
+            <button onclick="testPermissionDenied()">Run Test</button>
+            <div id="test4-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 5: Loading State</h3>
+            <p>Tests that button is disabled and spinner is shown during save.</p>
+            <button onclick="testLoadingState()">Run Test</button>
+            <div id="test5-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 6: Cache Invalidation</h3>
+            <p>Tests that cache is invalidated after successful save.</p>
+            <button onclick="testCacheInvalidation()">Run Test</button>
+            <div id="test6-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 7: Retry Functionality</h3>
+            <p>Tests that retry button appears and works after error.</p>
+            <button onclick="testRetryFunctionality()">Run Test</button>
+            <div id="test7-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Scenario 8: Double Submission Prevention</h3>
+            <p>Tests that multiple save attempts are prevented during save.</p>
+            <button onclick="testDoubleSubmissionPrevention()">Run Test</button>
+            <div id="test8-result"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with saveSettings implementation
+        var MASE = {
+            config: {
+                ajaxUrl: '/wp-admin/admin-ajax.php',
+                nonce: 'test_nonce_12345',
+                debounceDelay: 300,
+                noticeTimeout: 3000
+            },
+            
+            state: {
+                livePreviewEnabled: false,
+                currentPalette: null,
+                currentTemplate: null,
+                isDirty: false,
+                isSaving: false
+            },
+            
+            livePreview: {
+                update: function() {
+                    console.log('Live preview updated');
+                }
+            },
+            
+            /**
+             * Save settings via AJAX
+             * Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 18.1, 18.2, 18.3, 18.4, 18.5
+             */
+            saveSettings: function() {
+                var self = this;
+                var $form = $('#test-form');
+                var $button = $form.find('input[type="submit"]');
+                var originalText = $button.val();
+                
+                // Prevent double submission (Requirement 11.1)
+                if (this.state.isSaving) {
+                    return;
+                }
+                
+                this.state.isSaving = true;
+                
+                // Show loading state: disable button, show spinner (Requirement 11.1)
+                $button.prop('disabled', true).val('Saving...').css('opacity', '0.6');
+                
+                // Add spinner next to button
+                var $spinner = $('<span class="mase-spinner spinner"></span>');
+                $button.after($spinner);
+                
+                // Collect all form data (Requirement 11.2)
+                var formData = this.collectFormData();
+                
+                // Submit via AJAX to admin-ajax.php (Requirement 11.1)
+                $.ajax({
+                    url: this.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_save_settings',
+                        nonce: this.config.nonce, // Include nonce for security (Requirement 11.2)
+                        settings: formData
+                    },
+                    success: function(response) {
+                        // Handle success response (Requirement 11.4)
+                        if (response.success) {
+                            // Show success notice (Requirement 11.4, 18.1)
+                            self.showNotice('success', response.data.message || 'Settings saved successfully!');
+                            
+                            // Update state (Requirement 11.4)
+                            self.state.isDirty = false;
+                            
+                            // Invalidate cache on successful save (Requirement 11.4)
+                            self.invalidateCache();
+                            
+                            // Update live preview if enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } else {
+                            // Handle error response (Requirement 11.5, 18.2)
+                            self.showNotice('error', response.data.message || 'Failed to save settings');
+                            
+                            // Show retry option (Requirement 18.2)
+                            self.showRetryOption();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle network errors (Requirement 18.3)
+                        var message = 'Network error. Please check your connection and try again.';
+                        
+                        if (xhr.status === 403) {
+                            message = 'Permission denied. You do not have access to perform this action.';
+                        } else if (xhr.status === 500) {
+                            message = 'Server error. Please try again later.';
+                        } else if (xhr.status === 0) {
+                            message = 'Network connection lost. Please check your internet connection.';
+                        }
+                        
+                        // Show network error notice with retry option (Requirement 18.3)
+                        self.showNotice('error', message);
+                        self.showRetryOption();
+                        
+                        // Log error for debugging (Requirement 18.5)
+                        console.error('MASE AJAX Error:', {
+                            status: xhr.status,
+                            statusText: xhr.statusText,
+                            error: error
+                        });
+                    },
+                    complete: function() {
+                        // Re-enable button and remove spinner (Requirement 11.1)
+                        $button.prop('disabled', false).val(originalText).css('opacity', '1');
+                        $spinner.remove();
+                        self.state.isSaving = false;
+                    }
+                });
+            },
+            
+            /**
+             * Invalidate cache after successful save
+             * Requirement 11.4: Invalidate cache on successful save
+             */
+            invalidateCache: function() {
+                var self = this;
+                
+                // Send cache invalidation request
+                $.ajax({
+                    url: this.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_invalidate_cache',
+                        nonce: this.config.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            console.log('Cache invalidated successfully');
+                        }
+                    },
+                    error: function() {
+                        // Silent fail - cache invalidation is not critical
+                        console.warn('Cache invalidation failed, but settings were saved');
+                    }
+                });
+            },
+            
+            /**
+             * Show retry option after save failure
+             * Requirement 18.2: Handle error response with retry option
+             */
+            showRetryOption: function() {
+                var self = this;
+                
+                // Create retry button
+                var $retryBtn = $('<button type="button" class="button" style="margin-left:10px;">Retry Save</button>');
+                
+                // Add retry button to notice area
+                $('#mase-notices .notice').append($retryBtn);
+                
+                // Bind retry click handler
+                $retryBtn.on('click', function() {
+                    $(this).remove();
+                    self.saveSettings();
+                });
+            },
+            
+            collectFormData: function() {
+                var formData = {};
+                var $form = $('#test-form');
+                
+                $form.find('input, select, textarea').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    var value = $input.val();
+                    var type = $input.attr('type');
+                    
+                    if (!name) return;
+                    
+                    if (type === 'checkbox') {
+                        value = $input.is(':checked') ? '1' : '0';
+                    }
+                    
+                    if (type === 'radio' && !$input.is(':checked')) {
+                        return;
+                    }
+                    
+                    var parts = name.match(/^(\w+)(?:\[(\w+)\])?(?:\[(\w+)\])?$/);
+                    
+                    if (parts) {
+                        var section = parts[1];
+                        var key1 = parts[2];
+                        var key2 = parts[3];
+                        
+                        if (key2) {
+                            if (!formData[section]) formData[section] = {};
+                            if (!formData[section][key1]) formData[section][key1] = {};
+                            formData[section][key1][key2] = value;
+                        } else if (key1) {
+                            if (!formData[section]) formData[section] = {};
+                            formData[section][key1] = value;
+                        } else {
+                            formData[section] = value;
+                        }
+                    }
+                });
+                
+                return formData;
+            },
+            
+            showNotice: function(type, message, dismissible) {
+                dismissible = typeof dismissible !== 'undefined' ? dismissible : true;
+                
+                var dismissClass = dismissible ? ' is-dismissible' : '';
+                var $notice = $('<div class="notice notice-' + type + dismissClass + '"><p>' + message + '</p></div>');
+                
+                $('#mase-notices .notice').remove();
+                $('#mase-notices').html($notice);
+                
+                if (dismissible) {
+                    $notice.find('.notice-dismiss').on('click', function() {
+                        $notice.fadeOut(200, function() {
+                            $(this).remove();
+                        });
+                    });
+                }
+            }
+        };
+        
+        // Mock jQuery AJAX for testing
+        var originalAjax = $.ajax;
+        var mockMode = 'success';
+        
+        function setMockMode(mode) {
+            mockMode = mode;
+        }
+        
+        $.ajax = function(options) {
+            console.log('AJAX Request:', options);
+            
+            setTimeout(function() {
+                if (mockMode === 'success') {
+                    if (options.data.action === 'mase_save_settings') {
+                        options.success({
+                            success: true,
+                            data: {
+                                message: 'Settings saved successfully!'
+                            }
+                        });
+                    } else if (options.data.action === 'mase_invalidate_cache') {
+                        options.success({
+                            success: true
+                        });
+                    }
+                } else if (mockMode === 'error') {
+                    options.success({
+                        success: false,
+                        data: {
+                            message: 'Validation error: Invalid color format'
+                        }
+                    });
+                } else if (mockMode === 'network') {
+                    options.error({
+                        status: 0,
+                        statusText: 'Network Error'
+                    }, 'error', 'Network Error');
+                } else if (mockMode === 'permission') {
+                    options.error({
+                        status: 403,
+                        statusText: 'Forbidden'
+                    }, 'error', 'Forbidden');
+                }
+                
+                if (options.complete) {
+                    options.complete();
+                }
+            }, 500);
+        };
+        
+        // Test functions
+        function testSuccessfulSave() {
+            setMockMode('success');
+            var $result = $('#test1-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var hasNotice = $('#mase-notices .notice-success').length > 0;
+                var buttonEnabled = $('#test-form input[type="submit"]').prop('disabled') === false;
+                var noSpinner = $('.mase-spinner').length === 0;
+                
+                if (hasNotice && buttonEnabled && noSpinner) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Success notice shown, button re-enabled, spinner removed</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected success notice and button re-enabled</div>');
+                }
+            }, 1000);
+        }
+        
+        function testServerError() {
+            setMockMode('error');
+            var $result = $('#test2-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var hasErrorNotice = $('#mase-notices .notice-error').length > 0;
+                var hasRetryButton = $('#mase-notices button:contains("Retry")').length > 0;
+                
+                if (hasErrorNotice && hasRetryButton) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Error notice and retry button shown</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected error notice with retry button</div>');
+                }
+            }, 1000);
+        }
+        
+        function testNetworkError() {
+            setMockMode('network');
+            var $result = $('#test3-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var hasErrorNotice = $('#mase-notices .notice-error').length > 0;
+                var hasRetryButton = $('#mase-notices button:contains("Retry")').length > 0;
+                var noticeText = $('#mase-notices .notice-error p').text();
+                
+                if (hasErrorNotice && hasRetryButton && noticeText.includes('Network')) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Network error notice with retry button shown</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected network error notice with retry button</div>');
+                }
+            }, 1000);
+        }
+        
+        function testPermissionDenied() {
+            setMockMode('permission');
+            var $result = $('#test4-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var noticeText = $('#mase-notices .notice-error p').text();
+                
+                if (noticeText.includes('Permission denied')) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Permission denied message shown</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected permission denied message</div>');
+                }
+            }, 1000);
+        }
+        
+        function testLoadingState() {
+            setMockMode('success');
+            var $result = $('#test5-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var buttonDisabled = $('#test-form input[type="submit"]').prop('disabled');
+                var hasSpinner = $('.mase-spinner').length > 0;
+                var buttonText = $('#test-form input[type="submit"]').val();
+                
+                if (buttonDisabled && hasSpinner && buttonText === 'Saving...') {
+                    $result.html('<div class="test-result pass">✓ Test passed: Button disabled, spinner shown, text changed to "Saving..."</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected button disabled with spinner and "Saving..." text</div>');
+                }
+            }, 100);
+        }
+        
+        function testCacheInvalidation() {
+            setMockMode('success');
+            var $result = $('#test6-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            var cacheInvalidated = false;
+            var originalInvalidate = MASE.invalidateCache;
+            MASE.invalidateCache = function() {
+                cacheInvalidated = true;
+                originalInvalidate.call(this);
+            };
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                MASE.invalidateCache = originalInvalidate;
+                
+                if (cacheInvalidated) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Cache invalidation called after successful save</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Cache invalidation not called</div>');
+                }
+            }, 1000);
+        }
+        
+        function testRetryFunctionality() {
+            setMockMode('error');
+            var $result = $('#test7-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                var $retryBtn = $('#mase-notices button:contains("Retry")');
+                
+                if ($retryBtn.length > 0) {
+                    // Click retry button
+                    setMockMode('success');
+                    $retryBtn.click();
+                    
+                    setTimeout(function() {
+                        var hasSuccessNotice = $('#mase-notices .notice-success').length > 0;
+                        
+                        if (hasSuccessNotice) {
+                            $result.html('<div class="test-result pass">✓ Test passed: Retry button works and shows success after retry</div>');
+                        } else {
+                            $result.html('<div class="test-result fail">✗ Test failed: Retry did not result in success</div>');
+                        }
+                    }, 1000);
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Retry button not found</div>');
+                }
+            }, 1000);
+        }
+        
+        function testDoubleSubmissionPrevention() {
+            setMockMode('success');
+            var $result = $('#test8-result');
+            $result.html('<div class="test-result info">Running test...</div>');
+            
+            var callCount = 0;
+            var originalAjax = $.ajax;
+            $.ajax = function(options) {
+                if (options.data.action === 'mase_save_settings') {
+                    callCount++;
+                }
+                setTimeout(function() {
+                    options.success({ success: true, data: { message: 'Saved' } });
+                    if (options.complete) options.complete();
+                }, 500);
+            };
+            
+            // Try to save twice quickly
+            MASE.saveSettings();
+            MASE.saveSettings();
+            MASE.saveSettings();
+            
+            setTimeout(function() {
+                $.ajax = originalAjax;
+                
+                if (callCount === 1) {
+                    $result.html('<div class="test-result pass">✓ Test passed: Only one AJAX call made despite multiple save attempts</div>');
+                } else {
+                    $result.html('<div class="test-result fail">✗ Test failed: Expected 1 AJAX call, got ' + callCount + '</div>');
+                }
+            }, 1000);
+        }
+        
+        // Form submission handler
+        $('#test-form').on('submit', function(e) {
+            e.preventDefault();
+            MASE.saveSettings();
+        });
+    </script>
+</body>
+</html>

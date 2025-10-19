@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE - Screen Reader Test (Requirement 13.5)</title>
+    <link rel="stylesheet" href="../../assets/css/mase-palettes.css">
+    <link rel="stylesheet" href="../../assets/css/mase-accessibility.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f0f0f1;
+        }
+        
+        .test-header {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #1e293b;
+            border-bottom: 2px solid #4A90E2;
+            padding-bottom: 10px;
+        }
+        
+        .sr-instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #4A90E2;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .sr-instructions strong {
+            color: #4A90E2;
+        }
+        
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: #f8f9fa;
+            border-left: 3px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        
+        .checklist li.checked {
+            background: #d4edda;
+            border-left-color: #46b450;
+        }
+        
+        .checklist li input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        /* Demo Components */
+        .palette-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .palette-card:hover {
+            border-color: #4A90E2;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+        }
+        
+        .palette-colors {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .button {
+            padding: 10px 20px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            background: #ffffff;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        .button-primary {
+            background: #4A90E2;
+            color: #ffffff;
+            border-color: #4A90E2;
+        }
+        
+        /* Live Region Demo */
+        .live-region-demo {
+            border: 2px dashed #cbd5e1;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .status-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .status-message.show {
+            display: block;
+        }
+        
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #4A90E2;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link -->
+    <a href="#main-content" class="mase-skip-link">Skip to main content</a>
+    
+    <div class="test-header">
+        <h1>🔊 Screen Reader Test</h1>
+        <p><strong>Requirement 13.5:</strong> Provide ARIA labels for all form controls and buttons</p>
+        <div class="sr-instructions">
+            <strong>Screen Reader Instructions:</strong><br>
+            <strong>Windows (NVDA):</strong> Ctrl+Alt+N to start, Insert+Down Arrow to read<br>
+            <strong>Mac (VoiceOver):</strong> Cmd+F5 to start, VO+A to read all<br>
+            <strong>Linux (Orca):</strong> Super+Alt+S to start, Insert+Down Arrow to read
+        </div>
+    </div>
+    
+    <main id="main-content">
+        <!-- Test 1: Semantic HTML -->
+        <section class="test-section">
+            <h2>Test 1: Semantic HTML Structure</h2>
+            <p>Screen readers should announce proper heading hierarchy and landmarks.</p>
+            
+            <article>
+                <h3>Article Heading (h3)</h3>
+                <p>This content is inside an <code>&lt;article&gt;</code> element.</p>
+                
+                <h4>Subheading (h4)</h4>
+                <p>Proper heading hierarchy helps screen reader users navigate.</p>
+            </article>
+            
+            <aside>
+                <h3>Sidebar Content</h3>
+                <p>This is in an <code>&lt;aside&gt;</code> element.</p>
+            </aside>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="semantic">
+                        Headings announced in correct order (h1, h2, h3, h4)
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="semantic">
+                        Landmarks announced (main, article, aside)
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 2: ARIA Labels -->
+        <section class="test-section">
+            <h2>Test 2: ARIA Labels and Descriptions</h2>
+            <p>All interactive elements should have descriptive labels.</p>
+            
+            <div class="palette-card" 
+                 role="button" 
+                 tabindex="0"
+                 aria-label="Ocean Blue color palette with 4 colors"
+                 aria-describedby="palette-desc">
+                <h3>Ocean Blue</h3>
+                <p id="palette-desc">A calming palette inspired by ocean waters</p>
+                <div class="palette-colors" role="list" aria-label="Palette colors">
+                    <div class="color-swatch" 
+                         style="background: #0077BE"
+                         role="listitem"
+                         aria-label="Primary color: Ocean Blue #0077BE"></div>
+                    <div class="color-swatch" 
+                         style="background: #00A8E8"
+                         role="listitem"
+                         aria-label="Secondary color: Sky Blue #00A8E8"></div>
+                    <div class="color-swatch" 
+                         style="background: #00C9FF"
+                         role="listitem"
+                         aria-label="Accent color: Bright Cyan #00C9FF"></div>
+                    <div class="color-swatch" 
+                         style="background: #F0F8FF"
+                         role="listitem"
+                         aria-label="Background color: Alice Blue #F0F8FF"></div>
+                </div>
+                <button class="button button-primary" 
+                        aria-label="Apply Ocean Blue palette to admin interface">
+                    Apply Palette
+                </button>
+            </div>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="aria">
+                        Palette card has descriptive aria-label
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="aria">
+                        Color swatches have aria-labels with color names and hex codes
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="aria">
+                        Button has descriptive aria-label
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 3: Form Labels -->
+        <section class="test-section">
+            <h2>Test 3: Form Field Labels</h2>
+            <p>All form fields should have associated labels.</p>
+            
+            <form>
+                <div class="form-group">
+                    <label for="palette-name">
+                        Palette Name
+                        <span class="required" aria-label="required">*</span>
+                    </label>
+                    <input type="text" 
+                           id="palette-name" 
+                           aria-required="true"
+                           aria-describedby="palette-name-help">
+                    <p id="palette-name-help" class="description">
+                        Enter a unique name for your custom palette
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="primary-color">Primary Color</label>
+                    <input type="color" 
+                           id="primary-color" 
+                           value="#4A90E2"
+                           aria-label="Primary color picker">
+                </div>
+                
+                <fieldset>
+                    <legend>Enable Features</legend>
+                    <label>
+                        <input type="checkbox" 
+                               id="enable-glassmorphism"
+                               aria-describedby="glassmorphism-help">
+                        Enable Glassmorphism Effect
+                    </label>
+                    <p id="glassmorphism-help" class="description">
+                        Adds a frosted glass effect to admin bar
+                    </p>
+                </fieldset>
+                
+                <div class="form-group">
+                    <label for="blur-intensity">
+                        Blur Intensity
+                        <span class="screen-reader-text">(0 to 50 pixels)</span>
+                    </label>
+                    <input type="range" 
+                           id="blur-intensity" 
+                           min="0" 
+                           max="50" 
+                           value="10"
+                           aria-valuemin="0"
+                           aria-valuemax="50"
+                           aria-valuenow="10"
+                           aria-valuetext="10 pixels">
+                    <output for="blur-intensity" aria-live="polite">10px</output>
+                </div>
+            </form>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="forms">
+                        All inputs have associated labels
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="forms">
+                        Required fields announced with aria-required
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="forms">
+                        Help text associated with aria-describedby
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="forms">
+                        Range slider announces current value
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 4: ARIA Live Regions -->
+        <section class="test-section">
+            <h2>Test 4: ARIA Live Regions</h2>
+            <p>Dynamic content changes should be announced to screen readers.</p>
+            
+            <div class="live-region-demo">
+                <button class="button button-primary" id="btn-save-settings">
+                    Save Settings
+                </button>
+                <button class="button" id="btn-trigger-error">
+                    Trigger Error
+                </button>
+                
+                <div aria-live="polite" aria-atomic="true" class="status-message" id="status-message">
+                    <!-- Dynamic messages appear here -->
+                </div>
+            </div>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="live">
+                        Success message announced when settings saved
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="live">
+                        Error message announced when error triggered
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 5: Progress Indicators -->
+        <section class="test-section">
+            <h2>Test 5: Progress Indicators</h2>
+            <p>Progress bars should announce their current state.</p>
+            
+            <div class="progress-container">
+                <label for="upload-progress">Upload Progress:</label>
+                <div class="progress-bar">
+                    <div class="progress-fill" 
+                         id="upload-progress"
+                         role="progressbar" 
+                         aria-valuenow="0" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100"
+                         aria-label="Upload progress"
+                         style="width: 0%">
+                        0%
+                    </div>
+                </div>
+                <button class="button button-primary" id="btn-start-upload">
+                    Start Upload
+                </button>
+            </div>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="progress">
+                        Progress bar announces percentage
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="progress">
+                        Progress updates announced as they occur
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 6: Image Alt Text -->
+        <section class="test-section">
+            <h2>Test 6: Image Alternative Text</h2>
+            <p>All images should have descriptive alt text.</p>
+            
+            <figure>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100'%3E%3Crect fill='%234A90E2' width='200' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='20'%3EPalette Preview%3C/svg%3E" 
+                     alt="Ocean Blue palette preview showing primary blue color"
+                     width="200" 
+                     height="100">
+                <figcaption>Preview of the Ocean Blue color palette</figcaption>
+            </figure>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="images">
+                        Image has descriptive alt text
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="images">
+                        Figcaption provides additional context
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test 7: Button States -->
+        <section class="test-section">
+            <h2>Test 7: Button States and Toggles</h2>
+            <p>Button states should be announced (pressed, expanded, etc.).</p>
+            
+            <button class="button" 
+                    id="btn-toggle-preview"
+                    aria-pressed="false"
+                    aria-label="Toggle live preview">
+                <span aria-hidden="true">👁</span>
+                Live Preview: <span id="preview-state">Off</span>
+            </button>
+            
+            <button class="button" 
+                    id="btn-expand-advanced"
+                    aria-expanded="false"
+                    aria-controls="advanced-settings"
+                    aria-label="Show advanced settings">
+                <span aria-hidden="true">▶</span>
+                Advanced Settings
+            </button>
+            
+            <div id="advanced-settings" hidden>
+                <p>Advanced settings content goes here.</p>
+            </div>
+            
+            <ul class="checklist">
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="states">
+                        Toggle button announces pressed state
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" class="test-check" data-test="states">
+                        Expand button announces expanded state
+                    </label>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- Test Summary -->
+        <section class="test-section">
+            <h2>Test Summary</h2>
+            <div id="test-summary">
+                <p>Complete the checklist items above as you test with your screen reader.</p>
+                <p><strong>Total Tests:</strong> <span id="total-tests">0</span></p>
+                <p><strong>Passed:</strong> <span id="passed-tests">0</span></p>
+                <p><strong>Progress:</strong> <span id="progress-percent">0%</span></p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- ARIA Live Region for Announcements -->
+    <div aria-live="polite" aria-atomic="true" class="screen-reader-text" id="sr-announcements"></div>
+    
+    <script>
+        // Live Region Demo
+        const btnSave = document.getElementById('btn-save-settings');
+        const btnError = document.getElementById('btn-trigger-error');
+        const statusMessage = document.getElementById('status-message');
+        
+        btnSave.addEventListener('click', () => {
+            statusMessage.className = 'status-message success show';
+            statusMessage.textContent = '✓ Settings saved successfully';
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        });
+        
+        btnError.addEventListener('click', () => {
+            statusMessage.className = 'status-message error show';
+            statusMessage.textContent = '✗ Error: Unable to save settings. Please try again.';
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        });
+        
+        // Progress Bar Demo
+        const btnUpload = document.getElementById('btn-start-upload');
+        const progressBar = document.getElementById('upload-progress');
+        
+        btnUpload.addEventListener('click', () => {
+            let progress = 0;
+            btnUpload.disabled = true;
+            
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = progress + '%';
+                progressBar.setAttribute('aria-valuenow', progress);
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    btnUpload.disabled = false;
+                    
+                    // Announce completion
+                    const announcement = document.getElementById('sr-announcements');
+                    announcement.textContent = 'Upload complete';
+                }
+            }, 500);
+        });
+        
+        // Toggle Button Demo
+        const btnToggle = document.getElementById('btn-toggle-preview');
+        const previewState = document.getElementById('preview-state');
+        
+        btnToggle.addEventListener('click', () => {
+            const isPressed = btnToggle.getAttribute('aria-pressed') === 'true';
+            btnToggle.setAttribute('aria-pressed', !isPressed);
+            previewState.textContent = !isPressed ? 'On' : 'Off';
+        });
+        
+        // Expand Button Demo
+        const btnExpand = document.getElementById('btn-expand-advanced');
+        const advancedSettings = document.getElementById('advanced-settings');
+        
+        btnExpand.addEventListener('click', () => {
+            const isExpanded = btnExpand.getAttribute('aria-expanded') === 'true';
+            btnExpand.setAttribute('aria-expanded', !isExpanded);
+            advancedSettings.hidden = isExpanded;
+            btnExpand.querySelector('span[aria-hidden]').textContent = !isExpanded ? '▼' : '▶';
+        });
+        
+        // Range Slider Output
+        const blurSlider = document.getElementById('blur-intensity');
+        const blurOutput = document.querySelector('output[for="blur-intensity"]');
+        
+        blurSlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            blurOutput.textContent = value + 'px';
+            blurSlider.setAttribute('aria-valuenow', value);
+            blurSlider.setAttribute('aria-valuetext', value + ' pixels');
+        });
+        
+        // Test Summary
+        const checkboxes = document.querySelectorAll('.test-check');
+        const totalTests = document.getElementById('total-tests');
+        const passedTests = document.getElementById('passed-tests');
+        const progressPercent = document.getElementById('progress-percent');
+        
+        totalTests.textContent = checkboxes.length;
+        
+        function updateSummary() {
+            const checked = document.querySelectorAll('.test-check:checked').length;
+            passedTests.textContent = checked;
+            progressPercent.textContent = Math.round((checked / checkboxes.length) * 100) + '%';
+            
+            // Update parent li styling
+            checkboxes.forEach(cb => {
+                const li = cb.closest('li');
+                if (cb.checked) {
+                    li.classList.add('checked');
+                } else {
+                    li.classList.remove('checked');
+                }
+            });
+        }
+        
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateSummary);
+        });
+        
+        updateSummary();
+    </script>
+</body>
+</html>

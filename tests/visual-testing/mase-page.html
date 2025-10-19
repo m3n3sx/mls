@@ -1,0 +1,2130 @@
+<!DOCTYPE html><html class="wp-toolbar" lang="en-US"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Modern Admin Styler ‹ Moja strona — WordPress</title>
+<script type="text/javascript">
+addLoadEvent = function(func){if(typeof jQuery!=='undefined')jQuery(function(){func();});else if(typeof wpOnload!=='function'){wpOnload=func;}else{var oldonload=wpOnload;wpOnload=function(){oldonload();func();}}};
+var ajaxurl = '/wp-admin/admin-ajax.php',
+	pagenow = 'toplevel_page_mase-settings',
+	typenow = '',
+	adminpage = 'toplevel_page_mase-settings',
+	thousandsSeparator = ',',
+	decimalPoint = '.',
+	isRtl = 0;
+</script>
+<link rel="dns-prefetch" href="//localhost">
+<link rel="stylesheet" href="https://localhost/wp-admin/load-styles.php?c=1&amp;dir=ltr&amp;load%5Bchunk_0%5D=dashicons,admin-bar,common,forms,admin-menu,dashboard,list-tables,edit,revisions,media,themes,about,nav-menus,wp-pointer,widgets&amp;load%5Bchunk_1%5D=,site-icon,l10n,buttons,wp-auth-check,wp-color-picker&amp;ver=6.8.2" media="all">
+<style>
+@media print { #wpadminbar { display:none; } }
+</style>
+<link rel="stylesheet" id="mase-admin-css" href="https://localhost/wp-content/plugins/woow-admin/includes/../assets/css/mase-admin.css?ver=1.2.0" media="all">
+<link rel="stylesheet" id="mase-palettes-css" href="https://localhost/wp-content/plugins/woow-admin/includes/../assets/css/mase-palettes.css?ver=1.2.0" media="all">
+<link rel="stylesheet" id="mase-templates-css" href="https://localhost/wp-content/plugins/woow-admin/includes/../assets/css/mase-templates.css?ver=1.2.0" media="all">
+<link rel="stylesheet" id="mase-accessibility-css" href="https://localhost/wp-content/plugins/woow-admin/includes/../assets/css/mase-accessibility.css?ver=1.2.0" media="all">
+<link rel="stylesheet" id="mase-responsive-css" href="https://localhost/wp-content/plugins/woow-admin/includes/../assets/css/mase-responsive.css?ver=1.2.0" media="all">
+<link rel="stylesheet" id="litespeed-cache-css" href="https://localhost/wp-content/plugins/litespeed-cache/assets/css/litespeed.css?ver=7.5.0.1" media="all">
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<style class="wp-fonts-local">
+@font-face{font-family:"DM Sans";font-style:normal;font-weight:400;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/dm-sans/DMSans-Regular.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"DM Sans";font-style:italic;font-weight:400;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/dm-sans/DMSans-Regular-Italic.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"DM Sans";font-style:normal;font-weight:700;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/dm-sans/DMSans-Bold.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"DM Sans";font-style:italic;font-weight:700;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/dm-sans/DMSans-Bold-Italic.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:300;font-display:block;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/ibm-plex-mono/IBMPlexMono-Light.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:block;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/ibm-plex-mono/IBMPlexMono-Regular.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"IBM Plex Mono";font-style:italic;font-weight:400;font-display:block;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/ibm-plex-mono/IBMPlexMono-Italic.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:700;font-display:block;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/ibm-plex-mono/IBMPlexMono-Bold.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:Inter;font-style:normal;font-weight:200 900;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/inter/Inter-VariableFont_slnt,wght.ttf') format('truetype');font-stretch:normal;}
+@font-face{font-family:"Source Serif Pro";font-style:normal;font-weight:200 900;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/source-serif-pro/SourceSerif4Variable-Roman.ttf.woff2') format('woff2');font-stretch:normal;}
+@font-face{font-family:"Source Serif Pro";font-style:italic;font-weight:200 900;font-display:fallback;src:url('https://localhost/wp-content/themes/twentytwentythree/assets/fonts/source-serif-pro/SourceSerif4Variable-Italic.ttf.woff2') format('woff2');font-stretch:normal;}
+</style>
+<script>
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/16.0.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/localhost\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.8.2"}};
+/*! This file is auto-generated */
+!function(s,n){var o,i,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),a=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===a[t]})}function u(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);for(var n=e.getImageData(16,16,1,1),a=0;a<n.data.length;a++)if(0!==n.data[a])return!1;return!0}function f(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\udedf")}return!1}function g(e,t,n,a){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):s.createElement("canvas"),o=r.getContext("2d",{willReadFrequently:!0}),i=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(function(e){i[e]=t(o,e,n,a)}),i}function t(e){var t=s.createElement("script");t.src=e,t.defer=!0,s.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",i=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){s.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+g.toString()+"("+[JSON.stringify(i),f.toString(),p.toString(),u.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"}),r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=function(e){c(n=e.data),r.terminate(),t(n)})}catch(e){}c(n=g(i,f,p,u))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+</script>
+
+<script>
+/* <![CDATA[ */
+var userSettings = {"url":"\/","uid":"1","time":"1760830446","secure":"1"};/* ]]> */
+</script>
+<script src="https://localhost/wp-admin/load-scripts.php?c=1&amp;load%5Bchunk_0%5D=jquery-core,jquery-migrate,utils&amp;ver=6.8.2"></script>
+<script src="https://localhost/wp-content/plugins/litespeed-cache/assets/js/litespeed-cache-admin.js?ver=7.5.0.1" id="litespeed-cache-js"></script>
+<script type="text/javascript">var _wpColorScheme = {"icons":{"base":"#a7aaad","focus":"#72aee6","current":"#fff"}};</script>
+	<link id="wp-admin-canonical" rel="canonical" href="https://localhost/wp-admin/admin.php?page=mase-settings">
+	<script>
+		if ( window.history.replaceState ) {
+			window.history.replaceState( null, null, document.getElementById( 'wp-admin-canonical' ).href + window.location.hash );
+		}
+	</script>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"><style id="mase-custom-css" type="text/css">
+body.wp-admin #wpadminbar{background-color:#0EA5E9 !important;height:49px !important;}body.wp-admin #wpadminbar .ab-item,body.wp-admin #wpadminbar a.ab-item,body.wp-admin #wpadminbar > #wp-toolbar span.ab-label,body.wp-admin #wpadminbar > #wp-toolbar span.noticon{color:#ffffff !important;}body.wp-admin.admin-bar{margin-top:49px !important;}body.wp-admin #wpadminbar .ab-sub-wrapper{top:49px !important;}body.wp-admin #adminmenu,body.wp-admin #adminmenuback,body.wp-admin #adminmenuwrap{background-color:#0284C7 !important;width:160px !important;}body.wp-admin #adminmenu a,body.wp-admin #adminmenu div.wp-menu-name{color:#ffffff !important;}body.wp-admin #adminmenu li.menu-top:hover,body.wp-admin #adminmenu li.opensub > a.menu-top,body.wp-admin #adminmenu li > a.menu-top:focus{background-color:#0EA5E9 !important;}body.wp-admin #adminmenu li.menu-top:hover a,body.wp-admin #adminmenu li.opensub > a.menu-top,body.wp-admin #adminmenu li > a.menu-top:focus{color:#E0F2FE !important;}body.wp-admin #wpcontent,body.wp-admin #wpfooter{margin-left:160px !important;}body.wp-admin.folded #wpcontent,body.wp-admin.folded #wpfooter{margin-left:36px !important;}body.wp-admin #wpadminbar,body.wp-admin #wpadminbar .ab-item,body.wp-admin #wpadminbar > #wp-toolbar span.ab-label,body.wp-admin #wpadminbar > #wp-toolbar span.noticon{font-size:13px !important;font-weight:400 !important;line-height:1.5 !important;letter-spacing:0px !important;text-transform:none !important;}body.wp-admin #adminmenu a,body.wp-admin #adminmenu div.wp-menu-name,body.wp-admin #adminmenu .wp-submenu a{font-size:13px !important;font-weight:400 !important;line-height:1.5 !important;letter-spacing:0px !important;text-transform:none !important;}body.wp-admin #wpbody-content,body.wp-admin .wrap,body.wp-admin #wpbody-content p,body.wp-admin .wrap p{font-size:13px !important;font-weight:400 !important;line-height:1.6 !important;letter-spacing:0px !important;text-transform:none !important;}body.wp-admin{animation:mase-fade-in 300ms ease-in-out;}@keyframes mase-fade-in{0%{opacity:0;transform:translateY(10px);}100%{opacity:1;transform:translateY(0);}}body.wp-admin #adminmenu a:hover,body.wp-admin .button:hover,body.wp-admin .button-primary:hover{transform:translateY(-2px)!important;transition:transform 200ms ease!important;}body.wp-admin #adminmenu a,body.wp-admin .button,body.wp-admin .button-primary,body.wp-admin input[type="text"],body.wp-admin input[type="email"],body.wp-admin textarea,body.wp-admin select{transition:all 200ms cubic-bezier(0.4,0,0.2,1)!important;}@media (prefers-reduced-motion:reduce){body.wp-admin,body.wp-admin *{animation:none!important;transition:none!important;}}:root{--mase-shadow-subtle:0 2px 8px rgba(0,0,0,0.1);--mase-shadow-medium:0 4px 12px rgba(0,0,0,0.15);--mase-shadow-strong:0 8px 20px 2px rgba(0,0,0,0.2);--mase-transition-shadow:box-shadow 200ms cubic-bezier(0.4,0,0.2,1);}body.wp-admin #wpadminbar{border-radius:0px!important;box-shadow:none!important;transition:var(--mase-transition-shadow)!important;}body.wp-admin #adminmenu a{border-radius:0px!important;box-shadow:none!important;transition:var(--mase-transition-shadow)!important;}body.wp-admin .button,body.wp-admin .button-primary{border-radius:3px!important;box-shadow:0px 2px 8px 0px rgba(0,0,0,0.1)!important;transition:var(--mase-transition-shadow)!important;will-change:box-shadow!important;transform:translateZ(0)!important;backface-visibility:hidden!important;}body.wp-admin .button:hover,body.wp-admin .button:focus,body.wp-admin .button-primary:hover,body.wp-admin .button-primary:focus{box-shadow:0px 4px 8px 0px rgba(0,0,0,0.1)!important;}body.wp-admin input[type="text"],body.wp-admin input[type="email"],body.wp-admin textarea,body.wp-admin select{border-radius:3px!important;box-shadow:none!important;transition:var(--mase-transition-shadow)!important;}@media screen and (max-width:782px){body.wp-admin #wpadminbar{box-shadow:none!important;}body.wp-admin #adminmenu a{box-shadow:none!important;}body.wp-admin .button,body.wp-admin .button-primary{box-shadow:0px 2px 6px 0px rgba(0,0,0,0.1)!important;}body.wp-admin input[type="text"],body.wp-admin input[type="email"],body.wp-admin textarea,body.wp-admin select{box-shadow:none!important;}}@media (prefers-reduced-motion:reduce){body.wp-admin *{transition:none!important;}}body.wp-admin .mase-range:focus,body.wp-admin .mase-select:focus,body.wp-admin .mase-color-picker:focus,body.wp-admin input[type="radio"]:focus{outline:2px solid #2271b1!important;outline-offset:2px!important;box-shadow:0 0 0 1px #fff,0 0 0 3px #2271b1!important;}body.wp-admin .mase-shadow-direction label:focus-within{outline:2px solid #2271b1!important;outline-offset:2px!important;border-radius:3px!important;}body.wp-admin .mase-input.error,body.wp-admin .mase-input[aria-invalid="true"]{border-color:#d63638!important;box-shadow:0 0 0 1px #d63638!important;}body.wp-admin .palette-preset:focus,body.wp-admin #mase-export-btn:focus,body.wp-admin #mase-import-btn:focus{outline:2px solid #2271b1!important;outline-offset:2px!important;box-shadow:0 0 0 1px #fff,0 0 0 3px #2271b1!important;}body.wp-admin #adminmenu li.menu-top > a{padding-top:10px!important;padding-right:15px!important;padding-bottom:10px!important;padding-left:15px!important;}body.wp-admin #adminmenu li.menu-top{margin-top:2px!important;margin-right:0px!important;margin-bottom:2px!important;margin-left:0px!important;}body.wp-admin #wpadminbar .ab-item{padding-top:0px!important;padding-right:10px!important;padding-bottom:0px!important;padding-left:10px!important;}body.wp-admin #adminmenu .wp-submenu a{padding-top:8px!important;padding-right:12px!important;padding-bottom:8px!important;padding-left:12px!important;}body.wp-admin #adminmenu .wp-submenu{margin-top:0px!important;left:0px!important;}body.wp-admin #wpbody-content{margin-top:20px!important;margin-right:20px!important;margin-bottom:20px!important;margin-left:20px!important;}body.wp-admin #adminmenu li.menu-top > a,body.wp-admin #adminmenu li.menu-top,body.wp-admin #wpadminbar .ab-item,body.wp-admin #adminmenu .wp-submenu,body.wp-admin #adminmenu .wp-submenu a,body.wp-admin #wpbody-content{transition:padding 0.3s ease,margin 0.3s ease,left 0.3s ease!important;}@media (prefers-reduced-motion:reduce){body.wp-admin #adminmenu li.menu-top > a,body.wp-admin #adminmenu li.menu-top,body.wp-admin #wpadminbar .ab-item,body.wp-admin #adminmenu .wp-submenu,body.wp-admin #adminmenu .wp-submenu a,body.wp-admin #wpbody-content{transition:none!important;}}@media screen and (min-width:783px) and (max-width:1024px){body.wp-admin #adminmenu li.menu-top > a{padding-top:9px!important;padding-right:13px!important;padding-bottom:9px!important;padding-left:13px!important;}body.wp-admin #adminmenu li.menu-top{margin-top:1px!important;margin-bottom:1px!important;}}@media screen and (max-width:782px){body.wp-admin #adminmenu li.menu-top > a{padding-top:7px!important;padding-right:11px!important;padding-bottom:7px!important;padding-left:11px!important;}body.wp-admin #adminmenu li.menu-top{margin-top:1px!important;margin-bottom:1px!important;}body.wp-admin #wpadminbar .ab-item{padding-right:7px!important;padding-left:7px!important;}}body.wp-admin #adminmenu{display:block !important;}body.wp-admin #adminmenu li.menu-top > a,body.wp-admin #wpadminbar .ab-item,body.wp-admin #adminmenu .wp-submenu a{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}body.wp-admin #adminmenu li.menu-top > a,body.wp-admin #adminmenu li.menu-top,body.wp-admin #wpadminbar .ab-item{-webkit-transition:padding 0.3s ease,margin 0.3s ease;-moz-transition:padding 0.3s ease,margin 0.3s ease;-o-transition:padding 0.3s ease,margin 0.3s ease;transition:padding 0.3s ease,margin 0.3s ease;}@media screen and (-ms-high-contrast:active),(-ms-high-contrast:none){body.wp-admin #adminmenu li.menu-top > a{display:block;}}@supports (-ms-ime-align:auto){body.wp-admin #adminmenu li.menu-top > a{display:block;}}@media screen and (max-width:782px){body.wp-admin #adminmenu a,body.wp-admin .button,body.wp-admin .button-primary{min-height:44px!important;min-width:44px!important;padding:12px 16px!important;}body.wp-admin #wpadminbar,body.wp-admin #adminmenu{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:none!important;animation:none!important;transition:none!important;}body.wp-admin #wpcontent{display:block!important;width:100%!important;}}
+</style>
+<style id="iris-css">.iris-picker{display:block;position:relative}.iris-picker,.iris-picker *{-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}input+.iris-picker{margin-top:4px}.iris-error{background-color:#ffafaf}.iris-border{border-radius:3px;border:1px solid #aaa;width:200px;background-color:#fff}.iris-picker-inner{position:absolute;top:0;right:0;left:0;bottom:0}.iris-border .iris-picker-inner{top:10px;right:10px;left:10px;bottom:10px}.iris-picker .iris-square-inner{position:absolute;left:0;right:0;top:0;bottom:0}.iris-picker .iris-square,.iris-picker .iris-slider,.iris-picker .iris-square-inner,.iris-picker .iris-palette{border-radius:3px;box-shadow:inset 0 0 5px rgba(0,0,0,.4);height:100%;width:12.5%;float:left;margin-right:5%}.iris-only-strip .iris-slider{width:100%}.iris-picker .iris-square{width:76%;margin-right:10%;position:relative}.iris-only-strip .iris-square{display:none}.iris-picker .iris-square-inner{width:auto;margin:0}.iris-ie-9 .iris-square,.iris-ie-9 .iris-slider,.iris-ie-9 .iris-square-inner,.iris-ie-9 .iris-palette{box-shadow:none;border-radius:0}.iris-ie-9 .iris-square,.iris-ie-9 .iris-slider,.iris-ie-9 .iris-palette{outline:1px solid rgba(0,0,0,.1)}.iris-ie-lt9 .iris-square,.iris-ie-lt9 .iris-slider,.iris-ie-lt9 .iris-square-inner,.iris-ie-lt9 .iris-palette{outline:1px solid #aaa}.iris-ie-lt9 .iris-square .ui-slider-handle{outline:1px solid #aaa;background-color:#fff;-ms-filter:"alpha(Opacity=30)"}.iris-ie-lt9 .iris-square .iris-square-handle{background:0 0;border:3px solid #fff;-ms-filter:"alpha(Opacity=50)"}.iris-picker .iris-strip{margin-right:0;position:relative}.iris-picker .iris-strip .ui-slider-handle{position:absolute;background:0 0;margin:0;right:-3px;left:-3px;border:4px solid #aaa;border-width:4px 3px;width:auto;height:6px;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.2);opacity:.9;z-index:5;cursor:ns-resize}.iris-strip-horiz .iris-strip .ui-slider-handle{right:auto;left:auto;bottom:-3px;top:-3px;height:auto;width:6px;cursor:ew-resize}.iris-strip .ui-slider-handle:before{content:" ";position:absolute;left:-2px;right:-2px;top:-3px;bottom:-3px;border:2px solid #fff;border-radius:3px}.iris-picker .iris-slider-offset{position:absolute;top:11px;left:0;right:0;bottom:-3px;width:auto;height:auto;background:transparent;border:0;border-radius:0}.iris-strip-horiz .iris-slider-offset{top:0;bottom:0;right:11px;left:-3px}.iris-picker .iris-square-handle{background:transparent;border:5px solid #aaa;border-radius:50%;border-color:rgba(128,128,128,.5);box-shadow:none;width:12px;height:12px;position:absolute;left:-10px;top:-10px;cursor:move;opacity:1;z-index:10}.iris-picker .ui-state-focus .iris-square-handle{opacity:.8}.iris-picker .iris-square-handle:hover{border-color:#999}.iris-picker .iris-square-value:focus .iris-square-handle{box-shadow:0 0 2px rgba(0,0,0,.75);opacity:.8}.iris-picker .iris-square-handle:hover::after{border-color:#fff}.iris-picker .iris-square-handle::after{position:absolute;bottom:-4px;right:-4px;left:-4px;top:-4px;border:3px solid #f9f9f9;border-color:rgba(255,255,255,.8);border-radius:50%;content:" "}.iris-picker .iris-square-value{width:8px;height:8px;position:absolute}.iris-ie-lt9 .iris-square-value,.iris-mozilla .iris-square-value{width:1px;height:1px}.iris-palette-container{position:absolute;bottom:0;left:0;margin:0;padding:0}.iris-border .iris-palette-container{left:10px;bottom:10px}.iris-picker .iris-palette{margin:0;cursor:pointer}.iris-square-handle,.ui-slider-handle{border:0;outline:0}</style></head>
+<body class="wp-admin wp-core-ui js toplevel_page_mase-settings admin-bar branch-6-8 version-6-8-2 admin-color-fresh locale-en-us svg wp-theme-twentytwentythree customize-support">
+<script type="text/javascript">
+	document.body.className = document.body.className.replace('no-js','js');
+</script>
+
+<script>
+		(function() {
+			var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+				request = true;
+	
+			b[c] = b[c].replace( rcs, ' ' );
+			// The customizer requires postMessage and CORS (if the site is cross domain).
+			b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+		}());
+	
+</script>
+
+<div id="wpwrap">
+
+<div id="adminmenumain" role="navigation" aria-label="Main menu">
+<a href="#wpbody-content" class="screen-reader-shortcut">Skip to main content</a>
+<a href="#wp-toolbar" class="screen-reader-shortcut">Skip to toolbar</a>
+<div id="adminmenuback"></div>
+<div id="adminmenuwrap">
+<ul id="adminmenu">
+
+
+	<li class="wp-first-item wp-has-submenu wp-not-current-submenu menu-top menu-top-first menu-icon-dashboard menu-top-last" id="menu-dashboard">
+	<a href="index.php" class="wp-first-item wp-has-submenu wp-not-current-submenu menu-top menu-top-first menu-icon-dashboard menu-top-last" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-dashboard" aria-hidden="true"><br></div><div class="wp-menu-name">Dashboard</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Dashboard</li><li class="wp-first-item"><a href="index.php" class="wp-first-item">Home</a></li><li><a href="update-core.php">Updates <span class="update-plugins count-0"><span class="update-count">0</span></span></a></li></ul></li>
+	<li class="wp-not-current-submenu wp-menu-separator" aria-hidden="true"><div class="separator"></div></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-post open-if-no-js menu-top-first" id="menu-posts">
+	<a href="edit.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-post open-if-no-js menu-top-first" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-post" aria-hidden="true"><br></div><div class="wp-menu-name">Posts</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Posts</li><li class="wp-first-item"><a href="edit.php" class="wp-first-item">All Posts</a></li><li><a href="post-new.php">Add Post</a></li><li><a href="edit-tags.php?taxonomy=category">Categories</a></li><li><a href="edit-tags.php?taxonomy=post_tag">Tags</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" id="menu-media">
+	<a href="upload.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-media" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-media" aria-hidden="true"><br></div><div class="wp-menu-name">Media</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Media</li><li class="wp-first-item"><a href="upload.php" class="wp-first-item">Library</a></li><li><a href="media-new.php">Add Media File</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-page" id="menu-pages">
+	<a href="edit.php?post_type=page" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-page" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-page" aria-hidden="true"><br></div><div class="wp-menu-name">Pages</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Pages</li><li class="wp-first-item"><a href="edit.php?post_type=page" class="wp-first-item">All Pages</a></li><li><a href="post-new.php?post_type=page">Add Page</a></li></ul></li>
+	<li class="wp-not-current-submenu menu-top menu-icon-comments menu-top-last" id="menu-comments">
+	<a href="edit-comments.php" class="wp-not-current-submenu menu-top menu-icon-comments menu-top-last"><div class="wp-menu-image dashicons-before dashicons-admin-comments" aria-hidden="true"><br></div><div class="wp-menu-name">Comments <span class="awaiting-mod count-0"><span class="pending-count" aria-hidden="true">0</span><span class="comments-in-moderation-text screen-reader-text">0 Comments in moderation</span></span></div></a></li>
+	<li class="wp-not-current-submenu wp-menu-separator" aria-hidden="true"><div class="separator"></div></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-appearance menu-top-first" id="menu-appearance">
+	<a href="themes.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-appearance menu-top-first" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-appearance" aria-hidden="true"><br></div><div class="wp-menu-name">Appearance</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Appearance</li><li class="wp-first-item"><a href="themes.php" class="wp-first-item">Themes <span class="update-plugins count-0"><span class="theme-count">0</span></span></a></li><li><a href="site-editor.php">Editor</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-plugins" id="menu-plugins">
+	<a href="plugins.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-plugins" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-plugins" aria-hidden="true"><br></div><div class="wp-menu-name">Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span></div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Plugins <span class="update-plugins count-0"><span class="plugin-count">0</span></span></li><li class="wp-first-item"><a href="plugins.php" class="wp-first-item">Installed Plugins</a></li><li><a href="plugin-install.php">Add Plugin</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-users" id="menu-users">
+	<a href="users.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-users" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-users" aria-hidden="true"><br></div><div class="wp-menu-name">Users</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Users</li><li class="wp-first-item"><a href="users.php" class="wp-first-item">All Users</a></li><li><a href="user-new.php">Add User</a></li><li><a href="profile.php">Profile</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-tools" id="menu-tools">
+	<a href="tools.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-tools" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-tools" aria-hidden="true"><br></div><div class="wp-menu-name">Tools</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Tools</li><li class="wp-first-item"><a href="tools.php" class="wp-first-item">Available Tools</a></li><li><a href="import.php">Import</a></li><li><a href="export.php">Export</a></li><li><a href="site-health.php">Site Health <span class="menu-counter site-health-counter count-0"><span class="count">0</span></span></a></li><li><a href="export-personal-data.php">Export Personal Data</a></li><li><a href="erase-personal-data.php">Erase Personal Data</a></li><li><a href="theme-editor.php">Theme File Editor</a></li><li><a href="plugin-editor.php">Plugin File Editor</a></li></ul></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-settings menu-top-last" id="menu-settings">
+	<a href="options-general.php" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-settings menu-top-last" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-settings" aria-hidden="true"><br></div><div class="wp-menu-name">Settings</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">Settings</li><li class="wp-first-item"><a href="options-general.php" class="wp-first-item">General</a></li><li><a href="options-writing.php">Writing</a></li><li><a href="options-reading.php">Reading</a></li><li><a href="options-discussion.php">Discussion</a></li><li><a href="options-media.php">Media</a></li><li><a href="options-permalink.php">Permalinks</a></li><li><a href="options-privacy.php">Privacy</a></li><li><a href="options-general.php?page=litespeed-cache-options">LiteSpeed Cache</a></li></ul></li>
+	<li class="wp-not-current-submenu wp-menu-separator" aria-hidden="true"><div class="separator"></div></li>
+	<li class="current menu-top toplevel_page_mase-settings menu-top-first" id="toplevel_page_mase-settings">
+	<a href="admin.php?page=mase-settings" class="current menu-top toplevel_page_mase-settings menu-top-first" aria-current="page"><div class="wp-menu-image dashicons-before dashicons-admin-appearance" aria-hidden="true"><br></div><div class="wp-menu-name">Admin Styler</div></a></li>
+	<li class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-generic toplevel_page_litespeed menu-top-last" id="toplevel_page_litespeed"><a href="admin.php?page=litespeed" class="wp-has-submenu wp-not-current-submenu menu-top menu-icon-generic toplevel_page_litespeed menu-top-last" data-ariahaspopup=""><div class="wp-menu-image dashicons-before dashicons-admin-generic" aria-hidden="true"><br></div><div class="wp-menu-name">LiteSpeed Cache</div></a>
+	<ul class="wp-submenu wp-submenu-wrap"><li class="wp-submenu-head" aria-hidden="true">LiteSpeed Cache</li><li class="wp-first-item"><a href="admin.php?page=litespeed" class="wp-first-item">Dashboard</a></li><li><a href="admin.php?page=litespeed-presets">Presets</a></li><li><a href="admin.php?page=litespeed-general">General</a></li><li><a href="admin.php?page=litespeed-cache">Cache</a></li><li><a href="admin.php?page=litespeed-cdn">CDN</a></li><li><a href="admin.php?page=litespeed-img_optm">Image Optimization</a></li><li><a href="admin.php?page=litespeed-page_optm">Page Optimization</a></li><li><a href="admin.php?page=litespeed-db_optm">Database</a></li><li><a href="admin.php?page=litespeed-crawler">Crawler</a></li><li><a href="admin.php?page=litespeed-toolbox">Toolbox</a></li></ul></li><li id="collapse-menu" class="hide-if-no-js"><button type="button" id="collapse-button" aria-label="Collapse Main menu" aria-expanded="true"><span class="collapse-button-icon" aria-hidden="true"></span><span class="collapse-button-label">Collapse Menu</span></button></li></ul>
+</div>
+</div>
+<div id="wpcontent">
+
+		<div id="wpadminbar" class="nojq">
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="Toolbar">
+				<ul role="menu" id="wp-admin-bar-root-default" class="ab-top-menu"><li role="group" id="wp-admin-bar-menu-toggle"><a class="ab-item" role="menuitem" href="#" aria-expanded="false"><span class="ab-icon" aria-hidden="true"></span><span class="screen-reader-text">Menu</span></a></li><li role="group" id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" role="menuitem" aria-expanded="false" href="https://localhost/wp-admin/about.php"><span class="ab-icon" aria-hidden="true"></span><span class="screen-reader-text">About WordPress</span></a><div class="ab-sub-wrapper"><ul role="menu" aria-label="About WordPress" id="wp-admin-bar-wp-logo-default" class="ab-submenu"><li role="group" id="wp-admin-bar-about"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/about.php">About WordPress</a></li><li role="group" id="wp-admin-bar-contribute"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/contribute.php">Get Involved</a></li></ul><ul role="menu" aria-label="About WordPress" id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu"><li role="group" id="wp-admin-bar-wporg"><a class="ab-item" role="menuitem" href="https://wordpress.org/">WordPress.org</a></li><li role="group" id="wp-admin-bar-documentation"><a class="ab-item" role="menuitem" href="https://wordpress.org/documentation/">Documentation</a></li><li role="group" id="wp-admin-bar-learn"><a class="ab-item" role="menuitem" href="https://learn.wordpress.org/">Learn WordPress</a></li><li role="group" id="wp-admin-bar-support-forums"><a class="ab-item" role="menuitem" href="https://wordpress.org/support/forums/">Support</a></li><li role="group" id="wp-admin-bar-feedback"><a class="ab-item" role="menuitem" href="https://wordpress.org/support/forum/requests-and-feedback">Feedback</a></li></ul></div></li><li role="group" id="wp-admin-bar-site-name" class="menupop"><a class="ab-item" role="menuitem" aria-expanded="false" href="https://localhost/">Moja strona</a><div class="ab-sub-wrapper"><ul role="menu" aria-label="Moja strona" id="wp-admin-bar-site-name-default" class="ab-submenu"><li role="group" id="wp-admin-bar-view-site"><a class="ab-item" role="menuitem" href="https://localhost/">Visit Site</a></li></ul></div></li><li role="group" id="wp-admin-bar-comments"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/edit-comments.php"><span class="ab-icon" aria-hidden="true"></span><span class="ab-label awaiting-mod pending-count count-0" aria-hidden="true">0</span><span class="screen-reader-text comments-in-moderation-text">0 Comments in moderation</span></a></li><li role="group" id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" role="menuitem" aria-expanded="false" href="https://localhost/wp-admin/post-new.php"><span class="ab-icon" aria-hidden="true"></span><span class="ab-label">New</span></a><div class="ab-sub-wrapper"><ul role="menu" aria-label="New" id="wp-admin-bar-new-content-default" class="ab-submenu"><li role="group" id="wp-admin-bar-new-post"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/post-new.php">Post</a></li><li role="group" id="wp-admin-bar-new-media"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/media-new.php">Media</a></li><li role="group" id="wp-admin-bar-new-page"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/post-new.php?post_type=page">Page</a></li><li role="group" id="wp-admin-bar-new-user"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/user-new.php">User</a></li></ul></div></li><li role="group" id="wp-admin-bar-litespeed-menu" class="menupop litespeed-top-toolbar"><a class="ab-item" tabindex="0" role="menuitem" aria-expanded="false" href="https://localhost/wp-admin/admin.php?page=mase-settings&amp;LSCWP_CTRL=purge&amp;LSCWP_NONCE=effdc1cd10&amp;litespeed_type=purge_all_lscache"><span class="ab-icon" title="LiteSpeed Cache Purge All - LSCache"></span></a><div class="ab-sub-wrapper"><ul role="menu" id="wp-admin-bar-litespeed-menu-default" class="ab-submenu"><li role="group" id="wp-admin-bar-litespeed-bar-manage"><a class="ab-item" tabindex="0" role="menuitem" href="admin.php?page=litespeed">Manage</a></li><li role="group" id="wp-admin-bar-litespeed-bar-setting"><a class="ab-item" tabindex="0" role="menuitem" href="admin.php?page=litespeed-cache">Settings</a></li><li role="group" id="wp-admin-bar-litespeed-bar-imgoptm"><a class="ab-item" tabindex="0" role="menuitem" href="admin.php?page=litespeed-img_optm">Image Optimization</a></li><li role="group" id="wp-admin-bar-litespeed-purge-all"><a class="ab-item" tabindex="0" role="menuitem" href="https://localhost/wp-admin/admin.php?page=mase-settings&amp;LSCWP_CTRL=purge&amp;LSCWP_NONCE=effdc1cd10&amp;litespeed_type=purge_all">Purge All</a></li><li role="group" id="wp-admin-bar-litespeed-purge-all-lscache"><a class="ab-item" tabindex="0" role="menuitem" href="https://localhost/wp-admin/admin.php?page=mase-settings&amp;LSCWP_CTRL=purge&amp;LSCWP_NONCE=effdc1cd10&amp;litespeed_type=purge_all_lscache">Purge All - LSCache</a></li><li role="group" id="wp-admin-bar-litespeed-purge-cssjs"><a class="ab-item" tabindex="0" role="menuitem" href="https://localhost/wp-admin/admin.php?page=mase-settings&amp;LSCWP_CTRL=purge&amp;LSCWP_NONCE=effdc1cd10&amp;litespeed_type=purge_all_cssjs">Purge All - CSS/JS Cache</a></li><li role="group" id="wp-admin-bar-litespeed-purge-opcache"><a class="ab-item" tabindex="0" role="menuitem" href="https://localhost/wp-admin/admin.php?page=mase-settings&amp;LSCWP_CTRL=purge&amp;LSCWP_NONCE=effdc1cd10&amp;litespeed_type=purge_all_opcache">Purge All - Opcode Cache</a></li></ul></div></li></ul><ul role="menu" id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu"><li role="group" id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" role="menuitem" aria-expanded="false" href="https://localhost/wp-admin/profile.php">Howdy, <span class="display-name">admin</span><img alt="" src="https://secure.gravatar.com/avatar/4322a7721fcc182ea1c1a67b63d328dab4450b5a64633c350b5dc402ed115821?s=26&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/4322a7721fcc182ea1c1a67b63d328dab4450b5a64633c350b5dc402ed115821?s=52&amp;d=mm&amp;r=g 2x" class="avatar avatar-26 photo" height="26" width="26" loading="lazy" decoding="async"></a><div class="ab-sub-wrapper"><ul role="menu" aria-label="Howdy, admin" id="wp-admin-bar-user-actions" class="ab-submenu"><li role="group" id="wp-admin-bar-user-info"><a class="ab-item" role="menuitem" href="https://localhost/wp-admin/profile.php"><img alt="" src="https://secure.gravatar.com/avatar/4322a7721fcc182ea1c1a67b63d328dab4450b5a64633c350b5dc402ed115821?s=64&amp;d=mm&amp;r=g" srcset="https://secure.gravatar.com/avatar/4322a7721fcc182ea1c1a67b63d328dab4450b5a64633c350b5dc402ed115821?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64" loading="lazy" decoding="async"><span class="display-name">admin</span><span class="display-name edit-profile">Edit Profile</span></a></li><li role="group" id="wp-admin-bar-logout"><a class="ab-item" role="menuitem" href="https://localhost/wp-login.php?action=logout&amp;_wpnonce=2e1bf72e24">Log Out</a></li></ul></div></li></ul>			</div>
+		</div>
+
+		
+<div id="wpbody" role="main">
+
+<div id="wpbody-content">
+		<div id="screen-meta" class="metabox-prefs">
+
+			<div id="contextual-help-wrap" class="hidden no-sidebar" tabindex="-1" aria-label="Contextual Help Tab">
+				<div id="contextual-help-back"></div>
+				<div id="contextual-help-columns">
+					<div class="contextual-help-tabs">
+						<ul>
+												</ul>
+					</div>
+
+					
+					<div class="contextual-help-tabs-wrap">
+											</div>
+				</div>
+			</div>
+				</div>
+		
+<div class="wrap mase-settings-wrap">
+	<!-- Skip Navigation Link (Requirement 13.5) -->
+	<a href="#mase-main-content" class="mase-skip-link">
+		Skip to main content	</a>
+	
+	<!-- ARIA Live Region for Dynamic Notices (Requirement 13.5) -->
+	<div id="mase-notice-region" class="mase-notice-region" role="status" aria-live="polite" aria-atomic="true"></div>
+	
+	<!-- Header Section -->
+	<div class="mase-header">
+		<div class="mase-header-left">
+			<h1>
+				Modern Admin Styler				<span class="mase-version-badge">v1.2.0</span>
+			</h1>
+			<p class="mase-subtitle">Transform your WordPress admin with modern design and powerful customization</p>
+		</div>
+		<div class="mase-header-right">
+			<!-- Dark Mode Toggle -->
+			<label class="mase-header-toggle">
+				<input type="checkbox" id="mase-dark-mode-toggle" name="mase_dark_mode" value="1" role="switch" aria-checked="false" aria-label="Toggle dark mode for entire admin" style="">
+				<span class="dashicons dashicons-admin-appearance" aria-hidden="true"></span>
+				<span>Dark Mode</span>
+			</label>
+			<label class="mase-header-toggle">
+				<input type="checkbox" id="mase-live-preview-toggle" name="mase_live_preview" value="1" checked="" role="switch" aria-checked="true" aria-label="Toggle live preview mode" style="">
+				<span class="dashicons dashicons-visibility" aria-hidden="true"></span>
+				<span>Live Preview</span>
+			</label>
+			<button type="button" id="mase-reset-all" class="button button-secondary" aria-label="Reset all settings to default values">
+				<span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
+				<span>Reset All</span>
+			</button>
+			<button type="submit" form="mase-settings-form" id="mase-save-settings" class="button button-primary" aria-label="Save all settings">
+				<span class="dashicons dashicons-saved" aria-hidden="true"></span>
+				<span>Save Settings</span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Tab Navigation (Requirement 13.4: Keyboard accessible) -->
+	<nav class="mase-tab-nav" role="tablist" aria-label="Settings navigation">
+		<button type="button" class="mase-tab-button active" data-tab="general" role="tab" aria-selected="true" aria-controls="tab-general" id="tab-button-general" tabindex="0">
+			<span class="dashicons dashicons-admin-home" aria-hidden="true"></span>
+			<span class="mase-tab-label">General</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="admin-bar" role="tab" aria-selected="false" aria-controls="tab-admin-bar" id="tab-button-admin-bar" tabindex="-1">
+			<span class="dashicons dashicons-admin-generic" aria-hidden="true"></span>
+			<span class="mase-tab-label">Admin Bar</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="menu" role="tab" aria-selected="false" aria-controls="tab-menu" id="tab-button-menu" tabindex="-1">
+			<span class="dashicons dashicons-menu" aria-hidden="true"></span>
+			<span class="mase-tab-label">Menu</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="content" role="tab" aria-selected="false" aria-controls="tab-content" id="tab-button-content" tabindex="-1">
+			<span class="dashicons dashicons-layout" aria-hidden="true"></span>
+			<span class="mase-tab-label">Content</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="typography" role="tab" aria-selected="false" aria-controls="tab-typography" id="tab-button-typography" tabindex="-1">
+			<span class="dashicons dashicons-editor-textcolor" aria-hidden="true"></span>
+			<span class="mase-tab-label">Typography</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="effects" role="tab" aria-selected="false" aria-controls="tab-effects" id="tab-button-effects" tabindex="-1">
+			<span class="dashicons dashicons-art" aria-hidden="true"></span>
+			<span class="mase-tab-label">Effects</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="templates" role="tab" aria-selected="false" aria-controls="tab-templates" id="tab-button-templates" tabindex="-1">
+			<span class="dashicons dashicons-portfolio" aria-hidden="true"></span>
+			<span class="mase-tab-label">Templates</span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced" id="tab-button-advanced" tabindex="-1">
+			<span class="dashicons dashicons-admin-tools" aria-hidden="true"></span>
+			<span class="mase-tab-label">Advanced</span>
+		</button>
+	</nav>
+
+	<!-- Main Form -->
+	<form id="mase-settings-form" method="post" action="" aria-label="Modern Admin Styler settings form">
+		<input type="hidden" id="mase_nonce" name="mase_nonce" value="49613d72a5" style=""><input type="hidden" name="_wp_http_referer" value="/wp-admin/admin.php?page=mase-settings" style="">		
+		<!-- Tab Content Container -->
+		<div class="mase-tab-content-wrapper" id="mase-main-content">
+			
+			<!-- ============================================ -->
+			<!-- GENERAL TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content active" id="tab-general" data-tab-content="general" role="tabpanel" aria-labelledby="tab-button-general" tabindex="0">
+				
+				<!-- Color Palettes Section -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Color Palettes</h2>
+						<p class="description">Choose from 10 professionally designed color schemes. Click to preview, Apply to activate.</p>
+					</div>
+					
+					<div class="mase-palette-grid" role="group" aria-label="Color palettes">
+													<div class="mase-palette-card " data-palette="professional-blue" data-palette-id="professional-blue" role="button" tabindex="0" aria-label="Apply Professional Blue palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Professional Blue palette">
+									<span class="mase-palette-color" style="background-color: #4A90E2" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #50C9C3" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #7B68EE" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #F8FAFC" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Professional Blue</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="professional-blue" aria-label="Preview Professional Blue palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="professional-blue" aria-label="Apply Professional Blue palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="creative-purple" data-palette-id="creative-purple" role="button" tabindex="0" aria-label="Apply Creative Purple palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Creative Purple palette">
+									<span class="mase-palette-color" style="background-color: #8B5CF6" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #EC4899" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #F59E0B" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #FAF5FF" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Creative Purple</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="creative-purple" aria-label="Preview Creative Purple palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="creative-purple" aria-label="Apply Creative Purple palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="energetic-green" data-palette-id="energetic-green" role="button" tabindex="0" aria-label="Apply Energetic Green palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Energetic Green palette">
+									<span class="mase-palette-color" style="background-color: #10B981" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #34D399" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #FBBF24" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #F0FDF4" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Energetic Green</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="energetic-green" aria-label="Preview Energetic Green palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="energetic-green" aria-label="Apply Energetic Green palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="sunset" data-palette-id="sunset" role="button" tabindex="0" aria-label="Apply Sunset palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Sunset palette">
+									<span class="mase-palette-color" style="background-color: #F97316" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #FB923C" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #FBBF24" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #FFF7ED" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Sunset</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="sunset" aria-label="Preview Sunset palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="sunset" aria-label="Apply Sunset palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="dark-elegance" data-palette-id="dark-elegance" role="button" tabindex="0" aria-label="Apply Dark Elegance palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Dark Elegance palette">
+									<span class="mase-palette-color" style="background-color: #1F2937" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #374151" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #60A5FA" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #111827" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Dark Elegance</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="dark-elegance" aria-label="Preview Dark Elegance palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="dark-elegance" aria-label="Apply Dark Elegance palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card active" data-palette="ocean-breeze" data-palette-id="ocean-breeze" role="button" tabindex="0" aria-label="Apply Ocean Breeze palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Ocean Breeze palette">
+									<span class="mase-palette-color" style="background-color: #0EA5E9" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #06B6D4" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #22D3EE" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #F0F9FF" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Ocean Breeze</h3>
+																			<span class="mase-active-badge" role="status">Active</span>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="ocean-breeze" aria-label="Preview Ocean Breeze palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="ocean-breeze" aria-label="Apply Ocean Breeze palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="rose-garden" data-palette-id="rose-garden" role="button" tabindex="0" aria-label="Apply Rose Garden palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Rose Garden palette">
+									<span class="mase-palette-color" style="background-color: #E11D48" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #F43F5E" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #FB7185" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #FFF1F2" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Rose Garden</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="rose-garden" aria-label="Preview Rose Garden palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="rose-garden" aria-label="Apply Rose Garden palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="forest-calm" data-palette-id="forest-calm" role="button" tabindex="0" aria-label="Apply Forest Calm palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Forest Calm palette">
+									<span class="mase-palette-color" style="background-color: #16A34A" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #22C55E" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #84CC16" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #F7FEE7" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Forest Calm</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="forest-calm" aria-label="Preview Forest Calm palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="forest-calm" aria-label="Apply Forest Calm palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="midnight-blue" data-palette-id="midnight-blue" role="button" tabindex="0" aria-label="Apply Midnight Blue palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Midnight Blue palette">
+									<span class="mase-palette-color" style="background-color: #1E3A8A" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #3B82F6" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #60A5FA" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #EFF6FF" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Midnight Blue</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="midnight-blue" aria-label="Preview Midnight Blue palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="midnight-blue" aria-label="Apply Midnight Blue palette">
+										Apply									</button>
+								</div>
+							</div>
+													<div class="mase-palette-card " data-palette="golden-hour" data-palette-id="golden-hour" role="button" tabindex="0" aria-label="Apply Golden Hour palette">
+								<div class="mase-palette-preview" role="img" aria-label="Color preview for Golden Hour palette">
+									<span class="mase-palette-color" style="background-color: #D97706" aria-label="Primary color"></span>
+									<span class="mase-palette-color" style="background-color: #F59E0B" aria-label="Secondary color"></span>
+									<span class="mase-palette-color" style="background-color: #FBBF24" aria-label="Accent color"></span>
+									<span class="mase-palette-color" style="background-color: #FFFBEB" aria-label="Background color"></span>
+								</div>
+								<div class="mase-palette-info">
+									<h3 class="mase-palette-name">Golden Hour</h3>
+																	</div>
+								<div class="mase-palette-actions">
+									<button type="button" class="button button-secondary mase-palette-preview-btn" data-palette-id="golden-hour" aria-label="Preview Golden Hour palette">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-palette-apply-btn" data-palette-id="golden-hour" aria-label="Apply Golden Hour palette">
+										Apply									</button>
+								</div>
+							</div>
+											</div>
+				</div>
+
+				<!-- Template Preview Section -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Quick Templates</h2>
+						<p class="description">Preview of 3 popular templates. View all templates in the Templates tab.</p>
+					</div>
+					
+					<div class="mase-template-preview-grid">
+													<div class="mase-template-preview-card active" data-template-id="default">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="WordPress Default">
+																												<span class="mase-active-badge">Active</span>
+																	</div>
+								<div class="mase-template-info">
+									<h3>WordPress Default</h3>
+									<p class="description">Classic WordPress admin styling with no modifications</p>
+								</div>
+								<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="default">
+									Apply Template								</button>
+							</div>
+													<div class="mase-template-preview-card " data-template-id="modern-minimal">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Modern Minimal">
+																										</div>
+								<div class="mase-template-info">
+									<h3>Modern Minimal</h3>
+									<p class="description">Clean and minimal design with subtle effects</p>
+								</div>
+								<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="modern-minimal">
+									Apply Template								</button>
+							</div>
+													<div class="mase-template-preview-card " data-template-id="glassmorphic">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Glassmorphic">
+																										</div>
+								<div class="mase-template-info">
+									<h3>Glassmorphic</h3>
+									<p class="description">Modern glass effect with blur and transparency</p>
+								</div>
+								<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="glassmorphic">
+									Apply Template								</button>
+							</div>
+											</div>
+					
+					<div class="mase-view-all-templates">
+						<button type="button" class="button button-secondary" data-switch-tab="templates">
+							View All Templates							<span class="dashicons dashicons-arrow-right-alt2"></span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Master Controls Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Master Controls</h2>
+						<p class="description">Global settings that affect the entire admin interface.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="master-enable-plugin">
+										Enable Plugin									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="master-enable-plugin" name="master[enabled]" value="1" checked="checked" aria-describedby="master-enable-plugin-desc" role="switch" aria-checked="true" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="master-enable-plugin-desc">Turn off to temporarily disable all customizations without losing your settings.</p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="master-apply-to-login">
+										Apply to Login Page									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="master-apply-to-login" name="master[apply_to_login]" value="1" role="switch" aria-checked="false" aria-describedby="master-apply-to-login-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="master-apply-to-login-desc">Apply your color scheme to the WordPress login page.</p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="master-dark-mode">
+										Dark Mode									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="master-dark-mode" name="master[dark_mode]" value="1" role="switch" aria-checked="false" aria-describedby="master-dark-mode-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="master-dark-mode-desc">Enable dark mode for the admin interface.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div><!-- #tab-general -->
+
+
+			<!-- ============================================ -->
+			<!-- ADMIN BAR TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-admin-bar" data-tab-content="admin-bar" role="tabpanel" aria-labelledby="tab-button-admin-bar" tabindex="0">
+				
+				<!-- Admin Bar Colors -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Admin Bar Colors</h2>
+						<p class="description">Customize the colors of the WordPress admin bar.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-bg-color">
+										Background Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(14, 165, 233);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-bar-bg-color" name="admin_bar[bg_color]" class="mase-color-picker wp-color-picker" value="#0EA5E9" data-default-color="#23282d" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 100.675px; top: 16.3912px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 15, 15), rgb(255, 135, 15), rgb(255, 255, 15), rgb(135, 255, 15), rgb(15, 255, 15), rgb(15, 255, 135), rgb(15, 255, 255), rgb(15, 135, 255), rgb(15, 15, 255), rgb(135, 15, 255), rgb(255, 15, 255), rgb(255, 15, 135), rgb(255, 15, 15));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 157, 230), rgb(232, 232, 232));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 94%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-text-color">
+										Text Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(255, 255, 255);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-bar-text-color" name="admin_bar[text_color]" class="mase-color-picker wp-color-picker" value="#ffffff" data-default-color="#ffffff" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 0px; top: 0px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(255, 0, 0), rgb(255, 255, 255));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 0%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-hover-color">
+										Hover Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(0, 115, 170);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-bar-hover-color" name="admin_bar[hover_color]" class="mase-color-picker wp-color-picker" value="#0073aa" data-default-color="#0073aa" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 100.675px; top: 60.1012px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 0, 0), rgb(255, 128, 0), rgb(255, 255, 0), rgb(128, 255, 0), rgb(0, 255, 0), rgb(0, 255, 128), rgb(0, 255, 255), rgb(0, 128, 255), rgb(0, 0, 255), rgb(128, 0, 255), rgb(255, 0, 255), rgb(255, 0, 128), rgb(255, 0, 0));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 115, 168), rgb(171, 171, 171));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 100%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-height">
+										Height (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="number" id="admin-bar-height" name="admin_bar[height]" class="small-text" value="49" min="32" max="100" step="1" style="">
+									<p class="description">Default: 32px. Range: 32-100px.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Admin Bar Typography -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Admin Bar Typography</h2>
+						<p class="description">Customize the typography of the admin bar.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-font-size">
+										Font Size (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="number" id="admin-bar-font-size" name="typography[admin_bar][font_size]" class="small-text" value="13" min="10" max="24" step="1" style="">
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-font-weight">
+										Font Weight									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-font-weight" name="typography[admin_bar][font_weight]">
+										<option value="300">300 (Light)</option>
+										<option value="400" selected="selected">400 (Normal)</option>
+										<option value="500">500 (Medium)</option>
+										<option value="600">600 (Semi-Bold)</option>
+										<option value="700">700 (Bold)</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-line-height">
+										Line Height									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-bar-line-height" name="typography[admin_bar][line_height]" value="1.5" min="1.0" max="2.0" step="0.1" style="">
+									<span class="mase-range-value">1.5</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Admin Bar Visual Effects -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Admin Bar Visual Effects</h2>
+						<p class="description">Apply modern visual effects to the admin bar.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-glassmorphism">
+										Glassmorphism									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="admin-bar-glassmorphism" name="visual_effects[admin_bar][glassmorphism]" value="1" role="switch" aria-checked="false" aria-describedby="admin-bar-glassmorphism-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="admin-bar-glassmorphism-desc">Apply frosted glass effect with backdrop blur.</p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-glassmorphism" style="display: none;">
+								<div class="mase-setting-label">
+									<label for="admin-bar-blur-intensity">
+										Blur Intensity (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-bar-blur-intensity" name="visual_effects[admin_bar][blur_intensity]" value="20" min="0" max="50" step="1" style="">
+									<span class="mase-range-value">20px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-floating">
+										Floating Effect									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="admin-bar-floating" name="visual_effects[admin_bar][floating]" value="1" role="switch" aria-checked="false" aria-describedby="admin-bar-floating-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="admin-bar-floating-desc">Add margin to create floating appearance.</p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-floating" style="display: none;">
+								<div class="mase-setting-label">
+									<label for="admin-bar-floating-margin">
+										Floating Margin (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-bar-floating-margin" name="visual_effects[admin_bar][floating_margin]" value="8" min="0" max="20" step="1" style="">
+									<span class="mase-range-value">8px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius">
+										Border Radius (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-bar-border-radius" name="visual_effects[admin_bar][border_radius]" value="0" min="0" max="20" step="1" style="">
+									<span class="mase-range-value">0px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-shadow">
+										Shadow Preset									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-shadow" name="visual_effects[admin_bar][shadow]">
+										<option value="none" selected="selected">None</option>
+										<option value="flat">Flat</option>
+										<option value="subtle">Subtle</option>
+										<option value="elevated">Elevated</option>
+										<option value="floating">Floating</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div><!-- #tab-admin-bar -->
+
+
+			<!-- ============================================ -->
+			<!-- MENU TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-menu" data-tab-content="menu" role="tabpanel" aria-labelledby="tab-button-menu" tabindex="0">
+				
+				<!-- Menu Colors -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Menu Colors</h2>
+						<p class="description">Customize the colors of the admin menu.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-bg-color">
+										Background Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(2, 132, 199);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-menu-bg-color" name="admin_menu[bg_color]" class="mase-color-picker wp-color-picker" value="#0284C7" data-default-color="#23282d" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 101.181px; top: 40.0675px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 0, 0), rgb(255, 128, 0), rgb(255, 255, 0), rgb(128, 255, 0), rgb(0, 255, 0), rgb(0, 255, 128), rgb(0, 255, 255), rgb(0, 128, 255), rgb(0, 0, 255), rgb(128, 0, 255), rgb(255, 0, 255), rgb(255, 0, 128), rgb(255, 0, 0));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 133, 199), rgb(199, 199, 199));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 99%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-text-color">
+										Text Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(255, 255, 255);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-menu-text-color" name="admin_menu[text_color]" class="mase-color-picker wp-color-picker" value="#ffffff" data-default-color="#ffffff" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 0px; top: 0px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(255, 0, 0), rgb(255, 255, 255));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 0%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-hover-bg-color">
+										Hover Background Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(14, 165, 233);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-menu-hover-bg-color" name="admin_menu[hover_bg_color]" class="mase-color-picker wp-color-picker" value="#0EA5E9" data-default-color="#0073aa" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 100.675px; top: 16.3912px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 15, 15), rgb(255, 135, 15), rgb(255, 255, 15), rgb(135, 255, 15), rgb(15, 255, 15), rgb(15, 255, 135), rgb(15, 255, 255), rgb(15, 135, 255), rgb(15, 15, 255), rgb(135, 15, 255), rgb(255, 15, 255), rgb(255, 15, 135), rgb(255, 15, 15));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 157, 230), rgb(232, 232, 232));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 94%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-hover-text-color">
+										Hover Text Color									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(224, 242, 254);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="admin-menu-hover-text-color" name="admin_menu[hover_text_color]" class="mase-color-picker wp-color-picker" value="#E0F2FE" data-default-color="#ffffff" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 103.204px; top: 0px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 224, 224), rgb(255, 240, 224), rgb(255, 255, 224), rgb(240, 255, 224), rgb(224, 255, 224), rgb(224, 255, 240), rgb(224, 255, 255), rgb(224, 240, 255), rgb(224, 224, 255), rgb(240, 224, 255), rgb(255, 224, 255), rgb(255, 224, 240), rgb(255, 224, 224));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 153, 255), rgb(255, 255, 255));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 12%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-width">
+										Width (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="number" id="admin-menu-width" name="admin_menu[width]" class="small-text" value="160" min="160" max="400" step="1" style="">
+									<p class="description">Default: 160px. Range: 160-400px.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Menu Typography -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Menu Typography</h2>
+						<p class="description">Customize the typography of the admin menu.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-font-size">
+										Font Size (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="number" id="admin-menu-font-size" name="typography[admin_menu][font_size]" class="small-text" value="13" min="10" max="24" step="1" style="">
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-font-weight">
+										Font Weight									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-font-weight" name="typography[admin_menu][font_weight]">
+										<option value="300">300 (Light)</option>
+										<option value="400" selected="selected">400 (Normal)</option>
+										<option value="500">500 (Medium)</option>
+										<option value="600">600 (Semi-Bold)</option>
+										<option value="700">700 (Bold)</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-line-height">
+										Line Height									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-menu-line-height" name="typography[admin_menu][line_height]" value="1.5" min="1.0" max="2.0" step="0.1" style="">
+									<span class="mase-range-value">1.5</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Menu Visual Effects -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2>Menu Visual Effects</h2>
+						<p class="description">Apply modern visual effects to the admin menu.</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-glassmorphism">
+										Glassmorphism									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="admin-menu-glassmorphism" name="visual_effects[admin_menu][glassmorphism]" value="1" role="switch" aria-checked="false" aria-describedby="admin-menu-glassmorphism-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="admin-menu-glassmorphism-desc">Apply frosted glass effect with backdrop blur.</p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-glassmorphism" style="display: none;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-blur-intensity">
+										Blur Intensity (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-menu-blur-intensity" name="visual_effects[admin_menu][blur_intensity]" value="20" min="0" max="50" step="1" style="">
+									<span class="mase-range-value">20px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-border-radius">
+										Border Radius (px)									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input type="range" id="admin-menu-border-radius" name="visual_effects[admin_menu][border_radius]" value="0" min="0" max="20" step="1" style="">
+									<span class="mase-range-value">0px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-shadow">
+										Shadow Preset									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-shadow" name="visual_effects[admin_menu][shadow]">
+										<option value="none" selected="selected">None</option>
+										<option value="flat">Flat</option>
+										<option value="subtle">Subtle</option>
+										<option value="elevated">Elevated</option>
+										<option value="floating">Floating</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div><!-- #tab-menu -->
+
+
+			<!-- ============================================ -->
+			<!-- CONTENT TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-content" data-tab-content="content" role="tabpanel" aria-labelledby="tab-button-content" tabindex="0">
+				
+				<!-- Content Background -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Content Background</h2>
+						<p class="description">Customize the background of the content area.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="content-bg-color">
+										Background Color									</label>
+								</th>
+								<td>
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(240, 240, 241);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="content-bg-color" name="content[bg_color]" class="mase-color-picker wp-color-picker" value="#f0f0f1" data-default-color="#f0f0f1" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 121.417px; top: 9.10625px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255), rgb(255, 255, 255));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 0, 240), rgb(242, 242, 242));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 0%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="content-text-color">
+										Text Color									</label>
+								</th>
+								<td>
+									<div class="wp-picker-container"><button type="button" class="button wp-color-result" aria-expanded="false" style="background-color: rgb(29, 35, 39);"><span class="wp-color-result-text">Select Color</span></button><span class="wp-picker-input-wrap hidden"><label><span class="screen-reader-text">Color value</span><input type="text" id="content-text-color" name="content[text_color]" class="mase-color-picker wp-color-picker" value="#1d2327" data-default-color="#1d2327" style=""></label><input type="button" class="button button-small wp-picker-default" value="Default" aria-label="Select default color" style=""></span><div class="wp-picker-holder"><div class="iris-picker iris-border" style="display: none; width: 255px; height: 202.125px; padding-bottom: 23.2209px;"><div class="iris-picker-inner"><div class="iris-square" style="width: 182.125px; height: 182.125px;"><a class="iris-square-value ui-draggable ui-draggable-handle" href="#" style="left: 103.204px; top: 154.806px;"><span class="iris-square-handle ui-slider-handle"></span></a><div class="iris-square-inner iris-square-horiz" style="background-image: -webkit-linear-gradient(left, rgb(255, 189, 189), rgb(255, 222, 189), rgb(255, 255, 189), rgb(222, 255, 189), rgb(189, 255, 189), rgb(189, 255, 222), rgb(189, 255, 255), rgb(189, 222, 255), rgb(189, 189, 255), rgb(222, 189, 255), rgb(255, 189, 255), rgb(255, 189, 222), rgb(255, 189, 189));"></div><div class="iris-square-inner iris-square-vert" style="background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgb(0, 0, 0));"></div></div><div class="iris-slider iris-strip" style="height: 205.346px; width: 28.2px; background-image: -webkit-linear-gradient(top, rgb(0, 21, 36), rgb(38, 38, 38));"><div class="iris-slider-offset ui-slider ui-corner-all ui-slider-vertical ui-widget ui-widget-content"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="bottom: 26%;"></span></div></div></div><div class="iris-palette-container"><a class="iris-palette" tabindex="0" style="background-color: rgb(0, 0, 0); height: 19.5784px; width: 19.5784px; margin-left: 0px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(255, 255, 255); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 51, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(221, 153, 51); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(238, 238, 34); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(129, 215, 66); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(30, 115, 190); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a><a class="iris-palette" tabindex="0" style="background-color: rgb(130, 36, 227); height: 19.5784px; width: 19.5784px; margin-left: 3.6425px;"></a></div></div></div></div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Content Spacing -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Content Spacing</h2>
+						<p class="description">Adjust padding and margins for the content area.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="content-padding">
+										Padding (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="content-padding" name="content[padding]" value="20" min="0" max="100" step="5" style="">
+									<span class="mase-range-value">20px</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="content-margin">
+										Margin (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="content-margin" name="content[margin]" value="20" min="0" max="100" step="5" style="">
+									<span class="mase-range-value">20px</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Content Layout -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Content Layout</h2>
+						<p class="description">Control the layout and width of the content area.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="content-max-width">
+										Max Width (px)									</label>
+								</th>
+								<td>
+									<input type="number" id="content-max-width" name="content[max_width]" class="regular-text" value="0" min="0" max="2000" step="10" style="">
+									<p class="description">Set to 0 for no limit. Recommended: 1200-1600px for better readability.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="content-border-radius">
+										Border Radius (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="content-border-radius" name="content[border_radius]" value="0" min="0" max="20" step="1" style="">
+									<span class="mase-range-value">0px</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div><!-- #tab-content -->
+
+			<!-- ============================================ -->
+			<!-- TYPOGRAPHY TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-typography" data-tab-content="typography" role="tabpanel" aria-labelledby="tab-button-typography" tabindex="0">
+				
+				<!-- Global Typography -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Global Typography Settings</h2>
+						<p class="description">Typography settings that apply across all areas.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="typography-font-family">
+										Font Family									</label>
+								</th>
+								<td>
+									<select id="typography-font-family" name="typography[font_family]">
+										<option value="system" selected="selected">System Default</option>
+										<option value="inter">Inter</option>
+										<option value="roboto">Roboto</option>
+										<option value="open-sans">Open Sans</option>
+										<option value="lato">Lato</option>
+										<option value="montserrat">Montserrat</option>
+									</select>
+									<p class="description">Google Fonts will be loaded automatically.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typography-enable-google-fonts">
+										Enable Google Fonts									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="typography-enable-google-fonts" name="typography[enabled]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="typography-enable-google-fonts-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="typography-enable-google-fonts-desc">Load fonts from Google Fonts CDN.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Admin Bar Typography (Detailed) -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h3>Admin Bar Typography</h3>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-bar-font-size">
+										Font Size (px)									</label>
+								</th>
+								<td>
+									<input type="number" id="typo-admin-bar-font-size" name="typography[admin_bar][font_size]" class="small-text" value="13" min="10" max="24" step="1" style="">
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-bar-font-weight">
+										Font Weight									</label>
+								</th>
+								<td>
+									<select id="typo-admin-bar-font-weight" name="typography[admin_bar][font_weight]">
+										<option value="300">300 (Light)</option>
+										<option value="400" selected="selected">400 (Normal)</option>
+										<option value="500">500 (Medium)</option>
+										<option value="600">600 (Semi-Bold)</option>
+										<option value="700">700 (Bold)</option>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-bar-line-height">
+										Line Height									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-admin-bar-line-height" name="typography[admin_bar][line_height]" value="1.5" min="1.0" max="2.0" step="0.1" style="">
+									<span class="mase-range-value">1.5</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-bar-letter-spacing">
+										Letter Spacing (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-admin-bar-letter-spacing" name="typography[admin_bar][letter_spacing]" value="0" min="-2" max="5" step="0.5" style="">
+									<span class="mase-range-value">0px</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-bar-text-transform">
+										Text Transform									</label>
+								</th>
+								<td>
+									<select id="typo-admin-bar-text-transform" name="typography[admin_bar][text_transform]">
+										<option value="none" selected="selected">None</option>
+										<option value="uppercase">Uppercase</option>
+										<option value="lowercase">Lowercase</option>
+										<option value="capitalize">Capitalize</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Admin Menu Typography (Detailed) -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h3>Admin Menu Typography</h3>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-menu-font-size">
+										Font Size (px)									</label>
+								</th>
+								<td>
+									<input type="number" id="typo-admin-menu-font-size" name="typography[admin_menu][font_size]" class="small-text" value="13" min="10" max="24" step="1" style="">
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-menu-font-weight">
+										Font Weight									</label>
+								</th>
+								<td>
+									<select id="typo-admin-menu-font-weight" name="typography[admin_menu][font_weight]">
+										<option value="300">300 (Light)</option>
+										<option value="400" selected="selected">400 (Normal)</option>
+										<option value="500">500 (Medium)</option>
+										<option value="600">600 (Semi-Bold)</option>
+										<option value="700">700 (Bold)</option>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-menu-line-height">
+										Line Height									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-admin-menu-line-height" name="typography[admin_menu][line_height]" value="1.5" min="1.0" max="2.0" step="0.1" style="">
+									<span class="mase-range-value">1.5</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-menu-letter-spacing">
+										Letter Spacing (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-admin-menu-letter-spacing" name="typography[admin_menu][letter_spacing]" value="0" min="-2" max="5" step="0.5" style="">
+									<span class="mase-range-value">0px</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-admin-menu-text-transform">
+										Text Transform									</label>
+								</th>
+								<td>
+									<select id="typo-admin-menu-text-transform" name="typography[admin_menu][text_transform]">
+										<option value="none" selected="selected">None</option>
+										<option value="uppercase">Uppercase</option>
+										<option value="lowercase">Lowercase</option>
+										<option value="capitalize">Capitalize</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Content Typography (Detailed) -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h3>Content Typography</h3>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="typo-content-font-size">
+										Font Size (px)									</label>
+								</th>
+								<td>
+									<input type="number" id="typo-content-font-size" name="typography[content][font_size]" class="small-text" value="13" min="10" max="24" step="1" style="">
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-content-font-weight">
+										Font Weight									</label>
+								</th>
+								<td>
+									<select id="typo-content-font-weight" name="typography[content][font_weight]">
+										<option value="300">300 (Light)</option>
+										<option value="400" selected="selected">400 (Normal)</option>
+										<option value="500">500 (Medium)</option>
+										<option value="600">600 (Semi-Bold)</option>
+										<option value="700">700 (Bold)</option>
+									</select>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-content-line-height">
+										Line Height									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-content-line-height" name="typography[content][line_height]" value="1.6" min="1.0" max="2.0" step="0.1" style="">
+									<span class="mase-range-value">1.6</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-content-letter-spacing">
+										Letter Spacing (px)									</label>
+								</th>
+								<td>
+									<input type="range" id="typo-content-letter-spacing" name="typography[content][letter_spacing]" value="0" min="-2" max="5" step="0.5" style="">
+									<span class="mase-range-value">0px</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="typo-content-text-transform">
+										Text Transform									</label>
+								</th>
+								<td>
+									<select id="typo-content-text-transform" name="typography[content][text_transform]">
+										<option value="none" selected="selected">None</option>
+										<option value="uppercase">Uppercase</option>
+										<option value="lowercase">Lowercase</option>
+										<option value="capitalize">Capitalize</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div><!-- #tab-typography -->
+
+
+			<!-- ============================================ -->
+			<!-- EFFECTS TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-effects" data-tab-content="effects" role="tabpanel" aria-labelledby="tab-button-effects" tabindex="0">
+				
+				<!-- Animation Settings -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Animation Settings</h2>
+						<p class="description">Control page transitions and animations.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="effects-page-animations">
+										Page Animations									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-page-animations" name="effects[page_animations]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="effects-page-animations-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-page-animations-desc">Enable smooth page transitions.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="effects-animation-speed">
+										Animation Speed (ms)									</label>
+								</th>
+								<td>
+									<input type="range" id="effects-animation-speed" name="effects[animation_speed]" value="300" min="100" max="1000" step="50" style="">
+									<span class="mase-range-value">300ms</span>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="effects-microanimations">
+										Micro-animations									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-microanimations" name="visual_effects[microanimations_enabled]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="effects-microanimations-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-microanimations-desc">Enable subtle animations on buttons and interactive elements.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Hover Effects -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Hover Effects</h2>
+						<p class="description">Customize hover interactions.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="effects-hover-effects">
+										Enable Hover Effects									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-hover-effects" name="effects[hover_effects]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="effects-hover-effects-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-hover-effects-desc">Enable hover effects on menu items and buttons.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Advanced Visual Effects -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Advanced Visual Effects</h2>
+						<p class="description">Experimental effects that may impact performance.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="effects-particle-system">
+										Particle System									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-particle-system" name="visual_effects[particle_system]" value="1" role="switch" aria-checked="false" aria-describedby="effects-particle-system-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-particle-system-desc">Add animated particles to the background (may impact performance).</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="effects-3d-effects">
+										3D Effects									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-3d-effects" name="visual_effects[3d_effects]" value="1" role="switch" aria-checked="false" aria-describedby="effects-3d-effects-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-3d-effects-desc">Enable 3D transforms and perspective effects.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="effects-sound-effects">
+										Sound Effects									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-sound-effects" name="visual_effects[sound_effects]" value="1" role="switch" aria-checked="false" aria-describedby="effects-sound-effects-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-sound-effects-desc">Play subtle sound effects on interactions.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Performance Mode -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Performance Mode</h2>
+						<p class="description">Optimize for performance by disabling resource-intensive effects.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="effects-performance-mode">
+										Enable Performance Mode									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-performance-mode" name="effects[performance_mode]" value="1" role="switch" aria-checked="false" aria-describedby="effects-performance-mode-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-performance-mode-desc">Disable all animations and effects for maximum performance.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="effects-focus-mode">
+										Focus Mode									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="effects-focus-mode" name="effects[focus_mode]" value="1" role="switch" aria-checked="false" aria-describedby="effects-focus-mode-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="effects-focus-mode-desc">Hide distractions and focus on content.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div><!-- #tab-effects -->
+
+			<!-- ============================================ -->
+			<!-- TEMPLATES TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-templates" data-tab-content="templates" role="tabpanel" aria-labelledby="tab-button-templates" tabindex="0">
+				
+				<!-- Full Template Gallery -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Template Gallery</h2>
+						<p class="description">Browse and apply complete design templates. Each template includes colors, typography, and visual effects.</p>
+					</div>
+					
+					<div class="mase-template-gallery">
+													<div class="mase-template-card active" data-template="default" data-template-id="default" role="article" aria-label="WordPress Default">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="WordPress Default">
+																												<span class="mase-active-badge">Active</span>
+																	</div>
+								<div class="mase-template-details">
+									<h3>WordPress Default</h3>
+									<p class="description">Classic WordPress admin styling with no modifications</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="default">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="default">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="modern-minimal" data-template-id="modern-minimal" role="article" aria-label="Modern Minimal">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Modern Minimal">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Modern Minimal</h3>
+									<p class="description">Clean and minimal design with subtle effects</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="modern-minimal">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="modern-minimal">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="glassmorphic" data-template-id="glassmorphic" role="article" aria-label="Glassmorphic">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Glassmorphic">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Glassmorphic</h3>
+									<p class="description">Modern glass effect with blur and transparency</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="glassmorphic">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="glassmorphic">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="dark-mode" data-template-id="dark-mode" role="article" aria-label="Dark Mode">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Dark Mode">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Dark Mode</h3>
+									<p class="description">Elegant dark theme for reduced eye strain</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="dark-mode">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="dark-mode">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="creative-studio" data-template-id="creative-studio" role="article" aria-label="Creative Studio">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Creative Studio">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Creative Studio</h3>
+									<p class="description">Vibrant and creative design for artistic workflows</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="creative-studio">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="creative-studio">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="corporate-pro" data-template-id="corporate-pro" role="article" aria-label="Corporate Pro">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Corporate Pro">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Corporate Pro</h3>
+									<p class="description">Professional corporate design with clean lines</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="corporate-pro">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="corporate-pro">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="nature-inspired" data-template-id="nature-inspired" role="article" aria-label="Nature Inspired">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Nature Inspired">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Nature Inspired</h3>
+									<p class="description">Calming green tones inspired by nature</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="nature-inspired">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="nature-inspired">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="sunset-vibes" data-template-id="sunset-vibes" role="article" aria-label="Sunset Vibes">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Sunset Vibes">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Sunset Vibes</h3>
+									<p class="description">Warm sunset colors for evening work sessions</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="sunset-vibes">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="sunset-vibes">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="ocean-depth" data-template-id="ocean-depth" role="article" aria-label="Ocean Depth">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Ocean Depth">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Ocean Depth</h3>
+									<p class="description">Cool ocean blues for a refreshing workspace</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="ocean-depth">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="ocean-depth">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="elegant-rose" data-template-id="elegant-rose" role="article" aria-label="Elegant Rose">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Elegant Rose">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Elegant Rose</h3>
+									<p class="description">Sophisticated rose tones for a refined look</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="elegant-rose">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="elegant-rose">
+										Apply									</button>
+																	</div>
+							</div>
+													<div class="mase-template-card " data-template="golden-luxury" data-template-id="golden-luxury" role="article" aria-label="Golden Luxury">
+								<div class="mase-template-thumbnail">
+																			<img src="" alt="Golden Luxury">
+																										</div>
+								<div class="mase-template-details">
+									<h3>Golden Luxury</h3>
+									<p class="description">Luxurious golden tones for premium feel</p>
+																	</div>
+								<div class="mase-template-actions">
+									<button type="button" class="button button-secondary mase-template-preview-btn" data-template-id="golden-luxury">
+										Preview									</button>
+									<button type="button" class="button button-primary mase-template-apply-btn" data-template-id="golden-luxury">
+										Apply									</button>
+																	</div>
+							</div>
+											</div>
+				</div>
+
+				<!-- Save Custom Template -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Save Custom Template</h2>
+						<p class="description">Save your current settings as a custom template for future use.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="custom-template-name">
+										Template Name									</label>
+								</th>
+								<td>
+									<input type="text" id="custom-template-name" class="regular-text" placeholder="My Custom Template" style="">
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="custom-template-description">
+										Description									</label>
+								</th>
+								<td>
+									<textarea id="custom-template-description" class="large-text" rows="3" placeholder="Describe your template..." style=""></textarea>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row"></th>
+								<td>
+									<button type="button" id="mase-save-custom-template" class="button button-primary">
+										Save as Template									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div><!-- #tab-templates -->
+
+			<!-- ============================================ -->
+			<!-- ADVANCED TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-advanced" data-tab-content="advanced" role="tabpanel" aria-labelledby="tab-button-advanced" tabindex="0">
+				
+				<!-- Custom CSS -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Custom CSS</h2>
+						<p class="description">Add custom CSS to further customize your admin interface.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="advanced-custom-css">
+										Custom CSS Code									</label>
+								</th>
+								<td>
+									<textarea id="advanced-custom-css" name="advanced[custom_css]" class="large-text code" rows="10" placeholder="/* Add your custom CSS here */" style=""></textarea>
+									<p class="description">CSS will be sanitized and appended to generated styles.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Custom JavaScript -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Custom JavaScript</h2>
+						<p class="description">Add custom JavaScript for advanced functionality.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="advanced-custom-js">
+										Custom JavaScript Code									</label>
+								</th>
+								<td>
+									<textarea id="advanced-custom-js" name="advanced[custom_js]" class="large-text code" rows="10" placeholder="// Add your custom JavaScript here" style=""></textarea>
+									<p class="description">
+										<strong>Warning:</strong> 
+										Custom JavaScript can break your admin interface. Use with caution.									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Auto Palette Switching -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Auto Palette Switching</h2>
+						<p class="description">Automatically switch color palettes based on time of day.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="advanced-auto-palette-switch">
+										Enable Auto Switching									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="advanced-auto-palette-switch" name="advanced[auto_palette_switch]" value="1" role="switch" aria-checked="false" aria-describedby="advanced-auto-palette-switch-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="advanced-auto-palette-switch-desc">Automatically change palettes based on time of day.</p>
+								</td>
+							</tr>
+							
+							<tr class="mase-conditional" data-depends-on="advanced-auto-palette-switch" style="display: none;">
+								<th scope="row">
+									<label for="auto-palette-morning">
+										Morning (6:00-11:59)									</label>
+								</th>
+								<td>
+									<select id="auto-palette-morning" name="advanced[auto_palette_times][morning]">
+																					<option value="professional-blue" selected="selected">
+												Professional Blue											</option>
+																					<option value="creative-purple">
+												Creative Purple											</option>
+																					<option value="energetic-green">
+												Energetic Green											</option>
+																					<option value="sunset">
+												Sunset											</option>
+																					<option value="dark-elegance">
+												Dark Elegance											</option>
+																					<option value="ocean-breeze">
+												Ocean Breeze											</option>
+																					<option value="rose-garden">
+												Rose Garden											</option>
+																					<option value="forest-calm">
+												Forest Calm											</option>
+																					<option value="midnight-blue">
+												Midnight Blue											</option>
+																					<option value="golden-hour">
+												Golden Hour											</option>
+																			</select>
+								</td>
+							</tr>
+							
+							<tr class="mase-conditional" data-depends-on="advanced-auto-palette-switch" style="display: none;">
+								<th scope="row">
+									<label for="auto-palette-afternoon">
+										Afternoon (12:00-17:59)									</label>
+								</th>
+								<td>
+									<select id="auto-palette-afternoon" name="advanced[auto_palette_times][afternoon]">
+																					<option value="professional-blue">
+												Professional Blue											</option>
+																					<option value="creative-purple">
+												Creative Purple											</option>
+																					<option value="energetic-green" selected="selected">
+												Energetic Green											</option>
+																					<option value="sunset">
+												Sunset											</option>
+																					<option value="dark-elegance">
+												Dark Elegance											</option>
+																					<option value="ocean-breeze">
+												Ocean Breeze											</option>
+																					<option value="rose-garden">
+												Rose Garden											</option>
+																					<option value="forest-calm">
+												Forest Calm											</option>
+																					<option value="midnight-blue">
+												Midnight Blue											</option>
+																					<option value="golden-hour">
+												Golden Hour											</option>
+																			</select>
+								</td>
+							</tr>
+							
+							<tr class="mase-conditional" data-depends-on="advanced-auto-palette-switch" style="display: none;">
+								<th scope="row">
+									<label for="auto-palette-evening">
+										Evening (18:00-21:59)									</label>
+								</th>
+								<td>
+									<select id="auto-palette-evening" name="advanced[auto_palette_times][evening]">
+																					<option value="professional-blue">
+												Professional Blue											</option>
+																					<option value="creative-purple">
+												Creative Purple											</option>
+																					<option value="energetic-green">
+												Energetic Green											</option>
+																					<option value="sunset" selected="selected">
+												Sunset											</option>
+																					<option value="dark-elegance">
+												Dark Elegance											</option>
+																					<option value="ocean-breeze">
+												Ocean Breeze											</option>
+																					<option value="rose-garden">
+												Rose Garden											</option>
+																					<option value="forest-calm">
+												Forest Calm											</option>
+																					<option value="midnight-blue">
+												Midnight Blue											</option>
+																					<option value="golden-hour">
+												Golden Hour											</option>
+																			</select>
+								</td>
+							</tr>
+							
+							<tr class="mase-conditional" data-depends-on="advanced-auto-palette-switch" style="display: none;">
+								<th scope="row">
+									<label for="auto-palette-night">
+										Night (22:00-5:59)									</label>
+								</th>
+								<td>
+									<select id="auto-palette-night" name="advanced[auto_palette_times][night]">
+																					<option value="professional-blue">
+												Professional Blue											</option>
+																					<option value="creative-purple">
+												Creative Purple											</option>
+																					<option value="energetic-green">
+												Energetic Green											</option>
+																					<option value="sunset">
+												Sunset											</option>
+																					<option value="dark-elegance" selected="selected">
+												Dark Elegance											</option>
+																					<option value="ocean-breeze">
+												Ocean Breeze											</option>
+																					<option value="rose-garden">
+												Rose Garden											</option>
+																					<option value="forest-calm">
+												Forest Calm											</option>
+																					<option value="midnight-blue">
+												Midnight Blue											</option>
+																					<option value="golden-hour">
+												Golden Hour											</option>
+																			</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Backup Controls -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Backup &amp; Restore</h2>
+						<p class="description">Manage backups of your settings.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									<label for="advanced-backup-enabled">
+										Enable Automatic Backups									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="advanced-backup-enabled" name="advanced[backup_enabled]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="advanced-backup-enabled-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="advanced-backup-enabled-desc">Automatically create backups before major changes.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									<label for="advanced-backup-before-changes">
+										Backup Before Changes									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input type="checkbox" id="advanced-backup-before-changes" name="advanced[backup_before_changes]" value="1" checked="checked" role="switch" aria-checked="true" aria-describedby="advanced-backup-before-changes-desc" style="">
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="advanced-backup-before-changes-desc">Create backup before applying templates or importing settings.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									Manual Backup								</th>
+								<td>
+									<button type="button" id="mase-create-backup" class="button button-secondary">
+										<span class="dashicons dashicons-backup"></span>
+										Create Backup Now									</button>
+									<p class="description">Manually create a backup of current settings.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									Restore Backup								</th>
+								<td>
+									<select id="mase-backup-list" class="regular-text">
+										<option value="">Select a backup...</option>
+										<!-- Backups will be populated via AJAX -->
+									<option value="backup_20251018183720">18.10.2025, 20:37:20 (manual)</option><option value="backup_20251018183520">18.10.2025, 20:35:20 (manual)</option><option value="backup_20251018183459">18.10.2025, 20:34:59 (manual)</option><option value="backup_20251018183448">18.10.2025, 20:34:48 (manual)</option><option value="backup_20251018182527">18.10.2025, 20:25:27 (manual)</option><option value="backup_20251018165908">18.10.2025, 18:59:08 (manual)</option><option value="backup_20251018165907">18.10.2025, 18:59:07 (manual)</option><option value="backup_20251018153314">18.10.2025, 17:33:14 (manual)</option><option value="backup_20251018125435">18.10.2025, 14:54:35 (manual)</option><option value="backup_20251018115738">18.10.2025, 13:57:38 (manual)</option></select>
+									<button type="button" id="mase-restore-backup" class="button button-secondary" disabled="">
+										<span class="dashicons dashicons-update"></span>
+										Restore									</button>
+									<p class="description">Restore settings from a previous backup.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Import/Export -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2>Import / Export</h2>
+						<p class="description">Transfer settings between sites.</p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<tr>
+								<th scope="row">
+									Export Settings								</th>
+								<td>
+									<button type="button" id="mase-export-settings" class="button button-secondary">
+										<span class="dashicons dashicons-download"></span>
+										Export to JSON									</button>
+									<p class="description">Download all settings as a JSON file.</p>
+								</td>
+							</tr>
+							
+							<tr>
+								<th scope="row">
+									Import Settings								</th>
+								<td>
+									<input type="file" id="mase-import-file" accept=".json" style="display: none;">
+									<button type="button" id="mase-import-settings" class="button button-secondary">
+										<span class="dashicons dashicons-upload"></span>
+										Import from JSON									</button>
+									<p class="description">Import settings from a JSON file. This will overwrite current settings.</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
+			</div><!-- #tab-advanced -->
+			
+		</div><!-- .mase-tab-content-wrapper -->
+		
+	</form><!-- #mase-settings-form -->
+	
+	<!-- Notices Container -->
+	<div id="mase-notices-container"></div>
+	
+</div><!-- .wrap -->
+
+<div class="clear"></div></div><!-- wpbody-content -->
+<div class="clear"></div></div><!-- wpbody -->
+<div class="clear"></div></div><!-- wpcontent -->
+
+<div id="wpfooter" role="contentinfo">
+		<p id="footer-left" class="alignleft">
+		<span id="footer-thankyou">Thank you for creating with <a href="https://wordpress.org/">WordPress</a>.</span>	</p>
+	<p id="footer-upgrade" class="alignright">
+		Version 6.8.2	</p>
+	<div class="clear"></div>
+</div>
+	<div id="wp-auth-check-wrap" class="hidden">
+	<div id="wp-auth-check-bg"></div>
+	<div id="wp-auth-check">
+	<button type="button" class="wp-auth-check-close button-link"><span class="screen-reader-text">
+		Close dialog	</span></button>
+			<div id="wp-auth-check-form" class="loading" data-src="https://localhost/wp-login.php?interim-login=1&amp;wp_lang=en_US"></div>
+			<div class="wp-auth-fallback">
+		<p><b class="wp-auth-fallback-expired" tabindex="0">Session expired</b></p>
+		<p><a href="https://localhost/wp-login.php" target="_blank">Please log in again.</a>
+		The login page will open in a new tab. After logging in you can close it and return to this page.</p>
+	</div>
+	</div>
+	</div>
+	<script src="https://localhost/wp-admin/load-scripts.php?c=1&amp;load%5Bchunk_0%5D=hoverIntent,wp-dom-ready,wp-hooks&amp;ver=6.8.2"></script>
+<script src="https://localhost/wp-includes/js/dist/i18n.min.js?ver=5e580eb46a90c2b997e6" id="wp-i18n-js"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+</script>
+<script src="https://localhost/wp-includes/js/dist/a11y.min.js?ver=3156534cc54473497e14" id="wp-a11y-js"></script>
+<script id="common-js-extra">
+var bulkActionObserverIds = {"bulk_action":"action","changeit":"new_role"};
+</script>
+<script src="https://localhost/wp-admin/js/common.min.js?ver=6.8.2" id="common-js"></script>
+<script src="https://localhost/wp-includes/js/hoverintent-js.min.js?ver=2.2.1" id="hoverintent-js-js"></script>
+<script src="https://localhost/wp-includes/js/admin-bar.min.js?ver=6.8.2" id="admin-bar-js"></script>
+<script src="https://localhost/wp-admin/js/svg-painter.js?ver=6.8.2" id="svg-painter-js"></script>
+<script id="heartbeat-js-extra">
+var heartbeatSettings = {"nonce":"76b3f01149"};
+</script>
+<script src="https://localhost/wp-includes/js/heartbeat.min.js?ver=6.8.2" id="heartbeat-js"></script>
+<script src="https://localhost/wp-includes/js/wp-auth-check.min.js?ver=6.8.2" id="wp-auth-check-js"></script>
+<script src="https://localhost/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3" id="jquery-ui-core-js"></script>
+<script src="https://localhost/wp-includes/js/jquery/ui/mouse.min.js?ver=1.13.3" id="jquery-ui-mouse-js"></script>
+<script src="https://localhost/wp-includes/js/jquery/ui/draggable.min.js?ver=1.13.3" id="jquery-ui-draggable-js"></script>
+<script src="https://localhost/wp-includes/js/jquery/ui/slider.min.js?ver=1.13.3" id="jquery-ui-slider-js"></script>
+<script src="https://localhost/wp-includes/js/jquery/jquery.ui.touch-punch.js?ver=0.2.2" id="jquery-touch-punch-js"></script>
+<script src="https://localhost/wp-admin/js/iris.min.js?ver=1.1.1" id="iris-js"></script>
+<script src="https://localhost/wp-admin/js/color-picker.min.js?ver=6.8.2" id="wp-color-picker-js"></script>
+<script id="mase-admin-js-extra">
+var maseAdmin = {"ajaxUrl":"https:\/\/localhost\/wp-admin\/admin-ajax.php","nonce":"49613d72a5","palettes":{"professional-blue":{"id":"professional-blue","name":"Professional Blue","colors":{"primary":"#4A90E2","secondary":"#50C9C3","accent":"#7B68EE","background":"#F8FAFC","text":"#1E293B","text_secondary":"#64748B"},"admin_bar":{"bg_color":"#4A90E2","text_color":"#ffffff"},"admin_menu":{"bg_color":"#1E40AF","text_color":"#ffffff","hover_bg_color":"#3B82F6","hover_text_color":"#E0E7FF"},"is_custom":false},"creative-purple":{"id":"creative-purple","name":"Creative Purple","colors":{"primary":"#8B5CF6","secondary":"#EC4899","accent":"#F59E0B","background":"#FAF5FF","text":"#1F2937","text_secondary":"#6B7280"},"admin_bar":{"bg_color":"#8B5CF6","text_color":"#ffffff"},"admin_menu":{"bg_color":"#7C3AED","text_color":"#ffffff","hover_bg_color":"#8B5CF6","hover_text_color":"#EDE9FE"},"is_custom":false},"energetic-green":{"id":"energetic-green","name":"Energetic Green","colors":{"primary":"#10B981","secondary":"#34D399","accent":"#FBBF24","background":"#F0FDF4","text":"#064E3B","text_secondary":"#047857"},"admin_bar":{"bg_color":"#10B981","text_color":"#ffffff"},"admin_menu":{"bg_color":"#059669","text_color":"#ffffff","hover_bg_color":"#10B981","hover_text_color":"#D1FAE5"},"is_custom":false},"sunset":{"id":"sunset","name":"Sunset","colors":{"primary":"#F97316","secondary":"#FB923C","accent":"#FBBF24","background":"#FFF7ED","text":"#7C2D12","text_secondary":"#C2410C"},"admin_bar":{"bg_color":"#F97316","text_color":"#ffffff"},"admin_menu":{"bg_color":"#EA580C","text_color":"#ffffff","hover_bg_color":"#F97316","hover_text_color":"#FED7AA"},"is_custom":false},"dark-elegance":{"id":"dark-elegance","name":"Dark Elegance","colors":{"primary":"#1F2937","secondary":"#374151","accent":"#60A5FA","background":"#111827","text":"#F9FAFB","text_secondary":"#D1D5DB"},"admin_bar":{"bg_color":"#1F2937","text_color":"#F9FAFB"},"admin_menu":{"bg_color":"#111827","text_color":"#F9FAFB","hover_bg_color":"#374151","hover_text_color":"#60A5FA"},"is_custom":false},"ocean-breeze":{"id":"ocean-breeze","name":"Ocean Breeze","colors":{"primary":"#0EA5E9","secondary":"#06B6D4","accent":"#22D3EE","background":"#F0F9FF","text":"#0C4A6E","text_secondary":"#0369A1"},"admin_bar":{"bg_color":"#0EA5E9","text_color":"#ffffff"},"admin_menu":{"bg_color":"#0284C7","text_color":"#ffffff","hover_bg_color":"#0EA5E9","hover_text_color":"#E0F2FE"},"is_custom":false},"rose-garden":{"id":"rose-garden","name":"Rose Garden","colors":{"primary":"#E11D48","secondary":"#F43F5E","accent":"#FB7185","background":"#FFF1F2","text":"#881337","text_secondary":"#BE123C"},"admin_bar":{"bg_color":"#E11D48","text_color":"#ffffff"},"admin_menu":{"bg_color":"#BE123C","text_color":"#ffffff","hover_bg_color":"#E11D48","hover_text_color":"#FFE4E6"},"is_custom":false},"forest-calm":{"id":"forest-calm","name":"Forest Calm","colors":{"primary":"#16A34A","secondary":"#22C55E","accent":"#84CC16","background":"#F7FEE7","text":"#14532D","text_secondary":"#166534"},"admin_bar":{"bg_color":"#16A34A","text_color":"#ffffff"},"admin_menu":{"bg_color":"#15803D","text_color":"#ffffff","hover_bg_color":"#16A34A","hover_text_color":"#DCFCE7"},"is_custom":false},"midnight-blue":{"id":"midnight-blue","name":"Midnight Blue","colors":{"primary":"#1E3A8A","secondary":"#3B82F6","accent":"#60A5FA","background":"#EFF6FF","text":"#1E3A8A","text_secondary":"#1E40AF"},"admin_bar":{"bg_color":"#1E3A8A","text_color":"#ffffff"},"admin_menu":{"bg_color":"#1E40AF","text_color":"#ffffff","hover_bg_color":"#3B82F6","hover_text_color":"#DBEAFE"},"is_custom":false},"golden-hour":{"id":"golden-hour","name":"Golden Hour","colors":{"primary":"#D97706","secondary":"#F59E0B","accent":"#FBBF24","background":"#FFFBEB","text":"#78350F","text_secondary":"#92400E"},"admin_bar":{"bg_color":"#D97706","text_color":"#ffffff"},"admin_menu":{"bg_color":"#B45309","text_color":"#ffffff","hover_bg_color":"#D97706","hover_text_color":"#FEF3C7"},"is_custom":false}},"templates":{"default":{"id":"default","name":"WordPress Default","description":"Classic WordPress admin styling with no modifications","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzRBOTBFMiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+V29yZFByZXNzIERlZmF1bHQ8L3RleHQ+PC9zdmc+","is_custom":false,"settings":{"palettes":{"current":"professional-blue"},"typography":{"admin_bar":{"font_size":13,"font_weight":400,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"none"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"none"}}}},"modern-minimal":{"id":"modern-minimal","name":"Modern Minimal","description":"Clean and minimal design with subtle effects","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzRBOTBFMiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+TW9kZXJuIE1pbmltYWw8L3RleHQ+PC9zdmc+","is_custom":false,"settings":{"palettes":{"current":"professional-blue"},"typography":{"admin_bar":{"font_size":14,"font_weight":400,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":4,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":4,"shadow":"subtle"}}}},"glassmorphic":{"id":"glassmorphic","name":"Glassmorphic","description":"Modern glass effect with blur and transparency","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzRBOTBFMiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+R2xhc3Ntb3JwaGljPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"professional-blue"},"typography":{"admin_bar":{"font_size":14,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":true,"blur_intensity":20,"floating":true,"floating_margin":8,"border_radius":12,"shadow":"elevated"},"admin_menu":{"glassmorphism":true,"blur_intensity":15,"floating":false,"border_radius":8,"shadow":"subtle"}}}},"dark-mode":{"id":"dark-mode","name":"Dark Mode","description":"Elegant dark theme for reduced eye strain","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzFGMjkzNyIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+RGFyayBNb2RlPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"dark-elegance"},"typography":{"admin_bar":{"font_size":13,"font_weight":400,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"subtle"}}}},"creative-studio":{"id":"creative-studio","name":"Creative Studio","description":"Vibrant and creative design for artistic workflows","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzhCNUNGNiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+Q3JlYXRpdmUgU3R1ZGlvPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"creative-purple"},"typography":{"admin_bar":{"font_size":14,"font_weight":500,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":500,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":true,"floating_margin":10,"border_radius":8,"shadow":"elevated"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":6,"shadow":"subtle"}}}},"corporate-pro":{"id":"corporate-pro","name":"Corporate Pro","description":"Professional corporate design with clean lines","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzFFM0E4QSIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+Q29ycG9yYXRlIFBybzwvdGV4dD48L3N2Zz4=","is_custom":false,"settings":{"palettes":{"current":"midnight-blue"},"typography":{"admin_bar":{"font_size":13,"font_weight":500,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":0,"shadow":"none"}}}},"nature-inspired":{"id":"nature-inspired","name":"Nature Inspired","description":"Calming green tones inspired by nature","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzE2QTM0QSIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+TmF0dXJlIEluc3BpcmVkPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"forest-calm"},"typography":{"admin_bar":{"font_size":13,"font_weight":400,"line_height":1.6},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.6}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":6,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":4,"shadow":"subtle"}}}},"sunset-vibes":{"id":"sunset-vibes","name":"Sunset Vibes","description":"Warm sunset colors for evening work sessions","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iI0Y5NzMxNiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+U3Vuc2V0IFZpYmVzPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"sunset"},"typography":{"admin_bar":{"font_size":14,"font_weight":400,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":true,"floating_margin":8,"border_radius":10,"shadow":"elevated"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":6,"shadow":"subtle"}}}},"ocean-depth":{"id":"ocean-depth","name":"Ocean Depth","description":"Cool ocean blues for a refreshing workspace","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iIzBFQTVFOSIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+T2NlYW4gRGVwdGg8L3RleHQ+PC9zdmc+","is_custom":false,"settings":{"palettes":{"current":"ocean-breeze"},"typography":{"admin_bar":{"font_size":13,"font_weight":400,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":true,"blur_intensity":15,"floating":false,"border_radius":8,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":4,"shadow":"subtle"}}}},"elegant-rose":{"id":"elegant-rose","name":"Elegant Rose","description":"Sophisticated rose tones for a refined look","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iI0UxMUQ0OCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+RWxlZ2FudCBSb3NlPC90ZXh0Pjwvc3ZnPg==","is_custom":false,"settings":{"palettes":{"current":"rose-garden"},"typography":{"admin_bar":{"font_size":13,"font_weight":500,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":400,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":false,"border_radius":6,"shadow":"subtle"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":4,"shadow":"subtle"}}}},"golden-luxury":{"id":"golden-luxury","name":"Golden Luxury","description":"Luxurious golden tones for premium feel","thumbnail":"data:image\/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMzAwIDIwMCI+PHJlY3QgZmlsbD0iI0Q5NzcwNiIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIyMDAiLz48dGV4dCB4PSIxNTAiIHk9IjEwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI1MDAiIHN0eWxlPSJ0ZXh0LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwwLDAsMC4zKSI+R29sZGVuIEx1eHVyeTwvdGV4dD48L3N2Zz4=","is_custom":false,"settings":{"palettes":{"current":"golden-hour"},"typography":{"admin_bar":{"font_size":14,"font_weight":500,"line_height":1.5},"admin_menu":{"font_size":13,"font_weight":500,"line_height":1.5}},"visual_effects":{"admin_bar":{"glassmorphism":false,"floating":true,"floating_margin":10,"border_radius":8,"shadow":"elevated"},"admin_menu":{"glassmorphism":false,"floating":false,"border_radius":6,"shadow":"subtle"}}}}},"strings":{"saving":"Saving...","saved":"Settings saved successfully!","saveFailed":"Failed to save settings. Please try again.","paletteApplied":"Palette applied successfully!","paletteApplyFailed":"Failed to apply palette. Please try again.","templateApplied":"Template applied successfully!","templateApplyFailed":"Failed to apply template. Please try again.","confirmDelete":"Are you sure you want to delete this item?","exportSuccess":"Settings exported successfully!","exportFailed":"Failed to export settings. Please try again.","importSuccess":"Settings imported successfully!","importFailed":"Failed to import settings. Please try again.","invalidFile":"Invalid file format. Please select a valid JSON file.","backupCreated":"Backup created successfully!","backupRestored":"Backup restored successfully!","networkError":"Network error. Please check your connection and try again."}};
+</script>
+<script src="https://localhost/wp-content/plugins/woow-admin/includes/../assets/js/mase-admin.js?ver=1.2.0" id="mase-admin-js"></script>
+<script id="mase-admin-js-after">
+		(function() {
+			'use strict';
+			
+			// Detect device capabilities and low-power device using JavaScript APIs
+			function detectDeviceCapabilities() {
+				var isLowPower = false;
+				var capabilities = {
+					viewport_width: window.innerWidth || document.documentElement.clientWidth,
+					device_memory: navigator.deviceMemory || 0,
+					hardware_concurrency: navigator.hardwareConcurrency || 0,
+					connection_type: '',
+					save_data: false
+				};
+				
+				// Check for Save-Data header support
+				if (navigator.connection) {
+					if (navigator.connection.saveData) {
+						isLowPower = true;
+						capabilities.save_data = true;
+					}
+					if (navigator.connection.effectiveType) {
+						capabilities.connection_type = navigator.connection.effectiveType;
+					}
+				}
+				
+				// Check for reduced motion preference (often indicates low-power mode)
+				if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+					isLowPower = true;
+				}
+				
+				// Check device memory (if available)
+				if (navigator.deviceMemory && navigator.deviceMemory < 4) {
+					isLowPower = true;
+				}
+				
+				// Check hardware concurrency (CPU cores)
+				if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+					isLowPower = true;
+				}
+				
+				// Send results to server
+				jQuery.post(ajaxurl, {
+					action: 'mase_store_device_capabilities',
+					nonce: jQuery('#mase_nonce').val(),
+					is_low_power: isLowPower,
+					capabilities: capabilities
+				});
+			}
+			
+			// Run detection on page load
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', detectDeviceCapabilities);
+			} else {
+				detectDeviceCapabilities();
+			}
+		})();
+		
+</script>
+<script src="https://localhost/wp-content/plugins/woow-admin/includes/../assets/js/mase-admin-live-preview.js?ver=1.2.0" id="mase-admin-live-preview-js"></script>
+
+<div class="clear"></div></div><!-- wpwrap -->
+<script type="text/javascript">if(typeof wpOnload==='function')wpOnload();</script>
+
+
+<p id="a11y-speak-intro-text" class="a11y-speak-intro-text" style="position: absolute;margin: -1px;padding: 0;height: 1px;width: 1px;overflow: hidden;clip: rect(1px, 1px, 1px, 1px);-webkit-clip-path: inset(50%);clip-path: inset(50%);border: 0;word-wrap: normal !important;" hidden="hidden">Notifications</p><div id="a11y-speak-assertive" class="a11y-speak-region" style="position: absolute;margin: -1px;padding: 0;height: 1px;width: 1px;overflow: hidden;clip: rect(1px, 1px, 1px, 1px);-webkit-clip-path: inset(50%);clip-path: inset(50%);border: 0;word-wrap: normal !important;" aria-live="assertive" aria-relevant="additions text" aria-atomic="true"></div><div id="a11y-speak-polite" class="a11y-speak-region" style="position: absolute;margin: -1px;padding: 0;height: 1px;width: 1px;overflow: hidden;clip: rect(1px, 1px, 1px, 1px);-webkit-clip-path: inset(50%);clip-path: inset(50%);border: 0;word-wrap: normal !important;" aria-live="polite" aria-relevant="additions text" aria-atomic="true"></div></body></html>

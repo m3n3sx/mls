@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 15: Interactions & Animations Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .test-section {
+      margin-bottom: 48px;
+      padding: 24px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .test-section h2 {
+      margin-top: 0;
+      color: #0073aa;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
+    }
+    
+    .test-section h3 {
+      margin-top: 24px;
+      color: #374151;
+    }
+    
+    .test-row {
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 4px;
+    }
+    
+    .test-label {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .demo-card {
+      padding: 24px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .toggle-demo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .slider-demo {
+      width: 300px;
+    }
+    
+    .color-picker-demo {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .input-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 300px;
+    }
+    
+    .tab-demo {
+      display: flex;
+      gap: 8px;
+      padding: 8px;
+      background: #f3f4f6;
+      border-radius: 8px;
+    }
+    
+    .loading-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-start;
+    }
+    
+    .toast-trigger-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .instructions {
+      background: #e5f5fa;
+      padding: 16px;
+      border-radius: 4px;
+      border-left: 4px solid #0073aa;
+      margin-bottom: 24px;
+    }
+    
+    .instructions strong {
+      color: #0073aa;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task 15: Interactions & Animations Test</h1>
+  
+  <div class="instructions">
+    <strong>Test Instructions:</strong> This page tests all interaction and animation styles including hover states, focus states, loading animations, and toast notifications. Use keyboard (Tab key) to test focus states, and hover over elements to test hover effects.
+  </div>
+
+  <!-- 15.1 Hover States -->
+  <div class="test-section">
+    <h2>15.1 Hover States</h2>
+    
+    <h3>Button Hover Effects</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over buttons to see lift effect and color change</div>
+      <div class="button-row">
+        <button class="mase-btn mase-btn-primary">Primary Button</button>
+        <button class="mase-btn mase-btn-secondary">Secondary Button</button>
+        <button class="mase-btn mase-btn-primary" disabled>Disabled (No Hover)</button>
+      </div>
+    </div>
+    
+    <h3>Card Hover Effects</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over the card to see lift and shadow increase</div>
+      <div class="demo-card mase-card-interactive" style="max-width: 400px; cursor: pointer;">
+        <h4 style="margin-top: 0;">Interactive Card</h4>
+        <p style="margin: 0;">This card lifts and increases shadow on hover.</p>
+      </div>
+    </div>
+    
+    <h3>Toggle Switch Hover</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over toggle to see shadow effect</div>
+      <div class="toggle-demo">
+        <label class="mase-toggle">
+          <input type="checkbox" class="mase-toggle-input">
+          <span class="mase-toggle-slider"></span>
+        </label>
+        <span>Toggle Switch</span>
+      </div>
+    </div>
+    
+    <h3>Slider Hover</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over slider thumb to see size increase</div>
+      <div class="slider-demo">
+        <input type="range" class="mase-slider" min="0" max="100" value="50">
+      </div>
+    </div>
+    
+    <h3>Color Picker Hover</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over color swatch to see lift and shadow</div>
+      <div class="color-picker-demo">
+        <div class="mase-color-picker">
+          <input type="color" class="mase-color-input" value="#0073aa">
+          <div class="mase-color-swatch" style="background-color: #0073aa;"></div>
+          <input type="text" class="mase-color-hex" value="#0073aa">
+        </div>
+      </div>
+    </div>
+    
+    <h3>Input Hover</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over inputs to see border color change</div>
+      <div class="input-demo">
+        <input type="text" class="mase-input" placeholder="Text input">
+        <select class="mase-select">
+          <option>Select option</option>
+          <option>Option 1</option>
+          <option>Option 2</option>
+        </select>
+      </div>
+    </div>
+    
+    <h3>Tab Hover</h3>
+    <div class="test-row">
+      <div class="test-label">Hover over inactive tabs to see background change</div>
+      <div class="tab-demo">
+        <button class="mase-tab mase-tab-active">Active Tab</button>
+        <button class="mase-tab">Inactive Tab</button>
+        <button class="mase-tab">Another Tab</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15.2 Focus States -->
+  <div class="test-section">
+    <h2>15.2 Focus States</h2>
+    
+    <div class="instructions">
+      <strong>Keyboard Test:</strong> Press Tab key to navigate through elements and see focus indicators (2px outline with 2px offset).
+    </div>
+    
+    <h3>Button Focus</h3>
+    <div class="test-row">
+      <div class="test-label">Tab to buttons to see focus outline</div>
+      <div class="button-row">
+        <button class="mase-btn mase-btn-primary">Focus Me</button>
+        <button class="mase-btn mase-btn-secondary">And Me</button>
+        <button class="mase-btn mase-btn-primary">Me Too</button>
+      </div>
+    </div>
+    
+    <h3>Toggle Focus</h3>
+    <div class="test-row">
+      <div class="test-label">Tab to toggle to see focus outline</div>
+      <div class="toggle-demo">
+        <label class="mase-toggle">
+          <input type="checkbox" class="mase-toggle-input">
+          <span class="mase-toggle-slider"></span>
+        </label>
+        <span>Focus on toggle</span>
+      </div>
+    </div>
+    
+    <h3>Input Focus</h3>
+    <div class="test-row">
+      <div class="test-label">Tab to inputs to see focus shadow and border change</div>
+      <div class="input-demo">
+        <input type="text" class="mase-input" placeholder="Focus me">
+        <select class="mase-select">
+          <option>Focus me too</option>
+        </select>
+      </div>
+    </div>
+    
+    <h3>Tab Focus</h3>
+    <div class="test-row">
+      <div class="test-label">Tab through navigation tabs</div>
+      <div class="tab-demo">
+        <button class="mase-tab">Tab 1</button>
+        <button class="mase-tab">Tab 2</button>
+        <button class="mase-tab">Tab 3</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15.3 Loading Animations -->
+  <div class="test-section">
+    <h2>15.3 Loading Animations</h2>
+    
+    <h3>Spinner Animation</h3>
+    <div class="test-row">
+      <div class="test-label">Rotating spinner (continuous animation)</div>
+      <div class="loading-demo">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="mase-spinner"></div>
+          <span>Default spinner (20px)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="mase-spinner mase-spinner-lg"></div>
+          <span>Large spinner (40px)</span>
+        </div>
+      </div>
+    </div>
+    
+    <h3>Loading Button State</h3>
+    <div class="test-row">
+      <div class="test-label">Button with loading spinner</div>
+      <div class="button-row">
+        <button class="mase-btn mase-btn-primary mase-btn-loading">
+          <span class="mase-spinner"></span>
+          Saving...
+        </button>
+        <button class="mase-btn mase-btn-secondary mase-btn-loading">
+          <span class="mase-spinner"></span>
+          Loading...
+        </button>
+      </div>
+    </div>
+    
+    <h3>Loading Overlay</h3>
+    <div class="test-row">
+      <div class="test-label">Click to show full-screen loading overlay</div>
+      <button class="mase-btn mase-btn-primary" onclick="showLoadingOverlay()">
+        Show Loading Overlay
+      </button>
+    </div>
+    
+    <h3>Inline Loading</h3>
+    <div class="test-row">
+      <div class="test-label">Inline loading indicator</div>
+      <div class="mase-loading-inline">
+        <div class="mase-spinner"></div>
+        <span>Loading data...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15.4 Toast Notifications -->
+  <div class="test-section">
+    <h2>15.4 Toast Notifications</h2>
+    
+    <div class="instructions">
+      <strong>Toast Test:</strong> Click buttons to trigger toast notifications. They will slide in from the right and auto-dismiss after 3 seconds.
+    </div>
+    
+    <h3>Toast Variants</h3>
+    <div class="test-row">
+      <div class="test-label">Click buttons to show different toast types</div>
+      <div class="toast-trigger-buttons">
+        <button class="mase-btn mase-btn-primary" onclick="showToast('success')">
+          Show Success Toast
+        </button>
+        <button class="mase-btn mase-btn-primary" onclick="showToast('warning')">
+          Show Warning Toast
+        </button>
+        <button class="mase-btn mase-btn-primary" onclick="showToast('error')">
+          Show Error Toast
+        </button>
+        <button class="mase-btn mase-btn-primary" onclick="showToast('info')">
+          Show Info Toast
+        </button>
+      </div>
+    </div>
+    
+    <h3>Multiple Toasts</h3>
+    <div class="test-row">
+      <div class="test-label">Click to show multiple toasts stacked</div>
+      <button class="mase-btn mase-btn-secondary" onclick="showMultipleToasts()">
+        Show Multiple Toasts
+      </button>
+    </div>
+  </div>
+
+  <!-- 15.5 Reduced Motion -->
+  <div class="test-section">
+    <h2>15.5 Reduced Motion Support</h2>
+    
+    <div class="instructions">
+      <strong>Accessibility Test:</strong> To test reduced motion, enable "Reduce motion" in your operating system settings. All animations should be minimized while focus indicators remain visible.
+    </div>
+    
+    <div class="test-row">
+      <div class="test-label">Current Motion Preference</div>
+      <p id="motion-preference" style="font-weight: 600; color: #0073aa;"></p>
+    </div>
+  </div>
+
+  <!-- Toast Container (will be populated by JavaScript) -->
+  <div class="mase-toast-container" id="toast-container"></div>
+
+  <script>
+    // Check motion preference
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motionElement = document.getElementById('motion-preference');
+    
+    function updateMotionPreference() {
+      if (motionPreference.matches) {
+        motionElement.textContent = '✓ Reduced motion is ENABLED - Animations are minimized';
+        motionElement.style.color = '#00a32a';
+      } else {
+        motionElement.textContent = '✗ Reduced motion is DISABLED - Full animations active';
+        motionElement.style.color = '#0073aa';
+      }
+    }
+    
+    updateMotionPreference();
+    motionPreference.addEventListener('change', updateMotionPreference);
+    
+    // Loading overlay functions
+    function showLoadingOverlay() {
+      const overlay = document.createElement('div');
+      overlay.className = 'mase-loading-overlay';
+      overlay.innerHTML = `
+        <div class="mase-spinner mase-spinner-lg"></div>
+        <p class="mase-loading-text">Loading...</p>
+      `;
+      document.body.appendChild(overlay);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        overlay.remove();
+      }, 3000);
+    }
+    
+    // Toast notification functions
+    const toastIcons = {
+      success: '✓',
+      warning: '⚠',
+      error: '✕',
+      info: 'ℹ'
+    };
+    
+    const toastMessages = {
+      success: 'Operation completed successfully!',
+      warning: 'Please review your settings.',
+      error: 'An error occurred. Please try again.',
+      info: 'Here is some helpful information.'
+    };
+    
+    function showToast(type) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `mase-toast mase-toast-${type}`;
+      
+      toast.innerHTML = `
+        <span class="mase-toast-icon">${toastIcons[type]}</span>
+        <span class="mase-toast-message">${toastMessages[type]}</span>
+        <button class="mase-toast-dismiss" onclick="dismissToast(this)">×</button>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => {
+        dismissToast(toast.querySelector('.mase-toast-dismiss'));
+      }, 3000);
+    }
+    
+    function dismissToast(button) {
+      const toast = button.closest('.mase-toast');
+      toast.classList.add('mase-toast-dismissing');
+      
+      // Remove after animation completes
+      setTimeout(() => {
+        toast.remove();
+      }, 200);
+    }
+    
+    function showMultipleToasts() {
+      showToast('success');
+      setTimeout(() => showToast('info'), 300);
+      setTimeout(() => showToast('warning'), 600);
+    }
+  </script>
+</body>
+</html>

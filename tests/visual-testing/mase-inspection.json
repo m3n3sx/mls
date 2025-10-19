@@ -1,0 +1,835 @@
+{
+  "buttons": [
+    {
+      "text": "Collapse Menu",
+      "class": "",
+      "id": "collapse-button",
+      "type": "button"
+    },
+    {
+      "text": "Reset All",
+      "class": "button button-secondary",
+      "id": "mase-reset-all",
+      "type": "button"
+    },
+    {
+      "text": "Save Settings",
+      "class": "button button-primary",
+      "id": "mase-save-settings",
+      "type": "submit"
+    },
+    {
+      "text": "General",
+      "class": "mase-tab-button active",
+      "id": "tab-button-general",
+      "type": "button"
+    },
+    {
+      "text": "Admin Bar",
+      "class": "mase-tab-button",
+      "id": "tab-button-admin-bar",
+      "type": "button"
+    },
+    {
+      "text": "Menu",
+      "class": "mase-tab-button",
+      "id": "tab-button-menu",
+      "type": "button"
+    },
+    {
+      "text": "Content",
+      "class": "mase-tab-button",
+      "id": "tab-button-content",
+      "type": "button"
+    },
+    {
+      "text": "Typography",
+      "class": "mase-tab-button",
+      "id": "tab-button-typography",
+      "type": "button"
+    },
+    {
+      "text": "Effects",
+      "class": "mase-tab-button",
+      "id": "tab-button-effects",
+      "type": "button"
+    },
+    {
+      "text": "Templates",
+      "class": "mase-tab-button",
+      "id": "tab-button-templates",
+      "type": "button"
+    },
+    {
+      "text": "Advanced",
+      "class": "mase-tab-button",
+      "id": "tab-button-advanced",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-palette-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-palette-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply Template",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply Template",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply Template",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "View All Templates",
+      "class": "button button-secondary",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Select Color",
+      "class": "button wp-color-result",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Default",
+      "class": "button button-small wp-picker-default",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Preview",
+      "class": "button button-secondary mase-template-preview-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Apply",
+      "class": "button button-primary mase-template-apply-btn",
+      "id": "",
+      "type": "button"
+    },
+    {
+      "text": "Save as Template",
+      "class": "button button-primary",
+      "id": "mase-save-custom-template",
+      "type": "button"
+    },
+    {
+      "text": "Create Backup Now",
+      "class": "button button-secondary",
+      "id": "mase-create-backup",
+      "type": "button"
+    },
+    {
+      "text": "Restore",
+      "class": "button button-secondary",
+      "id": "mase-restore-backup",
+      "type": "button"
+    },
+    {
+      "text": "Export to JSON",
+      "class": "button button-secondary",
+      "id": "mase-export-settings",
+      "type": "button"
+    },
+    {
+      "text": "Import from JSON",
+      "class": "button button-secondary",
+      "id": "mase-import-settings",
+      "type": "button"
+    },
+    {
+      "text": "Close dialog",
+      "class": "wp-auth-check-close button-link",
+      "id": "",
+      "type": "button"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "admin_bar[bg_color]",
+      "id": "admin-bar-bg-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_bar[text_color]",
+      "id": "admin-bar-text-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_bar[hover_color]",
+      "id": "admin-bar-hover-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_bar[height]",
+      "id": "admin-bar-height",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_bar][font_size]",
+      "id": "admin-bar-font-size",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_bar][font_weight]",
+      "id": "admin-bar-font-weight",
+      "type": "select-one"
+    },
+    {
+      "name": "visual_effects[admin_bar][shadow]",
+      "id": "admin-bar-shadow",
+      "type": "select-one"
+    },
+    {
+      "name": "admin_menu[bg_color]",
+      "id": "admin-menu-bg-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_menu[text_color]",
+      "id": "admin-menu-text-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_menu[hover_bg_color]",
+      "id": "admin-menu-hover-bg-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_menu[hover_text_color]",
+      "id": "admin-menu-hover-text-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "admin_menu[width]",
+      "id": "admin-menu-width",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_menu][font_size]",
+      "id": "admin-menu-font-size",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_menu][font_weight]",
+      "id": "admin-menu-font-weight",
+      "type": "select-one"
+    },
+    {
+      "name": "visual_effects[admin_menu][shadow]",
+      "id": "admin-menu-shadow",
+      "type": "select-one"
+    },
+    {
+      "name": "content[bg_color]",
+      "id": "content-bg-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "content[text_color]",
+      "id": "content-text-color",
+      "type": "text",
+      "placeholder": ""
+    },
+    {
+      "name": "content[max_width]",
+      "id": "content-max-width",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[font_family]",
+      "id": "typography-font-family",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[admin_bar][font_size]",
+      "id": "typo-admin-bar-font-size",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_bar][font_weight]",
+      "id": "typo-admin-bar-font-weight",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[admin_bar][text_transform]",
+      "id": "typo-admin-bar-text-transform",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[admin_menu][font_size]",
+      "id": "typo-admin-menu-font-size",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[admin_menu][font_weight]",
+      "id": "typo-admin-menu-font-weight",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[admin_menu][text_transform]",
+      "id": "typo-admin-menu-text-transform",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[content][font_size]",
+      "id": "typo-content-font-size",
+      "type": "number",
+      "placeholder": ""
+    },
+    {
+      "name": "typography[content][font_weight]",
+      "id": "typo-content-font-weight",
+      "type": "select-one"
+    },
+    {
+      "name": "typography[content][text_transform]",
+      "id": "typo-content-text-transform",
+      "type": "select-one"
+    },
+    {
+      "name": "",
+      "id": "custom-template-name",
+      "type": "text",
+      "placeholder": "My Custom Template"
+    },
+    {
+      "name": "",
+      "id": "custom-template-description",
+      "type": "textarea",
+      "placeholder": "Describe your template..."
+    },
+    {
+      "name": "advanced[custom_css]",
+      "id": "advanced-custom-css",
+      "type": "textarea",
+      "placeholder": "/* Add your custom CSS here */"
+    },
+    {
+      "name": "advanced[custom_js]",
+      "id": "advanced-custom-js",
+      "type": "textarea",
+      "placeholder": "// Add your custom JavaScript here"
+    },
+    {
+      "name": "advanced[auto_palette_times][morning]",
+      "id": "auto-palette-morning",
+      "type": "select-one"
+    },
+    {
+      "name": "advanced[auto_palette_times][afternoon]",
+      "id": "auto-palette-afternoon",
+      "type": "select-one"
+    },
+    {
+      "name": "advanced[auto_palette_times][evening]",
+      "id": "auto-palette-evening",
+      "type": "select-one"
+    },
+    {
+      "name": "advanced[auto_palette_times][night]",
+      "id": "auto-palette-night",
+      "type": "select-one"
+    },
+    {
+      "name": "",
+      "id": "mase-backup-list",
+      "type": "select-one"
+    }
+  ],
+  "checkboxes": [
+    {
+      "name": "mase_dark_mode",
+      "id": "mase-dark-mode-toggle",
+      "checked": false
+    },
+    {
+      "name": "mase_live_preview",
+      "id": "mase-live-preview-toggle",
+      "checked": true
+    },
+    {
+      "name": "master[enabled]",
+      "id": "master-enable-plugin",
+      "checked": true
+    },
+    {
+      "name": "master[apply_to_login]",
+      "id": "master-apply-to-login",
+      "checked": false
+    },
+    {
+      "name": "master[dark_mode]",
+      "id": "master-dark-mode",
+      "checked": false
+    },
+    {
+      "name": "visual_effects[admin_bar][glassmorphism]",
+      "id": "admin-bar-glassmorphism",
+      "checked": false
+    },
+    {
+      "name": "visual_effects[admin_bar][floating]",
+      "id": "admin-bar-floating",
+      "checked": false
+    },
+    {
+      "name": "visual_effects[admin_menu][glassmorphism]",
+      "id": "admin-menu-glassmorphism",
+      "checked": false
+    },
+    {
+      "name": "typography[enabled]",
+      "id": "typography-enable-google-fonts",
+      "checked": true
+    },
+    {
+      "name": "effects[page_animations]",
+      "id": "effects-page-animations",
+      "checked": true
+    },
+    {
+      "name": "visual_effects[microanimations_enabled]",
+      "id": "effects-microanimations",
+      "checked": true
+    },
+    {
+      "name": "effects[hover_effects]",
+      "id": "effects-hover-effects",
+      "checked": true
+    },
+    {
+      "name": "visual_effects[particle_system]",
+      "id": "effects-particle-system",
+      "checked": false
+    },
+    {
+      "name": "visual_effects[3d_effects]",
+      "id": "effects-3d-effects",
+      "checked": false
+    },
+    {
+      "name": "visual_effects[sound_effects]",
+      "id": "effects-sound-effects",
+      "checked": false
+    },
+    {
+      "name": "effects[performance_mode]",
+      "id": "effects-performance-mode",
+      "checked": false
+    },
+    {
+      "name": "effects[focus_mode]",
+      "id": "effects-focus-mode",
+      "checked": false
+    },
+    {
+      "name": "advanced[auto_palette_switch]",
+      "id": "advanced-auto-palette-switch",
+      "checked": false
+    },
+    {
+      "name": "advanced[backup_enabled]",
+      "id": "advanced-backup-enabled",
+      "checked": true
+    },
+    {
+      "name": "advanced[backup_before_changes]",
+      "id": "advanced-backup-before-changes",
+      "checked": true
+    }
+  ],
+  "tabs": [
+    {
+      "text": "General",
+      "class": "mase-tab-button active"
+    },
+    {
+      "text": "Admin Bar",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Menu",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Content",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Typography",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Effects",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Templates",
+      "class": "mase-tab-button"
+    },
+    {
+      "text": "Advanced",
+      "class": "mase-tab-button"
+    }
+  ],
+  "timestamp": "2025-10-18T23:34:09.870Z"
+}

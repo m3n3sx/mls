@@ -1,0 +1,573 @@
+/**
+ * Modern Admin Styler Enterprise (MASE) - Accessibility Styles
+ * 
+ * Implements WCAG 2.1 AA/AAA accessibility standards including:
+ * - Visible focus indicators (Requirement 13.3)
+ * - Skip navigation links (Requirement 13.5)
+ * - Screen reader only text (Requirement 13.5)
+ * - High contrast mode support (Requirement 13.1)
+ * - Reduced motion support (Requirement 13.2)
+ * - Keyboard navigation enhancements (Requirement 13.4)
+ * 
+ * @package     Modern Admin Styler Enterprise
+ * @version     1.2.0
+ * @author      Modern Admin Styler Team
+ * @license     GPL-2.0+
+ */
+
+/* ============================================================================
+   SKIP NAVIGATION LINK (Requirement 13.5)
+   ============================================================================ */
+
+.mase-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    z-index: 100000;
+    padding: 8px 16px;
+    background: var(--mase-primary, #4A90E2);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: top 0.2s ease;
+}
+
+.mase-skip-link:focus {
+    top: 0;
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* ============================================================================
+   ARIA LIVE REGION FOR NOTICES (Requirement 13.5)
+   ============================================================================ */
+
+.mase-notice-region {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    z-index: 99999;
+    max-width: 400px;
+    pointer-events: none;
+}
+
+.mase-notice-region .notice {
+    pointer-events: auto;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-left: 4px solid #4A90E2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    animation: mase-notice-slide-in 0.3s ease;
+}
+
+.mase-notice-region .notice.notice-success {
+    border-left-color: #46b450;
+}
+
+.mase-notice-region .notice.notice-error {
+    border-left-color: #dc3232;
+}
+
+.mase-notice-region .notice.notice-warning {
+    border-left-color: #ffb900;
+}
+
+.mase-notice-region .notice.notice-info {
+    border-left-color: #00a0d2;
+}
+
+@keyframes mase-notice-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================================================
+   SCREEN READER ONLY TEXT (Requirement 13.5)
+   ============================================================================ */
+
+.mase-sr-only,
+.screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.mase-sr-only:focus,
+.screen-reader-text:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 8px 16px;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background: var(--mase-primary, #4A90E2);
+    color: #ffffff;
+    border-radius: 4px;
+    z-index: 100000;
+}
+
+/* ============================================================================
+   VISIBLE FOCUS INDICATORS (Requirement 13.3)
+   2px outline with 2px offset for all interactive elements
+   ============================================================================ */
+
+/* Buttons */
+button:focus,
+button:focus-visible,
+.button:focus,
+.button:focus-visible,
+input[type="button"]:focus,
+input[type="button"]:focus-visible,
+input[type="submit"]:focus,
+input[type="submit"]:focus-visible,
+input[type="reset"]:focus,
+input[type="reset"]:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Form inputs */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="range"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+input[type="time"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="color"]:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    border-color: var(--mase-primary, #4A90E2);
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Checkboxes and radio buttons */
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Links */
+a:focus,
+a:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Tab buttons */
+.mase-tab-button:focus,
+.mase-tab-button:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+/* Palette cards */
+.mase-palette-card:focus,
+.mase-palette-card:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Template cards */
+.mase-template-card:focus,
+.mase-template-card:focus-visible,
+.mase-template-preview-card:focus,
+.mase-template-preview-card:focus-visible {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Toggle switches */
+.mase-toggle-switch input:focus + .mase-toggle-slider {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Color pickers */
+.mase-color-picker:focus,
+.wp-color-picker:focus {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+/* Range sliders */
+input[type="range"]:focus {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: 2px;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.4);
+}
+
+/* ============================================================================
+   HIGH CONTRAST MODE (Requirement 13.1)
+   WCAG AAA 7:1 contrast ratio
+   ============================================================================ */
+
+@media (prefers-contrast: high) {
+    /* Increase border widths */
+    .mase-palette-card,
+    .mase-template-card,
+    .mase-template-preview-card,
+    button,
+    .button,
+    input,
+    select,
+    textarea {
+        border-width: 2px;
+    }
+    
+    /* Stronger focus indicators */
+    *:focus,
+    *:focus-visible {
+        outline-width: 3px;
+        outline-offset: 3px;
+    }
+    
+    /* Higher contrast text */
+    body,
+    .mase-settings-wrap {
+        color: #000000;
+        background: #ffffff;
+    }
+    
+    /* Ensure sufficient contrast for all text */
+    .description,
+    .mase-subtitle {
+        color: #1a1a1a;
+    }
+    
+    /* Button contrast */
+    .button-primary {
+        background: #0050a0;
+        border-color: #003070;
+        color: #ffffff;
+    }
+    
+    .button-secondary {
+        background: #ffffff;
+        border-color: #000000;
+        color: #000000;
+    }
+}
+
+/* ============================================================================
+   REDUCED MOTION (Requirement 13.2)
+   Disable all animations and transitions
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    /* Remove hover transforms */
+    .mase-palette-card:hover,
+    .mase-template-card:hover,
+    .mase-template-preview-card:hover,
+    button:hover,
+    .button:hover {
+        transform: none !important;
+    }
+    
+    /* Disable notice animations */
+    .mase-notice-region .notice {
+        animation: none;
+    }
+}
+
+/* ============================================================================
+   KEYBOARD NAVIGATION ENHANCEMENTS (Requirement 13.4)
+   ============================================================================ */
+
+/* Tab navigation with arrow keys */
+.mase-tab-nav {
+    position: relative;
+}
+
+.mase-tab-button[aria-selected="true"] {
+    position: relative;
+}
+
+.mase-tab-button[aria-selected="true"]::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--mase-primary, #4A90E2);
+}
+
+/* Ensure tab panels are focusable */
+.mase-tab-content[role="tabpanel"] {
+    outline: none;
+}
+
+.mase-tab-content[role="tabpanel"]:focus {
+    outline: 2px solid var(--mase-primary, #4A90E2);
+    outline-offset: -2px;
+}
+
+/* ============================================================================
+   TOUCH TARGET SIZES
+   Minimum 44x44px for all interactive elements
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    button,
+    .button,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    .mase-tab-button,
+    .mase-palette-btn,
+    .mase-template-btn {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 16px;
+    }
+    
+    /* Checkbox and radio touch targets */
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-width: 24px;
+        min-height: 24px;
+    }
+    
+    /* Toggle switch touch targets */
+    .mase-toggle-switch {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+/* ============================================================================
+   ARIA LIVE REGION STYLING
+   ============================================================================ */
+
+[aria-live] {
+    position: relative;
+}
+
+[aria-live="polite"],
+[aria-live="assertive"] {
+    /* Ensure live regions are announced but not visually intrusive */
+}
+
+/* ============================================================================
+   FORM FIELD ASSOCIATIONS
+   Ensure labels are properly associated with inputs
+   ============================================================================ */
+
+label {
+    cursor: pointer;
+}
+
+label[for] {
+    display: inline-block;
+}
+
+/* Required field indicator */
+.required,
+[aria-required="true"]::after {
+    content: " *";
+    color: #dc3232;
+    font-weight: bold;
+}
+
+/* ============================================================================
+   ERROR STATES
+   Clear visual indication of errors
+   ============================================================================ */
+
+.error,
+[aria-invalid="true"] {
+    border-color: #dc3232 !important;
+    background-color: #fff8f8;
+}
+
+.error:focus,
+[aria-invalid="true"]:focus {
+    outline-color: #dc3232;
+    box-shadow: 0 0 0 4px rgba(220, 50, 50, 0.2);
+}
+
+.error-message,
+[role="alert"] {
+    color: #dc3232;
+    font-weight: 600;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.error-message::before,
+[role="alert"]::before {
+    content: "⚠";
+    font-size: 16px;
+}
+
+/* ============================================================================
+   LOADING STATES
+   Accessible loading indicators
+   ============================================================================ */
+
+.mase-loading,
+[aria-busy="true"] {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.mase-loading::after,
+[aria-busy="true"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--mase-primary, #4A90E2);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: mase-spin 0.6s linear infinite;
+}
+
+@keyframes mase-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Respect reduced motion for loading spinners */
+@media (prefers-reduced-motion: reduce) {
+    .mase-loading::after,
+    [aria-busy="true"]::after {
+        animation: none;
+        border-top-color: var(--mase-primary, #4A90E2);
+    }
+}
+
+/* ============================================================================
+   DISABLED STATES
+   Clear indication of disabled elements
+   ============================================================================ */
+
+:disabled,
+[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================================================
+   TOOLTIPS AND HELP TEXT
+   Accessible tooltips
+   ============================================================================ */
+
+[aria-describedby] {
+    position: relative;
+}
+
+.mase-tooltip,
+[role="tooltip"] {
+    position: absolute;
+    z-index: 10000;
+    padding: 8px 12px;
+    background: #1e293b;
+    color: #ffffff;
+    font-size: 13px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    max-width: 250px;
+    word-wrap: break-word;
+}
+
+.mase-tooltip::before,
+[role="tooltip"]::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    margin-left: -4px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #1e293b;
+}
+
+/* ============================================================================
+   PRINT STYLES
+   Ensure accessibility in print
+   ============================================================================ */
+
+@media print {
+    .mase-skip-link,
+    .mase-notice-region {
+        display: none;
+    }
+    
+    /* Ensure focus indicators are visible in print */
+    *:focus {
+        outline: 2px solid #000000;
+    }
+    
+    /* Show URLs for links */
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.9em;
+        color: #666666;
+    }
+}

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 8: Material Design Slider Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin-bottom: 48px;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #1e1e1e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .test-section p {
+            color: #646970;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .demo-grid {
+            display: grid;
+            gap: 32px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 32px; color: #1e1e1e;">Task 8: Material Design Slider Component Test</h1>
+    
+    <!-- Test 8.1: Basic Slider Container -->
+    <div class="test-section">
+        <h2>8.1 Basic Slider Container</h2>
+        <p>Tests: Container with proper width, value bubble positioning</p>
+        <div class="mase-slider-container">
+            <input type="range" class="mase-slider" id="slider1" min="0" max="100" value="50">
+            <div class="mase-slider-value" id="value1">50</div>
+        </div>
+    </div>
+
+    <!-- Test 8.2: Slider Track Styling -->
+    <div class="test-section">
+        <h2>8.2 Slider Track Styling</h2>
+        <p>Tests: 6px height track, gray background, primary color fill, border radius</p>
+        <div class="demo-grid">
+            <div class="mase-slider-container">
+                <input type="range" class="mase-slider" id="slider2" min="0" max="100" value="25">
+                <div class="mase-slider-value" id="value2">25</div>
+            </div>
+            <div class="mase-slider-container">
+                <input type="range" class="mase-slider" id="slider3" min="0" max="100" value="75">
+                <div class="mase-slider-value" id="value3">75</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test 8.3: Slider Thumb Design -->
+    <div class="test-section">
+        <h2>8.3 Slider Thumb Design</h2>
+        <p>Tests: 16px circular thumb, white background with shadow, positioned on track</p>
+        <div class="mase-slider-container">
+            <input type="range" class="mase-slider" id="slider4" min="0" max="100" value="60">
+            <div class="mase-slider-value" id="value4">60</div>
+        </div>
+    </div>
+
+    <!-- Test 8.4: Value Display Bubble -->
+    <div class="test-section">
+        <h2>8.4 Value Display Bubble</h2>
+        <p>Tests: Dark background bubble, positioned above thumb, displays current value</p>
+        <div class="mase-slider-container">
+            <input type="range" class="mase-slider" id="slider5" min="0" max="100" value="40">
+            <div class="mase-slider-value" id="value5">40</div>
+        </div>
+    </div>
+
+    <!-- Test 8.5: Slider Interactions -->
+    <div class="test-section">
+        <h2>8.5 Slider Interactions</h2>
+        <p>Tests: Thumb increases to 20px on hover, real-time value updates, focus state</p>
+        <div class="mase-slider-container">
+            <input type="range" class="mase-slider" id="slider6" min="0" max="100" value="50">
+            <div class="mase-slider-value" id="value6">50</div>
+        </div>
+        <p style="margin-top: 16px; font-size: 13px; color: #646970;">
+            <strong>Interaction Tests:</strong><br>
+            • Hover over the slider to see thumb grow to 20px<br>
+            • Drag the slider to see real-time value updates<br>
+            • Tab to focus and use arrow keys for keyboard control
+        </p>
+    </div>
+
+    <!-- Test: Slider with Label -->
+    <div class="test-section">
+        <h2>Slider with Label</h2>
+        <p>Tests: Proper layout with label text</p>
+        <div class="mase-slider-wrapper">
+            <label class="mase-slider-label" for="slider7">Opacity Level</label>
+            <div class="mase-slider-container">
+                <input type="range" class="mase-slider" id="slider7" min="0" max="100" value="80">
+                <div class="mase-slider-value" id="value7">80</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test: Disabled Slider -->
+    <div class="test-section">
+        <h2>Disabled Slider</h2>
+        <p>Tests: Reduced opacity, no interaction</p>
+        <div class="mase-slider-wrapper">
+            <label class="mase-slider-label" for="slider8">Disabled Slider</label>
+            <div class="mase-slider-container">
+                <input type="range" class="mase-slider" id="slider8" min="0" max="100" value="30" disabled>
+                <div class="mase-slider-value" id="value8">30</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test: Multiple Sliders -->
+    <div class="test-section">
+        <h2>Multiple Sliders</h2>
+        <p>Tests: Multiple sliders working independently</p>
+        <div class="demo-grid">
+            <div class="mase-slider-wrapper">
+                <label class="mase-slider-label" for="slider9">Red</label>
+                <div class="mase-slider-container">
+                    <input type="range" class="mase-slider" id="slider9" min="0" max="255" value="200">
+                    <div class="mase-slider-value" id="value9">200</div>
+                </div>
+            </div>
+            <div class="mase-slider-wrapper">
+                <label class="mase-slider-label" for="slider10">Green</label>
+                <div class="mase-slider-container">
+                    <input type="range" class="mase-slider" id="slider10" min="0" max="255" value="150">
+                    <div class="mase-slider-value" id="value10">150</div>
+                </div>
+            </div>
+            <div class="mase-slider-wrapper">
+                <label class="mase-slider-label" for="slider11">Blue</label>
+                <div class="mase-slider-container">
+                    <input type="range" class="mase-slider" id="slider11" min="0" max="255" value="100">
+                    <div class="mase-slider-value" id="value11">100</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update slider values in real-time
+        function updateSliderValue(sliderId, valueId) {
+            const slider = document.getElementById(sliderId);
+            const valueDisplay = document.getElementById(valueId);
+            
+            slider.addEventListener('input', function() {
+                valueDisplay.textContent = this.value;
+                
+                // Update the filled track gradient (for WebKit browsers)
+                const percentage = ((this.value - this.min) / (this.max - this.min)) * 100;
+                this.style.setProperty('--slider-value', percentage + '%');
+                
+                // Position the value bubble above the thumb
+                const thumbPosition = percentage;
+                valueDisplay.style.left = thumbPosition + '%';
+            });
+            
+            // Initialize on page load
+            const percentage = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+            slider.style.setProperty('--slider-value', percentage + '%');
+            valueDisplay.style.left = percentage + '%';
+        }
+
+        // Initialize all sliders
+        for (let i = 1; i <= 11; i++) {
+            updateSliderValue('slider' + i, 'value' + i);
+        }
+
+        // Add keyboard support info
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Material Design Slider Test Loaded');
+            console.log('All sliders initialized with real-time value updates');
+            console.log('Keyboard navigation: Tab to focus, Arrow keys to adjust');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 14: Responsive Design System Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        /* Test page specific styles */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .test-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+        }
+        
+        .test-info div {
+            margin: 5px 0;
+        }
+        
+        .breakpoint-indicator {
+            font-weight: bold;
+            color: #4ade80;
+        }
+        
+        /* Simulate WordPress admin bar */
+        .wp-admin-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: #23282d;
+            z-index: 99999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Simulate WordPress admin bar -->
+    <div class="wp-admin-bar"></div>
+    
+    <!-- Test viewport info -->
+    <div class="test-info">
+        <div>Viewport: <span id="viewport-width">0</span>px × <span id="viewport-height">0</span>px</div>
+        <div>Breakpoint: <span class="breakpoint-indicator" id="breakpoint">Desktop</span></div>
+        <div>Touch Device: <span id="touch-device">No</span></div>
+    </div>
+    
+    <!-- Header Component -->
+    <div class="mase-header">
+        <div class="mase-header-left">
+            <h1 class="mase-header-title">Ultimate WordPress Admin Styler</h1>
+            <span class="mase-header-badge">v2.0.0</span>
+        </div>
+        <div class="mase-header-right">
+            <div class="mase-live-preview-toggle">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" checked />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <span class="mase-toggle-label">Live Preview</span>
+            </div>
+            <button class="mase-btn mase-btn-secondary">Export</button>
+            <button class="mase-btn mase-btn-secondary">Import</button>
+            <button class="mase-btn mase-btn-secondary">Reset</button>
+            <button class="mase-btn mase-btn-primary">Save Changes</button>
+        </div>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <nav class="mase-tabs">
+        <button class="mase-tab mase-tab-active" data-tab="general">
+            <span class="mase-tab-icon">⚙️</span>
+            <span class="mase-tab-label">General</span>
+        </button>
+        <button class="mase-tab" data-tab="admin-bar">
+            <span class="mase-tab-icon">📊</span>
+            <span class="mase-tab-label">Admin Bar</span>
+        </button>
+        <button class="mase-tab" data-tab="menu">
+            <span class="mase-tab-icon">📋</span>
+            <span class="mase-tab-label">Menu</span>
+        </button>
+        <button class="mase-tab" data-tab="content">
+            <span class="mase-tab-icon">📄</span>
+            <span class="mase-tab-label">Content</span>
+        </button>
+        <button class="mase-tab" data-tab="typography">
+            <span class="mase-tab-icon">🔤</span>
+            <span class="mase-tab-label">Typography</span>
+        </button>
+        <button class="mase-tab" data-tab="effects">
+            <span class="mase-tab-icon">✨</span>
+            <span class="mase-tab-label">Effects</span>
+        </button>
+        <button class="mase-tab" data-tab="templates">
+            <span class="mase-tab-icon">📑</span>
+            <span class="mase-tab-label">Templates</span>
+        </button>
+        <button class="mase-tab" data-tab="advanced">
+            <span class="mase-tab-icon">🔧</span>
+            <span class="mase-tab-label">Advanced</span>
+        </button>
+    </nav>
+    
+    <!-- Mobile Tab Dropdown (shown on mobile) -->
+    <select class="mase-tabs-mobile-select">
+        <option value="general" selected>⚙️ General</option>
+        <option value="admin-bar">📊 Admin Bar</option>
+        <option value="menu">📋 Menu</option>
+        <option value="content">📄 Content</option>
+        <option value="typography">🔤 Typography</option>
+        <option value="effects">✨ Effects</option>
+        <option value="templates">📑 Templates</option>
+        <option value="advanced">🔧 Advanced</option>
+    </select>
+    
+    <!-- Content Area -->
+    <div class="mase-content">
+        <div class="mase-section">
+            <h2 class="mase-section-title">Responsive Design Test</h2>
+            <p class="mase-section-description">
+                This page tests the responsive design system across different breakpoints.
+                Resize your browser window to see the layout adapt.
+            </p>
+            
+            <!-- Test Cards in Grid -->
+            <div class="mase-grid-2">
+                <div class="mase-card">
+                    <h3>Mobile (<768px)</h3>
+                    <p>Single column layout, stacked header, dropdown tabs, 44px touch targets, adjusted font sizes.</p>
+                    <div class="mase-toggle-wrapper">
+                        <label class="mase-toggle">
+                            <input type="checkbox" class="mase-toggle-input" checked />
+                            <span class="mase-toggle-slider"></span>
+                        </label>
+                        <span class="mase-toggle-label">Test Toggle</span>
+                    </div>
+                </div>
+                
+                <div class="mase-card">
+                    <h3>Tablet (768-1024px)</h3>
+                    <p>2-column grid, horizontal tabs with scrolling, adjusted spacing.</p>
+                    <button class="mase-btn mase-btn-primary">Test Button</button>
+                </div>
+                
+                <div class="mase-card">
+                    <h3>Desktop (>1024px)</h3>
+                    <p>Multi-column layouts, sidebar navigation option, max-width constraints.</p>
+                    <div class="mase-slider-container">
+                        <input type="range" class="mase-slider" min="0" max="100" value="50" />
+                        <div class="mase-slider-value">50</div>
+                    </div>
+                </div>
+                
+                <div class="mase-card">
+                    <h3>Touch Targets</h3>
+                    <p>All interactive elements meet 44px minimum on mobile.</p>
+                    <div class="mase-color-picker">
+                        <input type="color" class="mase-color-input" value="#0073aa" />
+                        <div class="mase-color-swatch" style="background-color: #0073aa;"></div>
+                        <input type="text" class="mase-color-hex" value="#0073aa" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Controls Test -->
+        <div class="mase-section">
+            <h2 class="mase-section-title">Form Controls</h2>
+            <div class="mase-card">
+                <div class="mase-card-body">
+                    <div class="mase-form-row">
+                        <label>Text Input</label>
+                        <input type="text" class="mase-input" placeholder="Enter text..." />
+                    </div>
+                    
+                    <div class="mase-form-row">
+                        <label>Select Dropdown</label>
+                        <select class="mase-select">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mase-form-row">
+                        <label>Slider</label>
+                        <div class="mase-slider-container">
+                            <input type="range" class="mase-slider" min="0" max="100" value="75" />
+                            <div class="mase-slider-value">75</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notices Test -->
+        <div class="mase-section">
+            <h2 class="mase-section-title">Notices</h2>
+            <div class="mase-notice mase-notice-success">
+                <span class="mase-notice-icon">✓</span>
+                <span class="mase-notice-message">Settings saved successfully!</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+            
+            <div class="mase-notice mase-notice-warning">
+                <span class="mase-notice-icon">⚠</span>
+                <span class="mase-notice-message">Please review your settings before saving.</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+            
+            <div class="mase-notice mase-notice-error">
+                <span class="mase-notice-icon">✕</span>
+                <span class="mase-notice-message">An error occurred. Please try again.</span>
+                <button class="mase-notice-dismiss">×</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Update viewport info
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            document.getElementById('viewport-width').textContent = width;
+            document.getElementById('viewport-height').textContent = height;
+            
+            // Determine breakpoint
+            let breakpoint = 'Desktop (>1024px)';
+            if (width < 768) {
+                breakpoint = 'Mobile (<768px)';
+            } else if (width >= 768 && width < 1024) {
+                breakpoint = 'Tablet (768-1024px)';
+            }
+            
+            document.getElementById('breakpoint').textContent = breakpoint;
+            
+            // Detect touch device
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            document.getElementById('touch-device').textContent = isTouchDevice ? 'Yes' : 'No';
+        }
+        
+        // Update on load and resize
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+        
+        // Slider value update
+        document.querySelectorAll('.mase-slider').forEach(slider => {
+            const container = slider.closest('.mase-slider-container');
+            const valueDisplay = container.querySelector('.mase-slider-value');
+            
+            slider.addEventListener('input', function() {
+                valueDisplay.textContent = this.value;
+                
+                // Update position of value bubble
+                const percent = (this.value - this.min) / (this.max - this.min);
+                const offset = percent * this.offsetWidth;
+                valueDisplay.style.left = offset + 'px';
+            });
+        });
+        
+        // Tab switching
+        document.querySelectorAll('.mase-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.mase-tab').forEach(t => t.classList.remove('mase-tab-active'));
+                this.classList.add('mase-tab-active');
+            });
+        });
+        
+        // Notice dismiss
+        document.querySelectorAll('.mase-notice-dismiss').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.mase-notice').style.display = 'none';
+            });
+        });
+        
+        // Log breakpoint changes
+        let lastWidth = window.innerWidth;
+        window.addEventListener('resize', function() {
+            const width = window.innerWidth;
+            const crossedBreakpoint = 
+                (lastWidth < 768 && width >= 768) ||
+                (lastWidth >= 768 && width < 768) ||
+                (lastWidth < 1024 && width >= 1024) ||
+                (lastWidth >= 1024 && width < 1024);
+            
+            if (crossedBreakpoint) {
+                console.log('Breakpoint changed at width:', width);
+            }
+            
+            lastWidth = width;
+        });
+    </script>
+</body>
+</html>

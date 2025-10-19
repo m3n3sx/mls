@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 9: Color Picker Component Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 40px;
+            background-color: var(--mase-background);
+        }
+        .test-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: var(--mase-text);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .test-row {
+            margin-bottom: 30px;
+        }
+        .test-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--mase-text-secondary);
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 30px;">Task 9: Color Picker Component Test</h1>
+
+    <!-- Test 9.1: Color Picker Container -->
+    <div class="test-section">
+        <h2>9.1 Color Picker Container - Layout with Flexbox</h2>
+        <div class="test-row">
+            <div class="test-label">Basic Color Picker (Swatch + Hex Input)</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color1" value="#0073aa">
+                <div class="mase-color-swatch" style="background-color: #0073aa;" onclick="document.getElementById('color1').click()"></div>
+                <input type="text" class="mase-color-hex" value="#0073aa" placeholder="#000000">
+            </div>
+        </div>
+        <div class="test-row">
+            <div class="test-label">Multiple Color Pickers with Different Colors</div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="mase-color-picker">
+                    <input type="color" class="mase-color-input" id="color2" value="#d63638">
+                    <div class="mase-color-swatch" style="background-color: #d63638;" onclick="document.getElementById('color2').click()"></div>
+                    <input type="text" class="mase-color-hex" value="#d63638">
+                </div>
+                <div class="mase-color-picker">
+                    <input type="color" class="mase-color-input" id="color3" value="#00a32a">
+                    <div class="mase-color-swatch" style="background-color: #00a32a;" onclick="document.getElementById('color3').click()"></div>
+                    <input type="text" class="mase-color-hex" value="#00a32a">
+                </div>
+                <div class="mase-color-picker">
+                    <input type="color" class="mase-color-input" id="color4" value="#dba617">
+                    <div class="mase-color-swatch" style="background-color: #dba617;" onclick="document.getElementById('color4').click()"></div>
+                    <input type="text" class="mase-color-hex" value="#dba617">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test 9.2: Color Swatch Styling -->
+    <div class="test-section">
+        <h2>9.2 Color Swatch - 40×40px Square with Border and Shadow</h2>
+        <div class="test-row">
+            <div class="test-label">Swatch Dimensions (40×40px), Border (2px), Border Radius (4px)</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color5" value="#0073aa">
+                <div class="mase-color-swatch" style="background-color: #0073aa;" onclick="document.getElementById('color5').click()"></div>
+                <input type="text" class="mase-color-hex" value="#0073aa">
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                ✓ Swatch should be exactly 40×40px<br>
+                ✓ Should have 2px solid border<br>
+                ✓ Should have 4px border radius<br>
+                ✓ Should have subtle shadow
+            </p>
+        </div>
+        <div class="test-row">
+            <div class="test-label">Hover Effect (Hover over swatch to see shadow increase)</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color6" value="#9b51e0">
+                <div class="mase-color-swatch" style="background-color: #9b51e0;" onclick="document.getElementById('color6').click()"></div>
+                <input type="text" class="mase-color-hex" value="#9b51e0">
+            </div>
+        </div>
+    </div>
+
+    <!-- Test 9.3: Hex Input Field -->
+    <div class="test-section">
+        <h2>9.3 Hex Input Field - Text Input with Standard Styling</h2>
+        <div class="test-row">
+            <div class="test-label">Hex Input (100px width, monospace font, centered text)</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color7" value="#ff6b6b">
+                <div class="mase-color-swatch" style="background-color: #ff6b6b;" onclick="document.getElementById('color7').click()"></div>
+                <input type="text" class="mase-color-hex" value="#ff6b6b">
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                ✓ Input should be 100px wide<br>
+                ✓ Should use monospace font<br>
+                ✓ Text should be centered<br>
+                ✓ Should match swatch height (40px)
+            </p>
+        </div>
+    </div>
+
+    <!-- Test 9.4: Color Picker Interactions -->
+    <div class="test-section">
+        <h2>9.4 Color Picker Interactions</h2>
+        
+        <div class="test-row">
+            <div class="test-label">Hover Effect on Swatch (Hover to see lift and shadow)</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color8" value="#4ecdc4">
+                <div class="mase-color-swatch" style="background-color: #4ecdc4;" onclick="document.getElementById('color8').click()"></div>
+                <input type="text" class="mase-color-hex" value="#4ecdc4">
+            </div>
+        </div>
+
+        <div class="test-row">
+            <div class="test-label">Click Swatch to Open Native Color Picker</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color9" value="#f39c12">
+                <div class="mase-color-swatch" style="background-color: #f39c12;" onclick="document.getElementById('color9').click()"></div>
+                <input type="text" class="mase-color-hex" value="#f39c12" id="hex9">
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                Click the swatch to open the native color picker dialog
+            </p>
+        </div>
+
+        <div class="test-row">
+            <div class="test-label">Hex Input Validation (Try entering invalid hex like "xyz")</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color10" value="#3498db">
+                <div class="mase-color-swatch" style="background-color: #3498db;" onclick="document.getElementById('color10').click()"></div>
+                <input type="text" class="mase-color-hex" value="#3498db" id="hex10">
+            </div>
+            <button onclick="validateHex()" style="margin-top: 10px; padding: 8px 16px; background: #0073aa; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Validate Hex
+            </button>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                Enter an invalid hex value (e.g., "xyz") and click Validate to see error state
+            </p>
+        </div>
+
+        <div class="test-row">
+            <div class="test-label">Error State Display</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color11" value="#e74c3c">
+                <div class="mase-color-swatch" style="background-color: #e74c3c;" onclick="document.getElementById('color11').click()"></div>
+                <input type="text" class="mase-color-hex mase-error" value="invalid" aria-invalid="true">
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                ✓ Error state shows red border and light red background
+            </p>
+        </div>
+    </div>
+
+    <!-- Test: Color Picker with Label -->
+    <div class="test-section">
+        <h2>Color Picker with Label</h2>
+        <div class="test-row">
+            <div class="mase-color-picker-wrapper">
+                <label class="mase-color-picker-label">Primary Color</label>
+                <div class="mase-color-picker">
+                    <input type="color" class="mase-color-input" id="color12" value="#0073aa">
+                    <div class="mase-color-swatch" style="background-color: #0073aa;" onclick="document.getElementById('color12').click()"></div>
+                    <input type="text" class="mase-color-hex" value="#0073aa">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test: Disabled State -->
+    <div class="test-section">
+        <h2>Disabled State</h2>
+        <div class="test-row">
+            <div class="test-label">Disabled Color Picker</div>
+            <div class="mase-color-picker">
+                <input type="color" class="mase-color-input" id="color13" value="#95a5a6" disabled>
+                <div class="mase-color-swatch" style="background-color: #95a5a6;"></div>
+                <input type="text" class="mase-color-hex" value="#95a5a6" disabled>
+            </div>
+            <p style="margin-top: 10px; font-size: 13px; color: var(--mase-text-secondary);">
+                ✓ Should have reduced opacity (0.5)<br>
+                ✓ Should show not-allowed cursor<br>
+                ✓ Should not be interactive
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Simple hex validation function for demo
+        function validateHex() {
+            const input = document.getElementById('hex10');
+            const value = input.value;
+            const hexRegex = /^#[0-9A-Fa-f]{6}$/;
+            
+            if (!hexRegex.test(value)) {
+                input.classList.add('mase-error');
+                input.setAttribute('aria-invalid', 'true');
+                alert('Invalid hex color format! Please use format: #RRGGBB');
+            } else {
+                input.classList.remove('mase-error');
+                input.setAttribute('aria-invalid', 'false');
+                alert('Valid hex color!');
+            }
+        }
+
+        // Update swatch color when hex input changes
+        document.querySelectorAll('.mase-color-hex').forEach(input => {
+            input.addEventListener('input', function() {
+                const hexRegex = /^#[0-9A-Fa-f]{6}$/;
+                const swatch = this.previousElementSibling;
+                
+                if (hexRegex.test(this.value)) {
+                    swatch.style.backgroundColor = this.value;
+                    this.classList.remove('mase-error');
+                    this.setAttribute('aria-invalid', 'false');
+                }
+            });
+        });
+
+        // Update hex input when color picker changes
+        document.querySelectorAll('.mase-color-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const swatch = this.nextElementSibling;
+                const hexInput = swatch.nextElementSibling;
+                
+                swatch.style.backgroundColor = this.value;
+                hexInput.value = this.value;
+            });
+        });
+    </script>
+</body>
+</html>

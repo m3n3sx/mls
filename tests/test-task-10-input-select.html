@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 10: Input and Select Styles Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .test-section {
+      margin-bottom: 48px;
+      padding: 24px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .test-section h2 {
+      margin-top: 0;
+      color: #1e1e1e;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #0073aa;
+    }
+    .test-row {
+      margin-bottom: 32px;
+    }
+    .test-row h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #646970;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="margin-bottom: 32px; color: #1e1e1e;">Task 10: Input and Select Styles Test</h1>
+  
+  <!-- Test Section 1: Basic Text Inputs -->
+  <div class="test-section">
+    <h2>10.1 Text Input Styles</h2>
+    
+    <div class="test-row">
+      <h3>Default Text Input</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Full Name</label>
+        <input type="text" class="mase-input" placeholder="Enter your full name">
+        <span class="mase-input-helper">Please enter your first and last name</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Email Input</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label mase-required">Email Address</label>
+        <input type="email" class="mase-input" placeholder="you@example.com">
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Password Input</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label mase-required">Password</label>
+        <input type="password" class="mase-input" placeholder="Enter password">
+        <span class="mase-input-helper">Must be at least 8 characters</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Number Input</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Age</label>
+        <input type="number" class="mase-input" placeholder="25" min="0" max="120">
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Textarea</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Description</label>
+        <textarea class="mase-input" placeholder="Enter a detailed description..."></textarea>
+        <span class="mase-input-helper">Maximum 500 characters</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Search Input</h3>
+      <input type="search" class="mase-input mase-input-search" placeholder="Search...">
+    </div>
+  </div>
+  
+  <!-- Test Section 2: Select Dropdowns -->
+  <div class="test-section">
+    <h2>10.2 Select Dropdown Styles</h2>
+    
+    <div class="test-row">
+      <h3>Default Select</h3>
+      <div class="mase-select-wrapper">
+        <label class="mase-select-label">Country</label>
+        <select class="mase-select">
+          <option value="">Select a country</option>
+          <option value="us">United States</option>
+          <option value="uk">United Kingdom</option>
+          <option value="ca">Canada</option>
+          <option value="au">Australia</option>
+        </select>
+        <span class="mase-select-helper">Choose your country of residence</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Required Select</h3>
+      <div class="mase-select-wrapper">
+        <label class="mase-select-label mase-required">Language</label>
+        <select class="mase-select">
+          <option value="">Select a language</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Section 3: Input States -->
+  <div class="test-section">
+    <h2>10.3 Input States</h2>
+    
+    <div class="test-row">
+      <h3>Hover State (hover over inputs to test)</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Hover Me</label>
+        <input type="text" class="mase-input" placeholder="Hover to see border change">
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Focus State (click to focus)</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Focus Me</label>
+        <input type="text" class="mase-input" placeholder="Click to see focus state">
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Error State</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Email with Error</label>
+        <input type="email" class="mase-input mase-error" value="invalid-email" aria-invalid="true">
+        <span class="mase-input-error">Please enter a valid email address</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Disabled State</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Disabled Input</label>
+        <input type="text" class="mase-input" value="Cannot edit this" disabled>
+        <span class="mase-input-helper">This field is disabled</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Readonly State</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Readonly Input</label>
+        <input type="text" class="mase-input" value="Read-only value" readonly>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Select Error State</h3>
+      <div class="mase-select-wrapper">
+        <label class="mase-select-label mase-required">Required Select</label>
+        <select class="mase-select mase-error" aria-invalid="true">
+          <option value="">Please select an option</option>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+        </select>
+        <span class="mase-select-error">This field is required</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Disabled Select</h3>
+      <div class="mase-select-wrapper">
+        <label class="mase-select-label">Disabled Select</label>
+        <select class="mase-select" disabled>
+          <option value="1">Option 1</option>
+          <option value="2">Option 2</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Section 4: Labels and Helpers -->
+  <div class="test-section">
+    <h2>10.4 Labels and Helper Text</h2>
+    
+    <div class="test-row">
+      <h3>Input with Label and Helper</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Username</label>
+        <input type="text" class="mase-input" placeholder="johndoe">
+        <span class="mase-input-helper">Choose a unique username (3-20 characters)</span>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Required Field Indicator</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label mase-required">Required Field</label>
+        <input type="text" class="mase-input" placeholder="This field is required">
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Error Message Display</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label mase-required">Phone Number</label>
+        <input type="tel" class="mase-input mase-error" value="123" aria-invalid="true">
+        <span class="mase-input-error">Phone number must be at least 10 digits</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Section 5: Advanced Layouts -->
+  <div class="test-section">
+    <h2>Advanced Input Layouts</h2>
+    
+    <div class="test-row">
+      <h3>Input Group (Horizontal)</h3>
+      <div class="mase-input-group">
+        <div class="mase-input-wrapper">
+          <label class="mase-input-label">First Name</label>
+          <input type="text" class="mase-input" placeholder="John">
+        </div>
+        <div class="mase-input-wrapper">
+          <label class="mase-input-label">Last Name</label>
+          <input type="text" class="mase-input" placeholder="Doe">
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Input with Prefix Addon</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Price</label>
+        <div class="mase-input-addon-wrapper">
+          <span class="mase-input-addon mase-input-addon-prefix">$</span>
+          <input type="number" class="mase-input" placeholder="0.00">
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Input with Suffix Addon</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Website</label>
+        <div class="mase-input-addon-wrapper">
+          <input type="text" class="mase-input" placeholder="mysite">
+          <span class="mase-input-addon mase-input-addon-suffix">.com</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="test-row">
+      <h3>Input with Both Addons</h3>
+      <div class="mase-input-wrapper">
+        <label class="mase-input-label">Amount</label>
+        <div class="mase-input-addon-wrapper">
+          <span class="mase-input-addon mase-input-addon-prefix">$</span>
+          <input type="number" class="mase-input" placeholder="100">
+          <span class="mase-input-addon mase-input-addon-suffix">.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Section 6: Keyboard Navigation -->
+  <div class="test-section">
+    <h2>Keyboard Navigation Test</h2>
+    <p style="color: #646970; margin-bottom: 16px;">
+      Press Tab to navigate through inputs. Focus indicators should be clearly visible.
+    </p>
+    
+    <div class="mase-input-wrapper">
+      <label class="mase-input-label">Field 1</label>
+      <input type="text" class="mase-input" placeholder="Tab to next field">
+    </div>
+    
+    <div class="mase-input-wrapper">
+      <label class="mase-input-label">Field 2</label>
+      <input type="text" class="mase-input" placeholder="Tab to next field">
+    </div>
+    
+    <div class="mase-select-wrapper">
+      <label class="mase-select-label">Field 3</label>
+      <select class="mase-select">
+        <option value="">Select an option</option>
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+      </select>
+    </div>
+    
+    <div class="mase-input-wrapper">
+      <label class="mase-input-label">Field 4</label>
+      <textarea class="mase-input" placeholder="Tab to complete"></textarea>
+    </div>
+  </div>
+  
+  <script>
+    // Add some interactivity for testing
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Task 10 Test Page Loaded');
+      console.log('Test all input states by interacting with the form controls');
+      
+      // Log focus events
+      const inputs = document.querySelectorAll('.mase-input, .mase-select');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          console.log('Focused:', this.placeholder || this.tagName);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

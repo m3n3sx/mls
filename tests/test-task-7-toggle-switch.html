@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 7: iOS-style Toggle Switch Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #1e1e1e;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .test-section h3 {
+            color: #646970;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+        .test-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+        .test-description {
+            flex: 1;
+            font-size: 14px;
+            color: #646970;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-pass {
+            background: #e7f7ed;
+            color: #00a32a;
+        }
+        .status-manual {
+            background: #fef8ee;
+            color: #dba617;
+        }
+        .requirements {
+            background: #e5f5fa;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #005a87;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-bottom: 8px;">Task 7: iOS-style Toggle Switch Test</h1>
+    <p style="color: #646970; margin-bottom: 32px;">Testing all toggle switch requirements and interaction states</p>
+
+    <!-- Test Section 1: Basic Toggle -->
+    <div class="test-section">
+        <h2>7.1 Toggle Container and Input</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.1 - Hide native checkbox, create custom toggle (44px × 24px), position with flexbox
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Basic toggle switch (unchecked)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Basic toggle switch (checked)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" checked />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Toggle with label</div>
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="toggle-with-label" />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="toggle-with-label">Enable Feature</label>
+            </div>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+    </div>
+
+    <!-- Test Section 2: Slider Background -->
+    <div class="test-section">
+        <h2>7.2 Toggle Slider Background</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.3, 4.4 - Rounded background, off state (gray-300), on state (primary)
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Off state: Gray background (#d1d5db)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">On state: Primary blue background (#0073aa)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" checked />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Fully rounded corners (pill shape)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+    </div>
+
+    <!-- Test Section 3: Toggle Knob -->
+    <div class="test-section">
+        <h2>7.3 Toggle Knob</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.5, 4.6 - Circular knob (20px), positioned left when off, translates right when on, white with shadow
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Knob at left position (off state)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Knob at right position (on state)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" checked />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">White knob with subtle shadow</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+    </div>
+
+    <!-- Test Section 4: Animations -->
+    <div class="test-section">
+        <h2>7.4 Toggle Animations</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.2, 9.1 - Smooth transition (200ms), animate knob translation, animate background color
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Click to test smooth animation (200ms)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" id="animation-test" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Knob slides smoothly left/right</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" id="knob-animation" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Background color fades smoothly</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" id="color-animation" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+    </div>
+
+    <!-- Test Section 5: Interaction States -->
+    <div class="test-section">
+        <h2>7.5 Toggle Interaction States</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.7, 10.2, 10.4 - Hover shadow, focus outline, disabled state
+        </div>
+        
+        <h3>Hover State</h3>
+        <div class="test-row">
+            <div class="test-description">Hover to see shadow effect</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+
+        <h3>Focus State (Keyboard Navigation)</h3>
+        <div class="test-row">
+            <div class="test-description">Tab to focus - should show outline</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Press Space to toggle when focused</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">MANUAL TEST</span>
+        </div>
+
+        <h3>Disabled State</h3>
+        <div class="test-row">
+            <div class="test-description">Disabled toggle (unchecked)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" disabled />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Disabled toggle (checked)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" checked disabled />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Disabled toggle with label</div>
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" disabled />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <span class="mase-toggle-label">Disabled Feature</span>
+            </div>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+    </div>
+
+    <!-- Test Section 6: Real-world Examples -->
+    <div class="test-section">
+        <h2>Real-world Usage Examples</h2>
+        
+        <h3>Settings Panel Example</h3>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="live-preview" checked />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="live-preview">Enable Live Preview</label>
+            </div>
+
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="auto-save" />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="auto-save">Auto-save Changes</label>
+            </div>
+
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="notifications" checked />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="notifications">Show Notifications</label>
+            </div>
+
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="dark-mode" />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="dark-mode">Dark Mode</label>
+            </div>
+
+            <div class="mase-toggle-wrapper">
+                <label class="mase-toggle">
+                    <input type="checkbox" class="mase-toggle-input" id="advanced" disabled />
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-label" for="advanced">Advanced Features (Pro Only)</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Section 7: Accessibility -->
+    <div class="test-section">
+        <h2>Accessibility Tests</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 10.2, 10.4 - Keyboard accessible, visible focus, screen reader support
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Screen reader announces state correctly</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" aria-label="Enable feature" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">SCREEN READER TEST</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Keyboard navigation works (Tab, Space)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">KEYBOARD TEST</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Focus visible indicator (2px outline, 2px offset)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-manual">KEYBOARD TEST</span>
+        </div>
+    </div>
+
+    <!-- Test Section 8: Dimensions -->
+    <div class="test-section">
+        <h2>Dimension Verification</h2>
+        <div class="requirements">
+            <strong>Requirements:</strong> 4.1, 4.5 - Toggle 44px × 24px, knob 20px diameter
+        </div>
+        
+        <div class="test-row">
+            <div class="test-description">Toggle width: 44px</div>
+            <label class="mase-toggle" style="outline: 1px dashed red;">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Toggle height: 24px</div>
+            <label class="mase-toggle" style="outline: 1px dashed red;">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+
+        <div class="test-row">
+            <div class="test-description">Knob diameter: 20px (with 2px margin)</div>
+            <label class="mase-toggle">
+                <input type="checkbox" class="mase-toggle-input" />
+                <span class="mase-toggle-slider" style="outline: 1px dashed red;"></span>
+            </label>
+            <span class="status-badge status-pass">VISUAL CHECK</span>
+        </div>
+    </div>
+
+    <script>
+        // Add console logging for testing
+        document.querySelectorAll('.mase-toggle-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                console.log('Toggle changed:', {
+                    id: e.target.id || 'unnamed',
+                    checked: e.target.checked,
+                    disabled: e.target.disabled
+                });
+            });
+        });
+
+        // Test animation timing
+        const animationTest = document.getElementById('animation-test');
+        if (animationTest) {
+            animationTest.addEventListener('change', () => {
+                console.log('Animation test - transition should take 200ms');
+            });
+        }
+    </script>
+</body>
+</html>

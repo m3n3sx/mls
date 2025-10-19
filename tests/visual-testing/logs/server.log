@@ -1,0 +1,4 @@
+127.0.0.1 - - [19/Oct/2025 00:09:51] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [19/Oct/2025 00:09:52] "GET /test-runner.js HTTP/1.1" 200 -
+127.0.0.1 - - [19/Oct/2025 00:09:52] code 404, message File not found
+127.0.0.1 - - [19/Oct/2025 00:09:52] "GET /favicon.ico HTTP/1.1" 404 -

@@ -1,0 +1,11 @@
+🚀 Uruchamianie testów wizualnych MASE...
+
+🔐 Logowanie do WordPress...
+❌ Błąd podczas testów: page.goto: net::ERR_CERT_AUTHORITY_INVALID at http://localhost/wp-login.php
+Call log:
+[2m  - navigating to "http://localhost/wp-login.php", waiting until "load"[22m
+
+    at loginToWordPress (/var/www/html/wp-content/plugins/woow-admin/tests/visual-testing/playwright-visual-tests.js:104:16)
+    at runVisualTests (/var/www/html/wp-content/plugins/woow-admin/tests/visual-testing/playwright-visual-tests.js:62:15) {
+  name: 'Error'
+}

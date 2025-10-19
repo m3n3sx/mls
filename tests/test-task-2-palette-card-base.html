@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 2: Palette Card Base Styles Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f0f0f1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    .test-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #1d2327;
+      margin-bottom: 10px;
+    }
+    .test-info {
+      background: #f0f6fc;
+      border-left: 4px solid #0073aa;
+      padding: 15px;
+      margin-bottom: 30px;
+    }
+    .test-info h2 {
+      margin-top: 0;
+      color: #0073aa;
+      font-size: 16px;
+    }
+    .test-info ul {
+      margin: 10px 0 0 20px;
+    }
+    .placeholder-content {
+      background: #f9f9f9;
+      border: 2px dashed #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Task 2: Palette Card Base Styles</h1>
+    
+    <div class="test-info">
+      <h2>Test Requirements</h2>
+      <ul>
+        <li>✓ .mase-palette-card with flexbox column layout</li>
+        <li>✓ White background using var(--mase-surface)</li>
+        <li>✓ 1px solid border using #e5e7eb (var(--mase-gray-200))</li>
+        <li>✓ Border-radius 8px using var(--mase-radius-lg)</li>
+        <li>✓ 16px padding using var(--mase-space-md)</li>
+        <li>✓ Box-shadow using var(--mase-shadow-base)</li>
+        <li>✓ Transition all 200ms ease using var(--mase-transition-base)</li>
+      </ul>
+      <p><strong>Expected Result:</strong> Cards with white background, subtle border, rounded corners, shadow, and smooth transitions.</p>
+    </div>
+
+    <!-- Color Palette Selector Component -->
+    <div class="mase-palette-selector">
+      <div class="mase-palette-grid">
+        <!-- Palette Card 1 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 2 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 3 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 4 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 5 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 6 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 7 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 8 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 9 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 10 -->
+        <div class="mase-palette-card">
+          <div class="placeholder-content">Header Area</div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-info" style="margin-top: 30px;">
+      <h2>Visual Verification Checklist</h2>
+      <ul>
+        <li>[ ] Cards have white background (not transparent)</li>
+        <li>[ ] Cards have subtle gray border (#e5e7eb)</li>
+        <li>[ ] Cards have 8px rounded corners</li>
+        <li>[ ] Cards have 16px padding inside</li>
+        <li>[ ] Cards have subtle shadow (0 1px 3px rgba(0,0,0,0.1))</li>
+        <li>[ ] Cards use flexbox column layout (elements stack vertically)</li>
+        <li>[ ] Grid maintains 5 columns on desktop</li>
+        <li>[ ] 16px gap between cards is maintained</li>
+      </ul>
+    </div>
+
+    <div class="test-info" style="background: #fff3cd; border-left-color: #f59e0b;">
+      <h2>CSS Variables Verification</h2>
+      <p>Open browser DevTools and verify these CSS variables are being used:</p>
+      <ul>
+        <li><code>--mase-surface</code> for background-color (should be #ffffff)</li>
+        <li><code>--mase-gray-200</code> for border-color (should be #e5e7eb)</li>
+        <li><code>--mase-radius-lg</code> for border-radius (should be 8px)</li>
+        <li><code>--mase-space-md</code> for padding (should be 16px)</li>
+        <li><code>--mase-shadow-base</code> for box-shadow</li>
+        <li><code>--mase-transition-base</code> for transition (should be 200ms ease)</li>
+      </ul>
+    </div>
+
+    <div class="test-info" style="background: #e7f7ed; border-left-color: #00a32a;">
+      <h2>Requirements Fulfilled</h2>
+      <ul>
+        <li><strong>3.1:</strong> White background color applied to all palette cards</li>
+        <li><strong>3.2:</strong> Cards rendered with 1px solid border using color #e5e7eb</li>
+        <li><strong>3.3:</strong> 8px border radius applied to all card corners</li>
+        <li><strong>3.4:</strong> 16px padding added inside each card</li>
+        <li><strong>3.5:</strong> Box shadow of 0 1px 3px rgba(0,0,0,0.1) applied to cards</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

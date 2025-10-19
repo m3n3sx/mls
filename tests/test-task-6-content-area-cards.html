@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 6: Content Area and Card Components Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    /* Additional test styles */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Simulate WordPress admin bar */
+    .wp-admin-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: #23282d;
+      z-index: 99999;
+    }
+    
+    /* Test container */
+    .test-container {
+      margin-top: 32px;
+    }
+    
+    /* Test info panel */
+    .test-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-width: 300px;
+      z-index: 1000;
+    }
+    
+    .test-info h3 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      color: #0073aa;
+    }
+    
+    .test-info ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    /* Viewport indicator */
+    .viewport-indicator {
+      position: fixed;
+      top: 40px;
+      right: 20px;
+      background: #0073aa;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Simulate WordPress admin bar -->
+  <div class="wp-admin-bar"></div>
+  
+  <!-- Viewport indicator -->
+  <div class="viewport-indicator">
+    <span id="viewport-size"></span>
+  </div>
+  
+  <div class="test-container">
+    <!-- Header -->
+    <div class="mase-header">
+      <div class="mase-header-left">
+        <h1 class="mase-header-title">Ultimate WordPress Admin Styler</h1>
+        <span class="mase-header-badge">v2.0.0</span>
+      </div>
+      <div class="mase-header-right">
+        <div class="mase-live-preview-toggle">
+          <label class="mase-toggle">
+            <input type="checkbox" class="mase-toggle-input" />
+            <span class="mase-toggle-slider"></span>
+          </label>
+          <span class="mase-toggle-label">Live Preview</span>
+        </div>
+        <button class="mase-btn mase-btn-secondary">Export</button>
+        <button class="mase-btn mase-btn-secondary">Import</button>
+        <button class="mase-btn mase-btn-secondary">Reset</button>
+        <button class="mase-btn mase-btn-primary">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <nav class="mase-tabs">
+      <button class="mase-tab mase-tab-active" data-tab="general">
+        <span class="mase-tab-icon">⚙️</span>
+        <span class="mase-tab-label">General</span>
+      </button>
+      <button class="mase-tab" data-tab="admin-bar">
+        <span class="mase-tab-icon">📊</span>
+        <span class="mase-tab-label">Admin Bar</span>
+      </button>
+      <button class="mase-tab" data-tab="menu">
+        <span class="mase-tab-icon">📋</span>
+        <span class="mase-tab-label">Menu</span>
+      </button>
+      <button class="mase-tab" data-tab="content">
+        <span class="mase-tab-icon">📄</span>
+        <span class="mase-tab-label">Content</span>
+      </button>
+      <button class="mase-tab" data-tab="typography">
+        <span class="mase-tab-icon">🔤</span>
+        <span class="mase-tab-label">Typography</span>
+      </button>
+      <button class="mase-tab" data-tab="effects">
+        <span class="mase-tab-icon">✨</span>
+        <span class="mase-tab-label">Effects</span>
+      </button>
+      <button class="mase-tab" data-tab="templates">
+        <span class="mase-tab-icon">📑</span>
+        <span class="mase-tab-label">Templates</span>
+      </button>
+      <button class="mase-tab" data-tab="advanced">
+        <span class="mase-tab-icon">🔧</span>
+        <span class="mase-tab-label">Advanced</span>
+      </button>
+    </nav>
+    
+    <!-- Content Area -->
+    <div class="mase-content">
+      <!-- Section 1: Single Column -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Single Column Layout</h2>
+        <p class="mase-section-description">This section demonstrates a single card with full width content.</p>
+        
+        <div class="mase-card">
+          <div class="mase-card-body">
+            <h3>Card Title</h3>
+            <p>This is a standard card component with white background, border, shadow, and proper padding. It should have 8px border radius and subtle elevation.</p>
+            <p>The card maintains consistent spacing and visual hierarchy throughout the interface.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Section 2: Two Column Grid (Desktop/Tablet) -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Two Column Grid Layout</h2>
+        <p class="mase-section-description">This section demonstrates a 2-column grid that adapts to screen size.</p>
+        
+        <div class="mase-grid-2">
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Card 1</h3>
+              <p>This card is part of a 2-column grid. On desktop and tablet, it displays side-by-side. On mobile, it stacks vertically.</p>
+            </div>
+          </div>
+          
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Card 2</h3>
+              <p>This card demonstrates responsive behavior. Resize your browser to see how the layout adapts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Section 3: Three Column Grid (Desktop only) -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Three Column Grid Layout</h2>
+        <p class="mase-section-description">This section demonstrates a 3-column grid (desktop), 2-column (tablet), single column (mobile).</p>
+        
+        <div class="mase-grid-3">
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Card 1</h3>
+              <p>Three columns on desktop (>1024px).</p>
+            </div>
+          </div>
+          
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Card 2</h3>
+              <p>Two columns on tablet (768-1024px).</p>
+            </div>
+          </div>
+          
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Card 3</h3>
+              <p>Single column on mobile (<768px).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Section 4: Interactive Cards -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Interactive Card Hover States</h2>
+        <p class="mase-section-description">Hover over these cards to see the interactive effects (shadow increase and lift).</p>
+        
+        <div class="mase-grid-2">
+          <div class="mase-card mase-card-interactive">
+            <div class="mase-card-body">
+              <h3>Interactive Card 1</h3>
+              <p>Hover over this card to see the shadow increase and subtle lift effect.</p>
+            </div>
+          </div>
+          
+          <div class="mase-card mase-card-interactive">
+            <div class="mase-card-body">
+              <h3>Interactive Card 2</h3>
+              <p>The hover state provides clear visual feedback for clickable cards.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Section 5: Card Grid Container -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Card Grid Container</h2>
+        <p class="mase-section-description">This demonstrates the flexible card grid with auto-fit columns.</p>
+        
+        <div class="mase-card-grid">
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Auto Card 1</h3>
+              <p>Cards automatically adjust to available space with minimum 350px width.</p>
+            </div>
+          </div>
+          
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Auto Card 2</h3>
+              <p>The grid uses auto-fit to create responsive columns.</p>
+            </div>
+          </div>
+          
+          <div class="mase-card">
+            <div class="mase-card-body">
+              <h3>Auto Card 3</h3>
+              <p>Resize the browser to see how cards reflow.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Section 6: Content with Proper Spacing -->
+      <div class="mase-section">
+        <h2 class="mase-section-title">Content Spacing Test</h2>
+        <p class="mase-section-description">This section tests proper spacing between elements.</p>
+        
+        <div class="mase-card">
+          <div class="mase-card-body">
+            <h3>Typography Hierarchy</h3>
+            <p>This paragraph demonstrates proper line height and spacing. The content should be easy to read with comfortable spacing between lines.</p>
+            <p>Multiple paragraphs maintain consistent spacing throughout the card.</p>
+            <ul>
+              <li>List items have proper spacing</li>
+              <li>Bullets are visible in content areas</li>
+              <li>Line height is optimized for readability</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Test Info Panel -->
+  <div class="test-info">
+    <h3>✅ Task 6 Test Checklist</h3>
+    <ul>
+      <li>Content container max-width: 1200px</li>
+      <li>Content centered with padding</li>
+      <li>Section titles and descriptions</li>
+      <li>Card white background & border</li>
+      <li>Card 8px border radius</li>
+      <li>Card shadow for elevation</li>
+      <li>Card hover states (interactive)</li>
+      <li>Responsive: Mobile single column</li>
+      <li>Responsive: Tablet 2-column grid</li>
+      <li>Responsive: Desktop multi-column</li>
+    </ul>
+  </div>
+  
+  <script>
+    // Update viewport size indicator
+    function updateViewportSize() {
+      const width = window.innerWidth;
+      const indicator = document.getElementById('viewport-size');
+      
+      let size = '';
+      if (width < 768) {
+        size = `Mobile: ${width}px`;
+      } else if (width < 1024) {
+        size = `Tablet: ${width}px`;
+      } else {
+        size = `Desktop: ${width}px`;
+      }
+      
+      indicator.textContent = size;
+    }
+    
+    // Update on load and resize
+    updateViewportSize();
+    window.addEventListener('resize', updateViewportSize);
+    
+    // Add click handlers to tabs
+    document.querySelectorAll('.mase-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.mase-tab').forEach(t => {
+          t.classList.remove('mase-tab-active', 'active');
+        });
+        
+        // Add active class to clicked tab
+        this.classList.add('mase-tab-active');
+      });
+    });
+    
+    // Add click handlers to interactive cards
+    document.querySelectorAll('.mase-card-interactive').forEach(card => {
+      card.addEventListener('click', function() {
+        alert('Interactive card clicked!');
+      });
+    });
+  </script>
+</body>
+</html>

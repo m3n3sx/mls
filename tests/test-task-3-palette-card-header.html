@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 3: Palette Card Header Layout Test</title>
+  <link rel="stylesheet" href="../assets/css/mase-admin.css">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f0f0f1;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    .test-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #1d2327;
+      margin-bottom: 10px;
+    }
+    .test-info {
+      background: #f0f6fc;
+      border-left: 4px solid #0073aa;
+      padding: 15px;
+      margin-bottom: 30px;
+    }
+    .test-info h2 {
+      margin-top: 0;
+      color: #0073aa;
+      font-size: 16px;
+    }
+    .test-info ul {
+      margin: 10px 0 0 20px;
+    }
+    .placeholder-content {
+      background: #f9f9f9;
+      border: 2px dashed #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      margin: 10px 0;
+    }
+    /* Temporary styles for visual testing */
+    .mase-palette-name {
+      background: #e7f7ed;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .mase-palette-badge {
+      background: #0073aa;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Task 3: Palette Card Header Layout</h1>
+    
+    <div class="test-info">
+      <h2>Test Requirements</h2>
+      <ul>
+        <li>✓ .mase-palette-card-header with flexbox layout</li>
+        <li>✓ justify-content set to space-between</li>
+        <li>✓ align-items set to center</li>
+        <li>✓ margin-bottom of 12px using var(--mase-space-md)</li>
+        <li>✓ min-height of 24px for badge alignment</li>
+      </ul>
+      <p><strong>Expected Result:</strong> Header with palette name on left, badge on right, vertically centered with proper spacing.</p>
+    </div>
+
+    <!-- Color Palette Selector Component -->
+    <div class="mase-palette-selector">
+      <div class="mase-palette-grid">
+        <!-- Palette Card 1 - With Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Professional Blue</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 2 - Without Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Creative Purple</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 3 - With Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Energetic Green</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 4 - Long Name Test -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Very Long Palette Name Example</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 5 - Without Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Sunset</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 6 - With Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Rose Gold</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 7 - Without Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Dark Elegance</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 8 - With Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Ocean</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 9 - Without Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Cyber Electric</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+
+        <!-- Palette Card 10 - With Badge -->
+        <div class="mase-palette-card">
+          <div class="mase-palette-card-header">
+            <span class="mase-palette-name">Gaming Neon</span>
+            <span class="mase-palette-badge">Active</span>
+          </div>
+          <div class="placeholder-content">Color Preview</div>
+          <div class="placeholder-content">Apply Button</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-info" style="margin-top: 30px;">
+      <h2>Visual Verification Checklist</h2>
+      <ul>
+        <li>[ ] Header uses flexbox layout (display: flex)</li>
+        <li>[ ] Palette name appears on the left side</li>
+        <li>[ ] Badge appears on the right side (when present)</li>
+        <li>[ ] Elements are vertically centered (align-items: center)</li>
+        <li>[ ] Space between name and badge is maximized (justify-content: space-between)</li>
+        <li>[ ] Header has 12px margin below it</li>
+        <li>[ ] Header maintains minimum height of 24px</li>
+        <li>[ ] Long palette names don't break the layout</li>
+        <li>[ ] Headers without badges still maintain proper height</li>
+      </ul>
+    </div>
+
+    <div class="test-info" style="background: #fff3cd; border-left-color: #f59e0b;">
+      <h2>CSS Properties Verification</h2>
+      <p>Open browser DevTools and inspect .mase-palette-card-header to verify:</p>
+      <ul>
+        <li><code>display: flex</code></li>
+        <li><code>justify-content: space-between</code></li>
+        <li><code>align-items: center</code></li>
+        <li><code>margin-bottom: var(--mase-space-md, 12px)</code> (should compute to 12px)</li>
+        <li><code>min-height: 24px</code></li>
+      </ul>
+    </div>
+
+    <div class="test-info" style="background: #e7f7ed; border-left-color: #00a32a;">
+      <h2>Requirements Fulfilled</h2>
+      <ul>
+        <li><strong>2.1:</strong> Palette card header displays palette name at the top with proper layout</li>
+      </ul>
+    </div>
+
+    <div class="test-info" style="background: #fef3c7; border-left-color: #f59e0b;">
+      <h2>Testing Instructions</h2>
+      <ol>
+        <li>Open this file in a web browser</li>
+        <li>Verify that palette names appear on the left side of each card header</li>
+        <li>Verify that "Active" badges appear on the right side (when present)</li>
+        <li>Check that name and badge are vertically centered</li>
+        <li>Verify there's proper spacing (12px) between header and content below</li>
+        <li>Test with different viewport sizes to ensure layout remains consistent</li>
+        <li>Use DevTools to inspect CSS properties match requirements</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>
