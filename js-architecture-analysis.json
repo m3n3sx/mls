@@ -1,0 +1,248 @@
+{
+  "module_system": {
+    "pattern": "IIFE (Immediately Invoked Function Expression)",
+    "namespace": "MASE",
+    "modules": [
+      "css",
+      "content",
+      "backupManager",
+      "livePreview",
+      "templateManager",
+      "keyboardShortcuts",
+      "admin_bar",
+      "state",
+      "admin_menu",
+      "typography",
+      "importExport",
+      "modules",
+      "config",
+      "visual_effects",
+      "paletteManager",
+      "spacing",
+      "tabNavigation",
+      "data"
+    ],
+    "circular_dependencies": false
+  },
+  "initialization_flow": {
+    "trigger": "document.ready",
+    "init_calls": [
+      "initColorPickers",
+      "bindEvents",
+      "bindPaletteEvents",
+      "bindTemplateEvents",
+      "bindImportExportEvents",
+      "bindBackupEvents",
+      "trackDirtyState",
+      "initConditionalFields",
+      "showNotice"
+    ],
+    "module_inits": []
+  },
+  "event_management": {
+    "delegated_events": 19,
+    "direct_bindings": 12,
+    "unbind_calls": 2
+  },
+  "state_management": {
+    "properties": [
+      "livePreviewEnabled",
+      "currentPalette",
+      "currentTemplate",
+      "isDirty",
+      "isSaving"
+    ],
+    "location": "MASE.state (centralized)",
+    "mutations": {
+      "currentPalette": 2,
+      "isDirty": 4,
+      "currentTemplate": 1,
+      "livePreviewEnabled": 3,
+      "isSaving": 2
+    },
+    "localStorage": [
+      "mase_dark_mode",
+      "mase_active_tab"
+    ]
+  },
+  "dependencies": {
+    "module_calls": {
+      "css": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "content": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "livePreview": [
+        "backupManager",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "templateManager": [
+        "backupManager",
+        "livePreview",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "keyboardShortcuts": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "admin_bar": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "state": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "admin_menu": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "typography": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "importExport": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager"
+      ],
+      "modules": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "config": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "paletteManager",
+        "importExport"
+      ],
+      "visual_effects": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "paletteManager": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "importExport"
+      ],
+      "spacing": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "tabNavigation": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "data": [
+        "backupManager",
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ],
+      "backupManager": [
+        "livePreview",
+        "templateManager",
+        "keyboardShortcuts",
+        "state",
+        "config",
+        "paletteManager",
+        "importExport"
+      ]
+    }
+  },
+  "potential_issues": [
+    "Multiple events on '.mase-palette-card': ['click', 'keydown', 'mouseenter', 'mouseleave', 'click']",
+    "Multiple events on '.mase-template-apply-btn': ['click', 'click']",
+    "Multiple events on '.mase-tab-button': ['click', 'keydown']",
+    "Multiple events on '.mase-template-card, .mase-template-preview-card': ['mouseenter', 'mouseleave', 'click']",
+    "Low error handling coverage: 10.2%"
+  ]
+}

@@ -9153,7 +9153,7 @@ html[data-theme="dark"] .mase-header-toggle .dashicons {
 }
 
 /**
- * FIX: Dashicons Pointer Events
+ * CRITICAL FIX: Dashicons Pointer Events
  * 
  * Ensure dashicons don't intercept pointer events in toggle wrappers.
  * This allows automated tests and accessibility tools to interact with
@@ -9162,16 +9162,41 @@ html[data-theme="dark"] .mase-header-toggle .dashicons {
  * Issue: Playwright tests were failing because dashicons were blocking
  * clicks to checkboxes (#mase-dark-mode-toggle, #mase-live-preview-toggle)
  * 
+ * Root Cause: Dashicons have default pointer-events: auto, positioned over checkboxes
+ * 
  * Solution: Set pointer-events: none on all dashicons within toggle contexts
- * so clicks pass through to the actual input elements.
+ * with multiple selector variations for maximum coverage.
  * 
  * A11Y: Improves accessibility by ensuring screen readers and automation
  * tools can properly interact with form controls.
+ * 
+ * @see Task 1.2 in .kiro/specs/live-preview-toggle-fix/tasks.md
+ * @see Requirements 1.1-1.5, 4.1-4.5
  */
-.mase-toggle-wrapper .dashicons,
 .mase-header-toggle .dashicons,
-[class*="toggle"] .dashicons {
-  pointer-events: none;                         /* Allow clicks to pass through */
+.mase-header-toggle > .dashicons,
+label.mase-header-toggle .dashicons,
+label.mase-header-toggle > .dashicons,
+.mase-toggle-wrapper .dashicons,
+.mase-toggle-wrapper > .dashicons,
+[class*="toggle"] .dashicons,
+[class*="toggle"] > .dashicons,
+.mase-header-toggle span.dashicons,
+label.mase-header-toggle span.dashicons {
+  pointer-events: none !important;              /* Allow clicks to pass through */
+}
+
+/* Ensure checkboxes remain clickable */
+.mase-header-toggle input[type="checkbox"],
+.mase-toggle-wrapper input[type="checkbox"],
+label.mase-header-toggle input[type="checkbox"] {
+  pointer-events: auto !important;              /* Ensure checkbox is clickable */
+}
+
+/* Ensure label itself is clickable */
+.mase-header-toggle,
+label.mase-header-toggle {
+  cursor: pointer !important;                   /* Show pointer cursor */
 }
 
 /**

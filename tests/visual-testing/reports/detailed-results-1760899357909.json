@@ -1,0 +1,396 @@
+{
+  "timestamp": "2025-10-19T18:39:16.984Z",
+  "tests": [
+    {
+      "id": "checkbox-1",
+      "name": "Tryb ciemny",
+      "status": "passed",
+      "error": null,
+      "screenshot": "001-checkbox-1.png"
+    },
+    {
+      "id": "checkbox-2",
+      "name": "Live preview",
+      "status": "passed",
+      "error": null,
+      "screenshot": "002-checkbox-2.png"
+    },
+    {
+      "id": "checkbox-3",
+      "name": "Enable plugin",
+      "status": "passed",
+      "error": null,
+      "screenshot": "003-checkbox-3.png"
+    },
+    {
+      "id": "checkbox-4",
+      "name": "Apply to login page",
+      "status": "passed",
+      "error": null,
+      "screenshot": "004-checkbox-4.png"
+    },
+    {
+      "id": "button-5",
+      "name": "Paleta kolorów 1",
+      "status": "passed",
+      "error": null,
+      "screenshot": "005-button-5.png"
+    },
+    {
+      "id": "button-6",
+      "name": "Paleta kolorów 2",
+      "status": "passed",
+      "error": null,
+      "screenshot": "006-button-6.png"
+    },
+    {
+      "id": "button-7",
+      "name": "Paleta kolorów 3",
+      "status": "passed",
+      "error": null,
+      "screenshot": "007-button-7.png"
+    },
+    {
+      "id": "button-8",
+      "name": "Paleta kolorów 4",
+      "status": "passed",
+      "error": null,
+      "screenshot": "008-button-8.png"
+    },
+    {
+      "id": "button-9",
+      "name": "Paleta kolorów 5",
+      "status": "passed",
+      "error": null,
+      "screenshot": "009-button-9.png"
+    },
+    {
+      "id": "button-10",
+      "name": "Paleta kolorów 6",
+      "status": "passed",
+      "error": null,
+      "screenshot": "010-button-10.png"
+    },
+    {
+      "id": "button-11",
+      "name": "Paleta kolorów 7",
+      "status": "passed",
+      "error": null,
+      "screenshot": "011-button-11.png"
+    },
+    {
+      "id": "button-12",
+      "name": "Paleta kolorów 8",
+      "status": "passed",
+      "error": null,
+      "screenshot": "012-button-12.png"
+    },
+    {
+      "id": "button-13",
+      "name": "Paleta kolorów 9",
+      "status": "passed",
+      "error": null,
+      "screenshot": "013-button-13.png"
+    },
+    {
+      "id": "button-14",
+      "name": "Paleta kolorów 10",
+      "status": "passed",
+      "error": null,
+      "screenshot": "014-button-14.png"
+    },
+    {
+      "id": "color-15",
+      "name": "Admin Bar - Kolor tła",
+      "status": "passed",
+      "error": null,
+      "screenshot": "015-color-15.png"
+    },
+    {
+      "id": "color-16",
+      "name": "Admin Bar - Kolor tekstu",
+      "status": "passed",
+      "error": null,
+      "screenshot": "016-color-16.png"
+    },
+    {
+      "id": "color-17",
+      "name": "Admin Bar - Kolor hover",
+      "status": "passed",
+      "error": null,
+      "screenshot": "017-color-17.png"
+    },
+    {
+      "id": "number-18",
+      "name": "Admin Bar - Wysokość",
+      "status": "passed",
+      "error": null,
+      "screenshot": "018-number-18.png"
+    },
+    {
+      "id": "number-19",
+      "name": "Admin Bar - Rozmiar czcionki",
+      "status": "passed",
+      "error": null,
+      "screenshot": "019-number-19.png"
+    },
+    {
+      "id": "checkbox-20",
+      "name": "Admin Bar - Glassmorphism",
+      "status": "passed",
+      "error": null,
+      "screenshot": "020-checkbox-20.png"
+    },
+    {
+      "id": "checkbox-21",
+      "name": "Admin Bar - Floating",
+      "status": "passed",
+      "error": null,
+      "screenshot": "021-checkbox-21.png"
+    },
+    {
+      "id": "color-22",
+      "name": "Menu - Kolor tła",
+      "status": "passed",
+      "error": null,
+      "screenshot": "022-color-22.png"
+    },
+    {
+      "id": "color-23",
+      "name": "Menu - Kolor tekstu",
+      "status": "passed",
+      "error": null,
+      "screenshot": "023-color-23.png"
+    },
+    {
+      "id": "color-24",
+      "name": "Menu - Kolor hover tła",
+      "status": "passed",
+      "error": null,
+      "screenshot": "024-color-24.png"
+    },
+    {
+      "id": "color-25",
+      "name": "Menu - Kolor hover tekstu",
+      "status": "passed",
+      "error": null,
+      "screenshot": "025-color-25.png"
+    },
+    {
+      "id": "number-26",
+      "name": "Menu - Szerokość",
+      "status": "passed",
+      "error": null,
+      "screenshot": "026-number-26.png"
+    },
+    {
+      "id": "number-27",
+      "name": "Menu - Rozmiar czcionki",
+      "status": "passed",
+      "error": null,
+      "screenshot": "027-number-27.png"
+    },
+    {
+      "id": "checkbox-28",
+      "name": "Menu - Glassmorphism",
+      "status": "passed",
+      "error": null,
+      "screenshot": "028-checkbox-28.png"
+    },
+    {
+      "id": "color-29",
+      "name": "Content - Kolor tła",
+      "status": "passed",
+      "error": null,
+      "screenshot": "029-color-29.png"
+    },
+    {
+      "id": "color-30",
+      "name": "Content - Kolor tekstu",
+      "status": "passed",
+      "error": null,
+      "screenshot": "030-color-30.png"
+    },
+    {
+      "id": "number-31",
+      "name": "Content - Maksymalna szerokość",
+      "status": "passed",
+      "error": null,
+      "screenshot": "031-number-31.png"
+    },
+    {
+      "id": "checkbox-32",
+      "name": "Typography - Enable Google Fonts",
+      "status": "passed",
+      "error": null,
+      "screenshot": "032-checkbox-32.png"
+    },
+    {
+      "id": "number-33",
+      "name": "Typography - Admin Bar rozmiar",
+      "status": "passed",
+      "error": null,
+      "screenshot": "033-number-33.png"
+    },
+    {
+      "id": "number-34",
+      "name": "Typography - Menu rozmiar",
+      "status": "passed",
+      "error": null,
+      "screenshot": "034-number-34.png"
+    },
+    {
+      "id": "number-35",
+      "name": "Typography - Content rozmiar",
+      "status": "passed",
+      "error": null,
+      "screenshot": "035-number-35.png"
+    },
+    {
+      "id": "checkbox-36",
+      "name": "Effects - Page animations",
+      "status": "passed",
+      "error": null,
+      "screenshot": "036-checkbox-36.png"
+    },
+    {
+      "id": "checkbox-37",
+      "name": "Effects - Microanimations",
+      "status": "passed",
+      "error": null,
+      "screenshot": "037-checkbox-37.png"
+    },
+    {
+      "id": "checkbox-38",
+      "name": "Effects - Hover effects",
+      "status": "passed",
+      "error": null,
+      "screenshot": "038-checkbox-38.png"
+    },
+    {
+      "id": "checkbox-39",
+      "name": "Effects - Particle system",
+      "status": "passed",
+      "error": null,
+      "screenshot": "039-checkbox-39.png"
+    },
+    {
+      "id": "checkbox-40",
+      "name": "Effects - 3D effects",
+      "status": "passed",
+      "error": null,
+      "screenshot": "040-checkbox-40.png"
+    },
+    {
+      "id": "checkbox-41",
+      "name": "Effects - Performance mode",
+      "status": "passed",
+      "error": null,
+      "screenshot": "041-checkbox-41.png"
+    },
+    {
+      "id": "button-42",
+      "name": "Szablon 1",
+      "status": "failed",
+      "error": "Template button is not visible",
+      "screenshot": "042-button-42.png"
+    },
+    {
+      "id": "button-43",
+      "name": "Szablon 2",
+      "status": "failed",
+      "error": "Template button is not visible",
+      "screenshot": "043-button-43.png"
+    },
+    {
+      "id": "button-44",
+      "name": "Szablon 3",
+      "status": "failed",
+      "error": "Template button is not visible",
+      "screenshot": "044-button-44.png"
+    },
+    {
+      "id": "button-45",
+      "name": "Szablon 4",
+      "status": "passed",
+      "error": null,
+      "screenshot": "045-button-45.png"
+    },
+    {
+      "id": "button-46",
+      "name": "Szablon 5",
+      "status": "passed",
+      "error": null,
+      "screenshot": "046-button-46.png"
+    },
+    {
+      "id": "button-47",
+      "name": "Szablon 6",
+      "status": "passed",
+      "error": null,
+      "screenshot": "047-button-47.png"
+    },
+    {
+      "id": "button-48",
+      "name": "Szablon 7",
+      "status": "passed",
+      "error": null,
+      "screenshot": "048-button-48.png"
+    },
+    {
+      "id": "button-49",
+      "name": "Szablon 8",
+      "status": "passed",
+      "error": null,
+      "screenshot": "049-button-49.png"
+    },
+    {
+      "id": "button-50",
+      "name": "Szablon 9",
+      "status": "passed",
+      "error": null,
+      "screenshot": "050-button-50.png"
+    },
+    {
+      "id": "button-51",
+      "name": "Szablon 10",
+      "status": "passed",
+      "error": null,
+      "screenshot": "051-button-51.png"
+    },
+    {
+      "id": "button-52",
+      "name": "Szablon 11",
+      "status": "passed",
+      "error": null,
+      "screenshot": "052-button-52.png"
+    },
+    {
+      "id": "checkbox-53",
+      "name": "Advanced - Auto palette switch",
+      "status": "passed",
+      "error": null,
+      "screenshot": "053-checkbox-53.png"
+    },
+    {
+      "id": "checkbox-54",
+      "name": "Advanced - Backup enabled",
+      "status": "passed",
+      "error": null,
+      "screenshot": "054-checkbox-54.png"
+    },
+    {
+      "id": "checkbox-55",
+      "name": "Advanced - Backup before changes",
+      "status": "passed",
+      "error": null,
+      "screenshot": "055-checkbox-55.png"
+    }
+  ],
+  "summary": {
+    "total": 55,
+    "passed": 52,
+    "failed": 3,
+    "screenshots": 53
+  }
+}

@@ -141,8 +141,8 @@ class MASE_Admin {
 		);
 
 		/**
-		 * NOTE: mase-admin-live-preview.js has been removed.
-		 * All live preview functionality is now handled by mase-admin.js
+		 * NOTE: Live preview functionality is handled by MASE.livePreview module.
+		 * All live preview functionality is in assets/js/mase-admin.js
 		 * to prevent duplicate event handlers and race conditions.
 		 * 
 		 * @see MASE.livePreview module in assets/js/mase-admin.js
@@ -181,17 +181,77 @@ class MASE_Admin {
 		/**
 		 * Fix pointer-events for dashicons blocking toggle clicks
 		 * 
-		 * Dashicons positioned before checkboxes can block click events.
+		 * CRITICAL FIX: Dashicons positioned before checkboxes can block click events.
 		 * This CSS ensures clicks pass through to the underlying checkbox.
 		 * 
-		 * @see Task 11.2 in .kiro/specs/critical-fixes-v1.2.0/tasks.md
+		 * PROBLEM ANALYSIS:
+		 * - Issue: Playwright tests were failing with "dashicons intercepts pointer events"
+		 * - Root Cause: Dashicons have default pointer-events: auto, blocking clicks
+		 * - Impact: Live Preview and Dark Mode toggles completely non-functional
+		 * - Evidence: [tests/visual-testing/reports/detailed-results-1760831245552.json:6-8]
+		 * 
+		 * SOLUTION DESIGN:
+		 * - Set pointer-events: none on all dashicons within toggle contexts
+		 * - Use multiple selector variations for maximum coverage
+		 * - Apply !important to override any conflicting rules
+		 * - Explicitly set pointer-events: auto on checkboxes to ensure clickability
+		 * - Inject inline to guarantee early application before other stylesheets
+		 * 
+		 * TECHNICAL DETAILS:
+		 * - Inline styles have higher specificity than external stylesheets
+		 * - Multiple selectors catch edge cases (direct children, nested, attribute selectors)
+		 * - !important ensures precedence over WordPress core styles
+		 * - Cursor: pointer on labels provides visual feedback
+		 * 
+		 * BROWSER COMPATIBILITY:
+		 * - pointer-events supported in all modern browsers (IE11+)
+		 * - No fallback needed as this is a progressive enhancement
+		 * 
+		 * @see Task 1.1 in .kiro/specs/live-preview-toggle-fix/tasks.md
+		 * @see Requirements 1.1-1.5, 4.1-4.5
+		 * @since 1.2.0
 		 */
 		wp_add_inline_style(
 			'mase-admin',
-			'.mase-toggle-wrapper .dashicons,
+			'/* ============================================================================
+			   CRITICAL FIX: Dashicons Blocking Toggle Clicks
+			   ============================================================================
+			   
+			   Problem: Dashicons positioned over checkboxes intercept click events,
+			   preventing both user interactions and automated test clicks.
+			   
+			   Solution: Set pointer-events: none on dashicons to allow clicks to pass
+			   through to underlying checkbox elements.
+			   
+			   Multiple selector variations ensure maximum coverage across different
+			   HTML structures and WordPress versions.
+			   ============================================================================ */
+			
+			/* Dashicons should not intercept pointer events */
 			.mase-header-toggle .dashicons,
-			[class*="toggle"] .dashicons {
-				pointer-events: none !important;
+			.mase-header-toggle > .dashicons,
+			label.mase-header-toggle .dashicons,
+			label.mase-header-toggle > .dashicons,
+			.mase-toggle-wrapper .dashicons,
+			.mase-toggle-wrapper > .dashicons,
+			[class*="toggle"] .dashicons,
+			[class*="toggle"] > .dashicons,
+			.mase-header-toggle span.dashicons,
+			label.mase-header-toggle span.dashicons {
+				pointer-events: none !important; /* !important overrides WordPress core styles */
+			}
+			
+			/* Checkboxes must remain clickable - explicit override */
+			.mase-header-toggle input[type="checkbox"],
+			.mase-toggle-wrapper input[type="checkbox"],
+			label.mase-header-toggle input[type="checkbox"] {
+				pointer-events: auto !important; /* Ensure checkbox receives events */
+			}
+			
+			/* Label should show pointer cursor for better UX */
+			.mase-header-toggle,
+			label.mase-header-toggle {
+				cursor: pointer !important; /* Visual feedback for clickable area */
 			}'
 		);
 	}

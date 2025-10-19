@@ -6,8 +6,7 @@
   "when": {
     "type": "fileEdited",
     "patterns": [
-      "assets/js/mase-admin.js",
-      "assets/js/mase-admin-live-preview.js"
+      "assets/js/mase-admin.js"
     ]
   },
   "then": {
