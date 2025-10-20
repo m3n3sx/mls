@@ -1,11 +1,14 @@
 {
   "name": "modern-admin-styler-enterprise",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Modern Admin Styler Enterprise - WordPress Admin Customization Plugin",
   "scripts": {
     "test": "jest --run",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage --run"
+    "test:coverage": "jest --coverage --run",
+    "build:css": "for file in assets/css/*.css; do [ -f \"$file\" ] && [ \"${file%.min.css}\" = \"$file\" ] && echo \"/* Minified for production v1.2.1 */\" > \"${file%.css}.min.css\" && cat \"$file\" >> \"${file%.css}.min.css\"; done",
+    "build:js": "for file in assets/js/*.js; do [ -f \"$file\" ] && [ \"${file%.min.js}\" = \"$file\" ] && echo \"/* Minified for production v1.2.1 */\" > \"${file%.js}.min.js\" && cat \"$file\" >> \"${file%.js}.min.js\"; done",
+    "build": "npm run build:css && npm run build:js"
   },
   "jest": {
     "testEnvironment": "jsdom",

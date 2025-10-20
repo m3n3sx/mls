@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-10-19T21:15:16.104Z",
+  "testName": "Dark Mode Circle Bug Test",
+  "bugId": "MASE-DARK-001",
+  "status": "PASSED",
+  "details": [
+    {
+      "phase": "Light Mode",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - general tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - admin-bar tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - menu tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - content tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - typography tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - effects tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - templates tab",
+      "circlesFound": 0,
+      "circles": []
+    },
+    {
+      "phase": "Dark Mode - advanced tab",
+      "circlesFound": 0,
+      "circles": []
+    }
+  ],
+  "screenshots": [
+    {
+      "filename": "dark-mode-test-light-mode-baseline-2025-10-19T21-15-21-120Z.png",
+      "description": "Light Mode - Before Dark Mode Toggle",
+      "timestamp": "2025-10-19T21-15-21-120Z"
+    },
+    {
+      "filename": "dark-mode-test-dark-mode-active-2025-10-19T21-15-23-018Z.png",
+      "description": "Dark Mode - After Toggle",
+      "timestamp": "2025-10-19T21-15-23-018Z"
+    },
+    {
+      "filename": "dark-mode-test-dark-mode-final-2025-10-19T21-15-28-010Z.png",
+      "description": "Dark Mode - Final Verification",
+      "timestamp": "2025-10-19T21-15-28-010Z"
+    }
+  ]
+}

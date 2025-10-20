@@ -1,6 +1,14 @@
-# Modern Admin Styler Enterprise (MASE) v1.2.0
+# Modern Admin Styler Enterprise (MASE) v1.2.1
 
 Enterprise-grade WordPress admin styling plugin with modern design patterns, professional color schemes, and powerful customization options.
+
+## 🐛 What's New in v1.2.1
+
+**Critical Bug Fixes:**
+- ✅ **Dark Mode Visual Fix** - Removed large gray circular element that was blocking content in Dark Mode
+- ✅ **Accessibility Enhancement** - Fixed Live Preview toggle aria-checked synchronization for screen readers
+
+This patch release resolves two critical issues reported in v1.2.0. All functionality from v1.2.0 remains intact.
 
 ## 🎉 What's New in v1.2.0
 
