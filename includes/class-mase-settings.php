@@ -99,44 +99,19 @@ class MASE_Settings {
 	 * @return bool True on success, false on failure.
 	 */
 	public function update_option( $data ) {
-		try {
-			error_log( 'MASE: Starting validation...' );
-			$validated = $this->validate( $data );
-			
-			if ( is_wp_error( $validated ) ) {
-				// Log validation errors for debugging
-				error_log( 'MASE: Validation failed - ' . $validated->get_error_message() );
-				error_log( 'MASE: Validation errors: ' . print_r( $validated->get_error_data(), true ) );
-				return false;
-			}
-
-			error_log( 'MASE: Validation passed, applying mobile optimization...' );
-			// Apply mobile optimization if on mobile device (Requirement 7.1).
-			$mobile_optimizer = new MASE_Mobile_Optimizer();
-			if ( $mobile_optimizer->is_mobile() ) {
-				$validated = $mobile_optimizer->get_optimized_settings( $validated );
-			}
-
-			error_log( 'MASE: Saving to database...' );
-			
-			// Save to database
-			// Note: update_option() returns false if value is unchanged, but that's OK
-			update_option( self::OPTION_NAME, $validated );
-			
-			// Verify the save by reading back
-			$saved_value = get_option( self::OPTION_NAME );
-			if ( $saved_value === $validated || $saved_value == $validated ) {
-				error_log( 'MASE: Save successful (verified)' );
-				return true;
-			}
-			
-			error_log( 'MASE: Save verification failed' );
-			return false;
-		} catch ( Exception $e ) {
-			error_log( 'MASE: Exception in update_option: ' . $e->getMessage() );
-			error_log( 'MASE: Stack trace: ' . $e->getTraceAsString() );
+		$validated = $this->validate( $data );
+		
+		if ( is_wp_error( $validated ) ) {
 			return false;
 		}
+
+		// Apply mobile optimization if on mobile device (Requirement 7.1).
+		$mobile_optimizer = new MASE_Mobile_Optimizer();
+		if ( $mobile_optimizer->is_mobile() ) {
+			$validated = $mobile_optimizer->get_optimized_settings( $validated );
+		}
+
+		return update_option( self::OPTION_NAME, $validated );
 	}
 
 	/**
@@ -161,10 +136,6 @@ class MASE_Settings {
 				'hover_bg_color'    => '#191e23',
 				'hover_text_color'  => '#00b9eb',
 				'width'             => 160,
-				'height_mode'       => 'full',
-				'item_padding'      => '6px 12px',
-				'font_size'         => 13,
-				'line_height'       => 18,
 			),
 			'performance' => array(
 				'enable_minification' => true,
@@ -326,9 +297,9 @@ class MASE_Settings {
 					'unit'   => 'px',
 				),
 				'submenu_spacing' => array(
-					'padding_top'    => 5,
+					'padding_top'    => 8,
 					'padding_right'  => 12,
-					'padding_bottom' => 5,
+					'padding_bottom' => 8,
 					'padding_left'   => 12,
 					'margin_top'     => 0,
 					'offset_left'    => 0,
@@ -373,23 +344,6 @@ class MASE_Settings {
 		$validated = array();
 		$errors    = array();
 
-		// Validate master settings.
-		if ( isset( $input['master'] ) ) {
-			$validated['master'] = array();
-
-			if ( isset( $input['master']['enabled'] ) ) {
-				$validated['master']['enabled'] = (bool) $input['master']['enabled'];
-			}
-
-			if ( isset( $input['master']['apply_to_login'] ) ) {
-				$validated['master']['apply_to_login'] = (bool) $input['master']['apply_to_login'];
-			}
-
-			if ( isset( $input['master']['dark_mode'] ) ) {
-				$validated['master']['dark_mode'] = (bool) $input['master']['dark_mode'];
-			}
-		}
-
 		// Validate admin bar settings.
 		if ( isset( $input['admin_bar'] ) ) {
 			$validated['admin_bar'] = array();
@@ -422,64 +376,6 @@ class MASE_Settings {
 			}
 		}
 
-		// Validate content settings.
-		if ( isset( $input['content'] ) ) {
-			$validated['content'] = array();
-
-			// Validate content colors
-			$color_fields = array( 'bg_color', 'text_color' );
-			foreach ( $color_fields as $field ) {
-				if ( isset( $input['content'][ $field ] ) ) {
-					$color = sanitize_hex_color( $input['content'][ $field ] );
-					if ( $color ) {
-						$validated['content'][ $field ] = $color;
-					} else {
-						$errors[ 'content_' . $field ] = 'Invalid hex color format';
-					}
-				}
-			}
-
-			// Validate content padding (0-100px)
-			if ( isset( $input['content']['padding'] ) ) {
-				$padding = absint( $input['content']['padding'] );
-				if ( $padding >= 0 && $padding <= 100 ) {
-					$validated['content']['padding'] = $padding;
-				} else {
-					$errors['content_padding'] = 'Padding must be between 0 and 100';
-				}
-			}
-
-			// Validate content margin (0-100px)
-			if ( isset( $input['content']['margin'] ) ) {
-				$margin = absint( $input['content']['margin'] );
-				if ( $margin >= 0 && $margin <= 100 ) {
-					$validated['content']['margin'] = $margin;
-				} else {
-					$errors['content_margin'] = 'Margin must be between 0 and 100';
-				}
-			}
-
-			// Validate content max_width (0-2000px)
-			if ( isset( $input['content']['max_width'] ) ) {
-				$max_width = absint( $input['content']['max_width'] );
-				if ( $max_width >= 0 && $max_width <= 2000 ) {
-					$validated['content']['max_width'] = $max_width;
-				} else {
-					$errors['content_max_width'] = 'Max width must be between 0 and 2000';
-				}
-			}
-
-			// Validate content border_radius (0-50px)
-			if ( isset( $input['content']['border_radius'] ) ) {
-				$border_radius = absint( $input['content']['border_radius'] );
-				if ( $border_radius >= 0 && $border_radius <= 50 ) {
-					$validated['content']['border_radius'] = $border_radius;
-				} else {
-					$errors['content_border_radius'] = 'Border radius must be between 0 and 50';
-				}
-			}
-		}
-
 		// Validate admin menu settings.
 		if ( isset( $input['admin_menu'] ) ) {
 			$validated['admin_menu'] = array();
@@ -502,16 +398,6 @@ class MASE_Settings {
 					$validated['admin_menu']['width'] = $width;
 				} else {
 					$errors['admin_menu_width'] = 'Width must be between 0 and 500';
-				}
-			}
-
-			if ( isset( $input['admin_menu']['height_mode'] ) ) {
-				$height_mode = sanitize_text_field( $input['admin_menu']['height_mode'] );
-				$allowed_modes = array( 'full', 'content' );
-				if ( in_array( $height_mode, $allowed_modes, true ) ) {
-					$validated['admin_menu']['height_mode'] = $height_mode;
-				} else {
-					$errors['admin_menu_height_mode'] = 'Height mode must be full or content';
 				}
 			}
 		}

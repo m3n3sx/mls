@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Synchronization Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #f0f0f1;
+            transition: background 0.3s ease;
+        }
+        
+        html[data-theme="dark"] body {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        html[data-theme="dark"] .test-container {
+            background: #2d2d2d;
+            color: #ffffff;
+        }
+        
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        
+        html[data-theme="dark"] h1 {
+            color: #ffffff;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+        
+        html[data-theme="dark"] .toggle-container {
+            background: #1e1e1e;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #2271b1;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .test-results {
+            margin-top: 20px;
+        }
+        
+        .test-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background: #f0f0f1;
+        }
+        
+        html[data-theme="dark"] .test-item {
+            background: #1e1e1e;
+        }
+        
+        .test-item.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        html[data-theme="dark"] .test-item.pass {
+            background: #1e4620;
+            color: #7dff8f;
+        }
+        
+        .test-item.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        html[data-theme="dark"] .test-item.fail {
+            background: #4a1e1e;
+            color: #ff7d7d;
+        }
+        
+        .status-display {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        html[data-theme="dark"] .status-display {
+            background: #1e1e1e;
+        }
+        
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #135e96;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌓 Dark Mode Synchronization Test</h1>
+        <p>This test verifies that the dark mode toggles synchronize correctly between the header and master controls.</p>
+        
+        <h2>Test Controls</h2>
+        
+        <div class="toggle-container">
+            <label class="toggle-switch">
+                <input type="checkbox" id="mase-dark-mode-toggle" role="switch" aria-checked="false">
+                <span class="toggle-slider"></span>
+            </label>
+            <label for="mase-dark-mode-toggle"><strong>Header Dark Mode Toggle</strong></label>
+        </div>
+        
+        <div class="toggle-container">
+            <label class="toggle-switch">
+                <input type="checkbox" id="master-dark-mode" role="switch" aria-checked="false">
+                <span class="toggle-slider"></span>
+            </label>
+            <label for="master-dark-mode"><strong>Master Controls Dark Mode</strong></label>
+        </div>
+        
+        <h2>Test Actions</h2>
+        <button onclick="runTests()">Run All Tests</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <div class="test-results" id="test-results"></div>
+        
+        <h2>Current State</h2>
+        <div class="status-display" id="status-display"></div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Simplified MASE object for testing
+        var MASE = {
+            config: {
+                ajaxUrl: '',
+                nonce: '',
+                debounceDelay: 300
+            },
+            state: {
+                livePreviewEnabled: false,
+                darkModeEnabled: false
+            },
+            
+            darkModeSync: {
+                init: function() {
+                    var self = MASE;
+                    
+                    // Sync header toggle to master controls
+                    $('#mase-dark-mode-toggle').on('change', function() {
+                        var isChecked = $(this).is(':checked');
+                        
+                        // Update master controls checkbox
+                        $('#master-dark-mode')
+                            .prop('checked', isChecked)
+                            .attr('aria-checked', isChecked ? 'true' : 'false');
+                        
+                        // Apply dark mode immediately
+                        self.darkModeSync.apply(isChecked);
+                    });
+                    
+                    // Sync master controls to header toggle
+                    $('#master-dark-mode').on('change', function() {
+                        var isChecked = $(this).is(':checked');
+                        
+                        // Update header toggle
+                        $('#mase-dark-mode-toggle')
+                            .prop('checked', isChecked)
+                            .attr('aria-checked', isChecked ? 'true' : 'false');
+                        
+                        // Apply dark mode immediately
+                        self.darkModeSync.apply(isChecked);
+                    });
+                },
+                
+                apply: function(enabled) {
+                    var self = MASE;
+                    
+                    if (enabled) {
+                        // Apply dark mode
+                        $('html').attr('data-theme', 'dark');
+                        $('body').addClass('mase-dark-mode');
+                        
+                        // Update state
+                        self.state.darkModeEnabled = true;
+                        
+                        // Save to localStorage
+                        try {
+                            localStorage.setItem('mase_dark_mode', 'true');
+                        } catch (error) {
+                            console.warn('MASE: Could not save dark mode to localStorage:', error);
+                        }
+                    } else {
+                        // Remove dark mode
+                        $('html').removeAttr('data-theme');
+                        $('body').removeClass('mase-dark-mode');
+                        
+                        // Update state
+                        self.state.darkModeEnabled = false;
+                        
+                        // Save to localStorage
+                        try {
+                            localStorage.setItem('mase_dark_mode', 'false');
+                        } catch (error) {
+                            console.warn('MASE: Could not save dark mode to localStorage:', error);
+                        }
+                    }
+                }
+            },
+            
+            updateStatus: function() {
+                var status = {
+                    'HTML data-theme': $('html').attr('data-theme') || 'none',
+                    'Body class': $('body').hasClass('mase-dark-mode') ? 'mase-dark-mode' : 'none',
+                    'Header toggle checked': $('#mase-dark-mode-toggle').is(':checked'),
+                    'Header aria-checked': $('#mase-dark-mode-toggle').attr('aria-checked'),
+                    'Master toggle checked': $('#master-dark-mode').is(':checked'),
+                    'Master aria-checked': $('#master-dark-mode').attr('aria-checked'),
+                    'State.darkModeEnabled': this.state.darkModeEnabled,
+                    'localStorage': localStorage.getItem('mase_dark_mode')
+                };
+                
+                var html = '<pre>';
+                for (var key in status) {
+                    html += key + ': ' + status[key] + '\n';
+                }
+                html += '</pre>';
+                
+                $('#status-display').html(html);
+            }
+        };
+        
+        // Test functions
+        function addTestResult(name, passed, message) {
+            var className = passed ? 'pass' : 'fail';
+            var icon = passed ? '✅' : '❌';
+            var html = '<div class="test-item ' + className + '">' + icon + ' ' + name + ': ' + message + '</div>';
+            $('#test-results').append(html);
+        }
+        
+        function clearResults() {
+            $('#test-results').empty();
+        }
+        
+        function runTests() {
+            clearResults();
+            
+            // Reset state
+            $('#mase-dark-mode-toggle').prop('checked', false).attr('aria-checked', 'false');
+            $('#master-dark-mode').prop('checked', false).attr('aria-checked', 'false');
+            $('html').removeAttr('data-theme');
+            $('body').removeClass('mase-dark-mode');
+            MASE.state.darkModeEnabled = false;
+            
+            // Test 1: Toggle header switch, verify master controls updates
+            $('#mase-dark-mode-toggle').prop('checked', true).trigger('change');
+            var test1Pass = $('#master-dark-mode').is(':checked') && 
+                           $('#master-dark-mode').attr('aria-checked') === 'true';
+            addTestResult('Test 1', test1Pass, 'Header toggle → Master controls sync');
+            
+            // Test 2: Verify data-theme attribute applied
+            var test2Pass = $('html').attr('data-theme') === 'dark';
+            addTestResult('Test 2', test2Pass, 'data-theme="dark" applied to HTML');
+            
+            // Test 3: Verify state updated
+            var test3Pass = MASE.state.darkModeEnabled === true;
+            addTestResult('Test 3', test3Pass, 'state.darkModeEnabled updated');
+            
+            // Reset for next test
+            $('#mase-dark-mode-toggle').prop('checked', false).trigger('change');
+            
+            // Test 4: Toggle master controls, verify header updates
+            $('#master-dark-mode').prop('checked', true).trigger('change');
+            var test4Pass = $('#mase-dark-mode-toggle').is(':checked') && 
+                           $('#mase-dark-mode-toggle').attr('aria-checked') === 'true';
+            addTestResult('Test 4', test4Pass, 'Master controls → Header toggle sync');
+            
+            // Test 5: Verify data-theme attribute applied again
+            var test5Pass = $('html').attr('data-theme') === 'dark';
+            addTestResult('Test 5', test5Pass, 'data-theme="dark" applied via master controls');
+            
+            // Test 6: Turn off and verify removal
+            $('#mase-dark-mode-toggle').prop('checked', false).trigger('change');
+            var test6Pass = $('html').attr('data-theme') === undefined && 
+                           MASE.state.darkModeEnabled === false;
+            addTestResult('Test 6', test6Pass, 'data-theme removed when disabled');
+            
+            // Test 7: Verify localStorage persistence
+            $('#mase-dark-mode-toggle').prop('checked', true).trigger('change');
+            var test7Pass = localStorage.getItem('mase_dark_mode') === 'true';
+            addTestResult('Test 7', test7Pass, 'localStorage persistence');
+            
+            MASE.updateStatus();
+        }
+        
+        // Initialize on page load
+        $(document).ready(function() {
+            console.log('Initializing Dark Mode Sync Test');
+            MASE.darkModeSync.init();
+            
+            // Apply initial state
+            var darkModeEnabled = $('#mase-dark-mode-toggle').is(':checked');
+            MASE.darkModeSync.apply(darkModeEnabled);
+            
+            // Update status on any change
+            $('#mase-dark-mode-toggle, #master-dark-mode').on('change', function() {
+                MASE.updateStatus();
+            });
+            
+            MASE.updateStatus();
+        });
+    </script>
+</body>
+</html>

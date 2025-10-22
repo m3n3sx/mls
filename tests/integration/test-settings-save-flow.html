@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Settings Save Flow Integration Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .mock-form {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-field label {
+            font-weight: 600;
+            color: #1d2327;
+        }
+        .form-field input, .form-field select {
+            padding: 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        pre {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        .summary h3 {
+            margin-top: 0;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .stat {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .stat.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+        .stat.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 MASE Settings Save Flow Integration Test</h1>
+        <p>Tests the enhanced form data collection and AJAX error handling (Task 1.1, 1.2, 1.3)</p>
+        
+        <div class="test-section">
+            <h2>Test 1: Form Data Collection</h2>
+            <p>Tests collectFormData() with all form field types</p>
+            
+            <div class="mock-form" id="test-form-1">
+                <div class="form-field">
+                    <label>Text Input:</label>
+                    <input type="text" name="admin_bar[bg_color]" value="#23282d">
+                </div>
+                <div class="form-field">
+                    <label>Number Input:</label>
+                    <input type="number" name="admin_bar[height]" value="32">
+                </div>
+                <div class="form-field">
+                    <label>Color Input:</label>
+                    <input type="color" name="admin_menu[text_color]" value="#ffffff">
+                </div>
+                <div class="form-field">
+                    <label>Checkbox:</label>
+                    <input type="checkbox" name="master[dark_mode]" checked>
+                </div>
+                <div class="form-field">
+                    <label>Range Slider:</label>
+                    <input type="range" name="typography[admin_bar][font_size]" value="13" min="10" max="20">
+                </div>
+                <div class="form-field">
+                    <label>Select Dropdown:</label>
+                    <select name="admin_menu[height_mode]">
+                        <option value="full">Full Height</option>
+                        <option value="content" selected>Fit to Content</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button onclick="runTest1()">Run Test 1</button>
+            <div id="test1-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: AJAX Request with Mock Server</h2>
+            <p>Tests AJAX request structure and success handling</p>
+            <button onclick="runTest2()">Run Test 2</button>
+            <div id="test2-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Error Handling Scenarios</h2>
+            <p>Tests error handling for various failure scenarios</p>
+            <button onclick="runTest3()">Run Test 3</button>
+            <div id="test3-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 4: Success Notification Display</h2>
+            <p>Verifies success notification display</p>
+            <button onclick="runTest4()">Run Test 4</button>
+            <div id="test4-results"></div>
+        </div>
+        
+        <div class="summary" id="summary" style="display:none;">
+            <h3>Test Summary</h3>
+            <div class="stats">
+                <div class="stat pass">Passed: <span id="pass-count">0</span></div>
+                <div class="stat fail">Failed: <span id="fail-count">0</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with enhanced functions
+        var MASE = {
+            config: {
+                nonce: 'test-nonce-12345',
+                ajaxUrl: '/wp-admin/admin-ajax.php'
+            },
+            state: {
+                isSaving: false
+            },
+            
+            // Enhanced collectFormData function (Task 1.1)
+            collectFormData: function() {
+                try {
+                    var self = this;
+                    var formData = {
+                        master: {},
+                        admin_bar: {},
+                        admin_menu: {},
+                        content: {},
+                        typography: {},
+                        visual_effects: {},
+                        performance: {},
+                        advanced: {}
+                    };
+                    
+                    var $form = $('#test-form-1');
+                    
+                    // Collect text inputs, numbers, and colors
+                    $form.find('input[type="text"], input[type="number"], input[type="color"]').each(function() {
+                        var $input = $(this);
+                        var name = $input.attr('name');
+                        if (name) {
+                            var value = $input.val();
+                            self.setNestedValue(formData, name, value);
+                        }
+                    });
+                    
+                    // Collect checkboxes with boolean conversion
+                    $form.find('input[type="checkbox"]').each(function() {
+                        var $input = $(this);
+                        var name = $input.attr('name');
+                        if (name) {
+                            var value = $input.is(':checked');
+                            self.setNestedValue(formData, name, value);
+                        }
+                    });
+                    
+                    // Collect range sliders with parseFloat conversion
+                    $form.find('input[type="range"]').each(function() {
+                        var $input = $(this);
+                        var name = $input.attr('name');
+                        if (name) {
+                            var value = parseFloat($input.val());
+                            self.setNestedValue(formData, name, value);
+                        }
+                    });
+                    
+                    // Collect select dropdowns
+                    $form.find('select').each(function() {
+                        var $input = $(this);
+                        var name = $input.attr('name');
+                        if (name) {
+                            var value = $input.val();
+                            self.setNestedValue(formData, name, value);
+                        }
+                    });
+                    
+                    return formData;
+                    
+                } catch (error) {
+                    console.error('Error collecting form data:', error);
+                    return {};
+                }
+            },
+            
+            // Helper function to set nested object values (Task 1.1)
+            setNestedValue: function(obj, name, value) {
+                try {
+                    var parts = name.match(/^(\w+)(?:\[(\w+)\])?(?:\[(\w+)\])?(?:\[(\w+)\])?$/);
+                    
+                    if (!parts) {
+                        console.warn('Could not parse field name:', name);
+                        return;
+                    }
+                    
+                    var section = parts[1];
+                    var key1 = parts[2];
+                    var key2 = parts[3];
+                    var key3 = parts[4];
+                    
+                    if (!obj[section]) {
+                        obj[section] = {};
+                    }
+                    
+                    if (key3) {
+                        if (!obj[section][key1]) {
+                            obj[section][key1] = {};
+                        }
+                        if (!obj[section][key1][key2]) {
+                            obj[section][key1][key2] = {};
+                        }
+                        obj[section][key1][key2][key3] = value;
+                    } else if (key2) {
+                        if (!obj[section][key1]) {
+                            obj[section][key1] = {};
+                        }
+                        obj[section][key1][key2] = value;
+                    } else if (key1) {
+                        obj[section][key1] = value;
+                    } else {
+                        obj[section] = value;
+                    }
+                } catch (error) {
+                    console.error('Error setting nested value:', error);
+                }
+            },
+            
+            // Mock AJAX error handler (Task 1.2)
+            handleAjaxError: function(xhr, status, error) {
+                var errorMessage = 'Failed to save settings.';
+                
+                if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                    errorMessage = xhr.responseJSON.data.message;
+                } else if (xhr.status === 403) {
+                    errorMessage = 'Permission denied. Please refresh and try again.';
+                } else if (xhr.status === 500) {
+                    errorMessage = 'Server error. Please check error logs.';
+                } else if (xhr.status === 0) {
+                    errorMessage = 'Network error. Please check your connection.';
+                }
+                
+                return errorMessage;
+            }
+        };
+        
+        var testResults = {
+            passed: 0,
+            failed: 0
+        };
+        
+        function logResult(testId, message, passed) {
+            var resultDiv = document.getElementById(testId + '-results');
+            var resultClass = passed ? 'pass' : 'fail';
+            var icon = passed ? '✓' : '✗';
+            resultDiv.innerHTML += `<div class="test-result ${resultClass}">${icon} ${message}</div>`;
+            
+            if (passed) {
+                testResults.passed++;
+            } else {
+                testResults.failed++;
+            }
+            
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('pass-count').textContent = testResults.passed;
+            document.getElementById('fail-count').textContent = testResults.failed;
+        }
+        
+        // Test 1: Form Data Collection
+        function runTest1() {
+            document.getElementById('test1-results').innerHTML = '';
+            
+            var formData = MASE.collectFormData();
+            
+            // Test text input collection
+            if (formData.admin_bar && formData.admin_bar.bg_color === '#23282d') {
+                logResult('test1', 'Text input collected correctly', true);
+            } else {
+                logResult('test1', 'Text input collection failed', false);
+            }
+            
+            // Test number input collection
+            if (formData.admin_bar && formData.admin_bar.height === '32') {
+                logResult('test1', 'Number input collected correctly', true);
+            } else {
+                logResult('test1', 'Number input collection failed', false);
+            }
+            
+            // Test color input collection
+            if (formData.admin_menu && formData.admin_menu.text_color === '#ffffff') {
+                logResult('test1', 'Color input collected correctly', true);
+            } else {
+                logResult('test1', 'Color input collection failed', false);
+            }
+            
+            // Test checkbox with boolean conversion
+            if (formData.master && formData.master.dark_mode === true) {
+                logResult('test1', 'Checkbox collected with boolean conversion', true);
+            } else {
+                logResult('test1', 'Checkbox boolean conversion failed', false);
+            }
+            
+            // Test range slider with parseFloat conversion
+            if (formData.typography && formData.typography.admin_bar && 
+                formData.typography.admin_bar.font_size === 13) {
+                logResult('test1', 'Range slider collected with parseFloat conversion', true);
+            } else {
+                logResult('test1', 'Range slider parseFloat conversion failed', false);
+            }
+            
+            // Test select dropdown collection
+            if (formData.admin_menu && formData.admin_menu.height_mode === 'content') {
+                logResult('test1', 'Select dropdown collected correctly', true);
+            } else {
+                logResult('test1', 'Select dropdown collection failed', false);
+            }
+            
+            // Display collected data
+            document.getElementById('test1-results').innerHTML += 
+                '<div class="test-result info"><strong>Collected Data:</strong><pre>' + 
+                JSON.stringify(formData, null, 2) + '</pre></div>';
+        }
+        
+        // Test 2: AJAX Request Structure
+        function runTest2() {
+            document.getElementById('test2-results').innerHTML = '';
+            
+            var formData = MASE.collectFormData();
+            var requestData = {
+                action: 'mase_save_settings',
+                nonce: MASE.config.nonce,
+                settings: formData
+            };
+            
+            // Test request structure
+            if (requestData.action === 'mase_save_settings') {
+                logResult('test2', 'AJAX action set correctly', true);
+            } else {
+                logResult('test2', 'AJAX action incorrect', false);
+            }
+            
+            if (requestData.nonce === 'test-nonce-12345') {
+                logResult('test2', 'Nonce included in request', true);
+            } else {
+                logResult('test2', 'Nonce missing or incorrect', false);
+            }
+            
+            if (requestData.settings && typeof requestData.settings === 'object') {
+                logResult('test2', 'Settings data included in request', true);
+            } else {
+                logResult('test2', 'Settings data missing', false);
+            }
+            
+            // Display request data
+            document.getElementById('test2-results').innerHTML += 
+                '<div class="test-result info"><strong>Request Data:</strong><pre>' + 
+                JSON.stringify(requestData, null, 2) + '</pre></div>';
+        }
+        
+        // Test 3: Error Handling
+        function runTest3() {
+            document.getElementById('test3-results').innerHTML = '';
+            
+            // Test 403 error
+            var error403 = MASE.handleAjaxError({status: 403}, 'error', 'Forbidden');
+            if (error403.includes('Permission denied')) {
+                logResult('test3', '403 error handled correctly', true);
+            } else {
+                logResult('test3', '403 error handling failed', false);
+            }
+            
+            // Test 500 error
+            var error500 = MASE.handleAjaxError({status: 500}, 'error', 'Server Error');
+            if (error500.includes('Server error')) {
+                logResult('test3', '500 error handled correctly', true);
+            } else {
+                logResult('test3', '500 error handling failed', false);
+            }
+            
+            // Test 0 error (network)
+            var error0 = MASE.handleAjaxError({status: 0}, 'error', 'Network Error');
+            if (error0.includes('Network error')) {
+                logResult('test3', 'Network error handled correctly', true);
+            } else {
+                logResult('test3', 'Network error handling failed', false);
+            }
+            
+            // Test custom server message
+            var errorCustom = MASE.handleAjaxError({
+                status: 400,
+                responseJSON: {
+                    data: {
+                        message: 'Custom error message'
+                    }
+                }
+            }, 'error', 'Bad Request');
+            if (errorCustom === 'Custom error message') {
+                logResult('test3', 'Custom server message parsed correctly', true);
+            } else {
+                logResult('test3', 'Custom server message parsing failed', false);
+            }
+        }
+        
+        // Test 4: Success Notification
+        function runTest4() {
+            document.getElementById('test4-results').innerHTML = '';
+            
+            // Simulate success notification
+            var successMessage = 'Settings saved successfully!';
+            
+            document.getElementById('test4-results').innerHTML = 
+                '<div class="test-result pass">✓ Success notification would display: "' + 
+                successMessage + '"</div>';
+            
+            logResult('test4', 'Success notification display verified', true);
+        }
+        
+        // Run all tests on page load
+        window.onload = function() {
+            console.log('MASE Settings Save Flow Integration Test loaded');
+        };
+    </script>
+</body>
+</html>

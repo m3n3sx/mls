@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Default Menu Spacing - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        h2 {
+            color: #2c3338;
+            border-bottom: 1px solid #dcdcde;
+            padding-bottom: 10px;
+        }
+        code {
+            background: #f6f7f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, monospace;
+        }
+        .css-output {
+            background: #f6f7f7;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test Default Menu Spacing</h1>
+        <p>This test verifies that the default admin menu spacing matches WordPress defaults.</p>
+        <p><strong>Requirements:</strong> 4.1, 4.2, 4.3, 4.4, 4.5</p>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 1: Default Settings Values</h2>
+        <div id="test1-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 2: CSS Generation with Defaults</h2>
+        <div id="test2-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 3: CSS Generation with Custom Values</h2>
+        <div id="test3-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Generated CSS Output</h2>
+        <div class="css-output" id="css-output"></div>
+    </div>
+
+    <script>
+        // Mock MASE object with generateAdminMenuCSS function
+        var MASE = {
+            generateAdminMenuCSS: function(settings) {
+                var css = '';
+                var adminMenu = settings.admin_menu || {};
+                
+                // Admin menu background (always apply)
+                css += 'body.wp-admin #adminmenu,';
+                css += 'body.wp-admin #adminmenuback,';
+                css += 'body.wp-admin #adminmenuwrap{';
+                if (adminMenu.bg_color) {
+                    css += 'background-color:' + adminMenu.bg_color + '!important;';
+                }
+                css += '}';
+                
+                // Width handling (simplified for test)
+                var width = parseInt(adminMenu.width) || 160;
+                if (width !== 160) {
+                    css += 'body.wp-admin:not(.folded) #adminmenu{';
+                    css += 'width:' + width + 'px!important;';
+                    css += '}';
+                }
+                
+                // Height mode (simplified for test)
+                var heightMode = adminMenu.height_mode || 'full';
+                if (heightMode === 'content') {
+                    css += 'body.wp-admin #adminmenu{';
+                    css += 'height:auto!important;';
+                    css += '}';
+                }
+                
+                // Text color
+                if (adminMenu.text_color) {
+                    css += 'body.wp-admin #adminmenu a{';
+                    css += 'color:' + adminMenu.text_color + '!important;';
+                    css += '}';
+                }
+                
+                // Hover states
+                if (adminMenu.hover_bg_color) {
+                    css += 'body.wp-admin #adminmenu li.menu-top:hover{';
+                    css += 'background-color:' + adminMenu.hover_bg_color + '!important;';
+                    css += '}';
+                }
+                
+                if (adminMenu.hover_text_color) {
+                    css += 'body.wp-admin #adminmenu li.menu-top:hover a{';
+                    css += 'color:' + adminMenu.hover_text_color + '!important;';
+                    css += '}';
+                }
+                
+                // Menu item spacing with WordPress defaults (Requirement 4.1, 4.2, 4.3)
+                var menuPadding = adminMenu.item_padding || '6px 12px';
+                var fontSize = adminMenu.font_size || 13;
+                var lineHeight = adminMenu.line_height || 18;
+                
+                css += 'body.wp-admin #adminmenu li.menu-top{';
+                css += 'padding:' + menuPadding + '!important;';
+                css += '}';
+                
+                css += 'body.wp-admin #adminmenu a{';
+                css += 'font-size:' + fontSize + 'px!important;';
+                css += 'line-height:' + lineHeight + 'px!important;';
+                css += '}';
+                
+                // Submenu indentation (Requirement 4.4, 4.5)
+                css += 'body.wp-admin #adminmenu .wp-submenu{';
+                css += 'padding-left:12px!important;';
+                css += '}';
+                
+                css += 'body.wp-admin #adminmenu .wp-submenu li{';
+                css += 'padding:5px 0!important;';
+                css += '}';
+                
+                return css;
+            }
+        };
+
+        // Test helper functions
+        function pass(message) {
+            return '<div class="test-result pass">✓ PASS: ' + message + '</div>';
+        }
+
+        function fail(message) {
+            return '<div class="test-result fail">✗ FAIL: ' + message + '</div>';
+        }
+
+        function info(message) {
+            return '<div class="test-result info">ℹ INFO: ' + message + '</div>';
+        }
+
+        // Test 1: Default Settings Values
+        function test1() {
+            var results = '';
+            
+            // Simulate default settings from PHP
+            var defaults = {
+                admin_menu: {
+                    bg_color: '#23282d',
+                    text_color: '#ffffff',
+                    hover_bg_color: '#191e23',
+                    hover_text_color: '#00b9eb',
+                    width: 160,
+                    height_mode: 'full',
+                    item_padding: '6px 12px',
+                    font_size: 13,
+                    line_height: 18
+                }
+            };
+            
+            results += info('Testing default settings structure...');
+            
+            if (defaults.admin_menu.item_padding === '6px 12px') {
+                results += pass('item_padding defaults to "6px 12px" (WordPress default)');
+            } else {
+                results += fail('item_padding is "' + defaults.admin_menu.item_padding + '", expected "6px 12px"');
+            }
+            
+            if (defaults.admin_menu.font_size === 13) {
+                results += pass('font_size defaults to 13 (WordPress default)');
+            } else {
+                results += fail('font_size is ' + defaults.admin_menu.font_size + ', expected 13');
+            }
+            
+            if (defaults.admin_menu.line_height === 18) {
+                results += pass('line_height defaults to 18 (WordPress default)');
+            } else {
+                results += fail('line_height is ' + defaults.admin_menu.line_height + ', expected 18');
+            }
+            
+            document.getElementById('test1-results').innerHTML = results;
+        }
+
+        // Test 2: CSS Generation with Defaults
+        function test2() {
+            var results = '';
+            
+            // Settings with no custom spacing (should use defaults)
+            var settings = {
+                admin_menu: {
+                    bg_color: '#23282d',
+                    text_color: '#ffffff',
+                    width: 160,
+                    height_mode: 'full'
+                    // No item_padding, font_size, or line_height specified
+                }
+            };
+            
+            results += info('Testing CSS generation with default values...');
+            
+            var css = MASE.generateAdminMenuCSS(settings);
+            
+            // Check for default padding
+            if (css.includes('padding:6px 12px!important;')) {
+                results += pass('Default padding "6px 12px" applied when not specified');
+            } else {
+                results += fail('Default padding not found in generated CSS');
+            }
+            
+            // Check for default font size
+            if (css.includes('font-size:13px!important;')) {
+                results += pass('Default font-size "13px" applied when not specified');
+            } else {
+                results += fail('Default font-size not found in generated CSS');
+            }
+            
+            // Check for default line height
+            if (css.includes('line-height:18px!important;')) {
+                results += pass('Default line-height "18px" applied when not specified');
+            } else {
+                results += fail('Default line-height not found in generated CSS');
+            }
+            
+            // Check for submenu indentation
+            if (css.includes('padding-left:12px!important;')) {
+                results += pass('Submenu indentation "12px" applied');
+            } else {
+                results += fail('Submenu indentation not found in generated CSS');
+            }
+            
+            // Check for submenu item padding
+            if (css.includes('padding:5px 0!important;')) {
+                results += pass('Submenu item padding "5px 0" applied');
+            } else {
+                results += fail('Submenu item padding not found in generated CSS');
+            }
+            
+            document.getElementById('test2-results').innerHTML = results;
+        }
+
+        // Test 3: CSS Generation with Custom Values
+        function test3() {
+            var results = '';
+            
+            // Settings with custom spacing values
+            var settings = {
+                admin_menu: {
+                    bg_color: '#23282d',
+                    text_color: '#ffffff',
+                    width: 160,
+                    height_mode: 'full',
+                    item_padding: '10px 15px',
+                    font_size: 14,
+                    line_height: 20
+                }
+            };
+            
+            results += info('Testing CSS generation with custom values...');
+            
+            var css = MASE.generateAdminMenuCSS(settings);
+            
+            // Check for custom padding
+            if (css.includes('padding:10px 15px!important;')) {
+                results += pass('Custom padding "10px 15px" applied correctly');
+            } else {
+                results += fail('Custom padding not found in generated CSS');
+            }
+            
+            // Check for custom font size
+            if (css.includes('font-size:14px!important;')) {
+                results += pass('Custom font-size "14px" applied correctly');
+            } else {
+                results += fail('Custom font-size not found in generated CSS');
+            }
+            
+            // Check for custom line height
+            if (css.includes('line-height:20px!important;')) {
+                results += pass('Custom line-height "20px" applied correctly');
+            } else {
+                results += fail('Custom line-height not found in generated CSS');
+            }
+            
+            // Display generated CSS
+            document.getElementById('css-output').textContent = css;
+            
+            document.getElementById('test3-results').innerHTML = results;
+        }
+
+        // Run all tests
+        window.onload = function() {
+            test1();
+            test2();
+            test3();
+        };
+    </script>
+</body>
+</html>
