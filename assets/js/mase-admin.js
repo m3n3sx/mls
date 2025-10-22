@@ -771,6 +771,20 @@
                         }
                     }, self.config.debounceDelay));
                     
+                    // Bind height mode selector specifically (Requirement 2.4)
+                    // Trigger live preview update when height mode changes
+                    $('#admin-menu-height-mode').on('change.livepreview', function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from height mode:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
                     // Bind checkboxes and radios
                     $('.mase-checkbox, .mase-radio').on('change.livepreview', self.debounce(function() {
                         try {
@@ -923,14 +937,31 @@
             generateAdminBarCSS: function(settings) {
                 var css = '';
                 var adminBar = settings.admin_bar || {};
+                var visualEffects = settings.visual_effects || {};
+                var adminBarEffects = visualEffects.admin_bar || {};
                 
+                // Get admin bar height (default 32px)
+                var height = adminBar.height || 32;
+                
+                // Base positioning (always applied) - Requirements 8.1, 8.2
                 css += 'body.wp-admin #wpadminbar{';
+                css += 'position:fixed!important;';
+                css += 'top:0!important;';
+                css += 'left:0!important;';
+                css += 'right:0!important;';
+                css += 'z-index:99999!important;';
+                
                 if (adminBar.bg_color) {
                     css += 'background-color:' + adminBar.bg_color + '!important;';
                 }
                 if (adminBar.height) {
                     css += 'height:' + adminBar.height + 'px!important;';
                 }
+                css += '}';
+                
+                // Adjust body padding to match admin bar height - Requirement 8.2
+                css += 'html.wp-toolbar{';
+                css += 'padding-top:' + height + 'px!important;';
                 css += '}';
                 
                 // Admin bar text color
@@ -943,12 +974,37 @@
                     css += '}';
                 }
                 
-                // Adjust page margin for admin bar height
-                if (adminBar.height) {
-                    css += 'body.wp-admin.admin-bar{';
-                    css += 'margin-top:' + adminBar.height + 'px!important;';
+                // Glassmorphism effect (if enabled) - Requirement 8.3
+                if (adminBarEffects.glassmorphism) {
+                    var blur = adminBarEffects.blur_intensity || 20;
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'backdrop-filter:blur(' + blur + 'px)!important;';
+                    css += '-webkit-backdrop-filter:blur(' + blur + 'px)!important;';
+                    css += 'background-color:rgba(35,40,45,0.8)!important;';
+                    css += '}';
+                }
+                
+                // Floating effect (if enabled) - Requirement 8.3
+                if (adminBarEffects.floating) {
+                    var margin = adminBarEffects.floating_margin || 8;
+                    var radius = adminBarEffects.border_radius || 8;
+                    
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'top:' + margin + 'px!important;';
+                    css += 'left:' + margin + 'px!important;';
+                    css += 'right:' + margin + 'px!important;';
+                    css += 'width:calc(100% - ' + (margin * 2) + 'px)!important;';
+                    css += 'border-radius:' + radius + 'px!important;';
                     css += '}';
                     
+                    // Adjust body padding for floating bar - Requirement 8.3
+                    css += 'html.wp-toolbar{';
+                    css += 'padding-top:' + (height + margin * 2) + 'px!important;';
+                    css += '}';
+                }
+                
+                // Submenu positioning
+                if (adminBar.height) {
                     css += 'body.wp-admin #wpadminbar .ab-sub-wrapper{';
                     css += 'top:' + adminBar.height + 'px!important;';
                     css += '}';
@@ -1069,18 +1125,26 @@
                 // Admin menu height mode
                 var heightMode = $('#admin-menu-height-mode').val() || 'full';
                 if (heightMode === 'content') {
+                    // Target all menu wrapper elements with maximum specificity
                     css += 'body.wp-admin #adminmenuwrap,';
-                    css += 'body.wp-admin #adminmenuback{';
+                    css += 'body.wp-admin #adminmenuback,';
+                    css += 'body.wp-admin #adminmenumain{';
                     css += 'height:auto!important;';
-                    css += 'min-height:100%!important;';
+                    css += 'min-height:0!important;';  // Override WordPress default min-height: 100vh
                     css += 'bottom:auto!important;';
                     css += '}';
                     
+                    // Ensure menu container fits content
                     css += 'body.wp-admin #adminmenu{';
                     css += 'height:auto!important;';
                     css += 'min-height:0!important;';
                     css += 'position:relative!important;';
                     css += 'bottom:auto!important;';
+                    css += '}';
+                    
+                    // Allow natural height for menu items
+                    css += 'body.wp-admin #adminmenu li.menu-top{';
+                    css += 'height:auto!important;';
                     css += '}';
                 }
                 
@@ -1108,6 +1172,29 @@
                     css += 'color:' + adminMenu.hover_text_color + '!important;';
                     css += '}';
                 }
+                
+                // Menu item spacing with WordPress defaults (Requirement 4.1, 4.2, 4.3)
+                var menuPadding = adminMenu.item_padding || '6px 12px';
+                var fontSize = adminMenu.font_size || 13;
+                var lineHeight = adminMenu.line_height || 18;
+                
+                css += 'body.wp-admin #adminmenu li.menu-top{';
+                css += 'padding:' + menuPadding + '!important;';
+                css += '}';
+                
+                css += 'body.wp-admin #adminmenu a{';
+                css += 'font-size:' + fontSize + 'px!important;';
+                css += 'line-height:' + lineHeight + 'px!important;';
+                css += '}';
+                
+                // Submenu indentation (Requirement 4.4, 4.5)
+                css += 'body.wp-admin #adminmenu .wp-submenu{';
+                css += 'padding-left:12px!important;';
+                css += '}';
+                
+                css += 'body.wp-admin #adminmenu .wp-submenu li{';
+                css += 'padding:5px 0!important;';
+                css += '}';
                 
                 return css;
             },
@@ -1330,72 +1417,96 @@
         },
         
         /**
-         * Toggle Dark Mode
-         * 
-         * Toggles dark mode for the ENTIRE WordPress admin.
-         * Applies data-theme="dark" to <html> element.
-         * Saves preference to localStorage.
-         * Syncs with form checkbox in General tab.
-         * 
-         * Requirements: 2.1, 2.2, 3.1, 3.2, 4.1, 5.1, 6.1
-         * 
-         * @param {Event} e - Change event from checkbox
+         * Dark Mode Synchronization Module
+         * Handles bidirectional synchronization between header toggle and master controls
+         * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5
          */
-        toggleDarkMode: function(e) {
-            var self = MASE;
+        darkModeSync: {
+            /**
+             * Initialize dark mode synchronization
+             * Sets up event listeners for both toggles
+             * Requirements: 6.1, 6.2
+             */
+            init: function() {
+                var self = MASE;
+                
+                // Sync header toggle to master controls (Requirement 6.1)
+                $('#mase-dark-mode-toggle').on('change', function() {
+                    var isChecked = $(this).is(':checked');
+                    
+                    // Update master controls checkbox (Requirement 6.2)
+                    $('#master-dark-mode')
+                        .prop('checked', isChecked)
+                        .attr('aria-checked', isChecked ? 'true' : 'false');
+                    
+                    // Apply dark mode immediately (Requirement 6.3)
+                    self.darkModeSync.apply(isChecked);
+                });
+                
+                // Sync master controls to header toggle (Requirement 6.1)
+                $('#master-dark-mode').on('change', function() {
+                    var isChecked = $(this).is(':checked');
+                    
+                    // Update header toggle (Requirement 6.2)
+                    $('#mase-dark-mode-toggle')
+                        .prop('checked', isChecked)
+                        .attr('aria-checked', isChecked ? 'true' : 'false');
+                    
+                    // Apply dark mode immediately (Requirement 6.3)
+                    self.darkModeSync.apply(isChecked);
+                });
+            },
             
-            // Safety check for event object
-            if (!e || !e.target) {
-                console.warn('MASE: Invalid event object in toggleDarkMode');
-                return;
+            /**
+             * Apply dark mode state
+             * Updates DOM and state without triggering events
+             * Requirements: 6.3, 6.4
+             * 
+             * @param {boolean} enabled - Whether dark mode should be enabled
+             */
+            apply: function(enabled) {
+                var self = MASE;
+                
+                if (enabled) {
+                    // Apply dark mode (Requirement 6.3)
+                    $('html').attr('data-theme', 'dark');
+                    $('body').addClass('mase-dark-mode');
+                    
+                    // Update state (Requirement 6.4)
+                    self.state.darkModeEnabled = true;
+                    
+                    // Save to localStorage
+                    try {
+                        localStorage.setItem('mase_dark_mode', 'true');
+                    } catch (error) {
+                        console.warn('MASE: Could not save dark mode to localStorage:', error);
+                    }
+                    
+                    // Trigger live preview update if enabled
+                    if (self.state.livePreviewEnabled) {
+                        self.updatePreview();
+                    }
+                } else {
+                    // Remove dark mode (Requirement 6.3)
+                    $('html').removeAttr('data-theme');
+                    $('body').removeClass('mase-dark-mode');
+                    
+                    // Update state (Requirement 6.4)
+                    self.state.darkModeEnabled = false;
+                    
+                    // Save to localStorage
+                    try {
+                        localStorage.setItem('mase_dark_mode', 'false');
+                    } catch (error) {
+                        console.warn('MASE: Could not save dark mode to localStorage:', error);
+                    }
+                    
+                    // Trigger live preview update if enabled
+                    if (self.state.livePreviewEnabled) {
+                        self.updatePreview();
+                    }
+                }
             }
-            
-            var $checkbox = $(e.target);
-            var isDark = $checkbox.is(':checked');
-            
-            // Apply to entire WordPress admin (Requirement 2.1, 2.2)
-            if (isDark) {
-                // Enable dark mode
-                $('html').attr('data-theme', 'dark');
-                $('body').addClass('mase-dark-mode');
-            } else {
-                // Disable dark mode
-                $('html').removeAttr('data-theme');
-                $('body').removeClass('mase-dark-mode');
-            }
-            
-            // Update aria-checked for accessibility (Requirement 6.1, 6.4)
-            $checkbox.attr('aria-checked', isDark ? 'true' : 'false');
-            
-            // Sync with form checkbox in General tab (Requirement 3.1, 3.2)
-            var $headerToggle = $('#mase-dark-mode-toggle');
-            var $generalCheckbox = $('#master-dark-mode');
-            
-            // Determine which toggle was clicked and sync the other
-            if ($checkbox.attr('id') === 'mase-dark-mode-toggle') {
-                // Header toggle was clicked, sync General tab
-                $generalCheckbox
-                    .prop('checked', isDark)
-                    .attr('aria-checked', isDark ? 'true' : 'false');
-            } else {
-                // General tab was clicked, sync header toggle
-                $headerToggle
-                    .prop('checked', isDark)
-                    .attr('aria-checked', isDark ? 'true' : 'false');
-            }
-            
-            // Save preference to localStorage (Requirement 4.1, 4.2)
-            try {
-                localStorage.setItem('mase_dark_mode', isDark ? 'true' : 'false');
-            } catch (error) {
-                console.warn('MASE: Could not save dark mode to localStorage:', error);
-            }
-            
-            // Show notification (Requirement 5.1, 5.2, 5.4)
-            self.showNotice(
-                'info',
-                isDark ? 'Dark mode enabled' : 'Dark mode disabled'
-            );
         },
         
         /**
@@ -1842,6 +1953,109 @@
                     }
                 });
             }
+        },
+        
+        /**
+         * Reset to WordPress Defaults
+         * Requirements: 5.1, 5.2, 5.3, 5.4
+         * 
+         * Completely resets all MASE settings to WordPress defaults by:
+         * - Displaying confirmation dialog with detailed warning
+         * - Removing all injected style elements from DOM
+         * - Clearing live preview state
+         * - Sending AJAX request to delete database settings
+         * - Reloading page to show WordPress defaults
+         */
+        resetToDefaults: function() {
+            var self = this;
+            
+            // Confirmation dialog with detailed warning (Requirement 5.1)
+            var confirmMessage = 'Reset all MASE settings to WordPress defaults?\n\n' +
+                'This will:\n' +
+                '• Remove all color customizations\n' +
+                '• Clear all typography settings\n' +
+                '• Delete all visual effects\n' +
+                '• Remove custom palettes and templates\n' +
+                '• Restore original WordPress admin appearance\n\n' +
+                'This action cannot be undone.';
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+            
+            // Show loading state
+            self.showNotice('info', 'Resetting to WordPress defaults...', false);
+            var $button = $('#mase-reset-all');
+            if ($button.length) {
+                $button.prop('disabled', true);
+            }
+            
+            // Step 1: Remove all style elements with id^="mase-" (Requirement 5.1)
+            console.log('MASE: Removing all injected style elements...');
+            $('style[id^="mase-"]').remove();
+            $('#mase-live-preview-styles').remove();
+            $('#mase-custom-styles').remove();
+            $('#mase-custom-css').remove();
+            
+            // Step 2: Remove data-theme attribute from html/body (Requirement 5.1)
+            console.log('MASE: Removing data-theme attributes...');
+            $('html, body').removeAttr('data-theme');
+            
+            // Step 3: Clear live preview state (Requirement 5.1)
+            console.log('MASE: Clearing live preview state...');
+            self.state.livePreviewEnabled = false;
+            var $livePreviewToggle = $('#mase-live-preview-toggle');
+            if ($livePreviewToggle.length) {
+                $livePreviewToggle.prop('checked', false);
+            }
+            
+            // Step 4: Send AJAX request to server (Requirement 5.1)
+            console.log('MASE: Sending reset request to server...');
+            $.ajax({
+                url: self.config.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mase_reset_settings',
+                    nonce: self.config.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.showNotice('success', 'Settings reset successfully. Reloading page...');
+                        
+                        // Reload page after 1 second to show WordPress defaults (Requirement 5.1)
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        self.showNotice('error', response.data.message || 'Failed to reset settings');
+                        if ($button.length) {
+                            $button.prop('disabled', false);
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    // Enhanced error handling (Requirement 5.1)
+                    var message = 'Network error. Please try again.';
+                    if (xhr.status === 403) {
+                        message = 'Permission denied. You do not have access to reset settings.';
+                    } else if (xhr.status === 500) {
+                        message = 'Server error. Please check error logs.';
+                    } else if (xhr.status === 0) {
+                        message = 'Network error. Please check your connection.';
+                    }
+                    
+                    console.error('MASE: Reset Settings Error:', {
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        responseText: xhr.responseText
+                    });
+                    
+                    self.showNotice('error', message);
+                    if ($button.length) {
+                        $button.prop('disabled', false);
+                    }
+                }
+            });
         },
         
         /**
@@ -2490,29 +2704,16 @@
             console.log('MASE: Initializing v1.2.0');
             
             try {
+                // Requirement 7.1: Store initial scroll position before initialization
+                var initialScrollTop = $(window).scrollTop();
+                console.log('MASE: Stored initial scroll position:', initialScrollTop);
+                
                 // Set nonce from localized script data (Requirement 6.5)
                 this.config.nonce = (typeof maseAdmin !== 'undefined' && maseAdmin.nonce) ? maseAdmin.nonce : '';
                 
                 // Set AJAX URL from localized script data (Requirement 6.5)
                 if (typeof maseAdmin !== 'undefined' && maseAdmin.ajaxUrl) {
                     this.config.ajaxUrl = maseAdmin.ajaxUrl;
-                }
-                
-                // Load saved dark mode preference (Requirement 4.2, 4.3, 4.5)
-                try {
-                    var darkMode = localStorage.getItem('mase_dark_mode') === 'true';
-                    if (darkMode) {
-                        $('html').attr('data-theme', 'dark');
-                        $('body').addClass('mase-dark-mode');
-                        $('#mase-dark-mode-toggle')
-                            .prop('checked', true)
-                            .attr('aria-checked', 'true');
-                        $('#master-dark-mode')
-                            .prop('checked', true)
-                            .attr('aria-checked', 'true');
-                    }
-                } catch (error) {
-                    console.warn('MASE: Could not load dark mode from localStorage:', error);
                 }
                 
                 // Initialize all modules
@@ -2525,6 +2726,17 @@
                 
                 // Initialize tab navigation (Requirement 8.1, 8.2, 8.3, 8.4, 8.5)
                 this.tabNavigation.init();
+                
+                // Initialize dark mode synchronization (Requirement 6.1, 6.2, 6.3)
+                this.darkModeSync.init();
+                
+                // Apply initial dark mode state from settings (Requirement 6.5)
+                try {
+                    var darkModeEnabled = $('#mase-dark-mode-toggle').is(':checked');
+                    this.darkModeSync.apply(darkModeEnabled);
+                } catch (error) {
+                    console.warn('MASE: Could not apply initial dark mode state:', error);
+                }
                 
                 // Initialize keyboard shortcuts (Requirement 12.1-12.5)
                 this.keyboardShortcuts.bind();
@@ -2549,6 +2761,28 @@
                 
                 // CRITICAL FIX: Remove gray circle bug in Dark Mode
                 this.removeGrayCircleBug();
+                
+                // Requirement 7.1, 7.2: Restore scroll position after component initialization
+                $(window).scrollTop(initialScrollTop);
+                console.log('MASE: Restored scroll position to:', initialScrollTop);
+                
+                // Requirement 7.1, 7.2: Remove focus from auto-focused elements
+                // Only blur elements that are not critical for form functionality
+                try {
+                    var $focused = $(':focus');
+                    if ($focused.length && !$focused.is('input[type="submit"], button[type="submit"]')) {
+                        $focused.blur();
+                        console.log('MASE: Removed focus from auto-focused element:', $focused.attr('id') || $focused.attr('name'));
+                    }
+                } catch (error) {
+                    console.warn('MASE: Could not remove focus from auto-focused elements:', error);
+                }
+                
+                // Requirement 8.4: Add .mase-loaded class on window load to prevent FOUC
+                $(window).on('load', function() {
+                    $('#wpadminbar').addClass('mase-loaded');
+                    console.log('MASE: Admin bar loaded, FOUC prevention complete');
+                });
                 
                 // Requirement 9.1: Log successful initialization
                 console.log('MASE Admin initialization complete!');
@@ -2844,16 +3078,8 @@
                 }
             });
             
-            // Dark Mode Toggle - Header (Requirement 3.1)
-            $('#mase-dark-mode-toggle').on('change', self.toggleDarkMode.bind(self));
-            
-            // Dark Mode Toggle - General Tab Sync (Requirement 3.2)
-            $('#master-dark-mode').on('change', function() {
-                var isChecked = $(this).is(':checked');
-                $('#mase-dark-mode-toggle')
-                    .prop('checked', isChecked)
-                    .trigger('change');
-            });
+            // Dark Mode synchronization is now handled by darkModeSync.init()
+            // See darkModeSync module for bidirectional synchronization (Requirements 6.1, 6.2)
             
             // Palette card click handler (Requirement 9.1)
             // NOTE: Consolidated with bindPaletteEvents to prevent duplicate handlers
@@ -2906,6 +3132,19 @@
                     $display.text($slider.val());
                 }
             });
+            
+            // Requirement 7.2, 7.3: Remove focus rings after mouse interaction
+            // Blur element after mouse interaction to remove blue focus rings
+            // Apply to all input, select, textarea, button elements
+            // IMPORTANT: Exclude submit buttons to prevent form submission issues
+            $('input:not([type="submit"]), select, textarea, button:not([type="submit"])').on('mouseup', function() {
+                // Only blur if not a submit button or form control that needs focus
+                var $el = $(this);
+                if (!$el.is('[type="submit"]') && !$el.hasClass('mase-no-blur')) {
+                    $el.blur();
+                }
+            });
+            console.log('MASE: Mouseup handler bound to remove focus rings (excluding submit buttons)');
             
             // Tab navigation is now handled by tabNavigation module
             
@@ -2982,6 +3221,10 @@
             switchTab: function(tabId) {
                 var self = MASE;
                 
+                // Requirement 7.1, 7.4: Store scroll position before tab switch
+                var scrollTop = $(window).scrollTop();
+                console.log('MASE: Stored scroll position before tab switch:', scrollTop);
+                
                 // Requirement 9.2: Log active tab change
                 console.log('MASE: Tab switch requested:', tabId);
                 
@@ -3026,19 +3269,9 @@
                     $tabContent[0].offsetHeight;
                 }
                 
-                // Scroll to top of content area
-                var $contentArea = $('.mase-content');
-                if ($contentArea.length) {
-                    $contentArea.scrollTop(0);
-                }
-                
-                // Also scroll window to top of settings page
-                var $adminWrap = $('.mase-admin-wrap');
-                if ($adminWrap.length) {
-                    $('html, body').animate({
-                        scrollTop: $adminWrap.offset().top - 32 // 32px = admin bar height
-                    }, 300);
-                }
+                // Requirement 7.1, 7.4: Restore scroll position after tab switch
+                $(window).scrollTop(scrollTop);
+                console.log('MASE: Restored scroll position after tab switch:', scrollTop);
                 
                 // Store active tab in localStorage (Requirement 8.2)
                 try {
@@ -3049,6 +3282,7 @@
                 }
                 
                 // Focus the tab content for accessibility (Requirement 6.4)
+                // Note: This may cause a slight scroll, but we restore it above
                 $tabContent.focus();
                 
                 // Trigger custom event for test synchronization (Requirement 6.5, 7.4)
@@ -3299,28 +3533,44 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    // Requirement 9.3: Log AJAX error with status code
-                    console.error('MASE: AJAX error - Save Settings', {
+                    // Enhanced AJAX error handling (Requirements 1.4, 1.5)
+                    
+                    // Parse xhr.responseJSON for server error messages (Requirement 1.4)
+                    var errorMessage = 'Failed to save settings.';
+                    
+                    if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                        // Server provided a specific error message
+                        errorMessage = xhr.responseJSON.data.message;
+                    } else if (xhr.status === 403) {
+                        // Add specific error messages for status codes (Requirement 1.4)
+                        errorMessage = 'Permission denied. Please refresh and try again.';
+                    } else if (xhr.status === 500) {
+                        errorMessage = 'Server error. Please check error logs.';
+                    } else if (xhr.status === 0) {
+                        errorMessage = 'Network error. Please check your connection.';
+                    } else if (status === 'timeout') {
+                        errorMessage = 'Request timed out. Please try again.';
+                    } else if (status === 'parsererror') {
+                        errorMessage = 'Invalid response from server. Please try again.';
+                    }
+                    
+                    // Log detailed error information to console (Requirement 1.4)
+                    console.error('MASE: Save Settings Error Details:', {
                         status: xhr.status,
                         statusText: xhr.statusText,
                         error: error,
-                        responseText: xhr.responseText
+                        responseText: xhr.responseText,
+                        responseJSON: xhr.responseJSON,
+                        ajaxStatus: status
                     });
                     
-                    // Handle network errors (Requirement 18.3)
-                    var message = 'Network error. Please check your connection and try again.';
+                    // Display user-friendly error notices (Requirement 1.5)
+                    self.showNotice('error', errorMessage);
                     
-                    if (xhr.status === 403) {
-                        message = 'Permission denied. You do not have access to perform this action.';
-                    } else if (xhr.status === 500) {
-                        message = 'Server error. Please try again later.';
-                    } else if (xhr.status === 0) {
-                        message = 'Network connection lost. Please check your internet connection.';
+                    // Show retry option for recoverable errors
+                    if (xhr.status !== 403) {
+                        self.showRetryOption();
                     }
-                    
-                    // Show network error notice with retry option (Requirement 18.3)
-                    self.showNotice('error', message);
-                    self.showRetryOption();
                 },
                 complete: function() {
                     console.log('MASE: Save request complete');
@@ -3381,79 +3631,160 @@
         
         /**
          * Collect all form data into structured object
-         * Handles nested fields, checkboxes, radio buttons, and selects
+         * Enhanced version with comprehensive field type support
+         * Requirements: 1.1, 1.2
+         * 
+         * Handles:
+         * - Text inputs, numbers, colors
+         * - Checkboxes with boolean conversion
+         * - Range sliders with parseFloat conversion
+         * - Select dropdowns
+         * - Nested object creation via setNestedValue helper
          */
         collectFormData: function() {
             try {
-                var formData = {};
+                var self = this;
+                var formData = {
+                    master: {},
+                    admin_bar: {},
+                    admin_menu: {},
+                    content: {},
+                    typography: {},
+                    visual_effects: {},
+                    performance: {},
+                    advanced: {}
+                };
+                
                 var $form = $('#mase-settings-form');
                 
-                // Process all form inputs
-                $form.find('input, select, textarea').each(function() {
-                    try {
-                        var $input = $(this);
-                        var name = $input.attr('name');
+                // Collect text inputs, numbers, and colors (Requirement 1.1)
+                $form.find('input[type="text"], input[type="number"], input[type="color"]').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
                         var value = $input.val();
-                        var type = $input.attr('type');
-                        
-                        // Skip if no name
-                        if (!name) {
-                            return;
-                        }
-                        
-                        // Handle checkboxes
-                        if (type === 'checkbox') {
-                            value = $input.is(':checked') ? '1' : '0';
-                        }
-                        
-                        // Handle radio buttons (only if checked)
-                        if (type === 'radio' && !$input.is(':checked')) {
-                            return;
-                        }
-                        
-                        // Parse nested field names (e.g., admin_bar[bg_color] or typography[admin_bar][font_size])
-                        var parts = name.match(/^(\w+)(?:\[(\w+)\])?(?:\[(\w+)\])?$/);
-                        
-                        if (parts) {
-                            var section = parts[1];
-                            var key1 = parts[2];
-                            var key2 = parts[3];
-                            
-                            if (key2) {
-                                // Three-level nesting: section[key1][key2]
-                                if (!formData[section]) {
-                                    formData[section] = {};
-                                }
-                                if (!formData[section][key1]) {
-                                    formData[section][key1] = {};
-                                }
-                                formData[section][key1][key2] = value;
-                            } else if (key1) {
-                                // Two-level nesting: section[key]
-                                if (!formData[section]) {
-                                    formData[section] = {};
-                                }
-                                formData[section][key1] = value;
-                            } else {
-                                // Top-level: section
-                                formData[section] = value;
-                            }
-                        }
-                    } catch (error) {
-                        // Requirement 9.5: Log error with stack trace
-                        console.error('MASE: Error processing form field:', error);
-                        console.error('MASE: Error stack:', error.stack);
+                        self.setNestedValue(formData, name, value);
                     }
                 });
                 
+                // Collect checkboxes with boolean conversion (Requirement 1.1)
+                $form.find('input[type="checkbox"]').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
+                        var value = $input.is(':checked');
+                        self.setNestedValue(formData, name, value);
+                    }
+                });
+                
+                // Collect range sliders with parseFloat conversion (Requirement 1.1)
+                $form.find('input[type="range"]').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
+                        var value = parseFloat($input.val());
+                        self.setNestedValue(formData, name, value);
+                    }
+                });
+                
+                // Collect select dropdowns (Requirement 1.1)
+                $form.find('select').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
+                        var value = $input.val();
+                        self.setNestedValue(formData, name, value);
+                    }
+                });
+                
+                // Collect textareas
+                $form.find('textarea').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
+                        var value = $input.val();
+                        self.setNestedValue(formData, name, value);
+                    }
+                });
+                
+                // Collect radio buttons (only checked ones)
+                $form.find('input[type="radio"]:checked').each(function() {
+                    var $input = $(this);
+                    var name = $input.attr('name');
+                    if (name) {
+                        var value = $input.val();
+                        self.setNestedValue(formData, name, value);
+                    }
+                });
+                
+                console.log('MASE: Form data collected successfully:', formData);
                 return formData;
                 
             } catch (error) {
-                // Requirement 9.5: Log error with stack trace
                 console.error('MASE: Error collecting form data:', error);
                 console.error('MASE: Error stack:', error.stack);
                 this.showNotice('error', 'Failed to collect form data. Please check your form inputs.');
                 return {};
+            }
+        },
+        
+        /**
+         * Helper function to set nested object values from field names
+         * Requirement 1.1: Implement setNestedValue() helper for nested object creation
+         * 
+         * Handles field names like:
+         * - "master[dark_mode]" -> formData.master.dark_mode
+         * - "typography[admin_bar][font_size]" -> formData.typography.admin_bar.font_size
+         * 
+         * @param {Object} obj - Target object to set value in
+         * @param {string} name - Field name with bracket notation
+         * @param {*} value - Value to set
+         */
+        setNestedValue: function(obj, name, value) {
+            try {
+                // Parse field name: section[key1][key2]...
+                var parts = name.match(/^(\w+)(?:\[(\w+)\])?(?:\[(\w+)\])?(?:\[(\w+)\])?$/);
+                
+                if (!parts) {
+                    console.warn('MASE: Could not parse field name:', name);
+                    return;
+                }
+                
+                var section = parts[1];
+                var key1 = parts[2];
+                var key2 = parts[3];
+                var key3 = parts[4];
+                
+                // Initialize section if needed
+                if (!obj[section]) {
+                    obj[section] = {};
+                }
+                
+                if (key3) {
+                    // Four-level nesting: section[key1][key2][key3]
+                    if (!obj[section][key1]) {
+                        obj[section][key1] = {};
+                    }
+                    if (!obj[section][key1][key2]) {
+                        obj[section][key1][key2] = {};
+                    }
+                    obj[section][key1][key2][key3] = value;
+                } else if (key2) {
+                    // Three-level nesting: section[key1][key2]
+                    if (!obj[section][key1]) {
+                        obj[section][key1] = {};
+                    }
+                    obj[section][key1][key2] = value;
+                } else if (key1) {
+                    // Two-level nesting: section[key1]
+                    obj[section][key1] = value;
+                } else {
+                    // Top-level: section
+                    obj[section] = value;
+                }
+            } catch (error) {
+                console.error('MASE: Error setting nested value:', error);
+                console.error('MASE: Field name:', name, 'Value:', value);
             }
         },
         
@@ -3810,6 +4141,20 @@
             // Bind file input change handler (Requirement 8.5)
             $('#mase-import-file').on('change', function(e) {
                 self.importExport.handleFileSelect(e);
+            });
+        },
+        
+        /**
+         * Bind reset button event
+         * Requirement 5.3: Register reset button click handler
+         */
+        bindResetButton: function() {
+            var self = this;
+            
+            // Bind reset button click handler (Requirement 5.3)
+            $('#mase-reset-all').on('click', function(e) {
+                e.preventDefault();
+                self.resetToDefaults();
             });
         },
         

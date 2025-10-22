@@ -118,9 +118,20 @@ class MASE_Settings {
 			}
 
 			error_log( 'MASE: Saving to database...' );
-			$result = update_option( self::OPTION_NAME, $validated );
-			error_log( 'MASE: Save result: ' . ( $result ? 'success' : 'failed' ) );
-			return $result;
+			
+			// Save to database
+			// Note: update_option() returns false if value is unchanged, but that's OK
+			update_option( self::OPTION_NAME, $validated );
+			
+			// Verify the save by reading back
+			$saved_value = get_option( self::OPTION_NAME );
+			if ( $saved_value === $validated || $saved_value == $validated ) {
+				error_log( 'MASE: Save successful (verified)' );
+				return true;
+			}
+			
+			error_log( 'MASE: Save verification failed' );
+			return false;
 		} catch ( Exception $e ) {
 			error_log( 'MASE: Exception in update_option: ' . $e->getMessage() );
 			error_log( 'MASE: Stack trace: ' . $e->getTraceAsString() );
@@ -151,6 +162,9 @@ class MASE_Settings {
 				'hover_text_color'  => '#00b9eb',
 				'width'             => 160,
 				'height_mode'       => 'full',
+				'item_padding'      => '6px 12px',
+				'font_size'         => 13,
+				'line_height'       => 18,
 			),
 			'performance' => array(
 				'enable_minification' => true,

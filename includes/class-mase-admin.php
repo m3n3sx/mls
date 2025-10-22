@@ -27,6 +27,7 @@ class MASE_Admin {
 
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'admin_head', array( $this, 'output_critical_css' ), 1 );
 		add_action( 'admin_print_styles', array( $this, 'inject_custom_css' ), 1 );
 		
 		// Core settings AJAX handlers.
@@ -285,6 +286,61 @@ class MASE_Admin {
 
 
 	/**
+	 * Generate critical CSS for admin bar positioning.
+	 *
+	 * Generates minimal CSS required to prevent layout shift during page load.
+	 * This CSS is output inline in the <head> before other styles to ensure
+	 * the admin bar is positioned correctly from the start.
+	 *
+	 * Requirements: 8.1, 8.2
+	 *
+	 * @return string Critical CSS for admin bar positioning
+	 */
+	private function generate_critical_css() {
+		$settings = $this->settings->get_option();
+		$css      = '';
+
+		// Admin bar positioning (critical for layout stability)
+		$css .= '#wpadminbar {';
+		$css .= '  position: fixed !important;';
+		$css .= '  top: 0 !important;';
+		$css .= '  left: 0 !important;';
+		$css .= '  right: 0 !important;';
+		$css .= '  z-index: 99999 !important;';
+		$css .= '}';
+
+		// Get admin bar height from settings (default 32px)
+		$admin_bar_height = ! empty( $settings['admin_bar']['height'] ) 
+			? absint( $settings['admin_bar']['height'] ) 
+			: 32;
+
+		// Prevent layout shift by setting body padding
+		$css .= 'html.wp-toolbar {';
+		$css .= '  padding-top: ' . $admin_bar_height . 'px !important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Output critical CSS in admin head.
+	 *
+	 * Outputs critical CSS inline in the <head> section with priority 1
+	 * to ensure it loads before other stylesheets and prevents FOUC.
+	 *
+	 * Requirements: 8.1, 8.4
+	 */
+	public function output_critical_css() {
+		$critical_css = $this->generate_critical_css();
+
+		if ( ! empty( $critical_css ) ) {
+			echo '<style id="mase-critical-css" type="text/css">' . "\n";
+			echo $critical_css . "\n";
+			echo '</style>' . "\n";
+		}
+	}
+
+	/**
 	 * Inject custom CSS into admin pages.
 	 *
 	 * Uses advanced caching with automatic generation on cache miss.
@@ -377,8 +433,9 @@ class MASE_Admin {
 			}
 		} catch ( Exception $e ) {
 			error_log( 'MASE Error (save_settings): ' . $e->getMessage() );
+			error_log( 'MASE Error trace: ' . $e->getTraceAsString() );
 			wp_send_json_error( array(
-				'message' => __( 'An error occurred. Please try again.', 'mase' ),
+				'message' => __( 'An error occurred: ', 'mase' ) . $e->getMessage(),
 			) );
 		}
 	}
@@ -1020,37 +1077,39 @@ class MASE_Admin {
 	/**
 	 * Handle AJAX reset settings request.
 	 * Resets all settings to default values.
+	 * Requirements: 5.2, 5.4, 5.5
 	 */
 	public function handle_ajax_reset_settings() {
 		try {
-			// Verify nonce.
+			// Verify nonce (Requirement 5.2).
 			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
 			}
 
-			// Check user capability.
+			// Check user capability (Requirement 5.2).
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
 			}
 
-			// Reset to defaults.
-			$result = $this->settings->reset_to_defaults();
+			// Delete mase_settings option (Requirement 5.2).
+			$settings_deleted = delete_option( 'mase_settings' );
+			
+			// Delete mase_custom_palettes option (Requirement 5.2).
+			$palettes_deleted = delete_option( 'mase_custom_palettes' );
+			
+			// Delete mase_custom_templates option (Requirement 5.2).
+			$templates_deleted = delete_option( 'mase_custom_templates' );
 
-			if ( $result ) {
-				// Invalidate all CSS caches.
-				$this->cache->invalidate( 'generated_css' );
-				$this->cache->invalidate_typography_cache();
-				$this->cache->invalidate_visual_effects_cache();
-				$this->cache->invalidate_spacing_cache();
+			// Clear MASE cache (Requirement 5.2).
+			$this->cache->invalidate( 'generated_css' );
+			$this->cache->invalidate_typography_cache();
+			$this->cache->invalidate_visual_effects_cache();
+			$this->cache->invalidate_spacing_cache();
 
-				wp_send_json_success( array(
-					'message' => __( 'Settings reset to defaults successfully', 'mase' ),
-				) );
-			} else {
-				wp_send_json_error( array(
-					'message' => __( 'Failed to reset settings', 'mase' ),
-				) );
-			}
+			// Return success response (Requirement 5.2).
+			wp_send_json_success( array(
+				'message' => __( 'Settings reset to defaults successfully', 'mase' ),
+			) );
 		} catch ( Exception $e ) {
 			error_log( 'MASE Error (reset_settings): ' . $e->getMessage() );
 			wp_send_json_error( array(
