@@ -102,6 +102,7 @@ class MASE_Settings {
 		$validated = $this->validate( $data );
 		
 		if ( is_wp_error( $validated ) ) {
+			error_log( 'MASE: Validation error: ' . $validated->get_error_message() );
 			return false;
 		}
 
@@ -111,7 +112,11 @@ class MASE_Settings {
 			$validated = $mobile_optimizer->get_optimized_settings( $validated );
 		}
 
-		return update_option( self::OPTION_NAME, $validated );
+		$result = update_option( self::OPTION_NAME, $validated );
+		error_log( 'MASE: update_option result: ' . ( $result ? 'true' : 'false' ) );
+		
+		// Always return true if no validation errors (update_option returns false if value unchanged)
+		return true;
 	}
 
 	/**
