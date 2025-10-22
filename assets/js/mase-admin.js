@@ -388,9 +388,9 @@
                     if (e.preventDefault) e.preventDefault();
                     if (e.stopPropagation) e.stopPropagation();
                 
-                // Get button element and parent card
+                // Get button element and parent card (support both card types)
                 var $button = $(e.currentTarget);
-                var $card = $button.closest('.mase-template-card');
+                var $card = $button.closest('.mase-template-card, .mase-template-preview-card');
                 
                 // Read data-template attribute from card (Requirement 3.5)
                 var templateId = $card.attr('data-template');
@@ -729,12 +729,12 @@
                         }
                     }, 100));
                     
-                    // Bind sliders (Requirement 9.4: Display current value and update preview)
-                    $('.mase-slider').on('input.livepreview', self.debounce(function() {
+                    // Bind sliders and range inputs (Requirement 9.4: Display current value and update preview)
+                    $('#mase-settings-form input[type="range"]').on('input.livepreview', self.debounce(function() {
                         try {
                             // Update slider value display
                             var $slider = $(this);
-                            var $display = $slider.siblings('.mase-slider-value');
+                            var $display = $slider.siblings('.mase-range-value, .mase-slider-value');
                             if ($display.length) {
                                 $display.text($slider.val());
                             }
@@ -747,7 +747,8 @@
                     }, self.config.debounceDelay));
                     
                     // Bind text inputs
-                    $('.mase-input[type="text"], .mase-input[type="number"]').on('input.livepreview', 
+                    // Bind all text and number inputs in the settings form
+                    $('#mase-settings-form input[type="text"], #mase-settings-form input[type="number"]').on('input.livepreview', 
                         self.debounce(function() {
                             try {
                                 self.livePreview.update();
@@ -759,8 +760,8 @@
                         }, self.config.debounceDelay)
                     );
                     
-                    // Bind selects
-                    $('.mase-select').on('change.livepreview', self.debounce(function() {
+                    // Bind all selects in the form
+                    $('#mase-settings-form select').on('change.livepreview', self.debounce(function() {
                         try {
                             self.livePreview.update();
                         } catch (error) {
@@ -793,7 +794,8 @@
              * Unbind input events
              */
             unbind: function() {
-                $('.mase-color-picker, .mase-slider, .mase-input, .mase-select, .mase-checkbox, .mase-radio')
+                // Unbind from all form inputs
+                $('#mase-settings-form input, #mase-settings-form select, #mase-settings-form textarea')
                     .off('.livepreview');
             },
             
@@ -847,23 +849,29 @@
                 settings.admin_menu.hover_bg_color = $('#admin-menu-hover-bg-color').val() || '#191e23';
                 settings.admin_menu.hover_text_color = $('#admin-menu-hover-text-color').val() || '#00b9eb';
                 settings.admin_menu.width = $('#admin-menu-width').val() || 160;
+                settings.admin_menu.height_mode = $('#admin-menu-height-mode').val() || 'full';
                 
                 // Collect typography settings
-                settings.typography.admin_bar.font_size = $('#typography-admin-bar-font-size').val() || 13;
-                settings.typography.admin_bar.font_weight = $('#typography-admin-bar-font-weight').val() || 400;
-                settings.typography.admin_bar.line_height = $('#typography-admin-bar-line-height').val() || 1.5;
-                settings.typography.admin_bar.letter_spacing = $('#typography-admin-bar-letter-spacing').val() || 0;
-                settings.typography.admin_bar.text_transform = $('#typography-admin-bar-text-transform').val() || 'none';
+                // Admin Bar typography (from Admin Bar tab only)
+                settings.typography.admin_bar.font_size = $('#admin-bar-font-size').val() || 13;
+                settings.typography.admin_bar.font_weight = $('#admin-bar-font-weight').val() || 400;
+                settings.typography.admin_bar.line_height = $('#admin-bar-line-height').val() || 1.5;
+                settings.typography.admin_bar.letter_spacing = $('#admin-bar-letter-spacing').val() || 0;
+                settings.typography.admin_bar.text_transform = $('#admin-bar-text-transform').val() || 'none';
                 
-                settings.typography.admin_menu.font_size = $('#typography-admin-menu-font-size').val() || 13;
-                settings.typography.admin_menu.font_weight = $('#typography-admin-menu-font-weight').val() || 400;
-                settings.typography.admin_menu.line_height = $('#typography-admin-menu-line-height').val() || 1.5;
-                settings.typography.admin_menu.letter_spacing = $('#typography-admin-menu-letter-spacing').val() || 0;
-                settings.typography.admin_menu.text_transform = $('#typography-admin-menu-text-transform').val() || 'none';
+                // Admin Menu typography (from Menu tab only)
+                settings.typography.admin_menu.font_size = $('#admin-menu-font-size').val() || 13;
+                settings.typography.admin_menu.font_weight = $('#admin-menu-font-weight').val() || 400;
+                settings.typography.admin_menu.line_height = $('#admin-menu-line-height').val() || 1.5;
+                settings.typography.admin_menu.letter_spacing = $('#admin-menu-letter-spacing').val() || 0;
+                settings.typography.admin_menu.text_transform = $('#admin-menu-text-transform').val() || 'none';
                 
-                settings.typography.content.font_size = $('#typography-content-font-size').val() || 13;
-                settings.typography.content.font_weight = $('#typography-content-font-weight').val() || 400;
-                settings.typography.content.line_height = $('#typography-content-line-height').val() || 1.5;
+                // Content typography (from Typography tab only)
+                settings.typography.content.font_size = $('#typo-content-font-size').val() || 13;
+                settings.typography.content.font_weight = $('#typo-content-font-weight').val() || 400;
+                settings.typography.content.line_height = $('#typo-content-line-height').val() || 1.5;
+                settings.typography.content.letter_spacing = $('#typo-content-letter-spacing').val() || 0;
+                settings.typography.content.text_transform = $('#typo-content-text-transform').val() || 'none';
                 
                 // Collect visual effects settings
                 settings.visual_effects.admin_bar.border_radius = $('#visual-effects-admin-bar-border-radius').val() || 0;
@@ -959,17 +967,122 @@
                 var css = '';
                 var adminMenu = settings.admin_menu || {};
                 
-                // Admin menu background and width
+                // Admin menu background (always apply)
                 css += 'body.wp-admin #adminmenu,';
                 css += 'body.wp-admin #adminmenuback,';
                 css += 'body.wp-admin #adminmenuwrap{';
                 if (adminMenu.bg_color) {
                     css += 'background-color:' + adminMenu.bg_color + '!important;';
                 }
-                if (adminMenu.width) {
-                    css += 'width:' + adminMenu.width + 'px!important;';
-                }
                 css += '}';
+                
+                // Only set width if different from WordPress default (160px)
+                // This matches the PHP logic in class-mase-css-generator.php
+                var width = parseInt(adminMenu.width) || 160;
+                if (width !== 160) {
+                    // Expanded menu width
+                    css += 'body.wp-admin:not(.folded) #adminmenu,';
+                    css += 'body.wp-admin:not(.folded) #adminmenuback,';
+                    css += 'body.wp-admin:not(.folded) #adminmenuwrap{';
+                    css += 'width:' + width + 'px!important;';
+                    css += '}';
+                    
+                    // Folded menu width (always 36px when collapsed)
+                    css += 'body.wp-admin.folded #adminmenu,';
+                    css += 'body.wp-admin.folded #adminmenuback,';
+                    css += 'body.wp-admin.folded #adminmenuwrap{';
+                    css += 'width:36px!important;';
+                    css += '}';
+                    
+                    // Adjust content area margin for custom menu width (expanded)
+                    css += 'body.wp-admin:not(.folded) #wpcontent,';
+                    css += 'body.wp-admin:not(.folded) #wpfooter{';
+                    css += 'margin-left:' + width + 'px!important;';
+                    css += '}';
+                    
+                    // Adjust content area margin for folded menu
+                    css += 'body.wp-admin.folded #wpcontent,';
+                    css += 'body.wp-admin.folded #wpfooter{';
+                    css += 'margin-left:36px!important;';
+                    css += '}';
+                }
+                
+                // Fix folded menu icons and submenu positioning
+                // Ensure icons are visible and centered in folded mode
+                css += 'body.wp-admin.folded #adminmenu .wp-menu-image{';
+                css += 'width:36px!important;';
+                css += 'height:34px!important;';
+                css += 'display:flex!important;';
+                css += 'align-items:center!important;';
+                css += 'justify-content:center!important;';
+                css += 'overflow:hidden!important;';
+                css += '}';
+                
+                // Fix folded menu icon dashicons - smaller size to fit in 36px
+                css += 'body.wp-admin.folded #adminmenu .wp-menu-image:before{';
+                css += 'padding:0!important;';
+                css += 'margin:0!important;';
+                css += 'width:18px!important;';
+                css += 'height:18px!important;';
+                css += 'font-size:18px!important;';
+                css += 'line-height:1!important;';
+                css += 'display:block!important;';
+                css += '}';
+                
+                // Fix folded menu item height
+                css += 'body.wp-admin.folded #adminmenu li.menu-top{';
+                css += 'height:34px!important;';
+                css += 'min-height:34px!important;';
+                css += '}';
+                
+                // Fix folded menu link padding
+                css += 'body.wp-admin.folded #adminmenu .wp-menu-image img{';
+                css += 'width:18px!important;';
+                css += 'height:18px!important;';
+                css += 'padding:0!important;';
+                css += '}';
+                
+                // Fix folded menu submenu positioning
+                css += 'body.wp-admin.folded #adminmenu .wp-submenu{';
+                css += 'position:absolute!important;';
+                css += 'left:36px!important;';
+                css += 'top:0!important;';
+                css += 'margin:0!important;';
+                css += 'padding:0!important;';
+                css += 'min-width:160px!important;';
+                css += 'z-index:9999!important;';
+                css += '}';
+                
+                // Fix folded menu submenu background
+                if (adminMenu.bg_color) {
+                    css += 'body.wp-admin.folded #adminmenu .wp-submenu{';
+                    css += 'background-color:' + adminMenu.bg_color + '!important;';
+                    css += 'box-shadow:2px 2px 5px rgba(0,0,0,0.1)!important;';
+                    css += '}';
+                }
+                
+                // Hide menu text in folded mode
+                css += 'body.wp-admin.folded #adminmenu .wp-menu-name{';
+                css += 'display:none!important;';
+                css += '}';
+                
+                // Admin menu height mode
+                var heightMode = $('#admin-menu-height-mode').val() || 'full';
+                if (heightMode === 'content') {
+                    css += 'body.wp-admin #adminmenuwrap,';
+                    css += 'body.wp-admin #adminmenuback{';
+                    css += 'height:auto!important;';
+                    css += 'min-height:100%!important;';
+                    css += 'bottom:auto!important;';
+                    css += '}';
+                    
+                    css += 'body.wp-admin #adminmenu{';
+                    css += 'height:auto!important;';
+                    css += 'min-height:0!important;';
+                    css += 'position:relative!important;';
+                    css += 'bottom:auto!important;';
+                    css += '}';
+                }
                 
                 // Admin menu text color
                 if (adminMenu.text_color) {
@@ -993,19 +1106,6 @@
                     css += 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
                     css += 'body.wp-admin #adminmenu li > a.menu-top:focus{';
                     css += 'color:' + adminMenu.hover_text_color + '!important;';
-                    css += '}';
-                }
-                
-                // Adjust content area margin for menu width
-                if (adminMenu.width) {
-                    css += 'body.wp-admin #wpcontent,';
-                    css += 'body.wp-admin #wpfooter{';
-                    css += 'margin-left:' + adminMenu.width + 'px!important;';
-                    css += '}';
-                    
-                    css += 'body.wp-admin.folded #wpcontent,';
-                    css += 'body.wp-admin.folded #wpfooter{';
-                    css += 'margin-left:36px!important;';
                     css += '}';
                 }
                 
@@ -1091,6 +1191,12 @@
                     }
                     if (content.line_height) {
                         css += 'line-height:' + content.line_height + '!important;';
+                    }
+                    if (content.letter_spacing !== undefined) {
+                        css += 'letter-spacing:' + content.letter_spacing + 'px!important;';
+                    }
+                    if (content.text_transform) {
+                        css += 'text-transform:' + content.text_transform + '!important;';
                     }
                     
                     css += '}';
@@ -2762,6 +2868,14 @@
             // NOTE: Consolidated with bindTemplateEvents to prevent duplicate handlers
             // See bindTemplateEvents() for template apply button handling
             
+            // Admin menu height mode change handler
+            $('#admin-menu-height-mode').on('change', function() {
+                if (self.state.livePreviewEnabled) {
+                    self.updatePreview();
+                }
+                self.state.isDirty = true;
+            });
+            
             // Input changes for live preview
             $('.mase-input, .mase-color-picker, .mase-slider, .mase-select, .mase-checkbox, .mase-radio').on('input change', 
                 this.debounce(function() {
@@ -2795,8 +2909,8 @@
             
             // Tab navigation is now handled by tabNavigation module
             
-            // Reset to defaults
-            $('#mase-reset-btn').on('click', function(e) {
+            // Reset to defaults - fixed selector to match HTML id
+            $('#mase-reset-all').on('click', function(e) {
                 e.preventDefault();
                 if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
                     self.resetToDefaults();
@@ -3151,6 +3265,8 @@
                 success: function(response) {
                     // Requirement 9.3: Log AJAX response
                     console.log('MASE: AJAX response - Save Settings', response);
+                    console.log('MASE: Response success:', response.success);
+                    console.log('MASE: Response data:', response.data);
                     
                     // Handle success response (Requirement 11.4)
                     if (response.success) {
@@ -3173,8 +3289,10 @@
                         }
                     } else {
                         // Handle error response (Requirement 11.5, 18.2)
-                        console.error('MASE: Save failed:', response.data.message);
-                        self.showNotice('error', response.data.message || 'Failed to save settings');
+                        console.error('MASE: Save failed:', response.data);
+                        console.error('MASE: Error message:', response.data.message);
+                        console.error('MASE: Full response:', JSON.stringify(response));
+                        self.showNotice('error', response.data.message || 'Failed to save settings. Check browser console and WordPress debug.log for details.');
                         
                         // Show retry option (Requirement 18.2)
                         self.showRetryOption();
@@ -3455,10 +3573,11 @@
          */
         resetToDefaults: function() {
             var self = this;
-            var $button = $('#mase-reset-btn');
-            var originalText = $button.text();
+            var $button = $('#mase-reset-all');
+            var originalText = $button.find('span:last').text();
             
-            $button.prop('disabled', true).text('Resetting...');
+            $button.prop('disabled', true);
+            $button.find('span:last').text('Resetting...');
             
             $.ajax({
                 url: this.config.ajaxUrl,
@@ -3476,12 +3595,14 @@
                         }, 1000);
                     } else {
                         self.showNotice('error', response.data.message || 'Failed to reset settings');
-                        $button.prop('disabled', false).text(originalText);
+                        $button.prop('disabled', false);
+                        $button.find('span:last').text(originalText);
                     }
                 },
                 error: function() {
                     self.showNotice('error', 'Network error. Please try again.');
-                    $button.prop('disabled', false).text(originalText);
+                    $button.prop('disabled', false);
+                    $button.find('span:last').text(originalText);
                 }
             });
         },

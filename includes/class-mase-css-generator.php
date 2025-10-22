@@ -126,10 +126,12 @@ class MASE_CSS_Generator {
 			$css .= 'color: ' . $text_color . ' !important;';
 			$css .= '}';
 
-			// Adjust page margin for admin bar height.
-			$css .= 'body.wp-admin.admin-bar {';
-			$css .= 'margin-top: ' . $height . 'px !important;';
-			$css .= '}';
+			// Adjust page margin for admin bar height - only if height is different from default
+			if ( $height !== 32 ) {
+				$css .= 'body.wp-admin.admin-bar {';
+				$css .= 'margin-top: ' . $height . 'px !important;';
+				$css .= '}';
+			}
 
 			// Adjust admin bar submenu position.
 			$css .= 'body.wp-admin #wpadminbar .ab-sub-wrapper {';
@@ -159,15 +161,120 @@ class MASE_CSS_Generator {
 			$hover_bg_color   = isset( $admin_menu['hover_bg_color'] ) ? $admin_menu['hover_bg_color'] : '#191e23';
 			$hover_text_color = isset( $admin_menu['hover_text_color'] ) ? $admin_menu['hover_text_color'] : '#00b9eb';
 			$width            = isset( $admin_menu['width'] ) ? absint( $admin_menu['width'] ) : 160;
+			$height_mode      = isset( $admin_menu['height_mode'] ) ? $admin_menu['height_mode'] : 'full';
 
 			$css = '';
 
-			// Admin menu background and width.
+			// Admin menu background.
 			$css .= 'body.wp-admin #adminmenu,';
 			$css .= 'body.wp-admin #adminmenuback,';
 			$css .= 'body.wp-admin #adminmenuwrap {';
 			$css .= 'background-color: ' . $bg_color . ' !important;';
-			$css .= 'width: ' . $width . 'px !important;';
+			$css .= '}';
+			
+			// Admin menu height mode
+			if ( 'content' === $height_mode ) {
+				$css .= 'body.wp-admin #adminmenuwrap,';
+				$css .= 'body.wp-admin #adminmenuback {';
+				$css .= 'height: auto !important;';
+				$css .= 'min-height: 100% !important;';
+				$css .= 'bottom: auto !important;';  // Override WordPress default bottom: -120px
+				$css .= '}';
+				
+				$css .= 'body.wp-admin #adminmenu {';
+				$css .= 'height: auto !important;';
+				$css .= 'min-height: 0 !important;';
+				$css .= 'position: relative !important;';
+				$css .= 'bottom: auto !important;';  // Override WordPress default
+				$css .= '}';
+			}
+			
+			// Only set width if different from WordPress default (160px).
+			// Don't override WordPress default to allow proper folded menu behavior.
+			if ( absint( $width ) !== 160 ) {
+				// Expanded menu width
+				$css .= 'body.wp-admin:not(.folded) #adminmenu,';
+				$css .= 'body.wp-admin:not(.folded) #adminmenuback,';
+				$css .= 'body.wp-admin:not(.folded) #adminmenuwrap {';
+				$css .= 'width: ' . $width . 'px !important;';
+				$css .= '}';
+				
+				// Folded menu width (always 36px when collapsed)
+				$css .= 'body.wp-admin.folded #adminmenu,';
+				$css .= 'body.wp-admin.folded #adminmenuback,';
+				$css .= 'body.wp-admin.folded #adminmenuwrap {';
+				$css .= 'width: 36px !important;';
+				$css .= '}';
+				
+				// Adjust content area margin for custom menu width (expanded)
+				$css .= 'body.wp-admin:not(.folded) #wpcontent,';
+				$css .= 'body.wp-admin:not(.folded) #wpfooter {';
+				$css .= 'margin-left: ' . $width . 'px !important;';
+				$css .= '}';
+				
+				// Adjust content area margin for folded menu
+				$css .= 'body.wp-admin.folded #wpcontent,';
+				$css .= 'body.wp-admin.folded #wpfooter {';
+				$css .= 'margin-left: 36px !important;';
+				$css .= '}';
+			}
+			
+			// Fix folded menu icons and submenu positioning
+			// Ensure icons are visible and centered in folded mode
+			$css .= 'body.wp-admin.folded #adminmenu .wp-menu-image {';
+			$css .= 'width: 36px !important;';
+			$css .= 'height: 34px !important;';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'justify-content: center !important;';
+			$css .= 'overflow: hidden !important;';
+			$css .= '}';
+			
+			// Fix folded menu icon dashicons - smaller size to fit in 36px
+			$css .= 'body.wp-admin.folded #adminmenu .wp-menu-image:before {';
+			$css .= 'padding: 0 !important;';
+			$css .= 'margin: 0 !important;';
+			$css .= 'width: 18px !important;';
+			$css .= 'height: 18px !important;';
+			$css .= 'font-size: 18px !important;';
+			$css .= 'line-height: 1 !important;';
+			$css .= 'display: block !important;';
+			$css .= '}';
+			
+			// Fix folded menu item height
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top {';
+			$css .= 'height: 34px !important;';
+			$css .= 'min-height: 34px !important;';
+			$css .= '}';
+			
+			// Fix folded menu link padding
+			$css .= 'body.wp-admin.folded #adminmenu .wp-menu-image img {';
+			$css .= 'width: 18px !important;';
+			$css .= 'height: 18px !important;';
+			$css .= 'padding: 0 !important;';
+			$css .= '}';
+			
+			// Fix folded menu submenu positioning
+			// Submenu should appear to the right of the collapsed menu
+			$css .= 'body.wp-admin.folded #adminmenu .wp-submenu {';
+			$css .= 'position: absolute !important;';
+			$css .= 'left: 36px !important;';
+			$css .= 'top: 0 !important;';
+			$css .= 'margin: 0 !important;';
+			$css .= 'padding: 0 !important;';
+			$css .= 'min-width: 160px !important;';
+			$css .= 'z-index: 9999 !important;';
+			$css .= '}';
+			
+			// Fix folded menu submenu background
+			$css .= 'body.wp-admin.folded #adminmenu .wp-submenu {';
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+			$css .= 'box-shadow: 2px 2px 5px rgba(0,0,0,0.1) !important;';
+			$css .= '}';
+			
+			// Hide menu text in folded mode
+			$css .= 'body.wp-admin.folded #adminmenu .wp-menu-name {';
+			$css .= 'display: none !important;';
 			$css .= '}';
 
 			// Admin menu text color.
@@ -189,17 +296,7 @@ class MASE_CSS_Generator {
 			$css .= 'color: ' . $hover_text_color . ' !important;';
 			$css .= '}';
 
-			// Adjust content area margin for menu width.
-			$css .= 'body.wp-admin #wpcontent,';
-			$css .= 'body.wp-admin #wpfooter {';
-			$css .= 'margin-left: ' . $width . 'px !important;';
-			$css .= '}';
 
-			// Adjust for folded menu.
-			$css .= 'body.wp-admin.folded #wpcontent,';
-			$css .= 'body.wp-admin.folded #wpfooter {';
-			$css .= 'margin-left: 36px !important;';
-			$css .= '}';
 
 			return $css;
 
@@ -402,9 +499,10 @@ class MASE_CSS_Generator {
 			}
 
 			// Generate admin menu visual effects.
+			// Apply only to top-level menu items, not submenu items to avoid positioning conflicts
 			if ( isset( $visual_effects['admin_menu'] ) ) {
 				$css .= $this->generate_element_visual_effects(
-					'body.wp-admin #adminmenu a',
+					'body.wp-admin #adminmenu li.menu-top > a',
 					$visual_effects['admin_menu'],
 					true // Include hover states.
 				);
@@ -438,7 +536,7 @@ class MASE_CSS_Generator {
 			if ( $disable_mobile_shadows ) {
 				// Disable shadows completely on mobile but maintain border radius (Requirement 16.3).
 				$css .= 'body.wp-admin #wpadminbar,';
-				$css .= 'body.wp-admin #adminmenu a,';
+				$css .= 'body.wp-admin #adminmenu li.menu-top > a,';
 				$css .= 'body.wp-admin .button,';
 				$css .= 'body.wp-admin .button-primary,';
 				$css .= 'body.wp-admin input[type="text"],';
@@ -805,39 +903,55 @@ class MASE_CSS_Generator {
 			}
 
 			// Generate submenu spacing CSS.
+			// Only generate if values differ from WordPress defaults to avoid conflicts
 			if ( isset( $spacing['submenu_spacing'] ) && is_array( $spacing['submenu_spacing'] ) ) {
 				$submenu_spacing = $spacing['submenu_spacing'];
 				$unit = isset( $submenu_spacing['unit'] ) ? $submenu_spacing['unit'] : 'px';
+				
+				// Check if any padding values are set and different from defaults
+				$has_padding = false;
+				$padding_css = '';
+				
+				// WordPress default submenu padding is approximately 5px 12px
+				$defaults = array(
+					'padding_top' => 5,
+					'padding_right' => 12,
+					'padding_bottom' => 5,
+					'padding_left' => 12
+				);
+				
+				foreach ( $defaults as $side => $default_value ) {
+					if ( isset( $submenu_spacing[$side] ) && $submenu_spacing[$side] != $default_value ) {
+						$padding_css .= str_replace('_', '-', $side) . ':' . $this->format_spacing_value( $submenu_spacing[$side], $unit ) . '!important;';
+						$has_padding = true;
+					}
+				}
+				
+				if ( $has_padding ) {
+					$css .= 'body.wp-admin #adminmenu .wp-submenu a{';
+					$css .= $padding_css;
+					$css .= '}';
+				}
 
-				// Submenu padding.
-				$css .= 'body.wp-admin #adminmenu .wp-submenu a{';
+				// Submenu margin and offset - only if non-zero
+				$has_submenu_styles = false;
+				$submenu_css = '';
 				
-				if ( isset( $submenu_spacing['padding_top'] ) ) {
-					$css .= 'padding-top:' . $this->format_spacing_value( $submenu_spacing['padding_top'], $unit ) . '!important;';
+				if ( isset( $submenu_spacing['margin_top'] ) && $submenu_spacing['margin_top'] != 0 ) {
+					$submenu_css .= 'margin-top:' . $this->format_spacing_value( $submenu_spacing['margin_top'], $unit ) . '!important;';
+					$has_submenu_styles = true;
 				}
-				if ( isset( $submenu_spacing['padding_right'] ) ) {
-					$css .= 'padding-right:' . $this->format_spacing_value( $submenu_spacing['padding_right'], $unit ) . '!important;';
-				}
-				if ( isset( $submenu_spacing['padding_bottom'] ) ) {
-					$css .= 'padding-bottom:' . $this->format_spacing_value( $submenu_spacing['padding_bottom'], $unit ) . '!important;';
-				}
-				if ( isset( $submenu_spacing['padding_left'] ) ) {
-					$css .= 'padding-left:' . $this->format_spacing_value( $submenu_spacing['padding_left'], $unit ) . '!important;';
+				// Only set left offset if it's not 0 (to preserve WordPress default positioning)
+				if ( isset( $submenu_spacing['offset_left'] ) && $submenu_spacing['offset_left'] != 0 ) {
+					$submenu_css .= 'left:' . $this->format_spacing_value( $submenu_spacing['offset_left'], $unit ) . '!important;';
+					$has_submenu_styles = true;
 				}
 				
-				$css .= '}';
-
-				// Submenu margin and offset.
-				$css .= 'body.wp-admin #adminmenu .wp-submenu{';
-				
-				if ( isset( $submenu_spacing['margin_top'] ) ) {
-					$css .= 'margin-top:' . $this->format_spacing_value( $submenu_spacing['margin_top'], $unit ) . '!important;';
+				if ( $has_submenu_styles ) {
+					$css .= 'body.wp-admin #adminmenu .wp-submenu{';
+					$css .= $submenu_css;
+					$css .= '}';
 				}
-				if ( isset( $submenu_spacing['offset_left'] ) ) {
-					$css .= 'left:' . $this->format_spacing_value( $submenu_spacing['offset_left'], $unit ) . '!important;';
-				}
-				
-				$css .= '}';
 			}
 
 			// Generate content margin CSS.
@@ -943,6 +1057,22 @@ class MASE_CSS_Generator {
 		$css .= 'body.wp-admin #adminmenu{';
 		$css .= 'display:block !important;'; // Maintain WordPress default vertical layout.
 		$css .= '}';
+		
+		// Ensure submenu displays correctly (position absolute, left positioning)
+		$css .= 'body.wp-admin #adminmenu .wp-submenu{';
+		$css .= 'position:absolute !important;';
+		$css .= 'top:0 !important;';
+		$css .= 'display:none !important;';
+		$css .= 'z-index:9999 !important;';
+		$css .= '}';
+		
+		$css .= 'body.wp-admin #adminmenu li.opensub > .wp-submenu,';
+		$css .= 'body.wp-admin #adminmenu li:hover > .wp-submenu{';
+		$css .= 'display:block !important;';
+		$css .= '}';
+		
+		// Ensure submenu appears to the right of menu
+		// Submenu positioning is handled by WordPress core - don't override
 
 		// Box-sizing fallback for older browsers.
 		$css .= 'body.wp-admin #adminmenu li.menu-top > a,';

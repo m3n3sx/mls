@@ -27,7 +27,7 @@ class MASE_Admin {
 
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'admin_head', array( $this, 'inject_custom_css' ), 999 );
+		add_action( 'admin_print_styles', array( $this, 'inject_custom_css' ), 1 );
 		
 		// Core settings AJAX handlers.
 		add_action( 'wp_ajax_mase_save_settings', array( $this, 'handle_ajax_save_settings' ) );
@@ -48,6 +48,9 @@ class MASE_Admin {
 		add_action( 'wp_ajax_mase_create_backup', array( $this, 'handle_ajax_create_backup' ) );
 		add_action( 'wp_ajax_mase_restore_backup', array( $this, 'handle_ajax_restore_backup' ) );
 		add_action( 'wp_ajax_mase_get_backups', array( $this, 'handle_ajax_get_backups' ) );
+		
+		// Reset settings handler.
+		add_action( 'wp_ajax_mase_reset_settings', array( $this, 'handle_ajax_reset_settings' ) );
 		
 		/**
 		 * REMOVED: Duplicate mobile optimizer AJAX handler registration.
@@ -285,6 +288,7 @@ class MASE_Admin {
 	 * Inject custom CSS into admin pages.
 	 *
 	 * Uses advanced caching with automatic generation on cache miss.
+	 * Hooked to admin_print_styles with priority 1 to load early and prevent FOUC.
 	 */
 	public function inject_custom_css() {
 		try {
@@ -352,8 +356,16 @@ class MASE_Admin {
 			$result = $this->settings->update_option( $input );
 
 			if ( $result ) {
-				// Invalidate cache on successful save.
-				$this->cache->invalidate( 'generated_css' );
+				// Invalidate all CSS caches on successful save.
+				try {
+					$this->cache->invalidate( 'generated_css' );
+					$this->cache->invalidate_typography_cache();
+					$this->cache->invalidate_visual_effects_cache();
+					$this->cache->invalidate_spacing_cache();
+				} catch ( Exception $e ) {
+					error_log( 'MASE Error (invalidate_cache): ' . $e->getMessage() );
+					// Continue even if cache invalidation fails
+				}
 
 				wp_send_json_success( array(
 					'message' => __( 'Settings saved successfully', 'mase' ),
@@ -433,8 +445,11 @@ class MASE_Admin {
 			);
 		}
 
-		// Clear cache (Requirement 17.2).
+		// Clear all CSS caches (Requirement 17.2).
 		$this->cache->invalidate( 'generated_css' );
+		$this->cache->invalidate_typography_cache();
+		$this->cache->invalidate_visual_effects_cache();
+		$this->cache->invalidate_spacing_cache();
 
 		// Return success response (Requirement 17.4, 17.5).
 		wp_send_json_success(
@@ -520,8 +535,11 @@ class MASE_Admin {
 			$result = $this->settings->update_option( $data['settings'] );
 
 			if ( $result ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message' => __( 'Settings imported successfully', 'mase' ),
@@ -571,8 +589,11 @@ class MASE_Admin {
 			$palette_id = $this->settings->save_custom_palette( $name, $colors );
 
 			if ( $palette_id ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message'    => __( 'Custom palette saved successfully', 'mase' ),
@@ -618,8 +639,11 @@ class MASE_Admin {
 			$result = $this->settings->delete_custom_palette( $palette_id );
 
 			if ( $result ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message' => __( 'Custom palette deleted successfully', 'mase' ),
@@ -717,8 +741,11 @@ class MASE_Admin {
 			);
 		}
 
-		// Invalidate CSS cache (Requirement 7.5).
+		// Invalidate all CSS caches (Requirement 7.5).
 		$this->cache->invalidate( 'generated_css' );
+		$this->cache->invalidate_typography_cache();
+		$this->cache->invalidate_visual_effects_cache();
+		$this->cache->invalidate_spacing_cache();
 
 		// Return success response (Requirement 7.5).
 		wp_send_json_success(
@@ -762,8 +789,11 @@ class MASE_Admin {
 			$template_id = $this->settings->save_custom_template( $name, $settings );
 
 			if ( $template_id ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message'     => __( 'Custom template saved successfully', 'mase' ),
@@ -809,8 +839,11 @@ class MASE_Admin {
 			$result = $this->settings->delete_custom_template( $template_id );
 
 			if ( $result ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message' => __( 'Custom template deleted successfully', 'mase' ),
@@ -924,8 +957,11 @@ class MASE_Admin {
 			$result = $this->settings->update_option( $backup_data['settings'] );
 
 			if ( $result ) {
-				// Invalidate cache.
+				// Invalidate all CSS caches.
 				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
 
 				wp_send_json_success( array(
 					'message' => __( 'Backup restored successfully', 'mase' ),
@@ -975,6 +1011,48 @@ class MASE_Admin {
 			) );
 		} catch ( Exception $e ) {
 			error_log( 'MASE Error (get_backups): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'An error occurred. Please try again.', 'mase' ),
+			) );
+		}
+	}
+
+	/**
+	 * Handle AJAX reset settings request.
+	 * Resets all settings to default values.
+	 */
+	public function handle_ajax_reset_settings() {
+		try {
+			// Verify nonce.
+			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
+			}
+
+			// Check user capability.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
+			}
+
+			// Reset to defaults.
+			$result = $this->settings->reset_to_defaults();
+
+			if ( $result ) {
+				// Invalidate all CSS caches.
+				$this->cache->invalidate( 'generated_css' );
+				$this->cache->invalidate_typography_cache();
+				$this->cache->invalidate_visual_effects_cache();
+				$this->cache->invalidate_spacing_cache();
+
+				wp_send_json_success( array(
+					'message' => __( 'Settings reset to defaults successfully', 'mase' ),
+				) );
+			} else {
+				wp_send_json_error( array(
+					'message' => __( 'Failed to reset settings', 'mase' ),
+				) );
+			}
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (reset_settings): ' . $e->getMessage() );
 			wp_send_json_error( array(
 				'message' => __( 'An error occurred. Please try again.', 'mase' ),
 			) );

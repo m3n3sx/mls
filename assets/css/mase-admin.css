@@ -4726,6 +4726,144 @@ select.mase-select {
 }
 
 /* ============================================================================
+   TEMPLATE PREVIEW SECTION (Quick Templates)
+   ============================================================================ */
+
+/**
+ * Template Preview Grid
+ * 
+ * Grid layout for Quick Templates section (3 templates).
+ */
+.mase-template-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--mase-space-lg);
+  margin-bottom: var(--mase-space-lg);
+}
+
+/**
+ * Template Preview Card
+ * 
+ * Individual template card in Quick Templates section.
+ */
+.mase-template-preview-card {
+  background: var(--mase-surface);
+  border: 1px solid var(--mase-gray-200);
+  border-radius: var(--mase-radius-lg);
+  overflow: hidden;
+  transition: all var(--mase-transition-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.mase-template-preview-card:hover {
+  box-shadow: var(--mase-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.mase-template-preview-card.active {
+  border-color: var(--mase-primary);
+  border-width: 2px;
+}
+
+/**
+ * Template Thumbnail
+ * 
+ * Container for template preview image.
+ */
+.mase-template-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: var(--mase-gray-100);
+}
+
+.mase-template-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mase-template-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--mase-gray-200) 0%, var(--mase-gray-300) 100%);
+}
+
+.mase-template-placeholder .dashicons {
+  font-size: 48px;
+  color: var(--mase-gray-400);
+}
+
+/**
+ * Template Info
+ * 
+ * Template name and description.
+ */
+.mase-template-info {
+  padding: var(--mase-space-md);
+  flex: 1;
+}
+
+.mase-template-info h3 {
+  font-size: var(--mase-font-size-base);
+  font-weight: var(--mase-font-weight-semibold);
+  margin: 0 0 var(--mase-space-xs) 0;
+  color: var(--mase-text);
+}
+
+.mase-template-info .description {
+  font-size: var(--mase-font-size-sm);
+  color: var(--mase-text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/**
+ * Template Apply Button
+ */
+.mase-template-preview-card .mase-template-apply-btn {
+  margin: 0 var(--mase-space-md) var(--mase-space-md);
+}
+
+/**
+ * View All Templates Button Container
+ */
+.mase-view-all-templates {
+  text-align: center;
+  margin-top: var(--mase-space-lg);
+}
+
+.mase-view-all-templates button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mase-space-xs);
+}
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .mase-template-preview-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive: Mobile */
+@media (max-width: 767px) {
+  .mase-template-preview-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mase-template-thumbnail {
+    height: 150px;
+  }
+}
+
+/* ============================================================================
    SECTION 6: RESPONSIVE DESIGN
    ============================================================================
    

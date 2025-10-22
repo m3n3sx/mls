@@ -29,11 +29,6 @@ $templates    = $settings_obj->get_all_templates();
 ?>
 
 <div class="wrap mase-settings-wrap">
-	<!-- Skip Navigation Link (Requirement 13.5) -->
-	<a href="#mase-main-content" class="mase-skip-link">
-		<?php esc_html_e( 'Skip to main content', 'modern-admin-styler' ); ?>
-	</a>
-	
 	<!-- ARIA Live Region for Dynamic Notices (Requirement 13.5) -->
 	<div id="mase-notice-region" class="mase-notice-region" role="status" aria-live="polite" aria-atomic="true"></div>
 	
@@ -189,10 +184,10 @@ $templates    = $settings_obj->get_all_templates();
 						$preview_templates = array_slice( $templates, 0, 3, true );
 						foreach ( $preview_templates as $template_id => $template ) :
 							?>
-							<div class="mase-template-preview-card <?php echo ( $settings['templates']['current'] === $template_id ) ? 'active' : ''; ?>" data-template-id="<?php echo esc_attr( $template_id ); ?>">
+							<div class="mase-template-preview-card <?php echo ( $settings['templates']['current'] === $template_id ) ? 'active' : ''; ?>" data-template="<?php echo esc_attr( $template_id ); ?>" data-template-id="<?php echo esc_attr( $template_id ); ?>">
 								<div class="mase-template-thumbnail">
 									<?php if ( ! empty( $template['thumbnail'] ) ) : ?>
-										<img src="<?php echo esc_url( $template['thumbnail'] ); ?>" alt="<?php echo esc_attr( $template['name'] ); ?>" />
+										<img src="<?php echo esc_attr( $template['thumbnail'] ); ?>" alt="<?php echo esc_attr( $template['name'] ); ?>" />
 									<?php else : ?>
 										<div class="mase-template-placeholder">
 											<span class="dashicons dashicons-admin-appearance"></span>
@@ -459,6 +454,42 @@ $templates    = $settings_obj->get_all_templates();
 									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_bar']['line_height'] ); ?></span>
 								</div>
 							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-letter-spacing">
+										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-letter-spacing"
+										name="typography[admin_bar][letter_spacing]" 
+										value="<?php echo esc_attr( $settings['typography']['admin_bar']['letter_spacing'] ?? 0 ); ?>"
+										min="-2"
+										max="5"
+										step="0.5"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_bar']['letter_spacing'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-text-transform">
+										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-text-transform" name="typography[admin_bar][text_transform]">
+										<option value="none" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+										<option value="uppercase" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
+										<option value="lowercase" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
+										<option value="capitalize" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -705,6 +736,21 @@ $templates    = $settings_obj->get_all_templates();
 									<p class="description"><?php esc_html_e( 'Default: 160px. Range: 160-400px.', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-height-mode">
+										<?php esc_html_e( 'Height Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-height-mode" name="admin_menu[height_mode]">
+										<option value="full" <?php selected( $settings['admin_menu']['height_mode'] ?? 'full', 'full' ); ?>><?php esc_html_e( 'Full Height (100%)', 'modern-admin-styler' ); ?></option>
+										<option value="content" <?php selected( $settings['admin_menu']['height_mode'] ?? 'full', 'content' ); ?>><?php esc_html_e( 'Fit to Content', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Full Height: Menu spans entire viewport. Fit to Content: Menu height adjusts to menu items.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -770,6 +816,42 @@ $templates    = $settings_obj->get_all_templates();
 										step="0.1"
 									/>
 									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_menu']['line_height'] ); ?></span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-letter-spacing">
+										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-letter-spacing"
+										name="typography[admin_menu][letter_spacing]" 
+										value="<?php echo esc_attr( $settings['typography']['admin_menu']['letter_spacing'] ?? 0 ); ?>"
+										min="-2"
+										max="5"
+										step="0.5"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_menu']['letter_spacing'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-text-transform">
+										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-text-transform" name="typography[admin_menu][text_transform]">
+										<option value="none" <?php selected( $settings['typography']['admin_menu']['text_transform'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+										<option value="uppercase" <?php selected( $settings['typography']['admin_menu']['text_transform'] ?? 'none', 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
+										<option value="lowercase" <?php selected( $settings['typography']['admin_menu']['text_transform'] ?? 'none', 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
+										<option value="capitalize" <?php selected( $settings['typography']['admin_menu']['text_transform'] ?? 'none', 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
+									</select>
 								</div>
 							</div>
 						</div>
@@ -1084,214 +1166,6 @@ $templates    = $settings_obj->get_all_templates();
 										<span class="mase-toggle-slider" aria-hidden="true"></span>
 									</label>
 									<p class="description" id="typography-enable-google-fonts-desc"><?php esc_html_e( 'Load fonts from Google Fonts CDN.', 'modern-admin-styler' ); ?></p>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Admin Bar Typography (Detailed) -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h3><?php esc_html_e( 'Admin Bar Typography', 'modern-admin-styler' ); ?></h3>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-bar-font-size">
-										<?php esc_html_e( 'Font Size (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="number" 
-										id="typo-admin-bar-font-size"
-										name="typography[admin_bar][font_size]" 
-										class="small-text"
-										value="<?php echo esc_attr( $settings['typography']['admin_bar']['font_size'] ); ?>"
-										min="10"
-										max="24"
-										step="1"
-									/>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-bar-font-weight">
-										<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typo-admin-bar-font-weight" name="typography[admin_bar][font_weight]">
-										<option value="300" <?php selected( $settings['typography']['admin_bar']['font_weight'], 300 ); ?>>300 (Light)</option>
-										<option value="400" <?php selected( $settings['typography']['admin_bar']['font_weight'], 400 ); ?>>400 (Normal)</option>
-										<option value="500" <?php selected( $settings['typography']['admin_bar']['font_weight'], 500 ); ?>>500 (Medium)</option>
-										<option value="600" <?php selected( $settings['typography']['admin_bar']['font_weight'], 600 ); ?>>600 (Semi-Bold)</option>
-										<option value="700" <?php selected( $settings['typography']['admin_bar']['font_weight'], 700 ); ?>>700 (Bold)</option>
-									</select>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-bar-line-height">
-										<?php esc_html_e( 'Line Height', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="typo-admin-bar-line-height"
-										name="typography[admin_bar][line_height]" 
-										value="<?php echo esc_attr( $settings['typography']['admin_bar']['line_height'] ); ?>"
-										min="1.0"
-										max="2.0"
-										step="0.1"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_bar']['line_height'] ); ?></span>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-bar-letter-spacing">
-										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="typo-admin-bar-letter-spacing"
-										name="typography[admin_bar][letter_spacing]" 
-										value="<?php echo esc_attr( $settings['typography']['admin_bar']['letter_spacing'] ); ?>"
-										min="-2"
-										max="5"
-										step="0.5"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_bar']['letter_spacing'] ); ?>px</span>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-bar-text-transform">
-										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typo-admin-bar-text-transform" name="typography[admin_bar][text_transform]">
-										<option value="none" <?php selected( $settings['typography']['admin_bar']['text_transform'], 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
-										<option value="uppercase" <?php selected( $settings['typography']['admin_bar']['text_transform'], 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
-										<option value="lowercase" <?php selected( $settings['typography']['admin_bar']['text_transform'], 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
-										<option value="capitalize" <?php selected( $settings['typography']['admin_bar']['text_transform'], 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Admin Menu Typography (Detailed) -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h3><?php esc_html_e( 'Admin Menu Typography', 'modern-admin-styler' ); ?></h3>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-menu-font-size">
-										<?php esc_html_e( 'Font Size (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="number" 
-										id="typo-admin-menu-font-size"
-										name="typography[admin_menu][font_size]" 
-										class="small-text"
-										value="<?php echo esc_attr( $settings['typography']['admin_menu']['font_size'] ); ?>"
-										min="10"
-										max="24"
-										step="1"
-									/>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-menu-font-weight">
-										<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typo-admin-menu-font-weight" name="typography[admin_menu][font_weight]">
-										<option value="300" <?php selected( $settings['typography']['admin_menu']['font_weight'], 300 ); ?>>300 (Light)</option>
-										<option value="400" <?php selected( $settings['typography']['admin_menu']['font_weight'], 400 ); ?>>400 (Normal)</option>
-										<option value="500" <?php selected( $settings['typography']['admin_menu']['font_weight'], 500 ); ?>>500 (Medium)</option>
-										<option value="600" <?php selected( $settings['typography']['admin_menu']['font_weight'], 600 ); ?>>600 (Semi-Bold)</option>
-										<option value="700" <?php selected( $settings['typography']['admin_menu']['font_weight'], 700 ); ?>>700 (Bold)</option>
-									</select>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-menu-line-height">
-										<?php esc_html_e( 'Line Height', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="typo-admin-menu-line-height"
-										name="typography[admin_menu][line_height]" 
-										value="<?php echo esc_attr( $settings['typography']['admin_menu']['line_height'] ); ?>"
-										min="1.0"
-										max="2.0"
-										step="0.1"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_menu']['line_height'] ); ?></span>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-menu-letter-spacing">
-										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="typo-admin-menu-letter-spacing"
-										name="typography[admin_menu][letter_spacing]" 
-										value="<?php echo esc_attr( $settings['typography']['admin_menu']['letter_spacing'] ); ?>"
-										min="-2"
-										max="5"
-										step="0.5"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['admin_menu']['letter_spacing'] ); ?>px</span>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-admin-menu-text-transform">
-										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typo-admin-menu-text-transform" name="typography[admin_menu][text_transform]">
-										<option value="none" <?php selected( $settings['typography']['admin_menu']['text_transform'], 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
-										<option value="uppercase" <?php selected( $settings['typography']['admin_menu']['text_transform'], 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
-										<option value="lowercase" <?php selected( $settings['typography']['admin_menu']['text_transform'], 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
-										<option value="capitalize" <?php selected( $settings['typography']['admin_menu']['text_transform'], 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
-									</select>
 								</td>
 							</tr>
 						</tbody>
@@ -1689,7 +1563,7 @@ $templates    = $settings_obj->get_all_templates();
 							<div class="mase-template-card <?php echo ( $settings['templates']['current'] === $template_id ) ? 'active' : ''; ?>" data-template="<?php echo esc_attr( $template_id ); ?>" data-template-id="<?php echo esc_attr( $template_id ); ?>" role="article" aria-label="<?php echo esc_attr( $template['name'] ); ?>">
 								<div class="mase-template-thumbnail">
 									<?php if ( ! empty( $template['thumbnail'] ) ) : ?>
-										<img src="<?php echo esc_url( $template['thumbnail'] ); ?>" alt="<?php echo esc_attr( $template['name'] ); ?>" />
+										<img src="<?php echo esc_attr( $template['thumbnail'] ); ?>" alt="<?php echo esc_attr( $template['name'] ); ?>" />
 									<?php else : ?>
 										<div class="mase-template-placeholder">
 											<span class="dashicons dashicons-admin-appearance"></span>
