@@ -1,6 +1,53 @@
 <?php
 /**
  * MASE Admin Interface Class
+ * 
+ * Handles admin interface, asset enqueuing, and AJAX request processing.
+ * 
+ * SECURITY IMPLEMENTATION (Requirements 22.1, 22.2, 22.3):
+ * 
+ * 1. Input Validation & Sanitization (Requirement 22.1):
+ *    - All numeric inputs validated against allowed ranges
+ *    - All color values sanitized using sanitize_hex_color()
+ *    - All text inputs sanitized using sanitize_text_field()
+ *    - All enum values validated against allowed values
+ *    - Validation performed in MASE_Settings::validate()
+ * 
+ * 2. File Upload Security (Requirement 22.2):
+ *    - File type validation (PNG, JPG, SVG only)
+ *    - File size validation (max 2MB)
+ *    - MIME type verification using wp_check_filetype()
+ *    - Extension validation to prevent spoofing
+ *    - SVG sanitization to remove malicious code
+ *    - Upload error handling
+ *    - User capability checks
+ * 
+ * 3. CSRF Protection (Requirement 22.3):
+ *    - All AJAX handlers verify nonces using check_ajax_referer()
+ *    - All AJAX handlers check user capabilities using current_user_can()
+ *    - Nonce created with wp_create_nonce('mase_save_settings')
+ *    - Nonce passed to JavaScript via wp_localize_script()
+ *    - Failed nonce checks return 403 Forbidden
+ *    - Failed capability checks return 403 Forbidden
+ * 
+ * AJAX Handler Security Pattern:
+ * ```php
+ * public function handle_ajax_example() {
+ *     // 1. Verify nonce (CSRF protection)
+ *     check_ajax_referer( 'mase_save_settings', 'nonce' );
+ *     
+ *     // 2. Check user capability
+ *     if ( ! current_user_can( 'manage_options' ) ) {
+ *         wp_send_json_error( array( 'message' => 'Unauthorized' ), 403 );
+ *     }
+ *     
+ *     // 3. Validate and sanitize input
+ *     $input = sanitize_text_field( $_POST['input'] );
+ *     
+ *     // 4. Process request
+ *     // ...
+ * }
+ * ```
  *
  * @package Modern_Admin_Styler_Enterprise
  * @since 1.0.0
@@ -48,6 +95,9 @@ class MASE_Admin {
 		add_action( 'wp_ajax_mase_create_backup', array( $this, 'handle_ajax_create_backup' ) );
 		add_action( 'wp_ajax_mase_restore_backup', array( $this, 'handle_ajax_restore_backup' ) );
 		add_action( 'wp_ajax_mase_get_backups', array( $this, 'handle_ajax_get_backups' ) );
+		
+		// Logo upload AJAX handler (Requirement 16.1).
+		add_action( 'wp_ajax_mase_upload_menu_logo', array( $this, 'handle_ajax_upload_menu_logo' ) );
 		
 		/**
 		 * REMOVED: Duplicate mobile optimizer AJAX handler registration.
@@ -332,21 +382,35 @@ class MASE_Admin {
 
 	/**
 	 * Handle AJAX save settings request.
+	 * 
+	 * Requirement 22.3: CSRF protection via nonce verification and capability checks.
+	 * All AJAX requests must verify nonces and check user capabilities.
 	 */
 	public function handle_ajax_save_settings() {
 		try {
-			// Verify nonce.
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
 			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
 			}
 
-			// Check user capability.
+			// Security: Check user capability (Requirement 22.3).
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
 			}
 
 			// Get and validate settings.
-			$input = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
+			// CRITICAL FIX: Settings are now sent as JSON string to avoid max_input_vars limit
+			if ( isset( $_POST['settings'] ) && is_string( $_POST['settings'] ) ) {
+				// Settings sent as JSON string - decode it
+				$input = json_decode( stripslashes( $_POST['settings'] ), true );
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					error_log( 'MASE: JSON decode error: ' . json_last_error_msg() );
+					wp_send_json_error( array( 'message' => __( 'Invalid settings format', 'mase' ) ), 400 );
+				}
+			} else {
+				// Fallback: Settings sent as array (old format)
+				$input = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
+			}
 			
 			// Save settings.
 			$result = $this->settings->update_option( $input );
@@ -448,15 +512,17 @@ class MASE_Admin {
 
 	/**
 	 * Handle AJAX export settings request.
+	 * 
+	 * Requirement 22.3: CSRF protection via nonce verification and capability checks.
 	 */
 	public function handle_ajax_export_settings() {
 		try {
-			// Verify nonce.
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
 			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
 			}
 
-			// Check user capability.
+			// Security: Check user capability (Requirement 22.3).
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
 			}
@@ -483,16 +549,18 @@ class MASE_Admin {
 
 	/**
 	 * Handle AJAX import settings request.
+	 * 
 	 * Requirement 8.3: Validate JSON file structure before applying settings.
+	 * Requirement 22.3: CSRF protection via nonce verification and capability checks.
 	 */
 	public function handle_ajax_import_settings() {
 		try {
-			// Verify nonce.
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
 			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
 				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
 			}
 
-			// Check user capability.
+			// Security: Check user capability (Requirement 22.3).
 			if ( ! current_user_can( 'manage_options' ) ) {
 				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
 			}
@@ -979,5 +1047,280 @@ class MASE_Admin {
 				'message' => __( 'An error occurred. Please try again.', 'mase' ),
 			) );
 		}
+	}
+
+	/**
+	 * Handle AJAX logo upload for admin menu (Requirement 16.1)
+	 *
+	 * @since 1.2.0
+	 */
+	/**
+	 * Handle AJAX logo upload request.
+	 * 
+	 * Requirement 22.2: Comprehensive file upload security.
+	 * - Validates file types (PNG, JPG, SVG only)
+	 * - Validates file sizes (max 2MB)
+	 * - Sanitizes SVG content to remove malicious code
+	 * - Checks user capabilities
+	 * - Verifies nonces
+	 * 
+	 * Requirement 22.3: CSRF protection via nonce verification.
+	 *
+	 * @since 1.2.0
+	 */
+	public function handle_ajax_upload_menu_logo() {
+		// Security: Verify nonce for CSRF protection (Requirement 22.3).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 22.2).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to upload files.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Validation: Check if file was uploaded (Requirement 22.2).
+		if ( empty( $_FILES['logo_file'] ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'No file was uploaded.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		$file = $_FILES['logo_file'];
+
+		// Security: Check for upload errors (Requirement 22.2).
+		if ( $file['error'] !== UPLOAD_ERR_OK ) {
+			$error_messages = array(
+				UPLOAD_ERR_INI_SIZE   => __( 'File exceeds upload_max_filesize directive.', 'modern-admin-styler' ),
+				UPLOAD_ERR_FORM_SIZE  => __( 'File exceeds MAX_FILE_SIZE directive.', 'modern-admin-styler' ),
+				UPLOAD_ERR_PARTIAL    => __( 'File was only partially uploaded.', 'modern-admin-styler' ),
+				UPLOAD_ERR_NO_FILE    => __( 'No file was uploaded.', 'modern-admin-styler' ),
+				UPLOAD_ERR_NO_TMP_DIR => __( 'Missing temporary folder.', 'modern-admin-styler' ),
+				UPLOAD_ERR_CANT_WRITE => __( 'Failed to write file to disk.', 'modern-admin-styler' ),
+				UPLOAD_ERR_EXTENSION  => __( 'File upload stopped by extension.', 'modern-admin-styler' ),
+			);
+			
+			$error_message = isset( $error_messages[ $file['error'] ] ) 
+				? $error_messages[ $file['error'] ] 
+				: __( 'Unknown upload error.', 'modern-admin-styler' );
+			
+			wp_send_json_error( array(
+				'message' => $error_message,
+			), 400 );
+		}
+
+		// Security: Validate file type using WordPress function (Requirement 22.2).
+		$allowed_types = array( 'image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml' );
+		$file_type = wp_check_filetype( $file['name'], array(
+			'png'  => 'image/png',
+			'jpg'  => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'svg'  => 'image/svg+xml',
+		) );
+		
+		// Double-check MIME type from both server and WordPress.
+		if ( ! in_array( $file['type'], $allowed_types, true ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Only PNG, JPG, and SVG files are allowed.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file extension matches MIME type (Requirement 22.2).
+		$allowed_extensions = array( 'png', 'jpg', 'jpeg', 'svg' );
+		if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_extensions, true ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'Invalid file extension.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file size (max 2MB) (Requirement 22.2).
+		$max_size = 2 * 1024 * 1024; // 2MB in bytes
+		if ( $file['size'] > $max_size ) {
+			wp_send_json_error( array(
+				'message' => __( 'File size must be less than 2MB.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file is not empty (Requirement 22.2).
+		if ( $file['size'] === 0 ) {
+			wp_send_json_error( array(
+				'message' => __( 'File is empty.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Sanitize SVG content if SVG file.
+		if ( $file['type'] === 'image/svg+xml' ) {
+			$svg_content = file_get_contents( $file['tmp_name'] );
+			$svg_content = $this->sanitize_svg( $svg_content );
+			
+			if ( $svg_content === false ) {
+				wp_send_json_error( array(
+					'message' => __( 'Invalid SVG file. Please upload a valid SVG.', 'modern-admin-styler' ),
+				) );
+			}
+			
+			// Write sanitized SVG back to temp file.
+			file_put_contents( $file['tmp_name'], $svg_content );
+		}
+
+		// Upload file using WordPress media handler.
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$upload_overrides = array(
+			'test_form' => false,
+			'mimes'     => array(
+				'png'  => 'image/png',
+				'jpg'  => 'image/jpeg',
+				'jpeg' => 'image/jpeg',
+				'svg'  => 'image/svg+xml',
+			),
+		);
+
+		$uploaded_file = wp_handle_upload( $file, $upload_overrides );
+
+		if ( isset( $uploaded_file['error'] ) ) {
+			wp_send_json_error( array(
+				'message' => $uploaded_file['error'],
+			) );
+		}
+
+		// Store logo URL in settings.
+		$settings = $this->settings->get_option();
+		$settings['admin_menu']['logo_url'] = $uploaded_file['url'];
+		$this->settings->update_option( $settings );
+
+		// Clear cache to regenerate CSS with new logo.
+		$this->cache->clear_all_cache();
+
+		wp_send_json_success( array(
+			'message'  => __( 'Logo uploaded successfully.', 'modern-admin-styler' ),
+			'logo_url' => $uploaded_file['url'],
+		) );
+	}
+
+	/**
+	 * Sanitize SVG content to remove malicious code.
+	 * 
+	 * Requirement 22.2: Comprehensive SVG sanitization.
+	 * Removes dangerous tags, attributes, and protocols that could execute scripts.
+	 *
+	 * @param string $svg_content SVG file content.
+	 * @return string|false Sanitized SVG content or false on failure.
+	 * @since 1.2.0
+	 */
+	private function sanitize_svg( $svg_content ) {
+		// Security: Basic SVG validation (Requirement 22.2).
+		if ( empty( $svg_content ) || strpos( $svg_content, '<svg' ) === false ) {
+			return false;
+		}
+
+		// Security: Check file size limit (prevent DoS).
+		if ( strlen( $svg_content ) > 1024 * 1024 ) { // 1MB text limit
+			return false;
+		}
+
+		// Security: Remove XML declarations and DOCTYPE (can contain entities).
+		$svg_content = preg_replace( '/<\?xml[^>]*\?>/i', '', $svg_content );
+		$svg_content = preg_replace( '/<!DOCTYPE[^>]*>/i', '', $svg_content );
+		$svg_content = preg_replace( '/<!ENTITY[^>]*>/i', '', $svg_content );
+
+		// Security: Remove potentially dangerous elements (Requirement 22.2).
+		$dangerous_tags = array(
+			'script',
+			'embed',
+			'object',
+			'iframe',
+			'link',
+			'style',
+			'foreignObject',
+			'use',
+			'image',
+			'video',
+			'audio',
+			'animate',
+			'animateTransform',
+			'set',
+		);
+
+		foreach ( $dangerous_tags as $tag ) {
+			// Remove opening and closing tags.
+			$svg_content = preg_replace( '/<' . $tag . '[^>]*>.*?<\/' . $tag . '>/is', '', $svg_content );
+			// Remove self-closing tags.
+			$svg_content = preg_replace( '/<' . $tag . '[^>]*\/>/is', '', $svg_content );
+		}
+
+		// Security: Remove dangerous event handler attributes (Requirement 22.2).
+		$dangerous_attrs = array(
+			'onload',
+			'onerror',
+			'onclick',
+			'onmouseover',
+			'onmouseout',
+			'onmousemove',
+			'onmouseenter',
+			'onmouseleave',
+			'onmousedown',
+			'onmouseup',
+			'onfocus',
+			'onblur',
+			'onchange',
+			'onsubmit',
+			'onkeydown',
+			'onkeyup',
+			'onkeypress',
+			'ondblclick',
+			'oncontextmenu',
+			'oninput',
+			'onselect',
+			'onscroll',
+			'onwheel',
+			'oncopy',
+			'oncut',
+			'onpaste',
+			'onabort',
+			'oncanplay',
+			'oncanplaythrough',
+			'ondrag',
+			'ondragend',
+			'ondragenter',
+			'ondragleave',
+			'ondragover',
+			'ondragstart',
+			'ondrop',
+		);
+
+		foreach ( $dangerous_attrs as $attr ) {
+			// Remove with double quotes.
+			$svg_content = preg_replace( '/' . $attr . '="[^"]*"/i', '', $svg_content );
+			// Remove with single quotes.
+			$svg_content = preg_replace( '/' . $attr . "='[^']*'/i", '', $svg_content );
+			// Remove without quotes.
+			$svg_content = preg_replace( '/' . $attr . '=[^\s>]*/i', '', $svg_content );
+		}
+
+		// Security: Remove dangerous protocols (Requirement 22.2).
+		$dangerous_protocols = array(
+			'javascript:',
+			'data:text/html',
+			'vbscript:',
+			'file:',
+			'about:',
+		);
+
+		foreach ( $dangerous_protocols as $protocol ) {
+			$svg_content = preg_replace( '/' . preg_quote( $protocol, '/' ) . '/i', '', $svg_content );
+		}
+
+		// Security: Remove CDATA sections (can hide malicious code).
+		$svg_content = preg_replace( '/<!\[CDATA\[.*?\]\]>/is', '', $svg_content );
+
+		// Security: Validate result still contains SVG tag.
+		if ( strpos( $svg_content, '<svg' ) === false ) {
+			return false;
+		}
+
+		return $svg_content;
 	}
 }

@@ -785,6 +785,190 @@
                         }
                     });
                     
+                    // Bind icon color mode selector (Requirement 2.3)
+                    // Trigger live preview update when icon color mode changes
+                    $('#admin-menu-icon-color-mode').on('change.livepreview', function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from icon color mode:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Bind custom icon color picker (Requirement 2.3)
+                    // Trigger live preview update when custom icon color changes
+                    $('#admin-menu-icon-color').on('change.livepreview', self.debounce(function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from custom icon color:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Bind menu text color picker (Requirement 2.1)
+                    // When text color changes in auto mode, icon color should update too
+                    $('#admin-menu-text-color').on('change.livepreview', self.debounce(function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from menu text color:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Bind submenu background color picker (Requirements 7.2, 7.4)
+                    // Update submenu background in real-time
+                    $('#admin-menu-submenu-bg-color').on('change.livepreview', self.debounce(function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu background color:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Bind submenu border radius mode selector (Requirement 8.4)
+                    $('#admin-menu-submenu-border-radius-mode').on('change.livepreview', function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu border radius mode:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Bind submenu border radius sliders (Requirement 8.4)
+                    $('#admin-menu-submenu-border-radius, #admin-menu-submenu-border-radius-tl, #admin-menu-submenu-border-radius-tr, #admin-menu-submenu-border-radius-br, #admin-menu-submenu-border-radius-bl').on('input.livepreview', self.debounce(function() {
+                        try {
+                            // Update range value display
+                            var $slider = $(this);
+                            var value = $slider.val();
+                            $slider.siblings('.mase-range-value').text(value + 'px');
+                            
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu border radius:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Bind submenu typography controls (Requirements 10.1, 10.2, 10.3, 10.4, 10.5, 10.6)
+                    // Font size
+                    $('#admin-menu-submenu-font-size').on('input.livepreview', self.debounce(function() {
+                        try {
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu font size:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, self.config.debounceDelay));
+                    
+                    // Text color
+                    $('#admin-menu-submenu-text-color').on('change.livepreview', self.debounce(function() {
+                        try {
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu text color:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Line height
+                    $('#admin-menu-submenu-line-height').on('input.livepreview', self.debounce(function() {
+                        try {
+                            // Update range value display
+                            var $slider = $(this);
+                            var value = $slider.val();
+                            $slider.siblings('.mase-range-value').text(value);
+                            
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu line height:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Letter spacing
+                    $('#admin-menu-submenu-letter-spacing').on('input.livepreview', self.debounce(function() {
+                        try {
+                            // Update range value display
+                            var $slider = $(this);
+                            var value = $slider.val();
+                            $slider.siblings('.mase-range-value').text(value + 'px');
+                            
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu letter spacing:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, 100));
+                    
+                    // Text transform
+                    $('#admin-menu-submenu-text-transform').on('change.livepreview', function() {
+                        try {
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu text transform:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Font family
+                    $('#admin-menu-submenu-font-family').on('change.livepreview', function() {
+                        try {
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from submenu font family:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Bind border radius mode selector (Requirements 9.4, 9.5)
+                    // Trigger live preview update when border radius mode changes
+                    $('#admin-bar-border-radius-mode').on('change.livepreview', function() {
+                        try {
+                            // Update CSS immediately if live preview enabled
+                            if (self.state.livePreviewEnabled) {
+                                self.livePreview.update();
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating live preview from border radius mode:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
                     // Bind checkboxes and radios
                     $('.mase-checkbox, .mase-radio').on('change.livepreview', self.debounce(function() {
                         try {
@@ -855,15 +1039,48 @@
                 // Collect admin bar settings
                 settings.admin_bar.bg_color = $('#admin-bar-bg-color').val() || '#23282d';
                 settings.admin_bar.text_color = $('#admin-bar-text-color').val() || '#ffffff';
+                settings.admin_bar.hover_color = $('#admin-bar-hover-color').val() || '#00b9eb';
                 settings.admin_bar.height = $('#admin-bar-height').val() || 32;
+                
+                // Collect border radius settings (Requirements 9.1, 9.2, 9.4, 9.5)
+                settings.admin_bar.border_radius_mode = $('#admin-bar-border-radius-mode').val() || 'uniform';
+                settings.admin_bar.border_radius = $('#admin-bar-border-radius').val() || 0;
+                settings.admin_bar.border_radius_tl = $('#admin-bar-border-radius-tl').val() || 0;
+                settings.admin_bar.border_radius_tr = $('#admin-bar-border-radius-tr').val() || 0;
+                settings.admin_bar.border_radius_bl = $('#admin-bar-border-radius-bl').val() || 0;
+                settings.admin_bar.border_radius_br = $('#admin-bar-border-radius-br').val() || 0;
                 
                 // Collect admin menu settings
                 settings.admin_menu.bg_color = $('#admin-menu-bg-color').val() || '#23282d';
                 settings.admin_menu.text_color = $('#admin-menu-text-color').val() || '#ffffff';
                 settings.admin_menu.hover_bg_color = $('#admin-menu-hover-bg-color').val() || '#191e23';
                 settings.admin_menu.hover_text_color = $('#admin-menu-hover-text-color').val() || '#00b9eb';
-                settings.admin_menu.width = $('#admin-menu-width').val() || 160;
+                settings.admin_menu.width = $('#admin-menu-width').val() || 160; // Legacy support
+                settings.admin_menu.width_unit = $('#admin-menu-width-unit').val() || 'pixels'; // Requirement 14.1
+                settings.admin_menu.width_value = $('#admin-menu-width').val() || 160; // Requirement 14.2
                 settings.admin_menu.height_mode = $('#admin-menu-height-mode').val() || 'full';
+                
+                // Collect icon color settings (Requirement 2.3)
+                settings.admin_menu.icon_color_mode = $('#admin-menu-icon-color-mode').val() || 'auto';
+                settings.admin_menu.icon_color = $('#admin-menu-icon-color').val() || '#ffffff';
+                
+                // Collect submenu settings (Requirements 7.2, 7.4, 8.4, 10.1, 10.2, 10.3, 10.4, 10.5)
+                settings.admin_menu_submenu = {
+                    bg_color: $('#admin-menu-submenu-bg-color').val() || '#32373c',
+                    border_radius_mode: $('#admin-menu-submenu-border-radius-mode').val() || 'uniform',
+                    border_radius: parseInt($('#admin-menu-submenu-border-radius').val()) || 0,
+                    border_radius_tl: parseInt($('#admin-menu-submenu-border-radius-tl').val()) || 0,
+                    border_radius_tr: parseInt($('#admin-menu-submenu-border-radius-tr').val()) || 0,
+                    border_radius_br: parseInt($('#admin-menu-submenu-border-radius-br').val()) || 0,
+                    border_radius_bl: parseInt($('#admin-menu-submenu-border-radius-bl').val()) || 0,
+                    // Typography settings (Requirements 10.1, 10.2, 10.3, 10.4, 10.5)
+                    font_size: parseInt($('#admin-menu-submenu-font-size').val()) || 13,
+                    text_color: $('#admin-menu-submenu-text-color').val() || '#ffffff',
+                    line_height: parseFloat($('#admin-menu-submenu-line-height').val()) || 1.5,
+                    letter_spacing: parseInt($('#admin-menu-submenu-letter-spacing').val()) || 0,
+                    text_transform: $('#admin-menu-submenu-text-transform').val() || 'none',
+                    font_family: $('#admin-menu-submenu-font-family').val() || 'system'
+                };
                 
                 // Collect typography settings
                 // Admin Bar typography (from Admin Bar tab only)
@@ -972,6 +1189,89 @@
                     css += 'body.wp-admin #wpadminbar > #wp-toolbar span.noticon{';
                     css += 'color:' + adminBar.text_color + '!important;';
                     css += '}';
+                    
+                    // Icon color synchronization (Requirements 2.1, 2.2, 2.3)
+                    // Apply text color to all icon types (dashicons, SVG elements, icon containers)
+                    css += 'body.wp-admin #wpadminbar .ab-icon,';
+                    css += 'body.wp-admin #wpadminbar .dashicons,';
+                    css += 'body.wp-admin #wpadminbar .ab-icon:before,';
+                    css += 'body.wp-admin #wpadminbar .dashicons-before:before{';
+                    css += 'color:' + adminBar.text_color + '!important;';
+                    css += '}';
+                    
+                    // Apply color to SVG elements
+                    css += 'body.wp-admin #wpadminbar svg,';
+                    css += 'body.wp-admin #wpadminbar .ab-icon svg{';
+                    css += 'fill:' + adminBar.text_color + '!important;';
+                    css += '}';
+                    
+                    // Apply color to SVG paths and shapes
+                    css += 'body.wp-admin #wpadminbar svg path,';
+                    css += 'body.wp-admin #wpadminbar svg circle,';
+                    css += 'body.wp-admin #wpadminbar svg rect,';
+                    css += 'body.wp-admin #wpadminbar svg polygon{';
+                    css += 'fill:' + adminBar.text_color + '!important;';
+                    css += '}';
+                    
+                    // Apply color to SVG strokes
+                    css += 'body.wp-admin #wpadminbar svg[stroke],';
+                    css += 'body.wp-admin #wpadminbar svg path[stroke]{';
+                    css += 'stroke:' + adminBar.text_color + '!important;';
+                    css += '}';
+                }
+                
+                // Icon hover states (Requirement 2.2)
+                if (adminBar.hover_color) {
+                    // Apply hover color to icons
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover .dashicons,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon:before,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover .dashicons-before:before{';
+                    css += 'color:' + adminBar.hover_color + '!important;';
+                    css += '}';
+                    
+                    // Apply hover color to SVG elements
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon svg{';
+                    css += 'fill:' + adminBar.hover_color + '!important;';
+                    css += '}';
+                    
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg path,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg circle,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg rect,';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg polygon{';
+                    css += 'fill:' + adminBar.hover_color + '!important;';
+                    css += '}';
+                    
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg[stroke],';
+                    css += 'body.wp-admin #wpadminbar .ab-item:hover svg path[stroke]{';
+                    css += 'stroke:' + adminBar.hover_color + '!important;';
+                    css += '}';
+                }
+                
+                // Border radius (Requirements 9.1, 9.2, 9.4, 9.5)
+                var borderRadiusMode = adminBar.border_radius_mode || 'uniform';
+                if (borderRadiusMode === 'individual') {
+                    // Individual corner radii
+                    var tl = parseInt(adminBar.border_radius_tl) || 0;
+                    var tr = parseInt(adminBar.border_radius_tr) || 0;
+                    var br = parseInt(adminBar.border_radius_br) || 0;
+                    var bl = parseInt(adminBar.border_radius_bl) || 0;
+                    
+                    // Only apply if at least one corner has a radius
+                    if (tl > 0 || tr > 0 || br > 0 || bl > 0) {
+                        css += 'body.wp-admin #wpadminbar{';
+                        css += 'border-radius:' + tl + 'px ' + tr + 'px ' + br + 'px ' + bl + 'px!important;';
+                        css += '}';
+                    }
+                } else {
+                    // Uniform border radius
+                    var radius = parseInt(adminBar.border_radius) || 0;
+                    if (radius > 0) {
+                        css += 'body.wp-admin #wpadminbar{';
+                        css += 'border-radius:' + radius + 'px!important;';
+                        css += '}';
+                    }
                 }
                 
                 // Glassmorphism effect (if enabled) - Requirement 8.3
@@ -1156,6 +1456,65 @@
                     css += '}';
                 }
                 
+                // Icon color synchronization (Requirements 2.1, 2.2)
+                var iconColorMode = adminMenu.icon_color_mode || 'auto';
+                var iconColor;
+                
+                if (iconColorMode === 'auto') {
+                    // Auto mode: sync icon color with text color (Requirement 2.1)
+                    iconColor = adminMenu.text_color || '#ffffff';
+                } else {
+                    // Custom mode: use custom icon color (Requirement 2.2)
+                    iconColor = adminMenu.icon_color || '#ffffff';
+                }
+                
+                // Apply icon color to all icon types (Requirement 2.1, 2.2)
+                css += 'body.wp-admin #adminmenu .wp-menu-image,';
+                css += 'body.wp-admin #adminmenu .wp-menu-image:before,';
+                css += 'body.wp-admin #adminmenu .dashicons,';
+                css += 'body.wp-admin #adminmenu .dashicons-before:before{';
+                css += 'color:' + iconColor + '!important;';
+                css += '}';
+                
+                // Apply color to SVG elements (Requirement 2.1, 2.2)
+                css += 'body.wp-admin #adminmenu .wp-menu-image svg,';
+                css += 'body.wp-admin #adminmenu .wp-menu-image img{';
+                css += 'fill:' + iconColor + '!important;';
+                css += '}';
+                
+                // Hover states for icons (Requirement 2.2)
+                var hoverIconColor;
+                if (iconColorMode === 'auto') {
+                    // In auto mode, icons follow hover text color
+                    hoverIconColor = adminMenu.hover_text_color || '#00b9eb';
+                } else {
+                    // In custom mode, icons maintain their custom color on hover
+                    hoverIconColor = iconColor;
+                }
+                
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image,';
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image:before,';
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .dashicons,';
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .dashicons-before:before,';
+                css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image,';
+                css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image:before,';
+                css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .dashicons,';
+                css += 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image,';
+                css += 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image:before,';
+                css += 'body.wp-admin #adminmenu li > a.menu-top:focus .dashicons{';
+                css += 'color:' + hoverIconColor + '!important;';
+                css += '}';
+                
+                // Hover states for SVG elements
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image svg,';
+                css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image img,';
+                css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image svg,';
+                css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image img,';
+                css += 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image svg,';
+                css += 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image img{';
+                css += 'fill:' + hoverIconColor + '!important;';
+                css += '}';
+                
                 // Admin menu hover states
                 if (adminMenu.hover_bg_color) {
                     css += 'body.wp-admin #adminmenu li.menu-top:hover,';
@@ -1170,6 +1529,46 @@
                     css += 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
                     css += 'body.wp-admin #adminmenu li > a.menu-top:focus{';
                     css += 'color:' + adminMenu.hover_text_color + '!important;';
+                    css += '}';
+                }
+                
+                // Submenu background color and border radius (Requirements 7.2, 7.4, 8.4)
+                if (settings.admin_menu_submenu && settings.admin_menu_submenu.bg_color) {
+                    var submenuBgColor = settings.admin_menu_submenu.bg_color;
+                    
+                    // Target submenu wrapper and submenu elements
+                    css += 'body.wp-admin #adminmenu .wp-submenu{';
+                    css += 'background-color:' + submenuBgColor + '!important;';
+                    
+                    // Add border radius (Requirement 8.4)
+                    var borderRadiusMode = settings.admin_menu_submenu.border_radius_mode || 'uniform';
+                    if (borderRadiusMode === 'individual') {
+                        var tl = parseInt(settings.admin_menu_submenu.border_radius_tl) || 0;
+                        var tr = parseInt(settings.admin_menu_submenu.border_radius_tr) || 0;
+                        var br = parseInt(settings.admin_menu_submenu.border_radius_br) || 0;
+                        var bl = parseInt(settings.admin_menu_submenu.border_radius_bl) || 0;
+                        
+                        if (tl > 0 || tr > 0 || br > 0 || bl > 0) {
+                            css += 'border-radius:' + tl + 'px ' + tr + 'px ' + br + 'px ' + bl + 'px!important;';
+                        }
+                    } else {
+                        var radius = parseInt(settings.admin_menu_submenu.border_radius) || 0;
+                        if (radius > 0) {
+                            css += 'border-radius:' + radius + 'px!important;';
+                        }
+                    }
+                    
+                    css += '}';
+                    
+                    // Ensure submenu items inherit background
+                    css += 'body.wp-admin #adminmenu .wp-submenu .wp-submenu-wrap{';
+                    css += 'background-color:' + submenuBgColor + '!important;';
+                    css += '}';
+                    
+                    // Submenu item hover state with semi-transparent overlay
+                    css += 'body.wp-admin #adminmenu .wp-submenu a:hover,';
+                    css += 'body.wp-admin #adminmenu .wp-submenu a:focus{';
+                    css += 'background-color:rgba(255,255,255,0.1)!important;';
                     css += '}';
                 }
                 
@@ -1413,6 +1812,2356 @@
              */
             remove: function() {
                 $('#mase-live-preview-css').remove();
+            }
+        },
+        
+        /**
+         * Admin Bar Preview Module
+         * Handles live preview for admin bar specific options
+         * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8
+         */
+        adminBarPreview: {
+            /**
+             * Initialize admin bar preview
+             * Binds event listeners for all admin bar controls
+             */
+            init: function() {
+                var self = MASE;
+                
+                // Bind hover color picker (Requirement 4.1)
+                $('#admin-bar-hover-color').on('change', function() {
+                    self.adminBarPreview.updateHoverColor($(this).val());
+                });
+                
+                // Bind line height slider (Requirement 4.2)
+                $('#admin-bar-line-height').on('input', function() {
+                    self.adminBarPreview.updateLineHeight($(this).val());
+                });
+                
+                // Bind glassmorphism toggle (Requirement 4.3)
+                $('#admin-bar-glassmorphism').on('change', function() {
+                    self.adminBarPreview.updateGlassmorphism($(this).is(':checked'));
+                });
+                
+                // Bind blur intensity slider (Requirement 4.4)
+                $('#admin-bar-blur-intensity').on('input', function() {
+                    self.adminBarPreview.updateBlurIntensity($(this).val());
+                });
+                
+                // Bind floating effect toggle (Requirements 4.5, 13.4, 13.5)
+                $('#admin-bar-floating').on('change', function() {
+                    var isFloating = $(this).is(':checked');
+                    
+                    // Update floating effect (Requirement 4.5)
+                    self.adminBarPreview.updateFloating(isFloating);
+                    
+                    // Show/hide floating margin controls (Requirement 13.5)
+                    var $floatingMarginSection = $('.mase-conditional[data-depends-on="admin-bar-floating"]');
+                    if (isFloating) {
+                        $floatingMarginSection.show();
+                    } else {
+                        $floatingMarginSection.hide();
+                    }
+                    
+                    // Update preview immediately (Requirement 13.5)
+                    self.adminBarPreview.updateFloatingLayout();
+                });
+                
+                // Bind floating margin slider (Requirement 4.6)
+                $('#admin-bar-floating-margin').on('input', function() {
+                    self.adminBarPreview.updateFloatingMargin($(this).val());
+                });
+                
+                // Bind border radius slider (Requirement 4.7)
+                $('#admin-bar-border-radius').on('input', function() {
+                    self.adminBarPreview.updateBorderRadius($(this).val());
+                });
+                
+                // Bind shadow mode selector (Requirement 10.5)
+                $('#admin-bar-shadow-mode').on('change', function() {
+                    self.adminBarPreview.updateShadowMode($(this).val());
+                });
+                
+                // Bind shadow preset selector (Requirement 10.5)
+                $('#admin-bar-shadow-preset').on('change', function() {
+                    self.adminBarPreview.updateShadowPreset($(this).val());
+                });
+                
+                // Bind custom shadow controls (Requirement 10.5)
+                $('#admin-bar-shadow-h-offset').on('input', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                $('#admin-bar-shadow-v-offset').on('input', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                $('#admin-bar-shadow-blur').on('input', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                $('#admin-bar-shadow-spread').on('input', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                $('#admin-bar-shadow-color').on('change', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                $('#admin-bar-shadow-opacity').on('input', function() {
+                    self.adminBarPreview.updateShadowCustom();
+                });
+                
+                // NEW: Bind gradient background controls (Requirement 5.3)
+                $('#admin-bar-bg-type').on('change', function() {
+                    self.adminBarPreview.updateBackgroundType($(this).val());
+                });
+                
+                $('#admin-bar-gradient-type').on('change', function() {
+                    self.adminBarPreview.updateGradient();
+                });
+                
+                $('#admin-bar-gradient-angle').on('input', function() {
+                    self.adminBarPreview.updateGradientAngle($(this).val());
+                });
+                
+                $('#admin-bar-gradient-color-1').on('change', function() {
+                    self.adminBarPreview.updateGradientColors();
+                });
+                
+                $('#admin-bar-gradient-color-2').on('change', function() {
+                    self.adminBarPreview.updateGradientColors();
+                });
+                
+                // NEW: Bind submenu styling controls (Requirements 6.4, 6.5, 6.6)
+                $('#admin-bar-submenu-bg-color').on('change', function() {
+                    self.adminBarPreview.updateSubmenuBgColor($(this).val());
+                });
+                
+                $('#admin-bar-submenu-border-radius').on('input', function() {
+                    self.adminBarPreview.updateSubmenuBorderRadius($(this).val());
+                });
+                
+                $('#admin-bar-submenu-spacing').on('input', function() {
+                    self.adminBarPreview.updateSubmenuSpacing($(this).val());
+                });
+                
+                // NEW: Bind font family selectors (Requirement 8.2)
+                $('#admin-bar-font-family').on('change', function() {
+                    self.adminBarPreview.updateFontFamily($(this).val(), 'admin-bar');
+                });
+                
+                $('#admin-bar-submenu-font-family').on('change', function() {
+                    self.adminBarPreview.updateFontFamily($(this).val(), 'submenu');
+                });
+                
+                // NEW: Bind width controls (Requirements 11.4, 11.5)
+                $('#admin-bar-width-unit').on('change', function() {
+                    self.adminBarPreview.updateWidthUnit($(this).val());
+                });
+                
+                $('#admin-bar-width-value-percent').on('input', function() {
+                    self.adminBarPreview.updateWidth($(this).val(), 'percent');
+                });
+                
+                $('#admin-bar-width-value-pixels').on('input', function() {
+                    self.adminBarPreview.updateWidth($(this).val(), 'pixels');
+                });
+                
+                // NEW: Bind floating margin controls (Requirements 12.4, 12.5)
+                $('#admin-bar-floating-margin-mode').on('change', function() {
+                    self.adminBarPreview.updateFloatingMarginMode($(this).val());
+                });
+                
+                $('#admin-bar-floating-margin-uniform').on('input', function() {
+                    self.adminBarPreview.updateFloatingMarginUniform($(this).val());
+                });
+                
+                $('#admin-bar-floating-margin-top').on('input', function() {
+                    self.adminBarPreview.updateFloatingMarginIndividual();
+                });
+                
+                $('#admin-bar-floating-margin-right').on('input', function() {
+                    self.adminBarPreview.updateFloatingMarginIndividual();
+                });
+                
+                $('#admin-bar-floating-margin-bottom').on('input', function() {
+                    self.adminBarPreview.updateFloatingMarginIndividual();
+                });
+                
+                $('#admin-bar-floating-margin-left').on('input', function() {
+                    self.adminBarPreview.updateFloatingMarginIndividual();
+                });
+            },
+            
+            /**
+             * Update hover color live preview
+             * Requirement 4.1: Create dynamic style tag for hover states
+             * 
+             * @param {string} color - Hover color value
+             */
+            updateHoverColor: function(color) {
+                if (!color) return;
+                
+                var css = '';
+                
+                // Apply hover color to admin bar items
+                css += 'body.wp-admin #wpadminbar .ab-item:hover,';
+                css += 'body.wp-admin #wpadminbar a.ab-item:hover,';
+                css += 'body.wp-admin #wpadminbar > #wp-toolbar span.ab-label:hover,';
+                css += 'body.wp-admin #wpadminbar > #wp-toolbar span.noticon:hover{';
+                css += 'color:' + color + '!important;';
+                css += '}';
+                
+                // Apply hover color to icons
+                css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon,';
+                css += 'body.wp-admin #wpadminbar .ab-item:hover .dashicons,';
+                css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon:before,';
+                css += 'body.wp-admin #wpadminbar .ab-item:hover .dashicons-before:before{';
+                css += 'color:' + color + '!important;';
+                css += '}';
+                
+                // Apply hover color to SVG elements
+                css += 'body.wp-admin #wpadminbar .ab-item:hover svg,';
+                css += 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon svg{';
+                css += 'fill:' + color + '!important;';
+                css += '}';
+                
+                this.applyCSS('hover-color', css);
+            },
+            
+            /**
+             * Update line height live preview
+             * Requirement 4.2: Apply to #wpadminbar and child elements
+             * 
+             * @param {number} lineHeight - Line height value
+             */
+            updateLineHeight: function(lineHeight) {
+                if (!lineHeight) return;
+                
+                var css = '';
+                
+                // Apply line height to admin bar
+                css += 'body.wp-admin #wpadminbar,';
+                css += 'body.wp-admin #wpadminbar .ab-item,';
+                css += 'body.wp-admin #wpadminbar a.ab-item,';
+                css += 'body.wp-admin #wpadminbar > #wp-toolbar span.ab-label,';
+                css += 'body.wp-admin #wpadminbar > #wp-toolbar span.noticon{';
+                css += 'line-height:' + lineHeight + '!important;';
+                css += '}';
+                
+                this.applyCSS('line-height', css);
+                
+                // Update range value display
+                $('#admin-bar-line-height').siblings('.mase-range-value').text(lineHeight);
+            },
+            
+            /**
+             * Update glassmorphism live preview
+             * Requirement 4.3: Apply backdrop-filter and transparency
+             * 
+             * @param {boolean} enabled - Whether glassmorphism is enabled
+             */
+            updateGlassmorphism: function(enabled) {
+                var css = '';
+                
+                if (enabled) {
+                    var blur = $('#admin-bar-blur-intensity').val() || 20;
+                    
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'backdrop-filter:blur(' + blur + 'px)!important;';
+                    css += '-webkit-backdrop-filter:blur(' + blur + 'px)!important;';
+                    css += 'background-color:rgba(35,40,45,0.8)!important;';
+                    css += '}';
+                } else {
+                    // Remove glassmorphism effect
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'backdrop-filter:none!important;';
+                    css += '-webkit-backdrop-filter:none!important;';
+                    css += '}';
+                }
+                
+                this.applyCSS('glassmorphism', css);
+            },
+            
+            /**
+             * Update blur intensity live preview
+             * Requirement 4.4: Update backdrop-filter blur value
+             * 
+             * @param {number} intensity - Blur intensity value
+             */
+            updateBlurIntensity: function(intensity) {
+                if (!intensity) return;
+                
+                // Only apply if glassmorphism is enabled
+                var glassmorphismEnabled = $('#admin-bar-glassmorphism').is(':checked');
+                if (!glassmorphismEnabled) return;
+                
+                var css = '';
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'backdrop-filter:blur(' + intensity + 'px)!important;';
+                css += '-webkit-backdrop-filter:blur(' + intensity + 'px)!important;';
+                css += '}';
+                
+                this.applyCSS('blur-intensity', css);
+                
+                // Update range value display
+                $('#admin-bar-blur-intensity').siblings('.mase-range-value').text(intensity + 'px');
+            },
+            
+            /**
+             * Update floating effect live preview
+             * Requirement 4.5: Apply margins and positioning
+             * 
+             * @param {boolean} enabled - Whether floating mode is enabled
+             */
+            updateFloating: function(enabled) {
+                var css = '';
+                var height = $('#admin-bar-height').val() || 32;
+                
+                if (enabled) {
+                    var margin = $('#admin-bar-floating-margin').val() || 8;
+                    var radius = $('#admin-bar-border-radius').val() || 8;
+                    
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'top:' + margin + 'px!important;';
+                    css += 'left:' + margin + 'px!important;';
+                    css += 'right:' + margin + 'px!important;';
+                    css += 'width:calc(100% - ' + (margin * 2) + 'px)!important;';
+                    css += 'border-radius:' + radius + 'px!important;';
+                    css += '}';
+                    
+                    // Adjust body padding for floating bar
+                    css += 'html.wp-toolbar{';
+                    css += 'padding-top:' + (parseInt(height) + parseInt(margin) * 2) + 'px!important;';
+                    css += '}';
+                } else {
+                    // Remove floating effect
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'top:0!important;';
+                    css += 'left:0!important;';
+                    css += 'right:0!important;';
+                    css += 'width:100%!important;';
+                    css += '}';
+                    
+                    // Reset body padding
+                    css += 'html.wp-toolbar{';
+                    css += 'padding-top:' + height + 'px!important;';
+                    css += '}';
+                }
+                
+                this.applyCSS('floating', css);
+                
+                // Call updateFloatingLayout to fix side menu
+                this.updateFloatingLayout();
+            },
+            
+            /**
+             * Update floating margin live preview
+             * Requirement 4.6: Update margin values and recalculate side menu offset
+             * 
+             * @param {number} margin - Floating margin value
+             */
+            updateFloatingMargin: function(margin) {
+                if (!margin) return;
+                
+                // Only apply if floating mode is enabled
+                var floatingEnabled = $('#admin-bar-floating').is(':checked');
+                if (!floatingEnabled) return;
+                
+                var css = '';
+                var radius = $('#admin-bar-border-radius').val() || 8;
+                var height = $('#admin-bar-height').val() || 32;
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'top:' + margin + 'px!important;';
+                css += 'left:' + margin + 'px!important;';
+                css += 'right:' + margin + 'px!important;';
+                css += 'width:calc(100% - ' + (margin * 2) + 'px)!important;';
+                css += 'border-radius:' + radius + 'px!important;';
+                css += '}';
+                
+                // Adjust body padding
+                css += 'html.wp-toolbar{';
+                css += 'padding-top:' + (parseInt(height) + parseInt(margin) * 2) + 'px!important;';
+                css += '}';
+                
+                this.applyCSS('floating-margin', css);
+                
+                // Update range value display
+                $('#admin-bar-floating-margin').siblings('.mase-range-value').text(margin + 'px');
+                
+                // Recalculate side menu offset
+                this.updateFloatingLayout();
+            },
+            
+            /**
+             * Update border radius live preview
+             * Requirement 4.7: Apply border-radius to admin bar
+             * 
+             * @param {number} radius - Border radius value
+             */
+            updateBorderRadius: function(radius) {
+                if (radius === undefined || radius === null) return;
+                
+                var css = '';
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'border-radius:' + radius + 'px!important;';
+                css += '}';
+                
+                this.applyCSS('border-radius', css);
+                
+                // Update range value display
+                $('#admin-bar-border-radius').siblings('.mase-range-value').text(radius + 'px');
+            },
+            
+            /**
+             * Update shadow mode
+             * Toggles between preset and custom shadow modes (Requirement 10.5)
+             * @param {string} mode - Shadow mode ('preset' or 'custom')
+             */
+            updateShadowMode: function(mode) {
+                if (!mode) return;
+                
+                // Update shadow based on current mode
+                if (mode === 'preset') {
+                    var preset = $('#admin-bar-shadow-preset').val();
+                    this.updateShadowPreset(preset);
+                } else {
+                    this.updateShadowCustom();
+                }
+            },
+            
+            /**
+             * Update shadow preset live preview
+             * Requirement 10.5: Map presets to box-shadow values
+             * 
+             * @param {string} preset - Shadow preset name
+             */
+            updateShadowPreset: function(preset) {
+                if (!preset) return;
+                
+                var css = '';
+                var shadowValue = 'none';
+                
+                // Map presets to box-shadow values (Requirement 10.1)
+                switch(preset) {
+                    case 'none':
+                        shadowValue = 'none';
+                        break;
+                    case 'subtle':
+                        shadowValue = '0 2px 4px rgba(0,0,0,0.1)';
+                        break;
+                    case 'medium':
+                        shadowValue = '0 4px 8px rgba(0,0,0,0.15)';
+                        break;
+                    case 'strong':
+                        shadowValue = '0 8px 16px rgba(0,0,0,0.2)';
+                        break;
+                    case 'dramatic':
+                        shadowValue = '0 12px 24px rgba(0,0,0,0.3)';
+                        break;
+                    default:
+                        shadowValue = 'none';
+                }
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'box-shadow:' + shadowValue + '!important;';
+                css += '}';
+                
+                this.applyCSS('shadow', css);
+            },
+            
+            /**
+             * Update custom shadow live preview
+             * Builds box-shadow from individual values and applies to admin bar (Requirement 10.5)
+             */
+            updateShadowCustom: function() {
+                var hOffset = parseInt($('#admin-bar-shadow-h-offset').val()) || 0;
+                var vOffset = parseInt($('#admin-bar-shadow-v-offset').val()) || 4;
+                var blur = parseInt($('#admin-bar-shadow-blur').val()) || 8;
+                var spread = parseInt($('#admin-bar-shadow-spread').val()) || 0;
+                var color = $('#admin-bar-shadow-color').val() || '#000000';
+                var opacity = parseFloat($('#admin-bar-shadow-opacity').val()) || 0.15;
+                
+                // Ensure opacity is within valid range (0-1)
+                opacity = Math.max(0, Math.min(1, opacity));
+                
+                // Convert hex color to RGB and combine with opacity (Requirement 10.3)
+                var rgb = this.hexToRgb(color);
+                var shadowColor = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + opacity.toFixed(2) + ')';
+                
+                // Build custom shadow value (Requirement 10.2)
+                var shadowValue = hOffset + 'px ' + vOffset + 'px ' + blur + 'px ' + spread + 'px ' + shadowColor;
+                
+                var css = 'body.wp-admin #wpadminbar{';
+                css += 'box-shadow:' + shadowValue + '!important;';
+                css += '}';
+                
+                this.applyCSS('shadow', css);
+            },
+            
+            /**
+             * Convert hex color to RGB object
+             * @param {string} hex - Hex color code (with or without #)
+             * @return {object} RGB values object with r, g, b properties
+             */
+            hexToRgb: function(hex) {
+                // Remove # if present
+                hex = hex.replace(/^#/, '');
+                
+                // Handle 3-character hex codes
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                
+                // Convert to RGB
+                return {
+                    r: parseInt(hex.substr(0, 2), 16),
+                    g: parseInt(hex.substr(2, 2), 16),
+                    b: parseInt(hex.substr(4, 2), 16)
+                };
+            },
+            
+            /**
+             * Update floating margin mode
+             * Toggles between uniform and individual margin modes (Requirement 12.4)
+             * @param {string} mode - Margin mode ('uniform' or 'individual')
+             */
+            updateFloatingMarginMode: function(mode) {
+                if (!mode) return;
+                
+                // Update the floating margin based on current mode
+                if (mode === 'uniform') {
+                    var margin = $('#admin-bar-floating-margin-uniform').val();
+                    this.updateFloatingMarginUniform(margin);
+                } else {
+                    this.updateFloatingMarginIndividual();
+                }
+            },
+            
+            /**
+             * Update uniform floating margin live preview
+             * Applies the same margin to all sides (Requirement 12.4, 12.5)
+             * @param {number} margin - Uniform margin value
+             */
+            updateFloatingMarginUniform: function(margin) {
+                if (!margin) return;
+                
+                // Only apply if floating mode is enabled
+                var floatingEnabled = $('#admin-bar-floating').is(':checked');
+                if (!floatingEnabled) return;
+                
+                var css = '';
+                var height = $('#admin-bar-height').val() || 32;
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'position:fixed!important;';
+                css += 'top:' + margin + 'px!important;';
+                css += 'right:' + margin + 'px!important;';
+                css += 'bottom:auto!important;';
+                css += 'left:' + margin + 'px!important;';
+                css += 'width:calc(100% - ' + (margin * 2) + 'px)!important;';
+                css += '}';
+                
+                this.applyCSS('floating-margin', css);
+                
+                // Update range value display
+                $('#admin-bar-floating-margin-uniform').siblings('.mase-range-value').text(margin + 'px');
+                
+                // Recalculate side menu offset
+                this.updateFloatingLayout();
+            },
+            
+            /**
+             * Update individual floating margins live preview
+             * Applies different margins to each side (Requirement 12.4, 12.5)
+             */
+            updateFloatingMarginIndividual: function() {
+                // Only apply if floating mode is enabled
+                var floatingEnabled = $('#admin-bar-floating').is(':checked');
+                if (!floatingEnabled) return;
+                
+                // Get individual margin values
+                var top = parseInt($('#admin-bar-floating-margin-top').val()) || 8;
+                var right = parseInt($('#admin-bar-floating-margin-right').val()) || 8;
+                var bottom = parseInt($('#admin-bar-floating-margin-bottom').val()) || 8;
+                var left = parseInt($('#admin-bar-floating-margin-left').val()) || 8;
+                
+                var css = '';
+                
+                css += 'body.wp-admin #wpadminbar{';
+                css += 'position:fixed!important;';
+                css += 'top:' + top + 'px!important;';
+                css += 'right:' + right + 'px!important;';
+                css += 'bottom:auto!important;';
+                css += 'left:' + left + 'px!important;';
+                css += 'width:calc(100% - ' + (left + right) + 'px)!important;';
+                css += '}';
+                
+                this.applyCSS('floating-margin', css);
+                
+                // Update range value displays
+                $('#admin-bar-floating-margin-top').siblings('.mase-range-value').text(top + 'px');
+                $('#admin-bar-floating-margin-right').siblings('.mase-range-value').text(right + 'px');
+                $('#admin-bar-floating-margin-bottom').siblings('.mase-range-value').text(bottom + 'px');
+                $('#admin-bar-floating-margin-left').siblings('.mase-range-value').text(left + 'px');
+                
+                // Recalculate side menu offset
+                this.updateFloatingLayout();
+            },
+            
+            /**
+             * Update floating layout to fix side menu positioning
+             * Calculates offset from height and margin inputs (Requirements 13.3, 13.4)
+             */
+            updateFloatingLayout: function() {
+                var floatingEnabled = $('#admin-bar-floating').is(':checked');
+                
+                if (!floatingEnabled) {
+                    // Remove padding when floating disabled (Requirement 13.4)
+                    var css = 'body.wp-admin #adminmenuwrap{padding-top:0!important;}';
+                    this.applyCSS('floating-layout', css);
+                    return;
+                }
+                
+                // Calculate offset from height and margin inputs (Requirement 13.3)
+                var height = parseInt($('#admin-bar-height').val()) || 32;
+                var topMargin = 8; // Default
+                
+                // Check margin mode to get correct top margin value
+                var marginMode = $('#admin-bar-floating-margin-mode').val();
+                if (marginMode === 'individual') {
+                    topMargin = parseInt($('#admin-bar-floating-margin-top').val()) || 8;
+                } else {
+                    topMargin = parseInt($('#admin-bar-floating-margin').val()) || 8;
+                }
+                
+                // Calculate total offset (Requirement 13.3)
+                var totalOffset = height + topMargin;
+                
+                // Apply padding-top to side menu dynamically (Requirement 13.3)
+                var css = '';
+                css += 'body.wp-admin #adminmenuwrap{';
+                css += 'padding-top:' + totalOffset + 'px!important;';
+                css += '}';
+                
+                this.applyCSS('floating-layout', css);
+            },
+            
+            /**
+             * Update background type live preview
+             * Requirement 5.5: Show/hide gradient controls and apply appropriate background
+             * 
+             * @param {string} bgType - Background type ('solid' or 'gradient')
+             */
+            updateBackgroundType: function(bgType) {
+                if (!bgType) return;
+                
+                // Show/hide gradient controls based on bg_type (Requirement 5.5)
+                var $gradientControls = $('.mase-conditional-group[data-depends-on="admin-bar-bg-type"]');
+                if (bgType === 'gradient') {
+                    $gradientControls.show();
+                    this.updateGradient();
+                } else {
+                    $gradientControls.hide();
+                    // Apply solid color
+                    var bgColor = $('#admin-bar-bg-color').val() || '#23282d';
+                    var css = 'body.wp-admin #wpadminbar{background:' + bgColor + '!important;}';
+                    this.applyCSS('background', css);
+                }
+            },
+            
+            /**
+             * Update gradient angle live preview
+             * Requirement 5.3: Update gradient with new angle
+             * 
+             * @param {number} angle - Gradient angle in degrees
+             */
+            updateGradientAngle: function(angle) {
+                if (angle === undefined || angle === null) return;
+                
+                // Update range value display
+                $('#admin-bar-gradient-angle').siblings('.mase-range-value').text(angle + '°');
+                
+                // Update gradient
+                this.updateGradient();
+            },
+            
+            /**
+             * Update gradient colors live preview
+             * Requirement 5.3: Update gradient with new colors
+             */
+            updateGradientColors: function() {
+                this.updateGradient();
+            },
+            
+            /**
+             * Generate and apply gradient CSS dynamically
+             * Requirement 5.3: Support linear, radial, and conic gradients
+             */
+            updateGradient: function() {
+                var bgType = $('#admin-bar-bg-type').val();
+                if (bgType !== 'gradient') return;
+                
+                var gradientType = $('#admin-bar-gradient-type').val() || 'linear';
+                var angle = $('#admin-bar-gradient-angle').val() || 90;
+                var color1 = $('#admin-bar-gradient-color-1').val() || '#23282d';
+                var color2 = $('#admin-bar-gradient-color-2').val() || '#32373c';
+                
+                var css = 'body.wp-admin #wpadminbar{';
+                
+                // Generate gradient based on type (Requirements 5.1, 5.2)
+                switch(gradientType) {
+                    case 'linear':
+                        css += 'background:linear-gradient(' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    case 'radial':
+                        css += 'background:radial-gradient(circle,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    case 'conic':
+                        css += 'background:conic-gradient(from ' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    default:
+                        css += 'background:linear-gradient(' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                }
+                
+                css += '}';
+                
+                this.applyCSS('background', css);
+            },
+            
+            /**
+             * Update submenu background color live preview
+             * Requirement 6.4: Apply background color to submenu elements
+             * 
+             * @param {string} color - Background color value
+             */
+            updateSubmenuBgColor: function(color) {
+                if (!color) return;
+                
+                var css = '';
+                
+                // Apply background color to submenu wrapper and submenu
+                css += 'body.wp-admin #wpadminbar .ab-sub-wrapper,';
+                css += 'body.wp-admin #wpadminbar .ab-submenu{';
+                css += 'background-color:' + color + '!important;';
+                css += '}';
+                
+                // Ensure submenu items inherit background
+                css += 'body.wp-admin #wpadminbar .ab-submenu .ab-item{';
+                css += 'background-color:transparent!important;';
+                css += '}';
+                
+                // Submenu item hover state
+                css += 'body.wp-admin #wpadminbar .ab-submenu .ab-item:hover{';
+                css += 'background-color:rgba(255,255,255,0.1)!important;';
+                css += '}';
+                
+                this.applyCSS('submenu-bg', css);
+            },
+            
+            /**
+             * Update submenu border radius live preview
+             * Requirement 6.5: Apply border radius to submenu elements
+             * 
+             * @param {number} radius - Border radius value in pixels
+             */
+            updateSubmenuBorderRadius: function(radius) {
+                if (radius === undefined || radius === null) return;
+                
+                var css = '';
+                
+                // Apply border radius to submenu wrapper and submenu
+                css += 'body.wp-admin #wpadminbar .ab-sub-wrapper,';
+                css += 'body.wp-admin #wpadminbar .ab-submenu{';
+                css += 'border-radius:' + radius + 'px!important;';
+                css += '}';
+                
+                this.applyCSS('submenu-radius', css);
+                
+                // Update range value display
+                $('#admin-bar-submenu-border-radius').next('.mase-range-value').text(radius + 'px');
+            },
+            
+            /**
+             * Update submenu spacing live preview
+             * Requirement 6.6: Apply spacing from admin bar to submenu
+             * 
+             * @param {number} spacing - Spacing value in pixels
+             */
+            updateSubmenuSpacing: function(spacing) {
+                if (spacing === undefined || spacing === null) return;
+                
+                var css = '';
+                
+                // Apply margin-top to submenu wrapper for spacing from admin bar
+                if (spacing > 0) {
+                    css += 'body.wp-admin #wpadminbar .ab-sub-wrapper{';
+                    css += 'margin-top:' + spacing + 'px!important;';
+                    css += '}';
+                }
+                
+                this.applyCSS('submenu-spacing', css);
+                
+                // Update range value display
+                $('#admin-bar-submenu-spacing').next('.mase-range-value').text(spacing + 'px');
+            },
+            
+            /**
+             * Apply CSS to page with specific ID
+             * Creates or updates a style tag for the given type
+             * 
+             * @param {string} type - CSS type identifier
+             * @param {string} css - CSS to apply
+             */
+            applyCSS: function(type, css) {
+                var styleId = 'mase-admin-bar-preview-' + type;
+                var $style = $('#' + styleId);
+                
+                if ($style.length === 0) {
+                    $style = $('<style id="' + styleId + '" type="text/css"></style>');
+                    $('head').append($style);
+                }
+                
+                $style.text(css);
+            },
+            
+            /**
+             * Update font family live preview
+             * Requirement 8.2: Detect Google Font vs system font, load if needed, apply CSS
+             * 
+             * @param {string} fontFamily - Font family value
+             * @param {string} target - Target element ('admin-bar' or 'submenu')
+             */
+            updateFontFamily: function(fontFamily, target) {
+                if (!fontFamily || !target) return;
+                
+                var self = this;
+                
+                // Detect if it's a Google Font (starts with 'google:')
+                if (fontFamily.startsWith('google:')) {
+                    var fontName = fontFamily.replace('google:', '');
+                    
+                    // Load Google Font dynamically (Requirement 8.2, 8.3)
+                    this.loadGoogleFont(fontName, function() {
+                        // Apply font after loading
+                        self.applyFontFamily(fontName, target);
+                    });
+                } else if (fontFamily === 'system') {
+                    // Apply system default font
+                    this.applyFontFamily('system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', target);
+                } else {
+                    // Apply system font directly
+                    this.applyFontFamily(fontFamily, target);
+                }
+            },
+            
+            /**
+             * Load Google Font dynamically
+             * Requirement 8.2, 8.3: Create link element, handle errors, cache loaded fonts
+             * 
+             * @param {string} fontName - Google Font name
+             * @param {function} callback - Callback function after font loads
+             */
+            loadGoogleFont: function(fontName, callback) {
+                if (!fontName) return;
+                
+                // Check if already loaded (Requirement 8.3 - cache to prevent duplicates)
+                var linkId = 'mase-google-font-' + fontName.replace(/\s+/g, '-').toLowerCase();
+                if ($('#' + linkId).length > 0) {
+                    // Font already loaded, execute callback immediately
+                    if (callback) callback();
+                    return;
+                }
+                
+                // Create link element (Requirement 8.2)
+                var link = document.createElement('link');
+                link.id = linkId;
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=' + 
+                            fontName.replace(/\s+/g, '+') + ':wght@300;400;500;600;700&display=swap';
+                
+                // Handle loading errors with fallback (Requirement 8.3)
+                link.onerror = function() {
+                    console.error('MASE: Failed to load Google Font:', fontName);
+                    
+                    // Show error notice
+                    if (typeof MASE.showNotice === 'function') {
+                        MASE.showNotice('error', 'Failed to load font "' + fontName + '". Using fallback.');
+                    }
+                    
+                    // Execute callback with fallback
+                    if (callback) callback();
+                };
+                
+                // Execute callback after successful load
+                link.onload = function() {
+                    console.log('MASE: Successfully loaded Google Font:', fontName);
+                    if (callback) callback();
+                };
+                
+                // Add to head
+                document.head.appendChild(link);
+            },
+            
+            /**
+             * Apply font family CSS to target element
+             * 
+             * @param {string} fontFamily - Font family CSS value
+             * @param {string} target - Target element ('admin-bar' or 'submenu')
+             */
+            applyFontFamily: function(fontFamily, target) {
+                if (!fontFamily || !target) return;
+                
+                var css = '';
+                
+                if (target === 'admin-bar') {
+                    // Apply to admin bar elements
+                    css += 'body.wp-admin #wpadminbar,';
+                    css += 'body.wp-admin #wpadminbar .ab-item,';
+                    css += 'body.wp-admin #wpadminbar a.ab-item,';
+                    css += 'body.wp-admin #wpadminbar > #wp-toolbar span.ab-label,';
+                    css += 'body.wp-admin #wpadminbar > #wp-toolbar span.noticon{';
+                    css += 'font-family:' + fontFamily + ', sans-serif!important;';
+                    css += '}';
+                } else if (target === 'submenu') {
+                    // Apply to submenu elements
+                    css += 'body.wp-admin #wpadminbar .ab-submenu .ab-item,';
+                    css += 'body.wp-admin #wpadminbar .ab-submenu a.ab-item{';
+                    css += 'font-family:' + fontFamily + ', sans-serif!important;';
+                    css += '}';
+                }
+                
+                this.applyCSS('font-family-' + target, css);
+            },
+            
+            /**
+             * Update width unit live preview
+             * Requirement 11.4: Switch between percentage and pixel width modes
+             * 
+             * @param {string} unit - Width unit ('percent' or 'pixels')
+             */
+            updateWidthUnit: function(unit) {
+                if (!unit) return;
+                
+                // Show/hide appropriate width control
+                if (unit === 'percent') {
+                    $('.mase-conditional-group[data-depends-on="admin-bar-width-unit"][data-value="percent"]').show();
+                    $('.mase-conditional-group[data-depends-on="admin-bar-width-unit"][data-value="pixels"]').hide();
+                    
+                    // Get current percentage value and update preview
+                    var value = $('#admin-bar-width-value-percent').val() || 100;
+                    this.updateWidth(value, 'percent');
+                } else {
+                    $('.mase-conditional-group[data-depends-on="admin-bar-width-unit"][data-value="percent"]').hide();
+                    $('.mase-conditional-group[data-depends-on="admin-bar-width-unit"][data-value="pixels"]').show();
+                    
+                    // Get current pixel value and update preview
+                    var value = $('#admin-bar-width-value-pixels').val() || 1920;
+                    this.updateWidth(value, 'pixels');
+                }
+            },
+            
+            /**
+             * Update width live preview
+             * Requirements 11.4, 11.5: Apply width CSS dynamically and center if < 100%
+             * 
+             * @param {number} value - Width value
+             * @param {string} unit - Width unit ('percent' or 'pixels')
+             */
+            updateWidth: function(value, unit) {
+                if (value === undefined || value === null || !unit) return;
+                
+                var css = '';
+                
+                // Only generate CSS if width is not 100% (default full width)
+                if (!(unit === 'percent' && parseInt(value) === 100)) {
+                    css += 'body.wp-admin #wpadminbar{';
+                    
+                    // Apply width based on unit (Requirement 11.4)
+                    if (unit === 'percent') {
+                        css += 'width:' + value + '%!important;';
+                    } else {
+                        // Pixels
+                        css += 'width:' + value + 'px!important;';
+                        css += 'max-width:100%!important;'; // Prevent overflow on smaller screens
+                    }
+                    
+                    // Center admin bar horizontally when width < 100% (Requirement 11.5)
+                    css += 'left:50%!important;';
+                    css += 'transform:translateX(-50%)!important;';
+                    css += 'right:auto!important;';
+                    
+                    css += '}';
+                } else {
+                    // Reset to full width
+                    css += 'body.wp-admin #wpadminbar{';
+                    css += 'width:100%!important;';
+                    css += 'left:0!important;';
+                    css += 'transform:none!important;';
+                    css += 'right:0!important;';
+                    css += '}';
+                }
+                
+                this.applyCSS('width', css);
+                
+                // Update range value display with unit
+                var displayValue = value + (unit === 'percent' ? '%' : 'px');
+                if (unit === 'percent') {
+                    $('#admin-bar-width-value-percent').siblings('.mase-range-value').text(displayValue);
+                } else {
+                    $('#admin-bar-width-value-pixels').siblings('.mase-range-value').text(displayValue);
+                }
+            }
+        },
+        
+        /**
+         * Admin Menu Preview Module
+         * Handles live preview for admin menu (left menu) customizations
+         * Requirements: 1.4, 3.1, 3.2, 3.3
+         */
+        adminMenuPreview: {
+            /**
+             * Initialize admin menu preview
+             * Binds event listeners for all admin menu controls
+             */
+            init: function() {
+                var self = MASE;
+                
+                // Bind padding controls (Requirement 1.4)
+                $('#admin-menu-padding-vertical').on('input', function() {
+                    self.adminMenuPreview.updatePadding();
+                });
+                
+                $('#admin-menu-padding-horizontal').on('input', function() {
+                    self.adminMenuPreview.updatePadding();
+                });
+                
+                // Bind width control (Requirement 3.5, 14.4)
+                $('#admin-menu-width').on('input', function() {
+                    self.adminMenuPreview.updateWidth();
+                });
+                
+                // Bind width unit toggle (Requirement 14.1, 14.4)
+                $('#admin-menu-width-unit').on('change', function() {
+                    var unit = $(this).val();
+                    var $widthInput = $('#admin-menu-width');
+                    
+                    // Update min/max based on unit (Requirement 14.3)
+                    if (unit === 'percent') {
+                        $widthInput.attr('min', $widthInput.data('min-percent') || 50);
+                        $widthInput.attr('max', $widthInput.data('max-percent') || 100);
+                        // Convert current pixel value to approximate percentage if needed
+                        var currentVal = parseInt($widthInput.val());
+                        if (currentVal > 100) {
+                            $widthInput.val(100);
+                        } else if (currentVal < 50) {
+                            $widthInput.val(50);
+                        }
+                        // Show/hide descriptions
+                        $('.mase-width-desc-pixels').hide();
+                        $('.mase-width-desc-percent').show();
+                    } else {
+                        $widthInput.attr('min', $widthInput.data('min-pixels') || 160);
+                        $widthInput.attr('max', $widthInput.data('max-pixels') || 400);
+                        // Convert current percentage to approximate pixels if needed
+                        var currentVal = parseInt($widthInput.val());
+                        if (currentVal < 160) {
+                            $widthInput.val(160);
+                        }
+                        // Show/hide descriptions
+                        $('.mase-width-desc-pixels').show();
+                        $('.mase-width-desc-percent').hide();
+                    }
+                    
+                    // Update live preview (Requirement 14.4)
+                    self.adminMenuPreview.updateWidth();
+                });
+                
+                // Bind submenu spacing control (Requirement 3.5)
+                $('#admin-menu-submenu-spacing').on('input', function() {
+                    self.adminMenuPreview.updateSubmenuSpacing();
+                });
+                
+                // Bind Height Mode control (Requirement 5.1)
+                $('#admin-menu-height-mode').on('change', function() {
+                    self.adminMenuPreview.updateHeightMode();
+                });
+                
+                // Bind glassmorphism controls (Requirement 5.2, 5.3)
+                $('#admin-menu-glassmorphism').on('change', function() {
+                    self.adminMenuPreview.updateGlassmorphism();
+                });
+                
+                $('#admin-menu-blur-intensity').on('input', function() {
+                    self.adminMenuPreview.updateBlurIntensity();
+                });
+                
+                // Bind border radius control (Requirement 5.4)
+                $('#admin-menu-border-radius').on('input', function() {
+                    self.adminMenuPreview.updateBorderRadius();
+                });
+                
+                // Bind shadow mode control (Requirement 13.5)
+                $('#admin-menu-shadow-mode').on('change', function() {
+                    self.adminMenuPreview.updateShadowMode($(this).val());
+                });
+                
+                // Bind shadow preset control (Requirement 13.5)
+                $('#admin-menu-shadow-preset').on('change', function() {
+                    self.adminMenuPreview.updateShadowPreset($(this).val());
+                });
+                
+                // Bind custom shadow controls (Requirement 13.5)
+                $('#admin-menu-shadow-h-offset').on('input', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                $('#admin-menu-shadow-v-offset').on('input', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                $('#admin-menu-shadow-blur').on('input', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                $('#admin-menu-shadow-spread').on('input', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                $('#admin-menu-shadow-color').on('change', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                $('#admin-menu-shadow-opacity').on('input', function() {
+                    self.adminMenuPreview.updateShadowCustom();
+                });
+                
+                // Bind floating mode controls (Requirements 5.6, 5.7, 15.5)
+                $('#admin-menu-floating').on('change', function() {
+                    self.adminMenuPreview.updateFloating();
+                });
+                
+                // Bind floating margin mode toggle (Requirement 15.5)
+                $('#admin-menu-floating-margin-mode').on('change', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                // Bind uniform margin control (Requirement 15.1, 15.5)
+                $('#admin-menu-floating-margin-uniform').on('input', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                // Bind individual margin controls (Requirements 15.2, 15.3, 15.5)
+                $('#admin-menu-floating-margin-top').on('input', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                $('#admin-menu-floating-margin-right').on('input', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                $('#admin-menu-floating-margin-bottom').on('input', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                $('#admin-menu-floating-margin-left').on('input', function() {
+                    self.adminMenuPreview.updateFloatingMargins();
+                });
+                
+                // Bind font family controls (Requirement 11.3)
+                $('#admin-menu-font-family').on('change', function() {
+                    self.adminMenuPreview.updateFontFamily();
+                });
+                
+                $('#admin-menu-submenu-font-family').on('change', function() {
+                    self.adminMenuPreview.updateSubmenuFontFamily();
+                });
+                
+                // Bind text and icon color controls (Requirements 2.1, 2.2, 2.3)
+                $('#admin-menu-text-color').on('change', function() {
+                    self.adminMenuPreview.updateTextAndIconColor();
+                });
+                
+                $('#admin-menu-icon-color-mode').on('change', function() {
+                    self.adminMenuPreview.updateTextAndIconColor();
+                });
+                
+                $('#admin-menu-icon-color').on('change', function() {
+                    self.adminMenuPreview.updateTextAndIconColor();
+                });
+                
+                // Bind gradient controls (Requirements 6.3, 6.5)
+                $('#admin-menu-bg-type').on('change', function() {
+                    var bgType = $(this).val();
+                    self.adminMenuPreview.updateBackgroundType(bgType);
+                });
+                
+                $('#admin-menu-gradient-type').on('change', function() {
+                    self.adminMenuPreview.updateGradient();
+                });
+                
+                $('#admin-menu-gradient-angle').on('input', function() {
+                    var angle = $(this).val();
+                    self.adminMenuPreview.updateGradientAngle(angle);
+                });
+                
+                $('#admin-menu-gradient-color-1, #admin-menu-gradient-color-2').on('change', function() {
+                    self.adminMenuPreview.updateGradient();
+                });
+                
+                // Bind logo controls (Requirements 16.1, 16.5, 16.6, 16.7)
+                $('#admin-menu-logo-enabled').on('change', function() {
+                    self.adminMenuPreview.updateLogoVisibility();
+                });
+                
+                $('#admin-menu-logo-upload-btn').on('click', function(e) {
+                    e.preventDefault();
+                    self.adminMenuPreview.openLogoUpload();
+                });
+                
+                $('#admin-menu-logo-remove-btn').on('click', function(e) {
+                    e.preventDefault();
+                    self.adminMenuPreview.removeLogo();
+                });
+                
+                $('#admin-menu-logo-position').on('change', function() {
+                    self.adminMenuPreview.updateLogoPosition();
+                });
+                
+                $('#admin-menu-logo-width').on('input', function() {
+                    self.adminMenuPreview.updateLogoSize();
+                });
+                
+                $('#admin-menu-logo-alignment').on('change', function() {
+                    self.adminMenuPreview.updateLogoAlignment();
+                });
+            },
+            
+            /**
+             * Update menu item padding in live preview
+             * Requirements: 1.4
+             */
+            updatePadding: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var vPadding = parseInt($('#admin-menu-padding-vertical').val()) || 10;
+                    var hPadding = parseInt($('#admin-menu-padding-horizontal').val()) || 15;
+                    
+                    // Build CSS for menu item padding
+                    var css = '';
+                    css += 'body.wp-admin #adminmenu li.menu-top > a {';
+                    css += 'padding: ' + vPadding + 'px ' + hPadding + 'px !important;';
+                    css += '}';
+                    
+                    // Also apply to submenu items for consistency
+                    css += 'body.wp-admin #adminmenu .wp-submenu a {';
+                    css += 'padding: ' + vPadding + 'px ' + hPadding + 'px !important;';
+                    css += '}';
+                    
+                    this.applyCSS('menu-padding', css);
+                    
+                    // Update range value displays
+                    $('#admin-menu-padding-vertical').siblings('.mase-range-value').text(vPadding + 'px');
+                    $('#admin-menu-padding-horizontal').siblings('.mase-range-value').text(hPadding + 'px');
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating menu padding:', error);
+                }
+            },
+            
+            /**
+             * Update menu width and recalculate submenu position
+             * Requirements: 3.5, 14.4, 14.5
+             */
+            updateWidth: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    // Get width value and unit (Requirement 14.1, 14.2)
+                    var widthValue = parseInt($('#admin-menu-width').val()) || 160;
+                    var widthUnit = $('#admin-menu-width-unit').val() || 'pixels';
+                    
+                    // Build CSS for menu width
+                    var css = '';
+                    
+                    // Determine if this is default width
+                    var isDefault = (widthUnit === 'pixels' && widthValue === 160) || 
+                                   (widthUnit === 'percent' && widthValue === 100);
+                    
+                    // Only apply if different from default (Requirement 14.2)
+                    if (!isDefault) {
+                        // Determine width string based on unit (Requirement 14.1, 14.2)
+                        var widthStr = widthUnit === 'percent' ? widthValue + '%' : widthValue + 'px';
+                        
+                        // Expanded menu width (Requirement 14.2)
+                        css += 'body.wp-admin:not(.folded) #adminmenu,';
+                        css += 'body.wp-admin:not(.folded) #adminmenuback,';
+                        css += 'body.wp-admin:not(.folded) #adminmenuwrap {';
+                        css += 'width: ' + widthStr + ' !important;';
+                        css += '}';
+                        
+                        // Adjust content area margin (Requirement 14.5)
+                        css += 'body.wp-admin:not(.folded) #wpcontent,';
+                        css += 'body.wp-admin:not(.folded) #wpfooter {';
+                        css += 'margin-left: ' + widthStr + ' !important;';
+                        css += '}';
+                    }
+                    
+                    this.applyCSS('menu-width', css);
+                    
+                    // Recalculate submenu positioning (Requirement 14.4)
+                    this.updateSubmenuPosition();
+                    
+                    // Update unit label display
+                    var unitLabel = widthUnit === 'percent' ? '%' : 'px';
+                    $('.mase-unit-label').text(unitLabel);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating menu width:', error);
+                }
+            },
+            
+            /**
+             * Update submenu spacing
+             * Requirements: 3.5
+             */
+            updateSubmenuSpacing: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    // Recalculate submenu positioning with new spacing
+                    this.updateSubmenuPosition();
+                    
+                    // Update range value display
+                    var spacing = parseInt($('#admin-menu-submenu-spacing').val()) || 0;
+                    $('#admin-menu-submenu-spacing').siblings('.mase-range-value').text(spacing + 'px');
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating submenu spacing:', error);
+                }
+            },
+            
+            /**
+             * Update submenu position based on menu width and spacing
+             * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 14.4
+             */
+            updateSubmenuPosition: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    // Get current menu width and unit (Requirement 3.1, 3.2, 14.4)
+                    var widthValue = parseInt($('#admin-menu-width').val()) || 160;
+                    var widthUnit = $('#admin-menu-width-unit').val() || 'pixels';
+                    
+                    // Get submenu spacing offset (Requirement 3.3)
+                    var spacing = parseInt($('#admin-menu-submenu-spacing').val()) || 0;
+                    
+                    // Determine width string based on unit (Requirement 14.4)
+                    var widthStr = widthUnit === 'percent' ? widthValue + '%' : widthValue + 'px';
+                    
+                    // Build CSS for submenu positioning (Requirement 3.1, 3.2, 3.3, 3.4, 14.4)
+                    var css = '';
+                    css += 'body.wp-admin:not(.folded) #adminmenu .wp-submenu {';
+                    css += 'left: ' + widthStr + ' !important;';
+                    
+                    // Apply vertical spacing offset if set (Requirement 3.4)
+                    if (spacing > 0) {
+                        css += 'top: ' + spacing + 'px !important;';
+                    }
+                    
+                    css += 'position: absolute !important;';
+                    css += 'margin: 0 !important;';
+                    css += '}';
+                    
+                    this.applyCSS('submenu-position', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating submenu position:', error);
+                }
+            },
+            
+            /**
+             * Update Height Mode in live preview
+             * Requirement 5.1
+             */
+            updateHeightMode: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var mode = $('#admin-menu-height-mode').val() || 'full';
+                    
+                    // Build CSS for height mode
+                    var css = '';
+                    
+                    if (mode === 'content') {
+                        // Fit to content mode
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'height: auto !important;';
+                        css += 'min-height: 100vh !important;';
+                        css += '}';
+                    } else {
+                        // Full height mode (default)
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'height: 100% !important;';
+                        css += '}';
+                    }
+                    
+                    this.applyCSS('height-mode', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating height mode:', error);
+                }
+            },
+            
+            /**
+             * Update glassmorphism effect in live preview
+             * Requirement 5.2
+             */
+            updateGlassmorphism: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var enabled = $('#admin-menu-glassmorphism').is(':checked');
+                    
+                    // Build CSS for glassmorphism
+                    var css = '';
+                    
+                    if (enabled) {
+                        var blurIntensity = parseInt($('#admin-menu-blur-intensity').val()) || 20;
+                        
+                        css += 'body.wp-admin #adminmenu,';
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'background: rgba(255, 255, 255, 0.1) !important;';
+                        css += 'backdrop-filter: blur(' + blurIntensity + 'px) !important;';
+                        css += '-webkit-backdrop-filter: blur(' + blurIntensity + 'px) !important;';
+                        css += 'border-right: 1px solid rgba(255, 255, 255, 0.2) !important;';
+                        css += '}';
+                    }
+                    
+                    this.applyCSS('glassmorphism', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating glassmorphism:', error);
+                }
+            },
+            
+            /**
+             * Update blur intensity in live preview
+             * Requirement 5.3
+             */
+            updateBlurIntensity: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var enabled = $('#admin-menu-glassmorphism').is(':checked');
+                    
+                    if (enabled) {
+                        var blurIntensity = parseInt($('#admin-menu-blur-intensity').val()) || 20;
+                        
+                        // Build CSS for blur intensity
+                        var css = '';
+                        css += 'body.wp-admin #adminmenu,';
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'backdrop-filter: blur(' + blurIntensity + 'px) !important;';
+                        css += '-webkit-backdrop-filter: blur(' + blurIntensity + 'px) !important;';
+                        css += '}';
+                        
+                        this.applyCSS('blur-intensity', css);
+                    }
+                    
+                    // Update range value display
+                    $('#admin-menu-blur-intensity').siblings('.mase-range-value').text(blurIntensity + 'px');
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating blur intensity:', error);
+                }
+            },
+            
+            /**
+             * Update border radius in live preview
+             * Requirements: 5.4, 12.5
+             */
+            updateBorderRadius: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var mode = $('#admin-menu-border-radius-mode').val() || 'uniform';
+                    var css = '';
+                    
+                    if (mode === 'individual') {
+                        // Individual corner radii (Requirement 12.5)
+                        var tl = parseInt($('#admin-menu-border-radius-tl').val()) || 0;
+                        var tr = parseInt($('#admin-menu-border-radius-tr').val()) || 0;
+                        var br = parseInt($('#admin-menu-border-radius-br').val()) || 0;
+                        var bl = parseInt($('#admin-menu-border-radius-bl').val()) || 0;
+                        
+                        // Only apply if at least one corner has a radius
+                        if (tl > 0 || tr > 0 || br > 0 || bl > 0) {
+                            css += 'body.wp-admin #adminmenu,';
+                            css += 'body.wp-admin #adminmenuback,';
+                            css += 'body.wp-admin #adminmenuwrap {';
+                            css += 'border-radius: ' + tl + 'px ' + tr + 'px ' + br + 'px ' + bl + 'px !important;';
+                            css += '}';
+                        }
+                        
+                        // Update range value displays for individual corners
+                        $('#admin-menu-border-radius-tl').siblings('.mase-range-value').text(tl + 'px');
+                        $('#admin-menu-border-radius-tr').siblings('.mase-range-value').text(tr + 'px');
+                        $('#admin-menu-border-radius-br').siblings('.mase-range-value').text(br + 'px');
+                        $('#admin-menu-border-radius-bl').siblings('.mase-range-value').text(bl + 'px');
+                    } else {
+                        // Uniform border radius (Requirement 5.4)
+                        var radius = parseInt($('#admin-menu-border-radius').val()) || 0;
+                        
+                        if (radius > 0) {
+                            css += 'body.wp-admin #adminmenu,';
+                            css += 'body.wp-admin #adminmenuback,';
+                            css += 'body.wp-admin #adminmenuwrap {';
+                            css += 'border-radius: ' + radius + 'px !important;';
+                            css += '}';
+                        }
+                        
+                        // Update range value display
+                        $('#admin-menu-border-radius').siblings('.mase-range-value').text(radius + 'px');
+                    }
+                    
+                    this.applyCSS('border-radius', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating border radius:', error);
+                }
+            },
+            
+            /**
+             * Update shadow mode in live preview (Requirement 13.5)
+             * @param {string} mode - Shadow mode ('preset' or 'custom')
+             */
+            updateShadowMode: function(mode) {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                if (!mode) return;
+                
+                // Update shadow based on mode
+                if (mode === 'preset') {
+                    var preset = $('#admin-menu-shadow-preset').val();
+                    this.updateShadowPreset(preset);
+                } else {
+                    this.updateShadowCustom();
+                }
+            },
+            
+            /**
+             * Update shadow preset in live preview (Requirement 13.5)
+             * @param {string} preset - Shadow preset name
+             */
+            updateShadowPreset: function(preset) {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                if (!preset) return;
+                
+                try {
+                    // Define shadow presets (Requirement 13.1)
+                    var shadows = {
+                        'none': 'none',
+                        'subtle': '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        'medium': '0 4px 8px rgba(0, 0, 0, 0.15)',
+                        'strong': '0 8px 16px rgba(0, 0, 0, 0.2)',
+                        'dramatic': '0 12px 24px rgba(0, 0, 0, 0.25)'
+                    };
+                    
+                    var shadowValue = shadows[preset] || 'none';
+                    
+                    // Build CSS for shadow
+                    var css = '';
+                    if (shadowValue !== 'none') {
+                        css += 'body.wp-admin #adminmenu,';
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'box-shadow: ' + shadowValue + ' !important;';
+                        css += '}';
+                    } else {
+                        css += 'body.wp-admin #adminmenu,';
+                        css += 'body.wp-admin #adminmenuback,';
+                        css += 'body.wp-admin #adminmenuwrap {';
+                        css += 'box-shadow: none !important;';
+                        css += '}';
+                    }
+                    
+                    this.applyCSS('shadow', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating shadow preset:', error);
+                }
+            },
+            
+            /**
+             * Update custom shadow in live preview (Requirement 13.5)
+             * Builds box-shadow from individual values and applies to admin menu
+             */
+            updateShadowCustom: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var hOffset = parseInt($('#admin-menu-shadow-h-offset').val()) || 0;
+                    var vOffset = parseInt($('#admin-menu-shadow-v-offset').val()) || 4;
+                    var blur = parseInt($('#admin-menu-shadow-blur').val()) || 8;
+                    var spread = parseInt($('#admin-menu-shadow-spread').val()) || 0;
+                    var color = $('#admin-menu-shadow-color').val() || '#000000';
+                    var opacity = parseFloat($('#admin-menu-shadow-opacity').val()) || 0.15;
+                    
+                    // Ensure opacity is within valid range
+                    opacity = Math.max(0, Math.min(1, opacity));
+                    
+                    // Convert hex color to RGB
+                    var rgb = this.hexToRgb(color);
+                    var shadowColor = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + opacity.toFixed(2) + ')';
+                    
+                    // Build shadow value
+                    var shadowValue = hOffset + 'px ' + vOffset + 'px ' + blur + 'px ' + spread + 'px ' + shadowColor;
+                    
+                    // Build CSS for shadow
+                    var css = '';
+                    css += 'body.wp-admin #adminmenu,';
+                    css += 'body.wp-admin #adminmenuback,';
+                    css += 'body.wp-admin #adminmenuwrap {';
+                    css += 'box-shadow: ' + shadowValue + ' !important;';
+                    css += '}';
+                    
+                    this.applyCSS('shadow', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating custom shadow:', error);
+                }
+            },
+            
+            /**
+             * Convert hex color to RGB
+             * @param {string} hex - Hex color code
+             * @return {object} RGB values
+             */
+            hexToRgb: function(hex) {
+                // Remove # if present
+                hex = hex.replace('#', '');
+                
+                // Parse hex values
+                var r = parseInt(hex.substring(0, 2), 16);
+                var g = parseInt(hex.substring(2, 4), 16);
+                var b = parseInt(hex.substring(4, 6), 16);
+                
+                return {r: r, g: g, b: b};
+            },
+            
+            /**
+             * Update floating mode in live preview
+             * Requirements: 5.6, 15.5
+             */
+            updateFloating: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var enabled = $('#admin-menu-floating').is(':checked');
+                    
+                    // Build CSS for floating mode
+                    var css = '';
+                    
+                    if (enabled) {
+                        // Call updateFloatingMargins to apply the current margin settings
+                        this.updateFloatingMargins();
+                    } else {
+                        // Clear floating CSS when disabled
+                        this.applyCSS('floating', '');
+                        this.applyCSS('floating-margins', '');
+                    }
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating floating mode:', error);
+                }
+            },
+            
+            /**
+             * Update floating margins in live preview
+             * Requirements: 5.7, 15.1, 15.2, 15.3, 15.5
+             */
+            updateFloatingMargins: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var enabled = $('#admin-menu-floating').is(':checked');
+                    
+                    if (!enabled) {
+                        return;
+                    }
+                    
+                    var mode = $('#admin-menu-floating-margin-mode').val() || 'uniform';
+                    var css = '';
+                    
+                    css += 'body.wp-admin #adminmenu,';
+                    css += 'body.wp-admin #adminmenuback,';
+                    css += 'body.wp-admin #adminmenuwrap {';
+                    css += 'position: fixed !important;';
+                    
+                    var top, left, width, widthUnit;
+                    
+                    if (mode === 'individual') {
+                        // Individual margins (Requirements 15.2, 15.3, 15.5)
+                        top = parseInt($('#admin-menu-floating-margin-top').val()) || 8;
+                        var right = parseInt($('#admin-menu-floating-margin-right').val()) || 8;
+                        var bottom = parseInt($('#admin-menu-floating-margin-bottom').val()) || 8;
+                        left = parseInt($('#admin-menu-floating-margin-left').val()) || 8;
+                        
+                        css += 'top: ' + top + 'px !important;';
+                        css += 'left: ' + left + 'px !important;';
+                        css += 'right: auto !important;';
+                        css += 'bottom: auto !important;';
+                        css += 'height: calc(100vh - ' + (top + bottom) + 'px) !important;';
+                        
+                        // Update range value displays
+                        $('#admin-menu-floating-margin-top').siblings('.mase-range-value').text(top + 'px');
+                        $('#admin-menu-floating-margin-right').siblings('.mase-range-value').text(right + 'px');
+                        $('#admin-menu-floating-margin-bottom').siblings('.mase-range-value').text(bottom + 'px');
+                        $('#admin-menu-floating-margin-left').siblings('.mase-range-value').text(left + 'px');
+                        
+                    } else {
+                        // Uniform margin (Requirements 15.1, 15.5)
+                        var margin = parseInt($('#admin-menu-floating-margin-uniform').val()) || 8;
+                        top = margin;
+                        left = margin;
+                        
+                        css += 'top: ' + margin + 'px !important;';
+                        css += 'left: ' + margin + 'px !important;';
+                        css += 'right: auto !important;';
+                        css += 'bottom: auto !important;';
+                        css += 'height: calc(100vh - ' + (margin * 2) + 'px) !important;';
+                        
+                        // Update range value display
+                        $('#admin-menu-floating-margin-uniform').siblings('.mase-range-value').text(margin + 'px');
+                    }
+                    
+                    css += '}';
+                    
+                    // Adjust content area margin (Requirement 15.5)
+                    width = parseInt($('#admin-menu-width').val()) || 160;
+                    widthUnit = $('#admin-menu-width-unit').val() || 'pixels';
+                    
+                    if (widthUnit === 'pixels') {
+                        var totalOffset = left + width;
+                        css += 'body.wp-admin:not(.folded) #wpcontent,';
+                        css += 'body.wp-admin:not(.folded) #wpfooter {';
+                        css += 'margin-left: ' + totalOffset + 'px !important;';
+                        css += '}';
+                    }
+                    
+                    this.applyCSS('floating-margins', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating floating margins:', error);
+                }
+            },
+            
+            /**
+             * Update menu font family in live preview
+             * Requirements: 11.2, 11.3
+             */
+            updateFontFamily: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var fontFamily = $('#admin-menu-font-family').val() || 'system';
+                    var self = this;
+                    
+                    // Detect if it's a Google Font (starts with 'google:')
+                    if (fontFamily.startsWith('google:')) {
+                        var fontName = fontFamily.replace('google:', '');
+                        
+                        // Load Google Font dynamically (Requirement 11.2)
+                        MASE.adminBarPreview.loadGoogleFont(fontName, function() {
+                            // Apply font after loading (Requirement 11.3)
+                            self.applyMenuFontFamily(fontName);
+                        });
+                    } else if (fontFamily === 'system') {
+                        // Apply system default font
+                        this.applyMenuFontFamily('system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif');
+                    } else {
+                        // Apply system font directly
+                        this.applyMenuFontFamily(fontFamily);
+                    }
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating menu font family:', error);
+                }
+            },
+            
+            /**
+             * Update submenu font family in live preview
+             * Requirements: 11.2, 11.3
+             */
+            updateSubmenuFontFamily: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var fontFamily = $('#admin-menu-submenu-font-family').val() || 'system';
+                    var self = this;
+                    
+                    // Detect if it's a Google Font (starts with 'google:')
+                    if (fontFamily.startsWith('google:')) {
+                        var fontName = fontFamily.replace('google:', '');
+                        
+                        // Load Google Font dynamically (Requirement 11.2)
+                        MASE.adminBarPreview.loadGoogleFont(fontName, function() {
+                            // Apply font after loading (Requirement 11.3)
+                            self.applySubmenuFontFamily(fontName);
+                        });
+                    } else if (fontFamily === 'system') {
+                        // Apply system default font
+                        this.applySubmenuFontFamily('system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif');
+                    } else {
+                        // Apply system font directly
+                        this.applySubmenuFontFamily(fontFamily);
+                    }
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating submenu font family:', error);
+                }
+            },
+            
+            /**
+             * Apply font family CSS to menu elements
+             * Requirement 11.3
+             * 
+             * @param {string} fontFamily - Font family CSS value
+             */
+            applyMenuFontFamily: function(fontFamily) {
+                if (!fontFamily) return;
+                
+                var css = '';
+                css += 'body.wp-admin #adminmenu,';
+                css += 'body.wp-admin #adminmenu a,';
+                css += 'body.wp-admin #adminmenu .wp-menu-name,';
+                css += 'body.wp-admin #adminmenu li.menu-top > a {';
+                css += 'font-family: ' + fontFamily + ', sans-serif !important;';
+                css += '}';
+                
+                this.applyCSS('menu-font-family', css);
+            },
+            
+            /**
+             * Apply font family CSS to submenu elements
+             * Requirement 11.3
+             * 
+             * @param {string} fontFamily - Font family CSS value
+             */
+            applySubmenuFontFamily: function(fontFamily) {
+                if (!fontFamily) return;
+                
+                var css = '';
+                css += 'body.wp-admin #adminmenu .wp-submenu,';
+                css += 'body.wp-admin #adminmenu .wp-submenu a,';
+                css += 'body.wp-admin #adminmenu .wp-submenu li {';
+                css += 'font-family: ' + fontFamily + ', sans-serif !important;';
+                css += '}';
+                
+                this.applyCSS('submenu-font-family', css);
+            },
+            
+            /**
+             * Update text and icon color synchronization
+             * Requirements: 2.1, 2.2, 2.3
+             * 
+             * When text color changes in auto mode, icon color should update too
+             */
+            updateTextAndIconColor: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var textColor = $('#admin-menu-text-color').val() || '#ffffff';
+                    var iconMode = $('#admin-menu-icon-color-mode').val() || 'auto';
+                    var iconColor = iconMode === 'auto' ? textColor : ($('#admin-menu-icon-color').val() || '#ffffff');
+                    
+                    // Build CSS for text and icon colors
+                    var css = '';
+                    
+                    // Apply text color (Requirement 2.1)
+                    css += 'body.wp-admin #adminmenu a,';
+                    css += 'body.wp-admin #adminmenu .wp-menu-name {';
+                    css += 'color: ' + textColor + ' !important;';
+                    css += '}';
+                    
+                    // Apply icon color (Requirement 2.2)
+                    css += 'body.wp-admin #adminmenu .wp-menu-image,';
+                    css += 'body.wp-admin #adminmenu .wp-menu-image:before,';
+                    css += 'body.wp-admin #adminmenu .dashicons {';
+                    css += 'color: ' + iconColor + ' !important;';
+                    css += '}';
+                    
+                    this.applyCSS('text-icon-color', css);
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating text and icon color:', error);
+                }
+            },
+            
+            /**
+             * Load Google Font dynamically
+             * Requirements: 11.2, 11.5, 23.3
+             * 
+             * @param {string} fontName - Name of the Google Font to load
+             * @param {function} callback - Callback function after font loads
+             */
+            loadGoogleFont: function(fontName, callback) {
+                try {
+                    if (!fontName) {
+                        console.warn('MASE: No font name provided to loadGoogleFont');
+                        if (callback) callback();
+                        return;
+                    }
+                    
+                    // Check if already loaded (Requirement 11.5: Cache fonts)
+                    if ($('link[href*="' + fontName.replace(' ', '+') + '"]').length > 0) {
+                        console.log('MASE: Google Font already loaded:', fontName);
+                        if (callback) callback();
+                        return;
+                    }
+                    
+                    // Create link element (Requirement 11.2)
+                    var link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = 'https://fonts.googleapis.com/css2?family=' + 
+                                fontName.replace(' ', '+') + ':wght@300;400;500;600;700&display=swap';
+                    
+                    // Set timeout for loading (Requirement 23.3: Fallback if loading takes too long)
+                    var loadTimeout = setTimeout(function() {
+                        console.warn('MASE: Google Font loading timeout:', fontName);
+                        MASE.showNotice('warning', 'Font loading is taking longer than expected. Using fallback.');
+                        if (callback) callback();
+                    }, 10000); // 10 second timeout
+                    
+                    // Handle loading errors with fallback (Requirement 11.5, 23.3)
+                    link.onerror = function() {
+                        clearTimeout(loadTimeout);
+                        console.error('MASE: Failed to load Google Font:', fontName);
+                        MASE.showNotice('error', 'Failed to load font "' + fontName + '". Using system fallback.');
+                        // Callback is still executed to apply fallback fonts
+                        if (callback) callback();
+                    };
+                    
+                    // Handle successful load (Requirement 11.2)
+                    link.onload = function() {
+                        clearTimeout(loadTimeout);
+                        console.log('MASE: Google Font loaded successfully:', fontName);
+                        if (callback) callback();
+                    };
+                    
+                    // Append to head to trigger loading (Requirement 11.2)
+                    document.head.appendChild(link);
+                    
+                } catch (error) {
+                    console.error('MASE: Error loading Google Font:', fontName, error);
+                    MASE.showNotice('error', 'Failed to load font. Using system fallback.');
+                    // Execute callback to apply fallback fonts
+                    if (callback) callback();
+                }
+            },
+            
+            /**
+             * Update background type live preview
+             * Requirement 6.5: Show/hide gradient controls and apply appropriate background
+             * 
+             * @param {string} bgType - Background type ('solid' or 'gradient')
+             */
+            updateBackgroundType: function(bgType) {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                if (!bgType) return;
+                
+                // Show/hide gradient controls based on bg_type (Requirement 6.5)
+                var $gradientControls = $('.mase-conditional-group[data-depends-on="admin-menu-bg-type"]');
+                if (bgType === 'gradient') {
+                    $gradientControls.show();
+                    this.updateGradient();
+                } else {
+                    $gradientControls.hide();
+                    // Apply solid color
+                    var bgColor = $('#admin-menu-bg-color').val() || '#23282d';
+                    var css = 'body.wp-admin #adminmenu,';
+                    css += 'body.wp-admin #adminmenuback,';
+                    css += 'body.wp-admin #adminmenuwrap{';
+                    css += 'background:' + bgColor + '!important;';
+                    css += '}';
+                    this.applyCSS('background', css);
+                }
+            },
+            
+            /**
+             * Update gradient angle live preview
+             * Requirement 6.3: Update gradient with new angle
+             * 
+             * @param {number} angle - Gradient angle in degrees
+             */
+            updateGradientAngle: function(angle) {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                if (angle === undefined || angle === null) return;
+                
+                // Update range value display
+                $('#admin-menu-gradient-angle').siblings('.mase-range-value').text(angle + '°');
+                
+                // Update gradient
+                this.updateGradient();
+            },
+            
+            /**
+             * Generate and apply gradient CSS dynamically
+             * Requirement 6.3: Support linear, radial, and conic gradients
+             */
+            updateGradient: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                var bgType = $('#admin-menu-bg-type').val();
+                if (bgType !== 'gradient') return;
+                
+                var gradientType = $('#admin-menu-gradient-type').val() || 'linear';
+                var angle = $('#admin-menu-gradient-angle').val() || 90;
+                var color1 = $('#admin-menu-gradient-color-1').val() || '#23282d';
+                var color2 = $('#admin-menu-gradient-color-2').val() || '#32373c';
+                
+                var css = 'body.wp-admin #adminmenu,';
+                css += 'body.wp-admin #adminmenuback,';
+                css += 'body.wp-admin #adminmenuwrap{';
+                
+                // Generate gradient based on type (Requirements 6.1, 6.2)
+                switch(gradientType) {
+                    case 'linear':
+                        css += 'background:linear-gradient(' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    case 'radial':
+                        css += 'background:radial-gradient(circle,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    case 'conic':
+                        css += 'background:conic-gradient(from ' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                        break;
+                    default:
+                        css += 'background:linear-gradient(' + angle + 'deg,' + color1 + ' 0%,' + color2 + ' 100%)!important;';
+                }
+                
+                css += '}';
+                
+                this.applyCSS('background', css);
+            },
+            
+            /**
+             * Update logo visibility live preview
+             * Requirement 16.5: Show/hide logo when enabled/disabled
+             */
+            updateLogoVisibility: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                var enabled = $('#admin-menu-logo-enabled').is(':checked');
+                
+                if (enabled) {
+                    this.updateLogoDisplay();
+                } else {
+                    this.applyCSS('logo', '');
+                }
+            },
+            
+            /**
+             * Open logo upload dialog
+             * Requirement 16.1: Handle logo file upload
+             * Requirement 23.4: Error handling for logo upload
+             */
+            openLogoUpload: function() {
+                try {
+                    var self = this;
+                    
+                    // Create file input if it doesn't exist
+                    var $fileInput = $('#mase-logo-file-input');
+                    if ($fileInput.length === 0) {
+                        $fileInput = $('<input type="file" id="mase-logo-file-input" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display:none;">');
+                        $('body').append($fileInput);
+                    }
+                    
+                    // Handle file selection
+                    $fileInput.off('change').on('change', function(e) {
+                        try {
+                            var file = e.target.files[0];
+                            if (!file) return;
+                            
+                            // Validate file type (Requirement 23.4)
+                            var allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+                            if (allowedTypes.indexOf(file.type) === -1) {
+                                MASE.showNotice('error', 'Only PNG, JPG, and SVG files are allowed.');
+                                return;
+                            }
+                            
+                            // Validate file size (2MB max) (Requirement 23.4)
+                            if (file.size > 2 * 1024 * 1024) {
+                                MASE.showNotice('error', 'File size must be less than 2MB.');
+                                return;
+                            }
+                            
+                            // Upload file via AJAX
+                            var formData = new FormData();
+                            formData.append('action', 'mase_upload_menu_logo');
+                            formData.append('nonce', MASE.config.nonce);
+                            formData.append('logo_file', file);
+                            
+                            $.ajax({
+                                url: MASE.config.ajaxUrl,
+                                type: 'POST',
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                success: function(response) {
+                                    try {
+                                        if (response.success) {
+                                            // Update hidden input with logo URL
+                                            $('#admin-menu-logo-url').val(response.data.logo_url);
+                                            
+                                            // Update preview
+                                            var $preview = $('#admin-menu-logo-preview');
+                                            $preview.html('<img src="' + response.data.logo_url + '" alt="Menu Logo">');
+                                            $preview.show();
+                                            
+                                            // Show remove button
+                                            $('#admin-menu-logo-remove-btn').show();
+                                            
+                                            // Update live preview
+                                            self.updateLogoDisplay();
+                                            
+                                            MASE.showNotice('success', response.data.message || 'Logo uploaded successfully.');
+                                        } else {
+                                            MASE.showNotice('error', response.data.message || 'Failed to upload logo.');
+                                        }
+                                    } catch (error) {
+                                        console.error('MASE: Error processing logo upload response:', error);
+                                        MASE.showNotice('error', 'Failed to process logo upload. Please try again.');
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    // Requirement 23.4: Upload failure handling
+                                    console.error('MASE: Logo upload AJAX error:', {
+                                        status: xhr.status,
+                                        statusText: xhr.statusText,
+                                        error: error
+                                    });
+                                    
+                                    var message = 'Failed to upload logo. Please try again.';
+                                    if (xhr.status === 403) {
+                                        message = 'Permission denied. You do not have access to upload files.';
+                                    } else if (xhr.status === 413) {
+                                        message = 'File is too large. Maximum size is 2MB.';
+                                    } else if (xhr.status === 500) {
+                                        message = 'Server error. Please try again later.';
+                                    }
+                                    
+                                    MASE.showNotice('error', message);
+                                }
+                            });
+                        } catch (error) {
+                            console.error('MASE: Error handling logo file selection:', error);
+                            MASE.showNotice('error', 'Failed to process selected file. Please try again.');
+                        }
+                    });
+                    
+                    // Trigger file input click
+                    $fileInput.click();
+                    
+                } catch (error) {
+                    console.error('MASE: Error opening logo upload dialog:', error);
+                    MASE.showNotice('error', 'Failed to open file upload dialog. Please try again.');
+                }
+            },
+            
+            /**
+             * Remove logo
+             * Requirement 16.7: Clear logo URL and hide logo
+             * Requirement 23.4: Error handling for logo removal
+             */
+            removeLogo: function() {
+                try {
+                    // Clear hidden input
+                    $('#admin-menu-logo-url').val('');
+                    
+                    // Hide preview
+                    $('#admin-menu-logo-preview').hide().html('');
+                    
+                    // Hide remove button
+                    $('#admin-menu-logo-remove-btn').hide();
+                    
+                    // Clear live preview
+                    this.applyCSS('logo', '');
+                    
+                    MASE.showNotice('success', 'Logo removed successfully.');
+                    
+                } catch (error) {
+                    console.error('MASE: Error removing logo:', error);
+                    MASE.showNotice('error', 'Failed to remove logo. Please try again.');
+                }
+            },
+            
+            /**
+             * Update logo position live preview
+             * Requirement 16.6: Move logo to top or bottom
+             */
+            updateLogoPosition: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                this.updateLogoDisplay();
+            },
+            
+            /**
+             * Update logo size live preview
+             * Requirement 16.6: Resize logo
+             */
+            updateLogoSize: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                var width = $('#admin-menu-logo-width').val();
+                $('#admin-menu-logo-width').siblings('.mase-range-value').text(width + 'px');
+                this.updateLogoDisplay();
+            },
+            
+            /**
+             * Update logo alignment live preview
+             * Requirement 16.6: Change logo alignment
+             */
+            updateLogoAlignment: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                this.updateLogoDisplay();
+            },
+            
+            /**
+             * Update logo display in live preview
+             * Requirements 16.2, 16.3, 16.4, 16.5, 16.6
+             */
+            updateLogoDisplay: function() {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                var enabled = $('#admin-menu-logo-enabled').is(':checked');
+                var logoUrl = $('#admin-menu-logo-url').val();
+                
+                if (!enabled || !logoUrl) {
+                    this.applyCSS('logo', '');
+                    return;
+                }
+                
+                var position = $('#admin-menu-logo-position').val() || 'top';
+                var width = $('#admin-menu-logo-width').val() || 100;
+                var alignment = $('#admin-menu-logo-alignment').val() || 'center';
+                
+                var css = 'body.wp-admin #adminmenu::' + (position === 'top' ? 'before' : 'after') + '{';
+                css += 'content:"";';
+                css += 'display:block;';
+                css += 'width:' + width + 'px;';
+                css += 'height:auto;';
+                css += 'max-width:100%;';
+                css += 'padding:15px;';
+                css += 'box-sizing:border-box;';
+                css += 'background-image:url("' + logoUrl + '");';
+                css += 'background-size:contain;';
+                css += 'background-repeat:no-repeat;';
+                css += 'background-position:center;';
+                
+                // Apply alignment
+                if (alignment === 'left') {
+                    css += 'margin-left:0;';
+                    css += 'margin-right:auto;';
+                    css += 'background-position:left center;';
+                } else if (alignment === 'right') {
+                    css += 'margin-left:auto;';
+                    css += 'margin-right:0;';
+                    css += 'background-position:right center;';
+                } else {
+                    css += 'margin-left:auto;';
+                    css += 'margin-right:auto;';
+                    css += 'background-position:center;';
+                }
+                
+                css += 'aspect-ratio:auto;';
+                css += 'min-height:40px;';
+                css += '}';
+                
+                // Adjust menu padding
+                if (position === 'top') {
+                    css += 'body.wp-admin #adminmenu{padding-top:10px;}';
+                } else {
+                    css += 'body.wp-admin #adminmenu{padding-bottom:10px;}';
+                }
+                
+                this.applyCSS('logo', css);
+            },
+            
+            /**
+             * Apply CSS to the page for live preview
+             * 
+             * @param {string} id - Unique identifier for this CSS block
+             * @param {string} css - CSS rules to apply
+             */
+            applyCSS: function(id, css) {
+                var styleId = 'mase-menu-preview-' + id;
+                var $style = $('#' + styleId);
+                
+                if ($style.length === 0) {
+                    $style = $('<style id="' + styleId + '"></style>');
+                    $('head').append($style);
+                }
+                
+                $style.text(css);
             }
         },
         
@@ -2727,6 +5476,12 @@
                 // Initialize tab navigation (Requirement 8.1, 8.2, 8.3, 8.4, 8.5)
                 this.tabNavigation.init();
                 
+                // Initialize admin bar preview (Requirements 4.1-4.8)
+                this.adminBarPreview.init();
+                
+                // Initialize admin menu preview (Requirements 1.4, 3.1, 3.2, 3.3)
+                this.adminMenuPreview.init();
+                
                 // Initialize dark mode synchronization (Requirement 6.1, 6.2, 6.3)
                 this.darkModeSync.init();
                 
@@ -3479,17 +6234,32 @@
                 $('head').append('<style id="mase-spinner-style">@keyframes mase-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
             }
             
+            // Validate form inputs before submission (Requirement 13.2)
+            var validation = this.validateFormInputs();
+            if (!validation.isValid) {
+                // Reset saving state
+                this.state.isSaving = false;
+                $button.prop('disabled', false).val(originalText).css('opacity', '1');
+                $spinner.remove();
+                
+                // Show validation errors
+                this.showValidationErrors(validation.errors);
+                return;
+            }
+            
             // Collect all form data (Requirement 11.2)
             var formData = this.collectFormData();
             
             // Requirement 9.3: Log AJAX request data
+            // CRITICAL FIX: Send settings as JSON string to avoid max_input_vars limit
             var requestData = {
                 action: 'mase_save_settings',
                 nonce: self.config.nonce,
-                settings: formData
+                settings: JSON.stringify(formData)  // Convert to JSON string
             };
             console.log('MASE: Sending AJAX request - Save Settings');
             console.log('MASE: Request data:', requestData);
+            console.log('MASE: Settings sent as JSON string, length:', requestData.settings.length);
             
             // Submit via AJAX to admin-ajax.php (Requirement 11.1)
             $.ajax({
@@ -3627,6 +6397,131 @@
                 $(this).remove();
                 self.saveSettings();
             });
+        },
+        
+        /**
+         * Validate form inputs before submission
+         * Requirement 13.2: Client-side validation with error messages
+         * 
+         * @returns {Object} Validation result with isValid flag and errors array
+         */
+        validateFormInputs: function() {
+            var errors = [];
+            var $form = $('#mase-settings-form');
+            
+            // Validate color inputs (hex format)
+            $form.find('input[type="color"], input.mase-color-picker').each(function() {
+                var $input = $(this);
+                var value = $input.val();
+                var name = $input.attr('name') || $input.attr('id');
+                
+                if (value && !/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                    errors.push({
+                        field: name,
+                        message: 'Invalid color format. Use hex format (#RRGGBB)',
+                        element: $input
+                    });
+                }
+            });
+            
+            // Validate numeric ranges
+            $form.find('input[type="number"], input[type="range"]').each(function() {
+                var $input = $(this);
+                var value = parseFloat($input.val());
+                var min = parseFloat($input.attr('min'));
+                var max = parseFloat($input.attr('max'));
+                var name = $input.attr('name') || $input.attr('id');
+                
+                if (!isNaN(min) && value < min) {
+                    errors.push({
+                        field: name,
+                        message: 'Value must be at least ' + min,
+                        element: $input
+                    });
+                }
+                
+                if (!isNaN(max) && value > max) {
+                    errors.push({
+                        field: name,
+                        message: 'Value must be at most ' + max,
+                        element: $input
+                    });
+                }
+            });
+            
+            // Validate gradient angles (0-360)
+            var $gradientAngle = $form.find('[name="admin_bar[gradient_angle]"]');
+            if ($gradientAngle.length) {
+                var angle = parseInt($gradientAngle.val());
+                if (angle < 0 || angle > 360) {
+                    errors.push({
+                        field: 'admin_bar[gradient_angle]',
+                        message: 'Gradient angle must be between 0 and 360 degrees',
+                        element: $gradientAngle
+                    });
+                }
+            }
+            
+            // Validate shadow opacity (0-1)
+            var $shadowOpacity = $form.find('[name="admin_bar[shadow_opacity]"]');
+            if ($shadowOpacity.length) {
+                var opacity = parseFloat($shadowOpacity.val());
+                if (opacity < 0 || opacity > 1) {
+                    errors.push({
+                        field: 'admin_bar[shadow_opacity]',
+                        message: 'Shadow opacity must be between 0 and 1',
+                        element: $shadowOpacity
+                    });
+                }
+            }
+            
+            // Font family validation removed - these fields are optional
+            // and empty values are valid (will use system defaults)
+            
+            return {
+                isValid: errors.length === 0,
+                errors: errors
+            };
+        },
+        
+        /**
+         * Display validation errors to user
+         * Requirement 13.2: Show error messages and visual feedback
+         * 
+         * @param {Array} errors - Array of error objects
+         */
+        showValidationErrors: function(errors) {
+            var self = this;
+            
+            // Clear previous error states
+            $('.mase-field-error').remove();
+            $('.mase-input-error').removeClass('mase-input-error');
+            
+            // Display each error
+            errors.forEach(function(error) {
+                // Add error class to input
+                error.element.addClass('mase-input-error');
+                
+                // Add error message below input
+                var $errorMsg = $('<div class="mase-field-error" style="color:#dc3232;font-size:12px;margin-top:4px;"></div>');
+                $errorMsg.text(error.message);
+                error.element.after($errorMsg);
+            });
+            
+            // Show summary notice
+            var errorCount = errors.length;
+            var message = errorCount === 1 
+                ? 'Please fix 1 validation error before saving' 
+                : 'Please fix ' + errorCount + ' validation errors before saving';
+            
+            self.showNotice('error', message);
+            
+            // Scroll to first error
+            if (errors.length > 0) {
+                $('html, body').animate({
+                    scrollTop: errors[0].element.offset().top - 100
+                }, 500);
+            }
         },
         
         /**
@@ -4193,57 +7088,178 @@
         },
         
         /**
-         * Initialize conditional field display
-         * Shows/hides fields based on checkbox dependencies
-         * Requirement 15.6: Show/hide auto palette time selectors based on toggle
+         * Initialize Conditional Fields
+         * 
+         * Show/hide fields based on parent control values.
+         * Handles gradient controls, individual corners, custom shadows, etc.
+         * 
+         * Requirements: 5.5, 9.3, 10.3, 11.3, 12.3, 15.6
+         * 
+         * Supported Dependencies:
+         * - Gradient controls (show when bg_type = gradient)
+         * - Individual corners (show when border_radius_mode = individual)
+         * - Individual margins (show when floating_margin_mode = individual)
+         * - Custom shadow (show when shadow_mode = custom)
+         * - Floating margins (show when floating = true)
+         * - Width controls (show based on width_unit)
+         * - Auto palette time selectors (show when auto_palette_switch = true)
          */
         initConditionalFields: function() {
             var self = this;
             
-            // Handle auto palette switch toggle (Requirement 15.6)
-            var $autoSwitchToggle = $('#advanced-auto-palette-switch');
-            var $conditionalFields = $('.mase-conditional[data-depends-on="advanced-auto-palette-switch"]');
+            console.log('MASE: Initializing conditional fields');
             
-            // Function to toggle conditional fields
-            function toggleConditionalFields() {
-                if ($autoSwitchToggle.is(':checked')) {
-                    $conditionalFields.show();
-                } else {
-                    $conditionalFields.hide();
-                }
-            }
-            
-            // Initialize on page load
-            toggleConditionalFields();
-            
-            // Bind change event
-            $autoSwitchToggle.on('change', toggleConditionalFields);
-            
-            // Handle other conditional fields generically
-            $('[data-depends-on]').each(function() {
-                var $field = $(this);
-                var dependsOn = $field.data('depends-on');
-                var $dependency = $('#' + dependsOn);
-                
-                if ($dependency.length) {
-                    // Function to check dependency
+            /**
+             * Handle Conditional Fields Generically
+             * 
+             * This function processes all elements with data-depends-on attribute
+             * and shows/hides them based on their parent control's value.
+             */
+            function handleConditionalFields() {
+                // Find all conditional fields and groups
+                $('[data-depends-on]').each(function() {
+                    var $field = $(this);
+                    var dependsOn = $field.data('depends-on');
+                    var requiredValue = $field.data('value');
+                    var $dependency = $('#' + dependsOn);
+                    
+                    // Skip if dependency element not found
+                    if (!$dependency.length) {
+                        console.warn('MASE: Dependency element not found:', dependsOn);
+                        return;
+                    }
+                    
+                    /**
+                     * Check Dependency and Show/Hide Field
+                     * 
+                     * Determines if the field should be visible based on
+                     * the parent control's current value.
+                     */
                     function checkDependency() {
+                        var shouldShow = false;
+                        
+                        // Handle checkbox dependencies (Requirements 12.3, 15.6)
                         if ($dependency.is(':checkbox')) {
-                            if ($dependency.is(':checked')) {
-                                $field.show();
+                            if (requiredValue !== undefined) {
+                                // Check for specific value (e.g., data-value="true")
+                                shouldShow = $dependency.is(':checked') === (requiredValue === 'true' || requiredValue === true);
                             } else {
-                                $field.hide();
+                                // No specific value required, just check if checked
+                                shouldShow = $dependency.is(':checked');
                             }
+                        }
+                        // Handle select dependencies (Requirements 5.5, 9.3, 10.3, 11.3)
+                        else if ($dependency.is('select')) {
+                            var currentValue = $dependency.val();
+                            
+                            if (requiredValue !== undefined) {
+                                // Check for specific value match
+                                shouldShow = (currentValue === requiredValue);
+                            } else {
+                                // No specific value required, just needs to have a value
+                                shouldShow = (currentValue !== '' && currentValue !== null);
+                            }
+                        }
+                        // Handle radio button dependencies
+                        else if ($dependency.is('input[type="radio"]')) {
+                            var currentValue = $('input[name="' + $dependency.attr('name') + '"]:checked').val();
+                            
+                            if (requiredValue !== undefined) {
+                                shouldShow = (currentValue === requiredValue);
+                            } else {
+                                shouldShow = (currentValue !== '' && currentValue !== null);
+                            }
+                        }
+                        
+                        // Show or hide the field with smooth transition
+                        if (shouldShow) {
+                            $field.slideDown(200);
+                        } else {
+                            $field.slideUp(200);
                         }
                     }
                     
-                    // Initialize
+                    // Initialize on page load
                     checkDependency();
                     
-                    // Bind change event
+                    // Bind change event to parent control
                     $dependency.on('change', checkDependency);
+                    
+                    // For radio buttons, bind to all radios with the same name
+                    if ($dependency.is('input[type="radio"]')) {
+                        $('input[name="' + $dependency.attr('name') + '"]').on('change', checkDependency);
+                    }
+                });
+            }
+            
+            // Initialize all conditional fields
+            handleConditionalFields();
+            
+            /**
+             * Specific Handlers for Complex Dependencies
+             * 
+             * Some fields require special handling beyond the generic approach.
+             */
+            
+            // Handle gradient controls (Requirement 5.5)
+            // Show when bg_type = gradient
+            var $bgTypeSelect = $('#admin-bar-bg-type');
+            if ($bgTypeSelect.length) {
+                console.log('MASE: Binding gradient controls to bg_type selector');
+            }
+            
+            // Handle border radius mode (Requirement 9.3)
+            // Show individual corners when mode = individual
+            var $borderRadiusMode = $('#admin-bar-border-radius-mode');
+            if ($borderRadiusMode.length) {
+                console.log('MASE: Binding border radius controls to mode selector');
+            }
+            
+            // Handle shadow mode (Requirement 10.3)
+            // Show custom controls when mode = custom
+            var $shadowMode = $('#admin-bar-shadow-mode');
+            if ($shadowMode.length) {
+                console.log('MASE: Binding shadow controls to mode selector');
+            }
+            
+            // Handle width unit (Requirement 11.3)
+            // Show appropriate slider based on unit selection
+            var $widthUnit = $('#admin-bar-width-unit');
+            if ($widthUnit.length) {
+                console.log('MASE: Binding width controls to unit selector');
+            }
+            
+            // Handle floating margin mode (Requirement 12.3)
+            // Show individual margins when mode = individual
+            var $floatingMarginMode = $('#admin-bar-floating-margin-mode');
+            if ($floatingMarginMode.length) {
+                console.log('MASE: Binding floating margin controls to mode selector');
+            }
+            
+            // Handle floating mode toggle (Requirement 12.3)
+            // Show floating margin section when floating is enabled
+            var $floatingToggle = $('#admin-bar-floating');
+            if ($floatingToggle.length) {
+                console.log('MASE: Binding floating margin section to floating toggle');
+                
+                // Additional handler to ensure section visibility
+                function updateFloatingSection() {
+                    var $floatingSection = $('.mase-section.mase-conditional[data-depends-on="admin-bar-floating"]');
+                    if ($floatingToggle.is(':checked')) {
+                        $floatingSection.slideDown(200);
+                    } else {
+                        $floatingSection.slideUp(200);
+                    }
                 }
-            });
+                
+                // Initialize
+                updateFloatingSection();
+                
+                // Bind change event
+                $floatingToggle.on('change', updateFloatingSection);
+            }
+            
+            console.log('MASE: Conditional fields initialized successfully');
         }
 
     };
@@ -4251,6 +7267,19 @@
     // Initialize on document ready
     $(document).ready(function() {
         MASE.init();
+        
+        // Bind admin menu preview events if live preview is enabled
+        if (MASE.state.livePreviewEnabled) {
+            MASE.bindAdminMenuPreviewEvents();
+        }
+        
+        // Also bind when live preview toggle changes
+        $('#mase-live-preview-toggle').on('change', function() {
+            MASE.state.livePreviewEnabled = $(this).is(':checked');
+            if (MASE.state.livePreviewEnabled) {
+                MASE.bindAdminMenuPreviewEvents();
+            }
+        });
     });
     
     // Cleanup on page unload to prevent memory leaks

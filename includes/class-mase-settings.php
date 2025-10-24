@@ -45,7 +45,8 @@ class MASE_Settings {
 	 * Get option value.
 	 *
 	 * Retrieves settings from WordPress options table and merges with defaults
-	 * to ensure completeness (Requirement 16.3).
+	 * to ensure completeness (Requirement 16.3, 4.2).
+	 * Ensures Height Mode and all new admin menu settings are loaded correctly.
 	 *
 	 * @param string|null $key     Optional. Specific setting key to retrieve.
 	 * @param mixed       $default Optional. Default value if key not found.
@@ -55,7 +56,8 @@ class MASE_Settings {
 		$defaults = $this->get_defaults();
 		$settings = get_option( self::OPTION_NAME, array() );
 
-		// Merge with defaults to ensure all keys exist (Requirement 16.3).
+		// Merge with defaults to ensure all keys exist (Requirement 16.3, 4.2).
+		// This ensures Height Mode and all new admin menu settings have default values.
 		$settings = $this->array_merge_recursive_distinct( $defaults, $settings );
 
 		if ( null === $key ) {
@@ -94,11 +96,14 @@ class MASE_Settings {
 	/**
 	 * Update option value.
 	 * Requirement 7.1: Apply mobile-optimized settings automatically during save.
+	 * Requirement 4.1: Ensure Height Mode is saved correctly.
+	 * Requirements 18.1: Validate and sanitize all new menu settings.
 	 *
 	 * @param array $data Settings data to save.
 	 * @return bool True on success, false on failure.
 	 */
 	public function update_option( $data ) {
+		// Validate all settings including Height Mode and new admin menu settings (Requirement 4.1, 18.1).
 		$validated = $this->validate( $data );
 		
 		if ( is_wp_error( $validated ) ) {
@@ -120,6 +125,33 @@ class MASE_Settings {
 	}
 
 	/**
+	 * Save settings (alias for update_option).
+	 * 
+	 * Requirement 18.1: Add validation for all new menu settings.
+	 * Requirement 4.1: Ensure Height Mode is saved correctly.
+	 *
+	 * @param array $data Settings data to save.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save_settings( $data ) {
+		return $this->update_option( $data );
+	}
+
+	/**
+	 * Get settings (alias for get_option).
+	 * 
+	 * Requirement 18.2: Load all new menu settings with defaults.
+	 * Requirement 4.2: Ensure Height Mode is loaded correctly.
+	 *
+	 * @param string|null $key     Optional. Specific setting key to retrieve.
+	 * @param mixed       $default Optional. Default value if key not found.
+	 * @return mixed Setting value or full settings array.
+	 */
+	public function get_settings( $key = null, $default = null ) {
+		return $this->get_option( $key, $default );
+	}
+
+	/**
 	 * Get default settings.
 	 *
 	 * Extended with new categories: palettes, templates, typography (enhanced),
@@ -136,11 +168,85 @@ class MASE_Settings {
 				'height'      => 32,
 			),
 			'admin_menu'  => array(
+				// Existing properties
 				'bg_color'          => '#23282d',
 				'text_color'        => '#ffffff',
 				'hover_bg_color'    => '#191e23',
 				'hover_text_color'  => '#00b9eb',
 				'width'             => 160,
+				'width_unit'        => 'pixels', // 'pixels' | 'percent' (Requirement 14.1)
+				'width_value'       => 160, // 160-400 pixels or 50-100 percent (Requirement 14.2)
+				'height_mode'       => 'full', // 'full' | 'content'
+				
+				// NEW: Gradient background (Requirement 6.1)
+				'bg_type'           => 'solid', // 'solid' | 'gradient'
+				'gradient_type'     => 'linear', // 'linear' | 'radial' | 'conic'
+				'gradient_angle'    => 90, // 0-360 degrees
+				'gradient_colors'   => array(
+					array( 'color' => '#23282d', 'position' => 0 ),
+					array( 'color' => '#32373c', 'position' => 100 ),
+				),
+				
+				// NEW: Padding controls (Requirement 1.2)
+				'padding_vertical'   => 10, // 5-30 pixels
+				'padding_horizontal' => 15, // 5-30 pixels
+				
+				// NEW: Icon color controls (Requirement 2.3)
+				'icon_color_mode'   => 'auto', // 'auto' | 'custom'
+				'icon_color'        => '#ffffff', // used when mode is 'custom'
+				
+				// NEW: Corner radius (Requirement 12.1)
+				'border_radius_mode' => 'uniform', // 'uniform' | 'individual'
+				'border_radius'      => 0, // uniform value 0-50px
+				'border_radius_tl'   => 0, // top-left
+				'border_radius_tr'   => 0, // top-right
+				'border_radius_bl'   => 0, // bottom-left
+				'border_radius_br'   => 0, // bottom-right
+				
+				// NEW: Floating margins (Requirement 15.1)
+				'floating'           => false,
+				'floating_margin_mode' => 'uniform', // 'uniform' | 'individual'
+				'floating_margin'    => 8, // uniform value 0-100px
+				'floating_margin_top'    => 8,
+				'floating_margin_right'  => 8,
+				'floating_margin_bottom' => 8,
+				'floating_margin_left'   => 8,
+				
+				// NEW: Advanced shadows (Requirement 13.1)
+				'shadow_mode'        => 'preset', // 'preset' | 'custom'
+				'shadow_preset'      => 'none', // 'none' | 'subtle' | 'medium' | 'strong' | 'dramatic'
+				'shadow_h_offset'    => 0,
+				'shadow_v_offset'    => 4,
+				'shadow_blur'        => 8,
+				'shadow_spread'      => 0,
+				'shadow_color'       => 'rgba(0,0,0,0.15)',
+				'shadow_opacity'     => 0.15,
+				
+				// NEW: Logo placement (Requirement 16.1)
+				'logo_enabled'       => false,
+				'logo_url'           => '',
+				'logo_position'      => 'top', // 'top' | 'bottom'
+				'logo_width'         => 100, // 20-200 pixels
+				'logo_alignment'     => 'center', // 'left' | 'center' | 'right'
+			),
+			// NEW: Admin menu submenu settings (Requirements 7.1, 8.1, 9.1, 10.1)
+			'admin_menu_submenu' => array(
+				'bg_color'           => '#32373c',
+				'border_radius_mode' => 'uniform',
+				'border_radius'      => 0,
+				'border_radius_tl'   => 0,
+				'border_radius_tr'   => 0,
+				'border_radius_bl'   => 0,
+				'border_radius_br'   => 0,
+				'spacing'            => 0, // distance from menu 0-50px
+				
+				// Submenu typography
+				'font_size'          => 13, // 10-24px
+				'text_color'         => '#ffffff',
+				'line_height'        => 1.5, // 1.0-3.0
+				'letter_spacing'     => 0, // -2 to 5px
+				'text_transform'     => 'none', // 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+				'font_family'        => 'system', // 'system' | Google Font name
 			),
 			'performance' => array(
 				'enable_minification' => true,
@@ -156,7 +262,7 @@ class MASE_Settings {
 				'current' => 'default',
 				'custom'  => array(), // Array of user-created templates.
 			),
-			// EXTENDED: Typography with enhanced settings (Requirement 3.3).
+			// EXTENDED: Typography with enhanced settings (Requirement 3.3, 11.1).
 			'typography'  => array(
 				'admin_bar'  => array(
 					'font_size'      => 13,
@@ -172,7 +278,8 @@ class MASE_Settings {
 					'line_height'    => 1.5,
 					'letter_spacing' => 0,
 					'text_transform' => 'none',
-					'font_family'    => 'system',
+					'font_family'    => 'system', // NEW: Font family support (Requirement 11.1)
+					'google_font_url' => '', // NEW: Google Font URL if selected
 				),
 				'content'    => array(
 					'font_size'      => 13,
@@ -341,6 +448,9 @@ class MASE_Settings {
 
 	/**
 	 * Validate settings input.
+	 * 
+	 * Requirement 22.1: Comprehensive input validation and sanitization for all settings.
+	 * Validates numeric ranges, sanitizes colors, sanitizes text, validates enum values.
 	 *
 	 * @param array $input Input data to validate.
 	 * @return array|WP_Error Validated data or WP_Error on failure.
@@ -397,13 +507,336 @@ class MASE_Settings {
 				}
 			}
 
+			// Validate width (legacy support for old 'width' field)
 			if ( isset( $input['admin_menu']['width'] ) ) {
 				$width = absint( $input['admin_menu']['width'] );
-				if ( $width >= 0 && $width <= 500 ) {
+				if ( $width >= 100 && $width <= 400 ) {
 					$validated['admin_menu']['width'] = $width;
 				} else {
-					$errors['admin_menu_width'] = 'Width must be between 0 and 500';
+					$errors['admin_menu_width'] = 'Width must be between 100 and 400';
 				}
+			}
+
+			// Validate width_unit (Requirement 14.1)
+			if ( isset( $input['admin_menu']['width_unit'] ) ) {
+				$width_unit = sanitize_text_field( $input['admin_menu']['width_unit'] );
+				if ( in_array( $width_unit, array( 'pixels', 'percent' ), true ) ) {
+					$validated['admin_menu']['width_unit'] = $width_unit;
+				} else {
+					$errors['admin_menu_width_unit'] = 'Width unit must be pixels or percent';
+				}
+			}
+
+			// Validate width_value (Requirement 14.2, 14.3)
+			if ( isset( $input['admin_menu']['width_value'] ) ) {
+				$width_value = absint( $input['admin_menu']['width_value'] );
+				$width_unit = isset( $validated['admin_menu']['width_unit'] ) ? $validated['admin_menu']['width_unit'] : 'pixels';
+				
+				if ( $width_unit === 'percent' ) {
+					// Percentage: 50-100%
+					if ( $width_value >= 50 && $width_value <= 100 ) {
+						$validated['admin_menu']['width_value'] = $width_value;
+					} else {
+						$errors['admin_menu_width_value'] = 'Width percentage must be between 50 and 100';
+					}
+				} else {
+					// Pixels: 160-400px
+					if ( $width_value >= 160 && $width_value <= 400 ) {
+						$validated['admin_menu']['width_value'] = $width_value;
+					} else {
+						$errors['admin_menu_width_value'] = 'Width pixels must be between 160 and 400';
+					}
+				}
+			}
+
+			// Validate height_mode (Requirement 4.1)
+			if ( isset( $input['admin_menu']['height_mode'] ) ) {
+				$height_mode = sanitize_text_field( $input['admin_menu']['height_mode'] );
+				if ( in_array( $height_mode, array( 'full', 'content' ), true ) ) {
+					$validated['admin_menu']['height_mode'] = $height_mode;
+				} else {
+					$errors['admin_menu_height_mode'] = 'Height mode must be full or content';
+				}
+			}
+
+			// Validate bg_type (Requirement 6.1)
+			if ( isset( $input['admin_menu']['bg_type'] ) ) {
+				$bg_type = sanitize_text_field( $input['admin_menu']['bg_type'] );
+				if ( in_array( $bg_type, array( 'solid', 'gradient' ), true ) ) {
+					$validated['admin_menu']['bg_type'] = $bg_type;
+				}
+			}
+
+			// Validate gradient_type (Requirement 6.1)
+			if ( isset( $input['admin_menu']['gradient_type'] ) ) {
+				$gradient_type = sanitize_text_field( $input['admin_menu']['gradient_type'] );
+				if ( in_array( $gradient_type, array( 'linear', 'radial', 'conic' ), true ) ) {
+					$validated['admin_menu']['gradient_type'] = $gradient_type;
+				}
+			}
+
+			// Validate gradient_angle (Requirement 6.4)
+			if ( isset( $input['admin_menu']['gradient_angle'] ) ) {
+				$angle = absint( $input['admin_menu']['gradient_angle'] );
+				if ( $angle >= 0 && $angle <= 360 ) {
+					$validated['admin_menu']['gradient_angle'] = $angle;
+				}
+			}
+
+			// Validate gradient_colors (Requirement 6.2)
+			if ( isset( $input['admin_menu']['gradient_colors'] ) && is_array( $input['admin_menu']['gradient_colors'] ) ) {
+				$validated['admin_menu']['gradient_colors'] = array();
+				foreach ( $input['admin_menu']['gradient_colors'] as $stop ) {
+					if ( isset( $stop['color'] ) && isset( $stop['position'] ) ) {
+						$color = sanitize_hex_color( $stop['color'] );
+						$position = absint( $stop['position'] );
+						if ( $color && $position >= 0 && $position <= 100 ) {
+							$validated['admin_menu']['gradient_colors'][] = array(
+								'color' => $color,
+								'position' => $position,
+							);
+						}
+					}
+				}
+			}
+
+			// Validate padding (Requirement 1.2)
+			if ( isset( $input['admin_menu']['padding_vertical'] ) ) {
+				$padding = absint( $input['admin_menu']['padding_vertical'] );
+				if ( $padding >= 5 && $padding <= 30 ) {
+					$validated['admin_menu']['padding_vertical'] = $padding;
+				}
+			}
+
+			if ( isset( $input['admin_menu']['padding_horizontal'] ) ) {
+				$padding = absint( $input['admin_menu']['padding_horizontal'] );
+				if ( $padding >= 5 && $padding <= 30 ) {
+					$validated['admin_menu']['padding_horizontal'] = $padding;
+				}
+			}
+
+			// Validate icon_color_mode (Requirement 2.3)
+			if ( isset( $input['admin_menu']['icon_color_mode'] ) ) {
+				$mode = sanitize_text_field( $input['admin_menu']['icon_color_mode'] );
+				if ( in_array( $mode, array( 'auto', 'custom' ), true ) ) {
+					$validated['admin_menu']['icon_color_mode'] = $mode;
+				}
+			}
+
+			// Validate icon_color (Requirement 2.3)
+			if ( isset( $input['admin_menu']['icon_color'] ) ) {
+				$color = sanitize_hex_color( $input['admin_menu']['icon_color'] );
+				if ( $color ) {
+					$validated['admin_menu']['icon_color'] = $color;
+				}
+			}
+
+			// Validate border_radius_mode (Requirement 12.1)
+			if ( isset( $input['admin_menu']['border_radius_mode'] ) ) {
+				$mode = sanitize_text_field( $input['admin_menu']['border_radius_mode'] );
+				if ( in_array( $mode, array( 'uniform', 'individual' ), true ) ) {
+					$validated['admin_menu']['border_radius_mode'] = $mode;
+				}
+			}
+
+			// Validate border_radius values (Requirement 12.1)
+			$radius_fields = array( 'border_radius', 'border_radius_tl', 'border_radius_tr', 'border_radius_bl', 'border_radius_br' );
+			foreach ( $radius_fields as $field ) {
+				if ( isset( $input['admin_menu'][ $field ] ) ) {
+					$radius = absint( $input['admin_menu'][ $field ] );
+					if ( $radius >= 0 && $radius <= 50 ) {
+						$validated['admin_menu'][ $field ] = $radius;
+					}
+				}
+			}
+
+			// Validate floating (Requirement 15.1)
+			if ( isset( $input['admin_menu']['floating'] ) ) {
+				$validated['admin_menu']['floating'] = (bool) $input['admin_menu']['floating'];
+			}
+
+			// Validate floating_margin_mode (Requirement 15.1)
+			if ( isset( $input['admin_menu']['floating_margin_mode'] ) ) {
+				$mode = sanitize_text_field( $input['admin_menu']['floating_margin_mode'] );
+				if ( in_array( $mode, array( 'uniform', 'individual' ), true ) ) {
+					$validated['admin_menu']['floating_margin_mode'] = $mode;
+				}
+			}
+
+			// Validate floating margin values (Requirement 15.1)
+			$margin_fields = array( 'floating_margin', 'floating_margin_top', 'floating_margin_right', 'floating_margin_bottom', 'floating_margin_left' );
+			foreach ( $margin_fields as $field ) {
+				if ( isset( $input['admin_menu'][ $field ] ) ) {
+					$margin = absint( $input['admin_menu'][ $field ] );
+					if ( $margin >= 0 && $margin <= 100 ) {
+						$validated['admin_menu'][ $field ] = $margin;
+					}
+				}
+			}
+
+			// Validate shadow_mode (Requirement 13.1)
+			if ( isset( $input['admin_menu']['shadow_mode'] ) ) {
+				$mode = sanitize_text_field( $input['admin_menu']['shadow_mode'] );
+				if ( in_array( $mode, array( 'preset', 'custom' ), true ) ) {
+					$validated['admin_menu']['shadow_mode'] = $mode;
+				}
+			}
+
+			// Validate shadow_preset (Requirement 13.1)
+			if ( isset( $input['admin_menu']['shadow_preset'] ) ) {
+				$preset = sanitize_text_field( $input['admin_menu']['shadow_preset'] );
+				if ( in_array( $preset, array( 'none', 'subtle', 'medium', 'strong', 'dramatic' ), true ) ) {
+					$validated['admin_menu']['shadow_preset'] = $preset;
+				}
+			}
+
+			// Validate custom shadow values (Requirement 13.2)
+			if ( isset( $input['admin_menu']['shadow_h_offset'] ) ) {
+				$validated['admin_menu']['shadow_h_offset'] = intval( $input['admin_menu']['shadow_h_offset'] );
+			}
+
+			if ( isset( $input['admin_menu']['shadow_v_offset'] ) ) {
+				$validated['admin_menu']['shadow_v_offset'] = intval( $input['admin_menu']['shadow_v_offset'] );
+			}
+
+			if ( isset( $input['admin_menu']['shadow_blur'] ) ) {
+				$blur = absint( $input['admin_menu']['shadow_blur'] );
+				if ( $blur >= 0 && $blur <= 50 ) {
+					$validated['admin_menu']['shadow_blur'] = $blur;
+				}
+			}
+
+			if ( isset( $input['admin_menu']['shadow_spread'] ) ) {
+				$validated['admin_menu']['shadow_spread'] = intval( $input['admin_menu']['shadow_spread'] );
+			}
+
+			if ( isset( $input['admin_menu']['shadow_color'] ) ) {
+				$shadow_color = sanitize_text_field( $input['admin_menu']['shadow_color'] );
+				if ( preg_match( '/^(rgba?\([^)]+\)|#[0-9a-f]{3,8})$/i', $shadow_color ) ) {
+					$validated['admin_menu']['shadow_color'] = $shadow_color;
+				}
+			}
+
+			if ( isset( $input['admin_menu']['shadow_opacity'] ) ) {
+				$opacity = floatval( $input['admin_menu']['shadow_opacity'] );
+				if ( $opacity >= 0 && $opacity <= 1 ) {
+					$validated['admin_menu']['shadow_opacity'] = round( $opacity, 2 );
+				}
+			}
+
+			// Validate logo settings (Requirement 16.1)
+			if ( isset( $input['admin_menu']['logo_enabled'] ) ) {
+				$validated['admin_menu']['logo_enabled'] = (bool) $input['admin_menu']['logo_enabled'];
+			}
+
+			if ( isset( $input['admin_menu']['logo_url'] ) ) {
+				$validated['admin_menu']['logo_url'] = esc_url_raw( $input['admin_menu']['logo_url'] );
+			}
+
+			if ( isset( $input['admin_menu']['logo_position'] ) ) {
+				$position = sanitize_text_field( $input['admin_menu']['logo_position'] );
+				if ( in_array( $position, array( 'top', 'bottom' ), true ) ) {
+					$validated['admin_menu']['logo_position'] = $position;
+				}
+			}
+
+			if ( isset( $input['admin_menu']['logo_width'] ) ) {
+				$width = absint( $input['admin_menu']['logo_width'] );
+				if ( $width >= 20 && $width <= 200 ) {
+					$validated['admin_menu']['logo_width'] = $width;
+				}
+			}
+
+			if ( isset( $input['admin_menu']['logo_alignment'] ) ) {
+				$alignment = sanitize_text_field( $input['admin_menu']['logo_alignment'] );
+				if ( in_array( $alignment, array( 'left', 'center', 'right' ), true ) ) {
+					$validated['admin_menu']['logo_alignment'] = $alignment;
+				}
+			}
+		}
+
+		// NEW: Validate admin_menu_submenu settings (Requirements 7.1, 8.1, 9.1, 10.1)
+		if ( isset( $input['admin_menu_submenu'] ) ) {
+			$validated['admin_menu_submenu'] = array();
+
+			// Validate bg_color
+			if ( isset( $input['admin_menu_submenu']['bg_color'] ) ) {
+				$color = sanitize_hex_color( $input['admin_menu_submenu']['bg_color'] );
+				if ( $color ) {
+					$validated['admin_menu_submenu']['bg_color'] = $color;
+				}
+			}
+
+			// Validate border_radius_mode
+			if ( isset( $input['admin_menu_submenu']['border_radius_mode'] ) ) {
+				$mode = sanitize_text_field( $input['admin_menu_submenu']['border_radius_mode'] );
+				if ( in_array( $mode, array( 'uniform', 'individual' ), true ) ) {
+					$validated['admin_menu_submenu']['border_radius_mode'] = $mode;
+				}
+			}
+
+			// Validate border_radius values (0-20px for submenu)
+			$radius_fields = array( 'border_radius', 'border_radius_tl', 'border_radius_tr', 'border_radius_bl', 'border_radius_br' );
+			foreach ( $radius_fields as $field ) {
+				if ( isset( $input['admin_menu_submenu'][ $field ] ) ) {
+					$radius = absint( $input['admin_menu_submenu'][ $field ] );
+					if ( $radius >= 0 && $radius <= 20 ) {
+						$validated['admin_menu_submenu'][ $field ] = $radius;
+					}
+				}
+			}
+
+			// Validate spacing (0-50px)
+			if ( isset( $input['admin_menu_submenu']['spacing'] ) ) {
+				$spacing = absint( $input['admin_menu_submenu']['spacing'] );
+				if ( $spacing >= 0 && $spacing <= 50 ) {
+					$validated['admin_menu_submenu']['spacing'] = $spacing;
+				}
+			}
+
+			// Validate font_size (10-24px)
+			if ( isset( $input['admin_menu_submenu']['font_size'] ) ) {
+				$font_size = absint( $input['admin_menu_submenu']['font_size'] );
+				if ( $font_size >= 10 && $font_size <= 24 ) {
+					$validated['admin_menu_submenu']['font_size'] = $font_size;
+				}
+			}
+
+			// Validate text_color
+			if ( isset( $input['admin_menu_submenu']['text_color'] ) ) {
+				$color = sanitize_hex_color( $input['admin_menu_submenu']['text_color'] );
+				if ( $color ) {
+					$validated['admin_menu_submenu']['text_color'] = $color;
+				}
+			}
+
+			// Validate line_height (1.0-3.0)
+			if ( isset( $input['admin_menu_submenu']['line_height'] ) ) {
+				$line_height = floatval( $input['admin_menu_submenu']['line_height'] );
+				if ( $line_height >= 1.0 && $line_height <= 3.0 ) {
+					$validated['admin_menu_submenu']['line_height'] = round( $line_height, 1 );
+				}
+			}
+
+			// Validate letter_spacing (-2 to 5px)
+			if ( isset( $input['admin_menu_submenu']['letter_spacing'] ) ) {
+				$letter_spacing = intval( $input['admin_menu_submenu']['letter_spacing'] );
+				if ( $letter_spacing >= -2 && $letter_spacing <= 5 ) {
+					$validated['admin_menu_submenu']['letter_spacing'] = $letter_spacing;
+				}
+			}
+
+			// Validate text_transform
+			if ( isset( $input['admin_menu_submenu']['text_transform'] ) ) {
+				$text_transform = strtolower( sanitize_text_field( $input['admin_menu_submenu']['text_transform'] ) );
+				if ( in_array( $text_transform, array( 'none', 'uppercase', 'lowercase', 'capitalize' ), true ) ) {
+					$validated['admin_menu_submenu']['text_transform'] = $text_transform;
+				}
+			}
+
+			// Validate font_family
+			if ( isset( $input['admin_menu_submenu']['font_family'] ) ) {
+				$validated['admin_menu_submenu']['font_family'] = sanitize_text_field( $input['admin_menu_submenu']['font_family'] );
 			}
 		}
 
@@ -699,9 +1132,14 @@ class MASE_Settings {
 				}
 			}
 
-			// NEW: Validate font_family - Requirement 3.3.
+			// NEW: Validate font_family - Requirement 3.3, 11.1.
 			if ( isset( $element_data['font_family'] ) ) {
 				$validated[ $element ]['font_family'] = sanitize_text_field( $element_data['font_family'] );
+			}
+
+			// NEW: Validate google_font_url for admin_menu - Requirement 11.2.
+			if ( 'admin_menu' === $element && isset( $element_data['google_font_url'] ) ) {
+				$validated[ $element ]['google_font_url'] = esc_url_raw( $element_data['google_font_url'] );
 			}
 		}
 
@@ -3241,5 +3679,161 @@ class MASE_Settings {
 			'success'      => empty( $missing_keys ),
 			'missing_keys' => $missing_keys,
 		);
+	}
+
+	/**
+	 * Validation Helper Methods
+	 * Requirement 22.1: Centralized validation and sanitization functions.
+	 */
+
+	/**
+	 * Validate and sanitize numeric value within range.
+	 *
+	 * @param mixed $value Value to validate.
+	 * @param int   $min   Minimum allowed value.
+	 * @param int   $max   Maximum allowed value.
+	 * @param int   $default Default value if validation fails.
+	 * @return int Validated integer value.
+	 */
+	private function validate_numeric_range( $value, $min, $max, $default ) {
+		$value = absint( $value );
+		if ( $value < $min || $value > $max ) {
+			return $default;
+		}
+		return $value;
+	}
+
+	/**
+	 * Validate and sanitize float value within range.
+	 *
+	 * @param mixed $value Value to validate.
+	 * @param float $min   Minimum allowed value.
+	 * @param float $max   Maximum allowed value.
+	 * @param float $default Default value if validation fails.
+	 * @param int   $decimals Number of decimal places.
+	 * @return float Validated float value.
+	 */
+	private function validate_float_range( $value, $min, $max, $default, $decimals = 2 ) {
+		$value = floatval( $value );
+		if ( $value < $min || $value > $max ) {
+			return $default;
+		}
+		return round( $value, $decimals );
+	}
+
+	/**
+	 * Validate and sanitize color value (hex or rgba).
+	 *
+	 * @param string $value Color value to validate.
+	 * @param string $default Default color if validation fails.
+	 * @return string Validated color value.
+	 */
+	private function validate_color( $value, $default = '#000000' ) {
+		// Try hex color first.
+		$hex = sanitize_hex_color( $value );
+		if ( $hex ) {
+			return $hex;
+		}
+
+		// Try rgba format.
+		$value = sanitize_text_field( $value );
+		if ( preg_match( '/^rgba?\([^)]+\)$/i', $value ) ) {
+			return $value;
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Validate enum value against allowed values.
+	 *
+	 * @param string $value Value to validate.
+	 * @param array  $allowed Allowed values.
+	 * @param string $default Default value if validation fails.
+	 * @return string Validated enum value.
+	 */
+	private function validate_enum( $value, $allowed, $default ) {
+		$value = sanitize_text_field( $value );
+		if ( ! in_array( $value, $allowed, true ) ) {
+			return $default;
+		}
+		return $value;
+	}
+
+	/**
+	 * Validate and sanitize URL.
+	 *
+	 * @param string $value URL to validate.
+	 * @param string $default Default URL if validation fails.
+	 * @return string Validated URL.
+	 */
+	private function validate_url( $value, $default = '' ) {
+		$url = esc_url_raw( $value );
+		if ( empty( $url ) && ! empty( $value ) ) {
+			return $default;
+		}
+		return $url;
+	}
+
+	/**
+	 * Validate boolean value.
+	 *
+	 * @param mixed $value Value to validate.
+	 * @return bool Validated boolean value.
+	 */
+	private function validate_boolean( $value ) {
+		return (bool) $value;
+	}
+
+	/**
+	 * Sanitize text field with length limit.
+	 *
+	 * @param string $value Value to sanitize.
+	 * @param int    $max_length Maximum allowed length.
+	 * @return string Sanitized text value.
+	 */
+	private function sanitize_text_limited( $value, $max_length = 255 ) {
+		$value = sanitize_text_field( $value );
+		if ( strlen( $value ) > $max_length ) {
+			$value = substr( $value, 0, $max_length );
+		}
+		return $value;
+	}
+
+	/**
+	 * Validate gradient colors array.
+	 *
+	 * @param array $colors Gradient colors array.
+	 * @return array Validated gradient colors.
+	 */
+	private function validate_gradient_colors( $colors ) {
+		if ( ! is_array( $colors ) ) {
+			return array();
+		}
+
+		$validated = array();
+		foreach ( $colors as $stop ) {
+			if ( ! isset( $stop['color'] ) || ! isset( $stop['position'] ) ) {
+				continue;
+			}
+
+			$color = $this->validate_color( $stop['color'] );
+			$position = $this->validate_numeric_range( $stop['position'], 0, 100, 0 );
+
+			$validated[] = array(
+				'color'    => $color,
+				'position' => $position,
+			);
+		}
+
+		// Ensure at least 2 color stops.
+		if ( count( $validated ) < 2 ) {
+			return array(
+				array( 'color' => '#23282d', 'position' => 0 ),
+				array( 'color' => '#32373c', 'position' => 100 ),
+			);
+		}
+
+		return $validated;
 	}
 }

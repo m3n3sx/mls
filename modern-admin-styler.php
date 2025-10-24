@@ -193,8 +193,29 @@ function mase_init() {
 	add_action( 'wp_ajax_mase_report_device_capabilities', array( $mobile_optimizer, 'handle_report_device_capabilities' ) );
 }
 
+/**
+ * Initialize REST API endpoints.
+ *
+ * Registers REST API routes for modern architecture.
+ * Requirement 8.1: Register /mase/v1/settings, /templates, /palettes endpoints.
+ *
+ * @since 1.3.0
+ * @return void
+ */
+function mase_init_rest_api() {
+	// Instantiate core classes.
+	$settings = new MASE_Settings();
+	$cache    = new MASE_CacheManager();
+	
+	// Initialize REST API controller.
+	$rest_api = new MASE_REST_API( $settings, $cache );
+}
+
 // Hook into plugins_loaded to initialize the plugin.
 add_action( 'plugins_loaded', 'mase_init' );
+
+// Hook into plugins_loaded to initialize REST API (runs for all contexts).
+add_action( 'plugins_loaded', 'mase_init_rest_api' );
 
 /**
  * Cron callback for auto palette switching.

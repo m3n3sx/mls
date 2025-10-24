@@ -34,11 +34,20 @@ class MASE_CSS_Generator {
 		try {
 			$css = '';
 
+			// NEW: Generate Google Fonts @import (Requirement 8.5).
+			$css .= $this->generate_google_fonts_import( $settings );
+
 			// Generate palette CSS variables (Requirement 4.3).
 			$css .= $this->generate_palette_css( $settings );
 
 			// Generate admin bar CSS.
 			$css .= $this->generate_admin_bar_css( $settings );
+
+			// Generate floating layout fixes (Requirements 13.1, 13.2, 13.3).
+			$css .= $this->generate_floating_layout_fixes( $settings );
+
+			// Generate admin bar submenu CSS (Requirement 6.1, 6.2, 6.3).
+			$css .= $this->generate_submenu_css( $settings );
 
 			// Generate admin menu CSS.
 			$css .= $this->generate_admin_menu_css( $settings );
@@ -109,13 +118,50 @@ class MASE_CSS_Generator {
 			$bg_color   = isset( $admin_bar['bg_color'] ) ? $admin_bar['bg_color'] : '#23282d';
 			$text_color = isset( $admin_bar['text_color'] ) ? $admin_bar['text_color'] : '#ffffff';
 			$height     = isset( $admin_bar['height'] ) ? absint( $admin_bar['height'] ) : 32;
+			$bg_type    = isset( $admin_bar['bg_type'] ) ? $admin_bar['bg_type'] : 'solid';
 
 			$css = '';
 
-			// Admin bar background and height.
+			// Admin bar background, height, and flexbox alignment (Requirements 1.1, 1.2, 1.3, 5.1, 5.2, 5.3).
 			$css .= 'body.wp-admin #wpadminbar {';
-			$css .= 'background-color: ' . $bg_color . ' !important;';
+			
+			// Apply background based on type (Requirement 5.5).
+			if ( $bg_type === 'gradient' ) {
+				$css .= $this->generate_gradient_background( $admin_bar );
+			} else {
+				$css .= 'background-color: ' . $bg_color . ' !important;';
+			}
+			
 			$css .= 'height: ' . $height . 'px !important;';
+			// Add flexbox for vertical alignment of text and icons.
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= '}';
+
+			// CRITICAL: Fix #wp-toolbar to match admin bar height and alignment
+			// justify-content: space-between pushes left items to left, right items to right
+			$css .= 'body.wp-admin #wpadminbar #wp-toolbar {';
+			$css .= 'height: ' . $height . 'px !important;';
+			$css .= 'width: 100% !important;';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'justify-content: space-between !important;';
+			$css .= '}';
+
+			// Ensure admin bar items maintain flexbox alignment (Requirements 3.1, 3.2, 3.3).
+			$css .= 'body.wp-admin #wpadminbar .ab-item,';
+			$css .= 'body.wp-admin #wpadminbar a.ab-item {';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'height: 100% !important;';
+			$css .= '}';
+
+			// Ensure icons align with text on same baseline (Requirements 1.1, 1.2, 1.3).
+			$css .= 'body.wp-admin #wpadminbar .ab-icon,';
+			$css .= 'body.wp-admin #wpadminbar .dashicons {';
+			$css .= 'display: inline-flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'vertical-align: middle !important;';
 			$css .= '}';
 
 			// Admin bar text color.
@@ -125,6 +171,21 @@ class MASE_CSS_Generator {
 			$css .= 'body.wp-admin #wpadminbar > #wp-toolbar span.noticon {';
 			$css .= 'color: ' . $text_color . ' !important;';
 			$css .= '}';
+
+			// Icon color synchronization (Requirements 2.1, 2.2).
+			$css .= $this->generate_icon_color_css( $admin_bar );
+
+			// Width (Requirements 11.1, 11.2).
+			$css .= $this->generate_width_css( $admin_bar );
+
+			// Border radius (Requirements 9.1, 9.2).
+			$css .= $this->generate_border_radius_css( $admin_bar );
+
+			// Shadow (Requirements 10.1, 10.2, 10.3).
+			$css .= $this->generate_shadow_css( $admin_bar );
+
+			// Floating margins (Requirements 12.1, 12.2).
+			$css .= $this->generate_floating_css( $admin_bar, $settings );
 
 			// Adjust page margin for admin bar height - only if height is different from default
 			if ( $height !== 32 ) {
@@ -138,10 +199,581 @@ class MASE_CSS_Generator {
 			$css .= 'top: ' . $height . 'px !important;';
 			$css .= '}';
 
+			// CRITICAL FIX: WordPress admin bar specific elements
+			// Fix for user profile menu and other admin bar items
+			$css .= 'body.wp-admin #wpadminbar #wp-admin-bar-my-account,';
+			$css .= 'body.wp-admin #wpadminbar #wp-admin-bar-my-account > .ab-item {';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'height: ' . $height . 'px !important;';
+			$css .= '}';
+
+			// Fix for top-secondary (right side) items
+			$css .= 'body.wp-admin #wpadminbar #wp-admin-bar-top-secondary {';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'height: ' . $height . 'px !important;';
+			$css .= '}';
+
+			// Fix for all top-level menu items
+			$css .= 'body.wp-admin #wpadminbar .ab-top-menu > li,';
+			$css .= 'body.wp-admin #wpadminbar .ab-top-menu > li > .ab-item {';
+			$css .= 'display: flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'height: ' . $height . 'px !important;';
+			$css .= '}';
+
+			// Fix for user avatar
+			$css .= 'body.wp-admin #wpadminbar .avatar {';
+			$css .= 'display: inline-flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'vertical-align: middle !important;';
+			$css .= '}';
+
+			// Fix for display name
+			$css .= 'body.wp-admin #wpadminbar .display-name {';
+			$css .= 'display: inline-flex !important;';
+			$css .= 'align-items: center !important;';
+			$css .= 'height: auto !important;';
+			$css .= 'line-height: normal !important;';
+			$css .= '}';
+
 			return $css;
 
 		} catch ( Exception $e ) {
 			error_log( sprintf( 'MASE: Admin bar CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate gradient background CSS for admin bar.
+	 * Supports linear, radial, and conic gradients (Requirements 5.1, 5.2, 5.3).
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @return string Gradient background CSS.
+	 */
+	private function generate_gradient_background( $admin_bar ) {
+		try {
+			$gradient_type = isset( $admin_bar['gradient_type'] ) ? $admin_bar['gradient_type'] : 'linear';
+			$gradient_angle = isset( $admin_bar['gradient_angle'] ) ? absint( $admin_bar['gradient_angle'] ) : 90;
+			$gradient_colors = isset( $admin_bar['gradient_colors'] ) ? $admin_bar['gradient_colors'] : array();
+
+			// Ensure we have at least 2 color stops.
+			if ( count( $gradient_colors ) < 2 ) {
+				$gradient_colors = array(
+					array( 'color' => '#23282d', 'position' => 0 ),
+					array( 'color' => '#32373c', 'position' => 100 ),
+				);
+			}
+
+			// Build color stops string.
+			$color_stops = array();
+			foreach ( $gradient_colors as $stop ) {
+				$color = isset( $stop['color'] ) ? $stop['color'] : '#23282d';
+				$position = isset( $stop['position'] ) ? absint( $stop['position'] ) : 0;
+				$color_stops[] = $color . ' ' . $position . '%';
+			}
+			$color_stops_str = implode( ', ', $color_stops );
+
+			$css = '';
+
+			// Generate gradient based on type (Requirements 5.1, 5.2).
+			switch ( $gradient_type ) {
+				case 'linear':
+					$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+
+				case 'radial':
+					$css .= 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
+					break;
+
+				case 'conic':
+					$css .= 'background: conic-gradient(from ' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+
+				default:
+					// Fallback to linear gradient.
+					$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Gradient background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate icon color CSS for admin bar.
+	 * Synchronizes icon colors with text color (Requirements 2.1, 2.2).
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @return string Icon color CSS.
+	 */
+	private function generate_icon_color_css( $admin_bar ) {
+		try {
+			$text_color = isset( $admin_bar['text_color'] ) ? $admin_bar['text_color'] : '#ffffff';
+			$hover_color = isset( $admin_bar['hover_color'] ) ? $admin_bar['hover_color'] : '#00b9eb';
+
+			$css = '';
+
+			// Apply text color to all icon types (Requirement 2.1).
+			// Target dashicons, SVG elements, and icon containers.
+			$css .= 'body.wp-admin #wpadminbar .ab-icon,';
+			$css .= 'body.wp-admin #wpadminbar .dashicons,';
+			$css .= 'body.wp-admin #wpadminbar .ab-icon:before,';
+			$css .= 'body.wp-admin #wpadminbar .dashicons-before:before {';
+			$css .= 'color: ' . $text_color . ' !important;';
+			$css .= '}';
+
+			// Apply color to SVG elements (Requirement 2.1).
+			$css .= 'body.wp-admin #wpadminbar svg,';
+			$css .= 'body.wp-admin #wpadminbar .ab-icon svg {';
+			$css .= 'fill: ' . $text_color . ' !important;';
+			$css .= '}';
+
+			// Apply color to SVG paths and shapes.
+			$css .= 'body.wp-admin #wpadminbar svg path,';
+			$css .= 'body.wp-admin #wpadminbar svg circle,';
+			$css .= 'body.wp-admin #wpadminbar svg rect,';
+			$css .= 'body.wp-admin #wpadminbar svg polygon {';
+			$css .= 'fill: ' . $text_color . ' !important;';
+			$css .= '}';
+
+			// Apply color to SVG strokes.
+			$css .= 'body.wp-admin #wpadminbar svg[stroke],';
+			$css .= 'body.wp-admin #wpadminbar svg path[stroke] {';
+			$css .= 'stroke: ' . $text_color . ' !important;';
+			$css .= '}';
+
+			// Hover states for icons (Requirement 2.2).
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover .dashicons,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon:before,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover .dashicons-before:before {';
+			$css .= 'color: ' . $hover_color . ' !important;';
+			$css .= '}';
+
+			// Hover states for SVG elements.
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover .ab-icon svg {';
+			$css .= 'fill: ' . $hover_color . ' !important;';
+			$css .= '}';
+
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg path,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg circle,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg rect,';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg polygon {';
+			$css .= 'fill: ' . $hover_color . ' !important;';
+			$css .= '}';
+
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg[stroke],';
+			$css .= 'body.wp-admin #wpadminbar .ab-item:hover svg path[stroke] {';
+			$css .= 'stroke: ' . $hover_color . ' !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Icon color CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate border radius CSS for admin bar.
+	 * Handles both uniform and individual corner radius modes (Requirements 9.1, 9.2).
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @return string Border radius CSS.
+	 */
+	private function generate_border_radius_css( $admin_bar ) {
+		try {
+			$mode = isset( $admin_bar['border_radius_mode'] ) ? $admin_bar['border_radius_mode'] : 'uniform';
+			$css = '';
+
+			if ( $mode === 'individual' ) {
+				// Individual corner radii (Requirement 9.2).
+				$tl = isset( $admin_bar['border_radius_tl'] ) ? absint( $admin_bar['border_radius_tl'] ) : 0;
+				$tr = isset( $admin_bar['border_radius_tr'] ) ? absint( $admin_bar['border_radius_tr'] ) : 0;
+				$br = isset( $admin_bar['border_radius_br'] ) ? absint( $admin_bar['border_radius_br'] ) : 0;
+				$bl = isset( $admin_bar['border_radius_bl'] ) ? absint( $admin_bar['border_radius_bl'] ) : 0;
+
+				// Only generate CSS if at least one corner has a radius.
+				if ( $tl > 0 || $tr > 0 || $br > 0 || $bl > 0 ) {
+					$css .= 'body.wp-admin #wpadminbar {';
+					$css .= sprintf(
+						'border-radius: %dpx %dpx %dpx %dpx !important;',
+						$tl,
+						$tr,
+						$br,
+						$bl
+					);
+					$css .= '}';
+				}
+			} else {
+				// Uniform border radius (Requirement 9.1).
+				$radius = isset( $admin_bar['border_radius'] ) ? absint( $admin_bar['border_radius'] ) : 0;
+
+				// Only generate CSS if radius is greater than 0.
+				if ( $radius > 0 ) {
+					$css .= 'body.wp-admin #wpadminbar {';
+					$css .= 'border-radius: ' . $radius . 'px !important;';
+					$css .= '}';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Border radius CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate shadow CSS for admin bar.
+	 * Supports preset and custom shadow modes (Requirements 10.1, 10.2, 10.3).
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @return string Shadow CSS.
+	 */
+	private function generate_shadow_css( $admin_bar ) {
+		try {
+			$mode = isset( $admin_bar['shadow_mode'] ) ? $admin_bar['shadow_mode'] : 'preset';
+			$css = '';
+
+			if ( $mode === 'custom' ) {
+				// Custom shadow with individual values (Requirement 10.2, 10.3).
+				$h_offset = isset( $admin_bar['shadow_h_offset'] ) ? intval( $admin_bar['shadow_h_offset'] ) : 0;
+				$v_offset = isset( $admin_bar['shadow_v_offset'] ) ? intval( $admin_bar['shadow_v_offset'] ) : 4;
+				$blur = isset( $admin_bar['shadow_blur'] ) ? absint( $admin_bar['shadow_blur'] ) : 8;
+				$spread = isset( $admin_bar['shadow_spread'] ) ? intval( $admin_bar['shadow_spread'] ) : 0;
+				$color = isset( $admin_bar['shadow_color'] ) ? $admin_bar['shadow_color'] : '#000000';
+				$opacity = isset( $admin_bar['shadow_opacity'] ) ? floatval( $admin_bar['shadow_opacity'] ) : 0.15;
+
+				// Ensure opacity is within valid range (0-1).
+				$opacity = max( 0, min( 1, $opacity ) );
+
+				// Convert hex color to RGB and combine with opacity (Requirement 10.3).
+				$rgb = $this->hex_to_rgb( $color );
+				$shadow_color = sprintf( 'rgba(%d, %d, %d, %.2f)', $rgb['r'], $rgb['g'], $rgb['b'], $opacity );
+
+				// Build custom shadow value.
+				$shadow_value = sprintf(
+					'%dpx %dpx %dpx %dpx %s',
+					$h_offset,
+					$v_offset,
+					$blur,
+					$spread,
+					$shadow_color
+				);
+
+				$css .= 'body.wp-admin #wpadminbar {';
+				$css .= 'box-shadow: ' . $shadow_value . ' !important;';
+				$css .= '}';
+
+			} else {
+				// Preset shadow mode (Requirement 10.1).
+				$preset = isset( $admin_bar['shadow_preset'] ) ? $admin_bar['shadow_preset'] : 'none';
+
+				// Map presets to box-shadow values (Requirement 10.1).
+				$shadow_presets = array(
+					'none'     => 'none',
+					'subtle'   => '0 2px 4px rgba(0, 0, 0, 0.1)',
+					'medium'   => '0 4px 8px rgba(0, 0, 0, 0.15)',
+					'strong'   => '0 8px 16px rgba(0, 0, 0, 0.2)',
+					'dramatic' => '0 12px 24px rgba(0, 0, 0, 0.3)',
+				);
+
+				$shadow_value = isset( $shadow_presets[ $preset ] ) ? $shadow_presets[ $preset ] : 'none';
+
+				// Only generate CSS if shadow is not 'none'.
+				if ( $shadow_value !== 'none' ) {
+					$css .= 'body.wp-admin #wpadminbar {';
+					$css .= 'box-shadow: ' . $shadow_value . ' !important;';
+					$css .= '}';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Shadow CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate width CSS for admin bar.
+	 * Supports percentage and pixel widths with horizontal centering (Requirements 11.1, 11.2).
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @return string Width CSS.
+	 */
+	private function generate_width_css( $admin_bar ) {
+		try {
+			$width_unit = isset( $admin_bar['width_unit'] ) ? $admin_bar['width_unit'] : 'percent';
+			$width_value = isset( $admin_bar['width_value'] ) ? absint( $admin_bar['width_value'] ) : 100;
+			$css = '';
+
+			// Only generate CSS if width is not 100% (default full width).
+			if ( ! ( $width_unit === 'percent' && $width_value === 100 ) ) {
+				$css .= 'body.wp-admin #wpadminbar {';
+				
+				// Apply width based on unit (Requirement 11.1, 11.2).
+				if ( $width_unit === 'percent' ) {
+					$css .= 'width: ' . $width_value . '% !important;';
+				} else {
+					// Pixels
+					$css .= 'width: ' . $width_value . 'px !important;';
+					$css .= 'max-width: 100% !important;'; // Prevent overflow on smaller screens
+				}
+				
+				// Center admin bar horizontally when width < 100% (Requirement 11.2).
+				$css .= 'left: 50% !important;';
+				$css .= 'transform: translateX(-50%) !important;';
+				$css .= 'right: auto !important;';
+				
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Width CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate floating margin CSS for admin bar.
+	 * Handles both uniform and individual margin modes (Requirements 12.1, 12.2).
+	 * Only applies when floating mode is enabled in visual_effects.
+	 *
+	 * @param array $admin_bar Admin bar settings array.
+	 * @param array $settings Full settings array to check floating mode.
+	 * @return string Floating margin CSS.
+	 */
+	private function generate_floating_css( $admin_bar, $settings ) {
+		try {
+			// Check if floating mode is enabled (Requirement 12.1).
+			$floating_enabled = isset( $settings['visual_effects']['admin_bar']['floating'] ) ? 
+				$settings['visual_effects']['admin_bar']['floating'] : false;
+
+			// Only generate CSS if floating mode is enabled.
+			if ( ! $floating_enabled ) {
+				return '';
+			}
+
+			$mode = isset( $admin_bar['floating_margin_mode'] ) ? $admin_bar['floating_margin_mode'] : 'uniform';
+			$css = '';
+
+			$css .= 'body.wp-admin #wpadminbar {';
+			$css .= 'position: fixed !important;';
+
+			if ( $mode === 'individual' ) {
+				// Individual margins (Requirement 12.2).
+				$top = isset( $admin_bar['floating_margin_top'] ) ? absint( $admin_bar['floating_margin_top'] ) : 8;
+				$right = isset( $admin_bar['floating_margin_right'] ) ? absint( $admin_bar['floating_margin_right'] ) : 8;
+				$bottom = isset( $admin_bar['floating_margin_bottom'] ) ? absint( $admin_bar['floating_margin_bottom'] ) : 8;
+				$left = isset( $admin_bar['floating_margin_left'] ) ? absint( $admin_bar['floating_margin_left'] ) : 8;
+
+				$css .= sprintf(
+					'top: %dpx !important; right: %dpx !important; bottom: auto !important; left: %dpx !important;',
+					$top,
+					$right,
+					$left
+				);
+				
+				// Calculate width accounting for left and right margins.
+				$css .= sprintf( 'width: calc(100%% - %dpx) !important;', $left + $right );
+
+			} else {
+				// Uniform margin (Requirement 12.1).
+				$margin = isset( $admin_bar['floating_margin'] ) ? absint( $admin_bar['floating_margin'] ) : 8;
+
+				$css .= sprintf(
+					'top: %dpx !important; right: %dpx !important; bottom: auto !important; left: %dpx !important;',
+					$margin,
+					$margin,
+					$margin
+				);
+				
+				// Calculate width accounting for margins on both sides.
+				$css .= sprintf( 'width: calc(100%% - %dpx) !important;', $margin * 2 );
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Floating margin CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate floating layout fix CSS for admin bar.
+	 * Prevents admin bar from overlapping side menu by applying padding-top to #adminmenuwrap.
+	 * Requirements 13.1, 13.2, 13.3.
+	 *
+	 * @param array $settings Full settings array.
+	 * @return string Floating layout fix CSS.
+	 */
+	private function generate_floating_layout_fixes( $settings ) {
+		try {
+			// Check if floating mode is enabled (Requirement 13.1).
+			$floating_enabled = isset( $settings['visual_effects']['admin_bar']['floating'] ) ? 
+				$settings['visual_effects']['admin_bar']['floating'] : false;
+
+			// Only generate CSS if floating mode is enabled.
+			if ( ! $floating_enabled ) {
+				return '';
+			}
+
+			$admin_bar = isset( $settings['admin_bar'] ) ? $settings['admin_bar'] : array();
+			
+			// Get admin bar height (Requirement 13.2).
+			$height = isset( $admin_bar['height'] ) ? absint( $admin_bar['height'] ) : 32;
+			
+			// Get floating margin mode and values (Requirement 13.2).
+			$mode = isset( $admin_bar['floating_margin_mode'] ) ? $admin_bar['floating_margin_mode'] : 'uniform';
+			
+			// Calculate top margin based on mode.
+			if ( $mode === 'individual' ) {
+				$top_margin = isset( $admin_bar['floating_margin_top'] ) ? absint( $admin_bar['floating_margin_top'] ) : 8;
+			} else {
+				$top_margin = isset( $admin_bar['floating_margin'] ) ? absint( $admin_bar['floating_margin'] ) : 8;
+			}
+			
+			// Calculate total offset (height + top margin) (Requirement 13.2).
+			$total_offset = $height + $top_margin;
+			
+			$css = '';
+			
+			// Apply padding-top to side menu to prevent overlap (Requirement 13.3).
+			$css .= 'body.wp-admin #adminmenuwrap {';
+			$css .= 'padding-top: ' . $total_offset . 'px !important;';
+			$css .= '}';
+			
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Floating layout fix CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Convert hex color to RGB array.
+	 *
+	 * @param string $hex Hex color code (with or without #).
+	 * @return array RGB values array with keys 'r', 'g', 'b'.
+	 */
+	private function hex_to_rgb( $hex ) {
+		// Remove # if present.
+		$hex = ltrim( $hex, '#' );
+
+		// Handle 3-character hex codes.
+		if ( strlen( $hex ) === 3 ) {
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+		}
+
+		// Convert to RGB.
+		return array(
+			'r' => hexdec( substr( $hex, 0, 2 ) ),
+			'g' => hexdec( substr( $hex, 2, 2 ) ),
+			'b' => hexdec( substr( $hex, 4, 2 ) ),
+		);
+	}
+
+	/**
+	 * Generate submenu CSS for admin bar.
+	 * Applies background color, border radius, and spacing to submenus (Requirements 6.1, 6.2, 6.3).
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Submenu CSS.
+	 */
+	private function generate_submenu_css( $settings ) {
+		try {
+			$submenu = isset( $settings['admin_bar_submenu'] ) ? $settings['admin_bar_submenu'] : array();
+
+			// Get submenu settings with defaults matching WordPress styles.
+			$bg_color      = isset( $submenu['bg_color'] ) ? $submenu['bg_color'] : '#32373c';
+			$border_radius = isset( $submenu['border_radius'] ) ? absint( $submenu['border_radius'] ) : 0;
+			$spacing       = isset( $submenu['spacing'] ) ? absint( $submenu['spacing'] ) : 0;
+
+			$css = '';
+
+			// Target submenu wrapper and submenu elements (Requirement 6.1, 6.2, 6.3).
+			$css .= 'body.wp-admin #wpadminbar .ab-sub-wrapper,';
+			$css .= 'body.wp-admin #wpadminbar .ab-submenu {';
+			
+			// Apply background color (Requirement 6.1).
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+			
+			// Apply border radius (Requirement 6.2).
+			if ( $border_radius > 0 ) {
+				$css .= 'border-radius: ' . $border_radius . 'px !important;';
+			}
+			
+			$css .= '}';
+
+			// Apply spacing from admin bar (Requirement 6.3).
+			if ( $spacing > 0 ) {
+				$css .= 'body.wp-admin #wpadminbar .ab-sub-wrapper {';
+				$css .= 'margin-top: ' . $spacing . 'px !important;';
+				$css .= '}';
+			}
+
+			// Ensure submenu items inherit background.
+			$css .= 'body.wp-admin #wpadminbar .ab-submenu .ab-item {';
+			$css .= 'background-color: transparent !important;';
+			$css .= '}';
+
+			// Submenu item hover state.
+			$css .= 'body.wp-admin #wpadminbar .ab-submenu .ab-item:hover {';
+			$css .= 'background-color: rgba(255, 255, 255, 0.1) !important;';
+			$css .= '}';
+
+			// NEW: Submenu typography (Requirement 7.1, 7.2, 7.3, 7.4, 7.5, 8.5).
+			$css .= 'body.wp-admin #wpadminbar .ab-submenu .ab-item,';
+			$css .= 'body.wp-admin #wpadminbar .ab-submenu a.ab-item {';
+			
+			if ( isset( $submenu['font_size'] ) ) {
+				$css .= 'font-size: ' . absint( $submenu['font_size'] ) . 'px !important;';
+			}
+			if ( isset( $submenu['text_color'] ) ) {
+				$css .= 'color: ' . esc_attr( $submenu['text_color'] ) . ' !important;';
+			}
+			if ( isset( $submenu['line_height'] ) ) {
+				$css .= 'line-height: ' . floatval( $submenu['line_height'] ) . ' !important;';
+			}
+			if ( isset( $submenu['letter_spacing'] ) ) {
+				$css .= 'letter-spacing: ' . intval( $submenu['letter_spacing'] ) . 'px !important;';
+			}
+			if ( isset( $submenu['text_transform'] ) ) {
+				$css .= 'text-transform: ' . esc_attr( $submenu['text_transform'] ) . ' !important;';
+			}
+			// Font family support (Requirement 8.5).
+			if ( isset( $submenu['font_family'] ) && $submenu['font_family'] !== 'system' ) {
+				$font_family = $this->get_font_family_css( $submenu['font_family'] );
+				if ( $font_family ) {
+					$css .= 'font-family: ' . $font_family . ' !important;';
+				}
+			}
+			
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Submenu CSS generation failed: %s', $e->getMessage() ) );
 			return '';
 		}
 	}
@@ -162,62 +794,38 @@ class MASE_CSS_Generator {
 			$hover_text_color = isset( $admin_menu['hover_text_color'] ) ? $admin_menu['hover_text_color'] : '#00b9eb';
 			$width            = isset( $admin_menu['width'] ) ? absint( $admin_menu['width'] ) : 160;
 			$height_mode      = isset( $admin_menu['height_mode'] ) ? $admin_menu['height_mode'] : 'full';
+			$bg_type          = isset( $admin_menu['bg_type'] ) ? $admin_menu['bg_type'] : 'solid';
 
 			$css = '';
 
-			// Admin menu background.
+			// Admin menu background (solid or gradient) (Requirements 6.1, 6.2, 6.4).
 			$css .= 'body.wp-admin #adminmenu,';
 			$css .= 'body.wp-admin #adminmenuback,';
 			$css .= 'body.wp-admin #adminmenuwrap {';
-			$css .= 'background-color: ' . $bg_color . ' !important;';
+			
+			// Apply background based on type (Requirement 6.5).
+			if ( $bg_type === 'gradient' ) {
+				$css .= $this->generate_gradient_background_menu( $admin_menu );
+			} else {
+				$css .= 'background-color: ' . $bg_color . ' !important;';
+			}
+			
+			// Apply border radius (Requirements 12.1, 12.2, 12.3).
+			$css .= $this->generate_menu_border_radius_css( $admin_menu );
+			
 			$css .= '}';
 			
-			// Admin menu height mode
-			if ( 'content' === $height_mode ) {
-				$css .= 'body.wp-admin #adminmenuwrap,';
-				$css .= 'body.wp-admin #adminmenuback {';
-				$css .= 'height: auto !important;';
-				$css .= 'min-height: 100% !important;';
-				$css .= 'bottom: auto !important;';  // Override WordPress default bottom: -120px
-				$css .= '}';
-				
-				$css .= 'body.wp-admin #adminmenu {';
-				$css .= 'height: auto !important;';
-				$css .= 'min-height: 0 !important;';
-				$css .= 'position: relative !important;';
-				$css .= 'bottom: auto !important;';  // Override WordPress default
-				$css .= '}';
-			}
+			// Generate shadow CSS (Requirements 13.1, 13.2, 13.3).
+			$css .= $this->generate_menu_shadow_css( $admin_menu );
 			
-			// Only set width if different from WordPress default (160px).
-			// Don't override WordPress default to allow proper folded menu behavior.
-			if ( absint( $width ) !== 160 ) {
-				// Expanded menu width
-				$css .= 'body.wp-admin:not(.folded) #adminmenu,';
-				$css .= 'body.wp-admin:not(.folded) #adminmenuback,';
-				$css .= 'body.wp-admin:not(.folded) #adminmenuwrap {';
-				$css .= 'width: ' . $width . 'px !important;';
-				$css .= '}';
-				
-				// Folded menu width (always 36px when collapsed)
-				$css .= 'body.wp-admin.folded #adminmenu,';
-				$css .= 'body.wp-admin.folded #adminmenuback,';
-				$css .= 'body.wp-admin.folded #adminmenuwrap {';
-				$css .= 'width: 36px !important;';
-				$css .= '}';
-				
-				// Adjust content area margin for custom menu width (expanded)
-				$css .= 'body.wp-admin:not(.folded) #wpcontent,';
-				$css .= 'body.wp-admin:not(.folded) #wpfooter {';
-				$css .= 'margin-left: ' . $width . 'px !important;';
-				$css .= '}';
-				
-				// Adjust content area margin for folded menu
-				$css .= 'body.wp-admin.folded #wpcontent,';
-				$css .= 'body.wp-admin.folded #wpfooter {';
-				$css .= 'margin-left: 36px !important;';
-				$css .= '}';
-			}
+			// Generate floating margin CSS (Requirements 15.1, 15.2, 15.3).
+			$css .= $this->generate_menu_floating_css( $admin_menu, $settings );
+			
+			// Generate Height Mode CSS (Requirement 4.4).
+			$css .= $this->generate_height_mode_css( $admin_menu );
+			
+			// Generate width CSS with unit support (Requirements 14.1, 14.2, 14.3, 14.5).
+			$css .= $this->generate_menu_width_css( $admin_menu );
 			
 			// Fix folded menu icons and submenu positioning
 			// Ensure icons are visible and centered in folded mode
@@ -296,12 +904,761 @@ class MASE_CSS_Generator {
 			$css .= 'color: ' . $hover_text_color . ' !important;';
 			$css .= '}';
 
+			// Generate menu item padding CSS (Requirement 1.1, 1.4, 1.5).
+			$css .= $this->generate_menu_item_padding_css( $admin_menu );
 
+			// Generate icon color CSS (Requirement 2.1, 2.2).
+			$css .= $this->generate_menu_icon_color_css( $admin_menu );
+
+			// Generate submenu positioning CSS (Requirements 3.1, 3.2, 3.3, 3.4).
+			$css .= $this->generate_submenu_positioning_css( $admin_menu, $settings );
+
+			// Generate submenu CSS (Requirements 7.1, 7.3, 8.1, 10.1, 10.2, 10.3, 10.4, 10.5).
+			$css .= $this->generate_menu_submenu_css( $settings );
+
+			// Generate logo CSS (Requirements 16.2, 16.3, 16.4, 16.8).
+			$css .= $this->generate_menu_logo_css( $admin_menu );
 
 			return $css;
 
 		} catch ( Exception $e ) {
 			error_log( sprintf( 'MASE: Admin menu CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate menu item padding CSS.
+	 * Applies vertical and horizontal padding to menu items (Requirement 1.1, 1.4, 1.5).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Menu item padding CSS.
+	 */
+	private function generate_menu_item_padding_css( $admin_menu ) {
+		try {
+			$v_padding = isset( $admin_menu['padding_vertical'] ) ? absint( $admin_menu['padding_vertical'] ) : 10;
+			$h_padding = isset( $admin_menu['padding_horizontal'] ) ? absint( $admin_menu['padding_horizontal'] ) : 15;
+
+			$css = '';
+
+			// Apply padding to menu items (Requirement 1.1, 1.5).
+			$css .= 'body.wp-admin #adminmenu li.menu-top > a {';
+			$css .= 'padding: ' . $v_padding . 'px ' . $h_padding . 'px !important;';
+			$css .= '}';
+
+			// Also apply to submenu items for consistency.
+			$css .= 'body.wp-admin #adminmenu .wp-submenu a {';
+			$css .= 'padding: ' . $v_padding . 'px ' . $h_padding . 'px !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu item padding CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate menu icon color CSS.
+	 * Synchronizes icon colors with text color in auto mode or applies custom color (Requirements 2.1, 2.2).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Menu icon color CSS.
+	 */
+	private function generate_menu_icon_color_css( $admin_menu ) {
+		try {
+			$mode = isset( $admin_menu['icon_color_mode'] ) ? $admin_menu['icon_color_mode'] : 'auto';
+			$text_color = isset( $admin_menu['text_color'] ) ? $admin_menu['text_color'] : '#ffffff';
+			$hover_text_color = isset( $admin_menu['hover_text_color'] ) ? $admin_menu['hover_text_color'] : '#00b9eb';
+
+			$css = '';
+
+			// Determine icon color based on mode (Requirement 2.1, 2.2).
+			if ( $mode === 'auto' ) {
+				// Auto mode: sync icon color with text color (Requirement 2.1).
+				$icon_color = $text_color;
+			} else {
+				// Custom mode: use custom icon color (Requirement 2.2).
+				$icon_color = isset( $admin_menu['icon_color'] ) ? $admin_menu['icon_color'] : '#ffffff';
+			}
+
+			// Apply icon color to all icon types (Requirement 2.1, 2.2).
+			$css .= 'body.wp-admin #adminmenu .wp-menu-image,';
+			$css .= 'body.wp-admin #adminmenu .wp-menu-image:before,';
+			$css .= 'body.wp-admin #adminmenu .dashicons,';
+			$css .= 'body.wp-admin #adminmenu .dashicons-before:before {';
+			$css .= 'color: ' . $icon_color . ' !important;';
+			$css .= '}';
+
+			// Apply color to SVG elements (Requirement 2.1, 2.2).
+			$css .= 'body.wp-admin #adminmenu .wp-menu-image svg,';
+			$css .= 'body.wp-admin #adminmenu .wp-menu-image img {';
+			$css .= 'fill: ' . $icon_color . ' !important;';
+			$css .= '}';
+
+			// Hover states for icons (Requirement 2.2).
+			// In auto mode, icons follow hover text color; in custom mode, they keep custom color.
+			if ( $mode === 'auto' ) {
+				$hover_icon_color = $hover_text_color;
+			} else {
+				// In custom mode, icons maintain their custom color on hover.
+				$hover_icon_color = $icon_color;
+			}
+
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image,';
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image:before,';
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .dashicons,';
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .dashicons-before:before,';
+			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image,';
+			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image:before,';
+			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .dashicons,';
+			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image,';
+			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image:before,';
+			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .dashicons {';
+			$css .= 'color: ' . $hover_icon_color . ' !important;';
+			$css .= '}';
+
+			// Hover states for SVG elements.
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image svg,';
+			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image img,';
+			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image svg,';
+			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image img,';
+			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image svg,';
+			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image img {';
+			$css .= 'fill: ' . $hover_icon_color . ' !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu icon color CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate Height Mode CSS for admin menu.
+	 * Controls whether menu uses full height or fits to content (Requirement 4.4).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Height Mode CSS.
+	 */
+	private function generate_height_mode_css( $admin_menu ) {
+		try {
+			$height_mode = isset( $admin_menu['height_mode'] ) ? $admin_menu['height_mode'] : 'full';
+			$css = '';
+
+			if ( 'content' === $height_mode ) {
+				// Target all menu wrapper elements with maximum specificity (Requirement 4.4).
+				$css .= 'body.wp-admin #adminmenuwrap,';
+				$css .= 'body.wp-admin #adminmenuback,';
+				$css .= 'body.wp-admin #adminmenumain {';
+				$css .= 'height: auto !important;';
+				$css .= 'min-height: 0 !important;';  // Override WordPress default min-height: 100vh
+				$css .= 'bottom: auto !important;';  // Override WordPress default bottom: -120px
+				$css .= '}';
+				
+				// Ensure menu container fits content.
+				$css .= 'body.wp-admin #adminmenu {';
+				$css .= 'height: auto !important;';
+				$css .= 'min-height: 0 !important;';
+				$css .= 'position: relative !important;';
+				$css .= 'bottom: auto !important;';  // Override WordPress default
+				$css .= '}';
+				
+				// Allow natural height for menu items.
+				$css .= 'body.wp-admin #adminmenu li.menu-top {';
+				$css .= 'height: auto !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Height Mode CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate submenu positioning CSS.
+	 * Dynamically positions submenus based on menu width and spacing (Requirements 3.1, 3.2, 3.3, 3.4, 14.4).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @param array $settings Full settings array to access submenu settings.
+	 * @return string Submenu positioning CSS.
+	 */
+	private function generate_submenu_positioning_css( $admin_menu, $settings ) {
+		try {
+			// Get menu width with unit support (Requirement 3.1, 3.2, 14.4).
+			$width_unit = isset( $admin_menu['width_unit'] ) ? $admin_menu['width_unit'] : 'pixels';
+			$width_value = isset( $admin_menu['width_value'] ) ? absint( $admin_menu['width_value'] ) : 160;
+			
+			// Fallback to legacy 'width' field if new fields not set.
+			if ( ! isset( $admin_menu['width_unit'] ) && isset( $admin_menu['width'] ) ) {
+				$width_unit = 'pixels';
+				$width_value = absint( $admin_menu['width'] );
+			}
+			
+			// Determine width string based on unit (Requirement 14.4).
+			$width_str = $width_unit === 'percent' ? $width_value . '%' : $width_value . 'px';
+
+			// Get submenu spacing offset (Requirement 3.3).
+			$spacing = 0;
+			if ( isset( $settings['admin_menu_submenu']['spacing'] ) ) {
+				$spacing = absint( $settings['admin_menu_submenu']['spacing'] );
+			}
+
+			$css = '';
+
+			// Position submenus to the right of the menu at the menu width (Requirement 3.1, 3.2, 3.3, 14.4).
+			// Only apply to expanded menu, not folded menu (folded menu has its own positioning).
+			$css .= 'body.wp-admin:not(.folded) #adminmenu .wp-submenu {';
+			$css .= 'left: ' . $width_str . ' !important;';
+			
+			// Apply vertical spacing offset if set (Requirement 3.4).
+			if ( $spacing > 0 ) {
+				$css .= 'top: ' . $spacing . 'px !important;';
+			}
+			
+			$css .= '}';
+
+			// Ensure submenu is positioned absolutely for proper placement.
+			$css .= 'body.wp-admin:not(.folded) #adminmenu .wp-submenu {';
+			$css .= 'position: absolute !important;';
+			$css .= 'margin: 0 !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Submenu positioning CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate menu width CSS.
+	 * Supports both pixel and percentage units (Requirements 14.1, 14.2, 14.3).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Menu width CSS.
+	 */
+	private function generate_menu_width_css( $admin_menu ) {
+		try {
+			// Get width settings (Requirement 14.1, 14.2).
+			$width_unit = isset( $admin_menu['width_unit'] ) ? $admin_menu['width_unit'] : 'pixels';
+			$width_value = isset( $admin_menu['width_value'] ) ? absint( $admin_menu['width_value'] ) : 160;
+			
+			// Fallback to legacy 'width' field if new fields not set.
+			if ( ! isset( $admin_menu['width_unit'] ) && isset( $admin_menu['width'] ) ) {
+				$width_unit = 'pixels';
+				$width_value = absint( $admin_menu['width'] );
+			}
+
+			$css = '';
+
+			// Only generate CSS if width is not default (160px or 100%).
+			$is_default = ( $width_unit === 'pixels' && $width_value === 160 ) || 
+			              ( $width_unit === 'percent' && $width_value === 100 );
+
+			if ( ! $is_default ) {
+				// Determine width string based on unit (Requirement 14.1, 14.2).
+				if ( $width_unit === 'percent' ) {
+					$width_str = $width_value . '%';
+				} else {
+					$width_str = $width_value . 'px';
+				}
+
+				// Expanded menu width (Requirement 14.2).
+				$css .= 'body.wp-admin:not(.folded) #adminmenu,';
+				$css .= 'body.wp-admin:not(.folded) #adminmenuback,';
+				$css .= 'body.wp-admin:not(.folded) #adminmenuwrap {';
+				$css .= 'width: ' . $width_str . ' !important;';
+				$css .= '}';
+				
+				// Folded menu width (always 36px when collapsed).
+				$css .= 'body.wp-admin.folded #adminmenu,';
+				$css .= 'body.wp-admin.folded #adminmenuback,';
+				$css .= 'body.wp-admin.folded #adminmenuwrap {';
+				$css .= 'width: 36px !important;';
+				$css .= '}';
+				
+				// Adjust content area margin for custom menu width (Requirement 14.5).
+				// For percentage widths, use calc() to handle dynamic sizing.
+				if ( $width_unit === 'percent' ) {
+					$css .= 'body.wp-admin:not(.folded) #wpcontent,';
+					$css .= 'body.wp-admin:not(.folded) #wpfooter {';
+					$css .= 'margin-left: ' . $width_str . ' !important;';
+					$css .= '}';
+				} else {
+					$css .= 'body.wp-admin:not(.folded) #wpcontent,';
+					$css .= 'body.wp-admin:not(.folded) #wpfooter {';
+					$css .= 'margin-left: ' . $width_value . 'px !important;';
+					$css .= '}';
+				}
+				
+				// Adjust content area margin for folded menu.
+				$css .= 'body.wp-admin.folded #wpcontent,';
+				$css .= 'body.wp-admin.folded #wpfooter {';
+				$css .= 'margin-left: 36px !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu width CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate gradient background CSS for admin menu.
+	 * Supports linear, radial, and conic gradients (Requirements 6.1, 6.2, 6.4).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Gradient background CSS.
+	 */
+	private function generate_gradient_background_menu( $admin_menu ) {
+		try {
+			$gradient_type = isset( $admin_menu['gradient_type'] ) ? $admin_menu['gradient_type'] : 'linear';
+			$gradient_angle = isset( $admin_menu['gradient_angle'] ) ? absint( $admin_menu['gradient_angle'] ) : 90;
+			$gradient_colors = isset( $admin_menu['gradient_colors'] ) ? $admin_menu['gradient_colors'] : array();
+
+			// Ensure we have at least 2 color stops (Requirement 6.4).
+			if ( count( $gradient_colors ) < 2 ) {
+				$gradient_colors = array(
+					array( 'color' => '#23282d', 'position' => 0 ),
+					array( 'color' => '#32373c', 'position' => 100 ),
+				);
+			}
+
+			// Build color stops string.
+			$color_stops = array();
+			foreach ( $gradient_colors as $stop ) {
+				$color = isset( $stop['color'] ) ? $stop['color'] : '#23282d';
+				$position = isset( $stop['position'] ) ? absint( $stop['position'] ) : 0;
+				$color_stops[] = $color . ' ' . $position . '%';
+			}
+			$color_stops_str = implode( ', ', $color_stops );
+
+			$css = '';
+
+			// Generate gradient based on type (Requirements 6.1, 6.2).
+			switch ( $gradient_type ) {
+				case 'linear':
+					$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+
+				case 'radial':
+					$css .= 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
+					break;
+
+				case 'conic':
+					$css .= 'background: conic-gradient(from ' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+
+				default:
+					// Fallback to linear gradient.
+					$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+					break;
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu gradient background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate comprehensive submenu CSS for admin menu.
+	 * Combines background, border radius, and typography (Requirements 7.1, 7.3, 8.1, 10.1-10.5).
+	 *
+	 * @param array $settings Full settings array.
+	 * @return string Submenu CSS.
+	 */
+	private function generate_menu_submenu_css( $settings ) {
+		try {
+			$submenu = isset( $settings['admin_menu_submenu'] ) ? $settings['admin_menu_submenu'] : array();
+
+			// Get submenu background color with default matching WordPress styles (Requirement 7.1).
+			$bg_color = isset( $submenu['bg_color'] ) ? $submenu['bg_color'] : '#32373c';
+
+			$css = '';
+
+			// Target submenu wrapper and submenu elements (Requirement 7.1, 7.3, 8.1).
+			$css .= 'body.wp-admin #adminmenu .wp-submenu {';
+			
+			// Apply background color (Requirement 7.1, 7.3).
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+			
+			// Apply border radius (Requirement 8.1).
+			$css .= $this->generate_submenu_border_radius_css( $submenu );
+			
+			$css .= '}';
+
+			// Ensure submenu items inherit background.
+			$css .= 'body.wp-admin #adminmenu .wp-submenu .wp-submenu-wrap {';
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+			$css .= '}';
+
+			// Submenu item hover state with semi-transparent overlay.
+			$css .= 'body.wp-admin #adminmenu .wp-submenu a:hover,';
+			$css .= 'body.wp-admin #adminmenu .wp-submenu a:focus {';
+			$css .= 'background-color: rgba(255, 255, 255, 0.1) !important;';
+			$css .= '}';
+
+			// Generate submenu typography CSS (Requirements 10.1, 10.2, 10.3, 10.4, 10.5).
+			$css .= $this->generate_menu_submenu_typography_css( $submenu );
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu submenu CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate submenu typography CSS for admin menu.
+	 * Applies typography styles to submenu items (Requirements 10.1, 10.2, 10.3, 10.4, 10.5).
+	 *
+	 * @param array $submenu Submenu settings array.
+	 * @return string Submenu typography CSS.
+	 */
+	private function generate_menu_submenu_typography_css( $submenu ) {
+		try {
+			$css = '';
+
+			// Target submenu items (Requirements 10.1, 10.2, 10.3, 10.4, 10.5).
+			$css .= 'body.wp-admin #adminmenu .wp-submenu a,';
+			$css .= 'body.wp-admin #adminmenu .wp-submenu li {';
+
+			// Font size (Requirement 10.1).
+			if ( isset( $submenu['font_size'] ) ) {
+				$font_size = absint( $submenu['font_size'] );
+				if ( $font_size >= 10 && $font_size <= 24 ) {
+					$css .= 'font-size: ' . $font_size . 'px !important;';
+				}
+			}
+
+			// Text color (Requirement 10.2).
+			if ( isset( $submenu['text_color'] ) ) {
+				$text_color = sanitize_hex_color( $submenu['text_color'] );
+				if ( $text_color ) {
+					$css .= 'color: ' . $text_color . ' !important;';
+				}
+			}
+
+			// Line height (Requirement 10.3).
+			if ( isset( $submenu['line_height'] ) ) {
+				$line_height = floatval( $submenu['line_height'] );
+				if ( $line_height >= 1.0 && $line_height <= 3.0 ) {
+					$css .= 'line-height: ' . $line_height . ' !important;';
+				}
+			}
+
+			// Letter spacing (Requirement 10.4).
+			if ( isset( $submenu['letter_spacing'] ) ) {
+				$letter_spacing = intval( $submenu['letter_spacing'] );
+				if ( $letter_spacing >= -2 && $letter_spacing <= 5 ) {
+					$css .= 'letter-spacing: ' . $letter_spacing . 'px !important;';
+				}
+			}
+
+			// Text transform (Requirement 10.5).
+			if ( isset( $submenu['text_transform'] ) ) {
+				$text_transform = strtolower( sanitize_text_field( $submenu['text_transform'] ) );
+				$valid_transforms = array( 'none', 'uppercase', 'lowercase', 'capitalize' );
+				if ( in_array( $text_transform, $valid_transforms, true ) ) {
+					$css .= 'text-transform: ' . $text_transform . ' !important;';
+				}
+			}
+
+			// Font family (Requirement 11.1).
+			if ( isset( $submenu['font_family'] ) && $submenu['font_family'] !== 'system' ) {
+				$font_family = $this->get_font_family_css( $submenu['font_family'] );
+				if ( $font_family ) {
+					$css .= 'font-family: ' . $font_family . ' !important;';
+				}
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu submenu typography CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate border radius CSS for admin menu submenu.
+	 * Handles both uniform and individual corner radius modes (Requirement 8.1).
+	 *
+	 * @param array $submenu Submenu settings array.
+	 * @return string Border radius CSS.
+	 */
+	private function generate_submenu_border_radius_css( $submenu ) {
+		try {
+			$mode = isset( $submenu['border_radius_mode'] ) ? $submenu['border_radius_mode'] : 'uniform';
+			$css = '';
+
+			if ( $mode === 'individual' ) {
+				// Individual corner radii (Requirement 8.1).
+				$tl = isset( $submenu['border_radius_tl'] ) ? absint( $submenu['border_radius_tl'] ) : 0;
+				$tr = isset( $submenu['border_radius_tr'] ) ? absint( $submenu['border_radius_tr'] ) : 0;
+				$br = isset( $submenu['border_radius_br'] ) ? absint( $submenu['border_radius_br'] ) : 0;
+				$bl = isset( $submenu['border_radius_bl'] ) ? absint( $submenu['border_radius_bl'] ) : 0;
+
+				// Only generate CSS if at least one corner has a radius.
+				if ( $tl > 0 || $tr > 0 || $br > 0 || $bl > 0 ) {
+					$css .= sprintf(
+						'border-radius: %dpx %dpx %dpx %dpx !important;',
+						$tl,
+						$tr,
+						$br,
+						$bl
+					);
+				}
+			} else {
+				// Uniform border radius (Requirement 8.1).
+				$radius = isset( $submenu['border_radius'] ) ? absint( $submenu['border_radius'] ) : 0;
+
+				// Only generate CSS if radius is greater than 0.
+				if ( $radius > 0 ) {
+					$css .= 'border-radius: ' . $radius . 'px !important;';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Submenu border radius CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate border radius CSS for admin menu.
+	 * Handles both uniform and individual corner radius modes (Requirements 12.1, 12.2, 12.3).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Border radius CSS.
+	 */
+	private function generate_menu_border_radius_css( $admin_menu ) {
+		try {
+			$mode = isset( $admin_menu['border_radius_mode'] ) ? $admin_menu['border_radius_mode'] : 'uniform';
+			$css = '';
+
+			if ( $mode === 'individual' ) {
+				// Individual corner radii (Requirement 12.2, 12.3).
+				$tl = isset( $admin_menu['border_radius_tl'] ) ? absint( $admin_menu['border_radius_tl'] ) : 0;
+				$tr = isset( $admin_menu['border_radius_tr'] ) ? absint( $admin_menu['border_radius_tr'] ) : 0;
+				$br = isset( $admin_menu['border_radius_br'] ) ? absint( $admin_menu['border_radius_br'] ) : 0;
+				$bl = isset( $admin_menu['border_radius_bl'] ) ? absint( $admin_menu['border_radius_bl'] ) : 0;
+
+				// Only generate CSS if at least one corner has a radius.
+				if ( $tl > 0 || $tr > 0 || $br > 0 || $bl > 0 ) {
+					$css .= sprintf(
+						'border-radius: %dpx %dpx %dpx %dpx !important;',
+						$tl,
+						$tr,
+						$br,
+						$bl
+					);
+				}
+			} else {
+				// Uniform border radius (Requirement 12.1).
+				$radius = isset( $admin_menu['border_radius'] ) ? absint( $admin_menu['border_radius'] ) : 0;
+
+				// Only generate CSS if radius is greater than 0.
+				if ( $radius > 0 ) {
+					$css .= 'border-radius: ' . $radius . 'px !important;';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu border radius CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate shadow CSS for admin menu.
+	 * Supports preset and custom shadow modes (Requirements 13.1, 13.2, 13.3).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Shadow CSS.
+	 */
+	private function generate_menu_shadow_css( $admin_menu ) {
+		try {
+			$mode = isset( $admin_menu['shadow_mode'] ) ? $admin_menu['shadow_mode'] : 'preset';
+			$css = '';
+
+			if ( $mode === 'custom' ) {
+				// Custom shadow with individual values (Requirements 13.2, 13.3).
+				$h_offset = isset( $admin_menu['shadow_h_offset'] ) ? intval( $admin_menu['shadow_h_offset'] ) : 0;
+				$v_offset = isset( $admin_menu['shadow_v_offset'] ) ? intval( $admin_menu['shadow_v_offset'] ) : 4;
+				$blur = isset( $admin_menu['shadow_blur'] ) ? absint( $admin_menu['shadow_blur'] ) : 8;
+				$spread = isset( $admin_menu['shadow_spread'] ) ? intval( $admin_menu['shadow_spread'] ) : 0;
+				$color = isset( $admin_menu['shadow_color'] ) ? $admin_menu['shadow_color'] : '#000000';
+				$opacity = isset( $admin_menu['shadow_opacity'] ) ? floatval( $admin_menu['shadow_opacity'] ) : 0.15;
+
+				// Ensure opacity is within valid range (0-1).
+				$opacity = max( 0, min( 1, $opacity ) );
+
+				// Convert hex color to RGB and combine with opacity (Requirement 13.3).
+				$rgb = $this->hex_to_rgb( $color );
+				$shadow_color = sprintf( 'rgba(%d, %d, %d, %.2f)', $rgb['r'], $rgb['g'], $rgb['b'], $opacity );
+
+				// Build custom shadow value.
+				$shadow_value = sprintf(
+					'%dpx %dpx %dpx %dpx %s',
+					$h_offset,
+					$v_offset,
+					$blur,
+					$spread,
+					$shadow_color
+				);
+
+				$css .= 'body.wp-admin #adminmenu,';
+				$css .= 'body.wp-admin #adminmenuback,';
+				$css .= 'body.wp-admin #adminmenuwrap {';
+				$css .= 'box-shadow: ' . $shadow_value . ' !important;';
+				$css .= '}';
+
+			} else {
+				// Preset shadow mode (Requirement 13.1).
+				$preset = isset( $admin_menu['shadow_preset'] ) ? $admin_menu['shadow_preset'] : 'none';
+
+				// Map presets to box-shadow values (Requirement 13.1).
+				$shadow_presets = array(
+					'none'     => 'none',
+					'subtle'   => '0 2px 4px rgba(0, 0, 0, 0.1)',
+					'medium'   => '0 4px 8px rgba(0, 0, 0, 0.15)',
+					'strong'   => '0 8px 16px rgba(0, 0, 0, 0.2)',
+					'dramatic' => '0 12px 24px rgba(0, 0, 0, 0.25)',
+				);
+
+				$shadow_value = isset( $shadow_presets[ $preset ] ) ? $shadow_presets[ $preset ] : 'none';
+
+				// Only generate CSS if shadow is not 'none'.
+				if ( $shadow_value !== 'none' ) {
+					$css .= 'body.wp-admin #adminmenu,';
+					$css .= 'body.wp-admin #adminmenuback,';
+					$css .= 'body.wp-admin #adminmenuwrap {';
+					$css .= 'box-shadow: ' . $shadow_value . ' !important;';
+					$css .= '}';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu shadow CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate floating margin CSS for admin menu.
+	 * Handles both uniform and individual margin modes (Requirements 15.1, 15.2, 15.3).
+	 * Only applies when floating mode is enabled in visual_effects.
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @param array $settings Full settings array to check floating mode.
+	 * @return string Floating margin CSS.
+	 */
+	private function generate_menu_floating_css( $admin_menu, $settings ) {
+		try {
+			// Check if floating mode is enabled (Requirement 15.1).
+			$floating_enabled = isset( $settings['visual_effects']['admin_menu']['floating'] ) ? 
+				$settings['visual_effects']['admin_menu']['floating'] : false;
+
+			// Only generate CSS if floating mode is enabled.
+			if ( ! $floating_enabled ) {
+				return '';
+			}
+
+			$mode = isset( $admin_menu['floating_margin_mode'] ) ? $admin_menu['floating_margin_mode'] : 'uniform';
+			$css = '';
+
+			$css .= 'body.wp-admin #adminmenu,';
+			$css .= 'body.wp-admin #adminmenuback,';
+			$css .= 'body.wp-admin #adminmenuwrap {';
+			$css .= 'position: fixed !important;';
+
+			if ( $mode === 'individual' ) {
+				// Individual margins (Requirement 15.2, 15.3).
+				$top = isset( $admin_menu['floating_margin_top'] ) ? absint( $admin_menu['floating_margin_top'] ) : 8;
+				$right = isset( $admin_menu['floating_margin_right'] ) ? absint( $admin_menu['floating_margin_right'] ) : 8;
+				$bottom = isset( $admin_menu['floating_margin_bottom'] ) ? absint( $admin_menu['floating_margin_bottom'] ) : 8;
+				$left = isset( $admin_menu['floating_margin_left'] ) ? absint( $admin_menu['floating_margin_left'] ) : 8;
+
+				$css .= sprintf(
+					'top: %dpx !important; right: auto !important; bottom: auto !important; left: %dpx !important;',
+					$top,
+					$left
+				);
+				
+				// Calculate height accounting for top and bottom margins.
+				$css .= sprintf( 'height: calc(100vh - %dpx) !important;', $top + $bottom );
+
+			} else {
+				// Uniform margin (Requirement 15.1).
+				$margin = isset( $admin_menu['floating_margin'] ) ? absint( $admin_menu['floating_margin'] ) : 8;
+
+				$css .= sprintf(
+					'top: %dpx !important; right: auto !important; bottom: auto !important; left: %dpx !important;',
+					$margin,
+					$margin
+				);
+				
+				// Calculate height accounting for margins on top and bottom.
+				$css .= sprintf( 'height: calc(100vh - %dpx) !important;', $margin * 2 );
+			}
+
+			$css .= '}';
+			
+			// Adjust content area margin to account for floating menu position.
+			if ( $mode === 'individual' ) {
+				$left = isset( $admin_menu['floating_margin_left'] ) ? absint( $admin_menu['floating_margin_left'] ) : 8;
+				$width_value = isset( $admin_menu['width_value'] ) ? absint( $admin_menu['width_value'] ) : 160;
+				$width_unit = isset( $admin_menu['width_unit'] ) ? $admin_menu['width_unit'] : 'pixels';
+				
+				if ( $width_unit === 'pixels' ) {
+					$total_offset = $left + $width_value;
+					$css .= 'body.wp-admin #wpcontent,';
+					$css .= 'body.wp-admin #wpfooter {';
+					$css .= sprintf( 'margin-left: %dpx !important;', $total_offset );
+					$css .= '}';
+				}
+			} else {
+				$margin = isset( $admin_menu['floating_margin'] ) ? absint( $admin_menu['floating_margin'] ) : 8;
+				$width_value = isset( $admin_menu['width_value'] ) ? absint( $admin_menu['width_value'] ) : 160;
+				$width_unit = isset( $admin_menu['width_unit'] ) ? $admin_menu['width_unit'] : 'pixels';
+				
+				if ( $width_unit === 'pixels' ) {
+					$total_offset = $margin + $width_value;
+					$css .= 'body.wp-admin #wpcontent,';
+					$css .= 'body.wp-admin #wpfooter {';
+					$css .= sprintf( 'margin-left: %dpx !important;', $total_offset );
+					$css .= '}';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu floating margin CSS generation failed: %s', $e->getMessage() ) );
 			return '';
 		}
 	}
@@ -361,6 +1718,13 @@ class MASE_CSS_Generator {
 				if ( isset( $admin_bar['text_transform'] ) ) {
 					$css .= 'text-transform: ' . esc_attr( $admin_bar['text_transform'] ) . ' !important;';
 				}
+				// NEW: Font family support (Requirement 8.5)
+				if ( isset( $admin_bar['font_family'] ) && $admin_bar['font_family'] !== 'system' ) {
+					$font_family = $this->get_font_family_css( $admin_bar['font_family'] );
+					if ( $font_family ) {
+						$css .= 'font-family: ' . $font_family . ' !important;';
+					}
+				}
 
 				$css .= '}';
 			}
@@ -387,6 +1751,13 @@ class MASE_CSS_Generator {
 				}
 				if ( isset( $admin_menu['text_transform'] ) ) {
 					$css .= 'text-transform: ' . esc_attr( $admin_menu['text_transform'] ) . ' !important;';
+				}
+				// Font family support (Requirement 11.2, 11.5)
+				if ( isset( $admin_menu['font_family'] ) && $admin_menu['font_family'] !== 'system' ) {
+					$font_family = $this->get_font_family_css( $admin_menu['font_family'] );
+					if ( $font_family ) {
+						$css .= 'font-family: ' . $font_family . ' !important;';
+					}
 				}
 
 				$css .= '}';
@@ -447,6 +1818,103 @@ class MASE_CSS_Generator {
 			}
 
 			// Return empty string as graceful degradation.
+			return '';
+		}
+	}
+
+	/**
+	 * Get font family CSS value
+	 * Requirement 8.5: Convert font family setting to CSS value with fallbacks
+	 * 
+	 * @param string $font_family Font family setting value.
+	 * @return string Font family CSS value.
+	 */
+	private function get_font_family_css( $font_family ) {
+		if ( empty( $font_family ) || $font_family === 'system' ) {
+			return 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+		}
+		
+		// Check if it's a Google Font (starts with 'google:')
+		if ( strpos( $font_family, 'google:' ) === 0 ) {
+			$font_name = str_replace( 'google:', '', $font_family );
+			return '"' . esc_attr( $font_name ) . '", sans-serif';
+		}
+		
+		// Return as-is for system fonts (already includes fallbacks)
+		return esc_attr( $font_family );
+	}
+
+	/**
+	 * Generate Google Fonts @import statement
+	 * Requirement 8.5: Generate @import for Google Fonts
+	 * Requirement 23.3: Error handling for Google Font loading
+	 * 
+	 * @param array $settings Settings array.
+	 * @return string Google Fonts @import CSS.
+	 */
+	private function generate_google_fonts_import( $settings ) {
+		try {
+			$fonts_to_load = array();
+			
+			// Check admin bar font
+			if ( isset( $settings['typography']['admin_bar']['font_family'] ) ) {
+				$font = $settings['typography']['admin_bar']['font_family'];
+				if ( strpos( $font, 'google:' ) === 0 ) {
+					$fonts_to_load[] = str_replace( 'google:', '', $font );
+				}
+			}
+			
+			// Check admin bar submenu font
+			if ( isset( $settings['admin_bar_submenu']['font_family'] ) ) {
+				$font = $settings['admin_bar_submenu']['font_family'];
+				if ( strpos( $font, 'google:' ) === 0 ) {
+					$fonts_to_load[] = str_replace( 'google:', '', $font );
+				}
+			}
+			
+			// Check admin menu font (Requirement 11.2)
+			if ( isset( $settings['typography']['admin_menu']['font_family'] ) ) {
+				$font = $settings['typography']['admin_menu']['font_family'];
+				if ( strpos( $font, 'google:' ) === 0 ) {
+					$fonts_to_load[] = str_replace( 'google:', '', $font );
+				}
+			}
+			
+			// Check admin menu submenu font (Requirement 11.2)
+			if ( isset( $settings['admin_menu_submenu']['font_family'] ) ) {
+				$font = $settings['admin_menu_submenu']['font_family'];
+				if ( strpos( $font, 'google:' ) === 0 ) {
+					$fonts_to_load[] = str_replace( 'google:', '', $font );
+				}
+			}
+			
+			// Remove duplicates
+			$fonts_to_load = array_unique( $fonts_to_load );
+			
+			if ( empty( $fonts_to_load ) ) {
+				return '';
+			}
+			
+			// Build @import statement (Requirement 11.2, 11.5)
+			$css = '';
+			foreach ( $fonts_to_load as $font_name ) {
+				// Validate font name to prevent injection
+				$font_name = sanitize_text_field( $font_name );
+				if ( empty( $font_name ) ) {
+					continue;
+				}
+				
+				$font_url = 'https://fonts.googleapis.com/css2?family=' . 
+							str_replace( ' ', '+', $font_name ) . 
+							':wght@300;400;500;600;700&display=swap';
+				$css .= '@import url("' . esc_url( $font_url ) . '");';
+			}
+			
+			return $css;
+			
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Google Fonts import generation failed: %s', $e->getMessage() ) );
+			// Return empty string to gracefully degrade to system fonts
 			return '';
 		}
 	}
@@ -1815,6 +3283,83 @@ class MASE_CSS_Generator {
 
 		} catch ( Exception $e ) {
 			error_log( sprintf( 'MASE: Custom CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate menu logo CSS.
+	 * Positions and styles the logo in the admin menu (Requirements 16.2, 16.3, 16.4, 16.8).
+	 *
+	 * @param array $admin_menu Admin menu settings array.
+	 * @return string Menu logo CSS.
+	 */
+	private function generate_menu_logo_css( $admin_menu ) {
+		try {
+			// Check if logo is enabled (Requirement 16.1).
+			$logo_enabled = isset( $admin_menu['logo_enabled'] ) && $admin_menu['logo_enabled'];
+			
+			if ( ! $logo_enabled || empty( $admin_menu['logo_url'] ) ) {
+				return '';
+			}
+
+			$logo_url = esc_url( $admin_menu['logo_url'] );
+			$logo_position = isset( $admin_menu['logo_position'] ) ? $admin_menu['logo_position'] : 'top';
+			$logo_width = isset( $admin_menu['logo_width'] ) ? absint( $admin_menu['logo_width'] ) : 100;
+			$logo_alignment = isset( $admin_menu['logo_alignment'] ) ? $admin_menu['logo_alignment'] : 'center';
+
+			$css = '';
+
+			// Create logo container (Requirement 16.2, 16.3, 16.4).
+			$css .= 'body.wp-admin #adminmenu::' . ( $logo_position === 'top' ? 'before' : 'after' ) . ' {';
+			$css .= 'content: "";';
+			$css .= 'display: block;';
+			$css .= 'width: ' . $logo_width . 'px;';
+			$css .= 'height: auto;';
+			$css .= 'max-width: 100%;';
+			$css .= 'padding: 15px;';
+			$css .= 'box-sizing: border-box;';
+			$css .= 'background-image: url("' . $logo_url . '");';
+			$css .= 'background-size: contain;';
+			$css .= 'background-repeat: no-repeat;';
+			$css .= 'background-position: center;';
+			
+			// Apply alignment (Requirement 16.4).
+			if ( $logo_alignment === 'left' ) {
+				$css .= 'margin-left: 0;';
+				$css .= 'margin-right: auto;';
+				$css .= 'background-position: left center;';
+			} elseif ( $logo_alignment === 'right' ) {
+				$css .= 'margin-left: auto;';
+				$css .= 'margin-right: 0;';
+				$css .= 'background-position: right center;';
+			} else {
+				$css .= 'margin-left: auto;';
+				$css .= 'margin-right: auto;';
+				$css .= 'background-position: center;';
+			}
+			
+			// Maintain aspect ratio (Requirement 16.8).
+			$css .= 'aspect-ratio: auto;';
+			$css .= 'min-height: 40px;';
+			
+			$css .= '}';
+
+			// Adjust menu padding to accommodate logo.
+			if ( $logo_position === 'top' ) {
+				$css .= 'body.wp-admin #adminmenu {';
+				$css .= 'padding-top: 10px;';
+				$css .= '}';
+			} else {
+				$css .= 'body.wp-admin #adminmenu {';
+				$css .= 'padding-bottom: 10px;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Menu logo CSS generation failed: %s', $e->getMessage() ) );
 			return '';
 		}
 	}

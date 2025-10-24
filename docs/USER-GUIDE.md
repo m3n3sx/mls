@@ -1,36 +1,115 @@
-# Modern Admin Styler Enterprise (MASE) v1.2.0 - User Guide
+# Modern Admin Styler Enterprise (MASE) v2.0.0 - User Guide
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Getting Started](#getting-started)
-3. [Color Palettes](#color-palettes)
-4. [Templates](#templates)
-5. [Admin Bar Customization](#admin-bar-customization)
-6. [Menu Customization](#menu-customization)
-7. [Typography Settings](#typography-settings)
-8. [Visual Effects](#visual-effects)
-9. [Advanced Features](#advanced-features)
-10. [Keyboard Shortcuts](#keyboard-shortcuts)
-11. [Import/Export](#import-export)
-12. [Backup & Restore](#backup-restore)
+2. [What's New in v2.0](#whats-new-in-v20)
+3. [Getting Started](#getting-started)
+4. [Color Palettes](#color-palettes)
+5. [Templates](#templates)
+6. [Admin Bar Customization](#admin-bar-customization)
+7. [Menu Customization](#menu-customization)
+8. [Typography Settings](#typography-settings)
+9. [Visual Effects](#visual-effects)
+10. [Advanced Features](#advanced-features)
+11. [Keyboard Shortcuts](#keyboard-shortcuts)
+12. [Import/Export](#import-export)
+13. [Backup & Restore](#backup-restore)
+14. [Troubleshooting](#troubleshooting-guide)
 
 ---
 
 ## Introduction
 
-Modern Admin Styler Enterprise (MASE) is a comprehensive WordPress plugin that transforms your admin interface with modern design patterns, professional color schemes, and powerful customization options. Version 1.2.0 introduces 10 color palettes, 11 templates, advanced visual effects, and enterprise-grade features.
+Modern Admin Styler Enterprise (MASE) is a comprehensive WordPress plugin that transforms your admin interface with modern design patterns, professional color schemes, and powerful customization options. Version 2.0.0 introduces a completely rebuilt modern architecture with improved performance, enhanced features, and a foundation for future AI-powered capabilities.
 
 ### Key Features
 
-- **10 Professional Color Palettes** - One-click color schemes for instant transformation
+- **10 Professional Color Palettes** - One-click color schemes with accessibility validation
 - **11 Complete Templates** - Pre-configured designs covering all settings
-- **Live Preview** - See changes in real-time before saving
-- **Visual Effects** - Glassmorphism, floating elements, shadows, and animations
+- **Real-Time Preview** - Instant visual feedback with sub-50ms updates
+- **Smart Color System** - Automatic contrast checking and accessible color suggestions
+- **Advanced Typography** - Google Fonts with intelligent loading and caching
+- **Smooth Animations** - 60fps animations with reduced motion support
+- **Visual Effects** - Glassmorphism, floating elements, shadows, and micro-interactions
 - **Mobile Optimized** - Responsive design with touch-friendly controls
-- **Accessibility** - WCAG AA compliant with keyboard navigation and screen reader support
+- **Accessibility** - WCAG 2.1 AA/AAA compliant with full keyboard navigation
+- **Undo/Redo** - 50-state history for safe experimentation
 - **Import/Export** - Share configurations across sites
 - **Backup/Restore** - Automatic backups before major changes
+- **Performance Optimized** - Code splitting and lazy loading for fast load times
+
+## What's New in v2.0
+
+Version 2.0.0 represents a complete architectural overhaul of MASE, bringing modern JavaScript practices, improved performance, and enhanced user experience.
+
+### Major Improvements
+
+#### 🚀 Performance Enhancements
+- **Faster Load Times**: Initial load reduced by 40% through code splitting
+- **Instant Preview Updates**: CSS generation optimized to < 50ms
+- **Smart Caching**: Fonts and settings cached for faster subsequent loads
+- **Lazy Loading**: Feature modules load on-demand when needed
+
+#### 🎨 Enhanced Color System
+- **Accessibility Validation**: Automatic WCAG 2.1 contrast ratio checking
+- **Smart Suggestions**: Get accessible color alternatives automatically
+- **Color Palette Generation**: Create complementary, analogous, and triadic palettes
+- **Real-Time Feedback**: See accessibility warnings as you adjust colors
+
+#### ✍️ Advanced Typography
+- **Google Fonts Integration**: Seamless loading with 7-day caching
+- **Fluid Typography**: Responsive text scaling based on viewport
+- **Font Loading Optimization**: Asynchronous loading with fallback fonts
+- **FOUT Prevention**: Smooth font transitions without layout shifts
+
+#### ✨ Smooth Animations
+- **60fps Performance**: GPU-accelerated animations for buttery smooth motion
+- **Reduced Motion Support**: Respects user accessibility preferences
+- **Easing Library**: Professional easing functions for natural motion
+- **Animation Queuing**: Coordinated animations without conflicts
+
+#### 🔄 Undo/Redo System
+- **50-State History**: Experiment freely with extensive undo capability
+- **Keyboard Shortcuts**: Ctrl+Z to undo, Ctrl+Y to redo
+- **Visual Feedback**: Clear indicators of undo/redo availability
+- **Smart History**: Automatically manages history size for performance
+
+#### 🛡️ Improved Reliability
+- **Error Recovery**: Automatic retry with exponential backoff
+- **Request Queuing**: Prevents concurrent save conflicts
+- **Validation**: Client and server-side validation for data integrity
+- **Graceful Degradation**: Fallbacks ensure functionality even if features fail
+
+### Under the Hood
+
+For developers and technically curious users:
+
+- **Modern Architecture**: Modular ES6+ JavaScript with clear separation of concerns
+- **State Management**: Centralized state with Zustand for predictable updates
+- **Event-Driven**: Decoupled modules communicate via Event Bus
+- **REST API**: Modern REST endpoints replace legacy AJAX
+- **Build System**: Vite for fast development and optimized production builds
+- **Testing**: Comprehensive unit, integration, and E2E test coverage
+- **Documentation**: Complete architecture and developer documentation
+
+### Backwards Compatibility
+
+Version 2.0.0 maintains full backwards compatibility:
+- All existing settings are preserved during upgrade
+- No changes to user interface or workflows
+- Custom CSS and JavaScript continue to work
+- All WordPress hooks and filters maintained
+- Existing templates and palettes unchanged
+
+### Migration Notes
+
+The upgrade to v2.0.0 is automatic and seamless:
+1. Plugin updates via WordPress admin
+2. Settings automatically migrated to new format
+3. Automatic backup created before migration
+4. No manual intervention required
+5. Rollback available if needed (see Advanced → Feature Flags)
 
 ---
 
@@ -306,28 +385,406 @@ The admin bar is the top horizontal bar in WordPress admin.
 
 ## Menu Customization
 
-The admin menu is the left sidebar navigation.
+The admin menu is the left sidebar navigation. MASE provides comprehensive customization options including spacing optimization, gradient backgrounds, Google Fonts, submenu styling, and logo placement.
 
 ### Colors
 
+#### Basic Colors
 - **Background Color**: Main background of the menu
 - **Text Color**: Color of menu item text
 - **Hover Background**: Background when hovering over items
 - **Hover Text**: Text color when hovering
-- **Width**: 160-400px (default: 160px)
+
+#### Background Type
+Choose between solid color or gradient backgrounds:
+
+**Solid Background**
+- Single color background
+- Simple and performant
+- Best for traditional designs
+
+**Gradient Background**
+- Multiple color stops with smooth transitions
+- Three gradient types available:
+  - **Linear**: Straight line gradient with adjustable angle (0-360°)
+  - **Radial**: Circular gradient from center outward
+  - **Conic**: Circular gradient rotating around center
+- Add multiple color stops for complex gradients
+- Angle control for linear gradients (0° = top to bottom, 90° = left to right)
+- Live preview updates as you adjust colors and angles
+
+**How to Use Gradients**:
+1. Set Background Type to "Gradient"
+2. Choose gradient type (Linear, Radial, or Conic)
+3. Add color stops (minimum 2, click + to add more)
+4. For linear gradients, adjust angle slider
+5. Preview updates in real-time
+6. Save when satisfied
+
+#### Icon Colors
+Control menu icon colors independently:
+
+- **Auto Mode** (default): Icons automatically match text color
+- **Custom Mode**: Set independent icon color
+  - Useful for creating visual hierarchy
+  - Icons can contrast with text for better visibility
+
+### Dimensions
+
+#### Width Controls
+- **Range**: 160-400px (default: 160px)
+- **Unit Toggle**: Switch between pixels and percentage
+  - Pixels: Fixed width (100-400px)
+  - Percentage: Responsive width (50-100%)
+- Width changes automatically update submenu positioning
+- Content area margin adjusts automatically
+
+#### Menu Item Spacing
+Optimize menu item padding for compact or spacious layouts:
+
+- **Vertical Padding**: 5-30px (default: 10px)
+  - Controls top and bottom spacing within menu items
+  - Smaller values create compact menus
+  - Larger values improve touch targets
+- **Horizontal Padding**: 5-30px (default: 15px)
+  - Controls left and right spacing within menu items
+  - Affects menu item width and text positioning
+- Live preview shows spacing changes immediately
+- Recommended: 8-12px vertical, 12-18px horizontal for modern look
+
+#### Height Mode
+Control how menu height is calculated:
+
+- **Full Height** (default): Menu spans 100% of viewport height
+  - Best for sites with many menu items
+  - Ensures menu is always visible
+  - Traditional WordPress behavior
+- **Fit to Content**: Menu height adjusts to content
+  - Best for sites with few menu items
+  - Creates cleaner appearance
+  - Reduces wasted space
+- **Fixed**: Setting now persists correctly after save and page refresh
+- Live preview toggles between modes instantly
 
 ### Typography
 
-Same options as Admin Bar typography
+#### Font Controls
+- **Font Size**: 10-24px (default: 13px)
+- **Font Weight**: 300-700 (default: 400)
+- **Line Height**: 1.0-2.0 (default: 1.5)
+- **Letter Spacing**: -2px to 5px (default: 0)
+- **Text Transform**: None, Uppercase, Lowercase, Capitalize
+
+#### Google Fonts Integration
+Select from popular Google Fonts for menu typography:
+
+**Available Fonts**:
+- System Default (no external loading)
+- Inter - Modern, highly legible
+- Roboto - Clean, professional
+- Open Sans - Friendly, readable
+- Lato - Warm, stable
+- Montserrat - Geometric, modern
+- Poppins - Geometric, friendly
+- Raleway - Elegant, thin
+- Source Sans Pro - Professional
+- Nunito - Rounded, friendly
+- Plus 10+ more options
+
+**How to Use**:
+1. Select font from Font Family dropdown
+2. Font loads automatically without page reload
+3. Preview updates immediately
+4. Fonts are cached for 7 days for performance
+5. Fallback to system fonts if loading fails
+
+**Performance Notes**:
+- Fonts load asynchronously
+- Only selected weights are loaded
+- Cached after first load
+- No impact on page speed after initial load
 
 ### Visual Effects
 
-Same options as Admin Bar visual effects, plus:
+#### Border Radius (Corner Rounding)
+Control menu corner rounding with precision:
 
-#### Submenu Styling
-- Independent styling for submenu items
-- Hover effects and transitions
-- Indentation and spacing controls
+**Uniform Mode**:
+- Single slider controls all four corners
+- Range: 0-50px
+- Quick and simple
+- Best for consistent rounding
+
+**Individual Mode**:
+- Four separate sliders for each corner:
+  - Top Left
+  - Top Right
+  - Bottom Left
+  - Bottom Right
+- Range: 0-50px per corner
+- Create unique shapes
+- Asymmetric designs possible
+
+**Recommended Values**:
+- 0px: Sharp corners (traditional)
+- 8-12px: Subtle modern look
+- 16-24px: Pronounced rounding
+- 30-50px: Pill-shaped edges
+
+#### Shadow Effects
+Add depth with customizable shadows:
+
+**Preset Mode** (recommended):
+- **None**: No shadow
+- **Subtle**: Light shadow (0 2px 4px rgba(0,0,0,0.1))
+- **Medium**: Moderate shadow (0 4px 8px rgba(0,0,0,0.15))
+- **Strong**: Pronounced shadow (0 8px 16px rgba(0,0,0,0.2))
+- **Dramatic**: Heavy shadow (0 12px 24px rgba(0,0,0,0.3))
+
+**Custom Mode** (advanced):
+- **Horizontal Offset**: -50px to 50px
+- **Vertical Offset**: -50px to 50px
+- **Blur Radius**: 0-100px
+- **Spread Radius**: -50px to 50px
+- **Shadow Color**: Any color with opacity
+- **Opacity**: 0-100%
+
+**Tips**:
+- Start with presets for quick results
+- Use custom mode for precise control
+- Combine with floating mode for elevated effect
+- Darker shadows work better with light backgrounds
+
+#### Floating Mode
+Create a floating menu effect with margins:
+
+**Uniform Margins**:
+- Single slider controls all sides
+- Range: 0-100px
+- Quick setup
+- Symmetrical floating effect
+
+**Individual Margins**:
+- Four separate sliders:
+  - Top Margin
+  - Right Margin
+  - Bottom Margin
+  - Left Margin
+- Range: 0-100px per side
+- Asymmetric positioning
+- Fine-tuned placement
+
+**Best Practices**:
+- Combine with border radius for modern look
+- Add shadow for depth
+- Use 8-16px margins for subtle effect
+- Use 20-40px margins for dramatic floating
+
+#### Glassmorphism
+Create frosted glass effect:
+- **Enable/Disable**: Toggle glassmorphism effect
+- **Blur Intensity**: 0-50px (default: 20px)
+- Works best with semi-transparent backgrounds
+- Requires backdrop-filter support (modern browsers)
+- Fallback provided for older browsers
+
+### Submenu Customization
+
+Style submenus independently from the main menu:
+
+#### Submenu Colors
+- **Background Color**: Independent from main menu background
+- **Text Color**: Independent from main menu text
+- Allows visual distinction between menu levels
+- Can match or contrast with main menu
+
+#### Submenu Border Radius
+Control submenu corner rounding:
+
+**Uniform Mode**:
+- Single slider for all corners
+- Range: 0-20px
+- Quick and consistent
+
+**Individual Mode**:
+- Four separate corner controls
+- Range: 0-20px per corner
+- Unique submenu shapes
+
+#### Submenu Spacing
+Control distance between menu and submenus:
+
+- **Range**: 0-50px (default: 0px)
+- Adjusts vertical offset from parent menu item
+- Creates visual separation
+- Useful for floating menu designs
+- Live preview shows positioning changes
+- Automatically maintains alignment with parent items
+
+#### Submenu Typography
+Independent typography controls for submenu items:
+
+- **Font Size**: 10-24px (default: 13px)
+- **Font Family**: System fonts or Google Fonts (independent from main menu)
+- **Text Color**: Independent color control
+- **Line Height**: 1.0-3.0 (default: 1.5)
+- **Letter Spacing**: -2px to 5px (default: 0)
+- **Text Transform**: None, Uppercase, Lowercase, Capitalize
+
+**Use Cases**:
+- Smaller font size for visual hierarchy
+- Different font family for distinction
+- Lighter text color for secondary items
+- Tighter line height for compact submenus
+
+### Logo Placement
+
+Add custom branding to your admin menu:
+
+#### Logo Upload
+- **Supported Formats**: PNG, JPG, SVG
+- **Maximum Size**: 2MB
+- **Security**: SVG content is sanitized
+- **Upload Process**:
+  1. Click "Upload Logo" button
+  2. Select image file
+  3. Logo appears immediately in preview
+  4. Save settings to persist
+
+#### Logo Position
+- **Top**: Logo appears above menu items
+  - Best for branding
+  - First thing users see
+  - Traditional placement
+- **Bottom**: Logo appears below menu items
+  - Subtle branding
+  - Doesn't interfere with navigation
+  - Modern placement
+
+#### Logo Size
+- **Width Control**: 20-200px (default: 100px)
+- Aspect ratio maintained automatically
+- Responsive sizing
+- Preview updates in real-time
+
+#### Logo Alignment
+- **Left**: Aligns logo to left edge
+- **Center**: Centers logo horizontally
+- **Right**: Aligns logo to right edge
+- Works with any logo width
+
+#### Logo Removal
+- Click "Remove Logo" button
+- Logo disappears from preview
+- Logo URL cleared from settings
+- Can upload new logo anytime
+
+**Best Practices**:
+- Use SVG for crisp display at any size
+- Optimize images before upload
+- Keep file size under 500KB for performance
+- Use transparent backgrounds for PNG/SVG
+- Test logo at different menu widths
+- Ensure logo is readable at small sizes
+
+### Dynamic Submenu Positioning
+
+Submenus automatically position correctly based on menu width:
+
+- **Automatic Calculation**: Submenu left position = menu width
+- **Width Changes**: Submenu repositions when menu width changes
+- **Spacing Offset**: Additional spacing applied if configured
+- **Live Updates**: Preview shows positioning changes immediately
+- **No Overlap**: Submenus never overlap with menu
+- **No Gaps**: Submenus align perfectly with menu edge
+
+**Examples**:
+- Menu width 160px → Submenu at left: 160px
+- Menu width 200px → Submenu at left: 200px
+- Menu width 250px + 10px spacing → Submenu at left: 250px, top: 10px
+
+### Live Preview
+
+All menu customization options update in real-time:
+
+- **Color Changes**: Instant background, text, and icon color updates
+- **Dimension Changes**: Width, padding, and spacing update immediately
+- **Typography Changes**: Font changes apply without reload
+- **Visual Effects**: Shadows, borders, and floating effects preview instantly
+- **Submenu Changes**: Positioning and styling update in real-time
+- **Logo Changes**: Upload, position, and size changes show immediately
+
+**How to Use Live Preview**:
+1. Enable "Live Preview" toggle in header
+2. Make changes to any menu setting
+3. See changes instantly without saving
+4. Experiment freely
+5. Click "Save Settings" when satisfied
+6. Or refresh page to discard changes
+
+### Troubleshooting Menu Issues
+
+#### Height Mode Not Persisting
+**Problem**: Height Mode reverts to "Full Height" after save
+
+**Solution**:
+1. Verify you clicked "Save Settings" after changing
+2. Check browser console for save errors
+3. Clear browser cache and try again
+4. Check WordPress debug log for PHP errors
+5. Ensure you have admin permissions
+
+**Technical Note**: This was a known issue in earlier versions where the height_mode setting wasn't properly saved to the database. This has been fixed in the current version.
+
+#### Submenu Positioning Incorrect
+**Problem**: Submenus don't align with menu edge
+
+**Solution**:
+1. Check menu width setting is correct
+2. Verify submenu spacing is set as intended
+3. Clear browser cache
+4. Disable conflicting plugins temporarily
+5. Check for custom CSS overriding positioning
+
+**Technical Note**: Submenu position is calculated as: `left = menu_width + spacing_offset`. If positioning seems wrong, verify these values in the settings.
+
+#### Google Fonts Not Loading
+**Problem**: Selected Google Font doesn't appear
+
+**Solution**:
+1. Check internet connection
+2. Verify font name is correct in dropdown
+3. Check browser console for loading errors
+4. Try a different font to isolate issue
+5. Clear font cache (Advanced → Clear Cache)
+6. Check if browser blocks Google Fonts (privacy extensions)
+
+**Technical Note**: Fonts load asynchronously from Google Fonts CDN. If loading fails, the system falls back to system fonts. Check browser console for specific error messages.
+
+#### Logo Not Displaying
+**Problem**: Uploaded logo doesn't appear
+
+**Solution**:
+1. Verify logo is enabled (toggle switch)
+2. Check file format is PNG, JPG, or SVG
+3. Ensure file size is under 2MB
+4. Try uploading a different image
+5. Check browser console for upload errors
+6. Verify logo URL is saved in settings
+
+**Technical Note**: Logo upload uses WordPress media handling. If upload fails, check PHP upload_max_filesize and post_max_size settings in php.ini.
+
+#### Icons Not Changing Color
+**Problem**: Menu icons don't match text color
+
+**Solution**:
+1. Check Icon Color Mode setting
+2. If "Auto" mode, icons should match text color
+3. If "Custom" mode, set icon color explicitly
+4. Clear browser cache
+5. Check for custom CSS overriding icon colors
+
+**Technical Note**: In Auto mode, icon color is synchronized with text color. In Custom mode, icon color is independent. Check the CSS generator output if colors don't match expectations.
 
 ---
 
@@ -556,9 +1013,130 @@ Backups are created automatically:
 
 ---
 
-## Troubleshooting
+## Troubleshooting Guide
 
-See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues and solutions.
+### Common Issues
+
+#### Preview Not Updating
+
+**Symptoms**: Changes don't appear in preview mode
+
+**Solutions**:
+1. Check if Live Preview is enabled (toggle in header)
+2. Hard refresh browser (Ctrl+Shift+R or Cmd+Shift+R)
+3. Clear browser cache
+4. Check browser console for JavaScript errors
+5. Disable browser extensions that might interfere
+
+#### Settings Not Saving
+
+**Symptoms**: Changes revert after page reload
+
+**Solutions**:
+1. Check for error messages after clicking Save
+2. Verify you have admin permissions
+3. Check browser console for network errors
+4. Try disabling other plugins temporarily
+5. Check WordPress debug log for PHP errors
+
+#### Slow Performance
+
+**Symptoms**: Admin interface feels sluggish
+
+**Solutions**:
+1. Enable Performance Mode (Ctrl+Shift+P)
+2. Disable animations in Effects tab
+3. Reduce glassmorphism blur intensity
+4. Clear font cache (Advanced → Clear Cache)
+5. Check for conflicting plugins
+
+#### Colors Look Wrong
+
+**Symptoms**: Colors don't match palette preview
+
+**Solutions**:
+1. Check if custom CSS is overriding colors
+2. Verify palette is fully applied (not just previewed)
+3. Clear browser cache
+4. Check for theme conflicts
+5. Try resetting to defaults and reapplying
+
+#### Fonts Not Loading
+
+**Symptoms**: Google Fonts don't appear
+
+**Solutions**:
+1. Check internet connection
+2. Verify font name is correct (e.g., "Inter:400,700")
+3. Clear font cache (Advanced → Clear Cache)
+4. Check browser console for loading errors
+5. Try a different font family
+
+#### Accessibility Warnings
+
+**Symptoms**: Color contrast warnings appear
+
+**Solutions**:
+1. Use suggested accessible colors
+2. Adjust colors manually to meet WCAG standards
+3. Use Color System's contrast checker
+4. Apply a different palette
+5. Enable High Contrast mode
+
+### Advanced Troubleshooting
+
+#### Enable Debug Mode
+
+1. Edit `wp-config.php`
+2. Add: `define('WP_DEBUG', true);`
+3. Add: `define('WP_DEBUG_LOG', true);`
+4. Check `wp-content/debug.log` for errors
+
+#### Check Feature Flags
+
+If experiencing issues after upgrade:
+
+1. Navigate to Advanced → Feature Flags
+2. Try disabling modern features one at a time
+3. Identify which feature causes the issue
+4. Report to support with details
+
+#### Reset to Defaults
+
+If all else fails:
+
+1. Navigate to Advanced tab
+2. Click "Reset to Defaults"
+3. Confirm the action
+4. Reapply your preferred palette/template
+
+### Getting Help
+
+If you can't resolve the issue:
+
+1. **Check Documentation**:
+   - [FAQ](FAQ.md) - Frequently asked questions
+   - [Troubleshooting](TROUBLESHOOTING.md) - Detailed troubleshooting
+   - [Developer Guide](DEVELOPER-GUIDE.md) - Technical documentation
+
+2. **Gather Information**:
+   - WordPress version
+   - MASE version
+   - Browser and version
+   - Error messages (console and PHP logs)
+   - Steps to reproduce
+
+3. **Contact Support**:
+   - GitHub Issues: Report bugs and feature requests
+   - Support Forum: Community help and discussions
+   - Email Support: Direct support for premium users
+
+4. **Provide Details**:
+   - Describe the issue clearly
+   - Include error messages
+   - List steps to reproduce
+   - Mention any recent changes
+   - Include browser console output
 
 ---
 
@@ -566,11 +1144,46 @@ See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for common issues and solutions.
 
 For additional help:
 
-- Check the [FAQ](FAQ.md)
-- Review [Developer Documentation](DEVELOPER.md)
-- Visit the plugin repository for issues and updates
+- **Documentation**: [Architecture](ARCHITECTURE.md) | [Developer Guide](DEVELOPER-GUIDE.md) | [Migration Guide](MIGRATION-GUIDE.md)
+- **FAQ**: [Frequently Asked Questions](FAQ.md)
+- **Troubleshooting**: [Detailed Troubleshooting Guide](TROUBLESHOOTING.md)
+- **GitHub**: Report issues and contribute
+- **Support Forum**: Community discussions
 
 ---
 
-**Version**: 1.2.0  
-**Last Updated**: January 2025
+## Appendix: Feature Flags
+
+Advanced users can control which modern features are enabled via Feature Flags in the Advanced tab.
+
+### Available Flags
+
+| Flag | Feature | Status | Recommended |
+|------|---------|--------|-------------|
+| Modern Preview | Enhanced CSS generation | Stable | ✅ Enabled |
+| Modern Color System | Accessibility validation | Stable | ✅ Enabled |
+| Modern Typography | Google Fonts integration | Stable | ✅ Enabled |
+| Modern Animations | Smooth animations | Stable | ✅ Enabled |
+| Modern API Client | REST API communication | Stable | ✅ Enabled |
+
+### When to Disable Features
+
+- **Compatibility Issues**: If a feature conflicts with another plugin
+- **Performance**: On very slow servers or devices
+- **Debugging**: To isolate which feature causes an issue
+- **Preference**: If you prefer legacy behavior
+
+### How to Manage
+
+1. Navigate to Advanced → Feature Flags
+2. Toggle checkboxes to enable/disable
+3. Click Save Settings
+4. Refresh page to apply changes
+
+**Note**: Disabling features reverts to legacy implementation. All functionality remains available, just using older code.
+
+---
+
+**Version**: 2.0.0  
+**Last Updated**: October 2025  
+**Architecture**: Modern Modular (v2.0+)

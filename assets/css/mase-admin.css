@@ -5698,6 +5698,84 @@ select.mase-select {
 /* End of Section 8: Utility Classes */
 
 /* ============================================================================
+   LOGO UPLOAD CONTROLS
+   ============================================================================ */
+
+/**
+ * Logo Upload Wrapper
+ * Container for logo upload controls
+ */
+.mase-logo-upload-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/**
+ * Logo Upload Buttons
+ * Styling for upload and remove buttons
+ */
+.mase-logo-upload-btn,
+.mase-logo-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mase-logo-upload-btn .dashicons,
+.mase-logo-remove-btn .dashicons {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.mase-logo-remove-btn {
+  background-color: #dc3232;
+  border-color: #dc3232;
+  color: #fff;
+}
+
+.mase-logo-remove-btn:hover {
+  background-color: #c62d2d;
+  border-color: #c62d2d;
+}
+
+/**
+ * Logo Preview
+ * Display uploaded logo image
+ */
+.mase-logo-preview {
+  margin-top: 8px;
+  padding: 12px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  max-width: 200px;
+}
+
+.mase-logo-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+
+/**
+ * Dark Mode Support
+ */
+html[data-theme="dark"] .mase-logo-preview {
+  background-color: #2c3338;
+  border-color: #3c434a;
+}
+
+/* ============================================================================
    SECTION 9: RTL SUPPORT
    ============================================================================ */
 
@@ -8630,6 +8708,48 @@ select {
   }
 }
 
+/* 11.6 Conditional Field Visibility
+   ========================================================================== */
+
+/**
+ * Conditional Fields
+ * 
+ * Fields that are shown/hidden based on parent control values.
+ * Used for gradient controls, individual corners, custom shadows, etc.
+ * 
+ * Requirements: 5.5, 9.3, 10.3, 11.3, 12.3
+ */
+.mase-conditional,
+.mase-conditional-group {
+  /* Transition for smooth show/hide */
+  transition: opacity 0.2s ease-in-out, max-height 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+/**
+ * Hidden state for conditional fields
+ * 
+ * Applied by JavaScript when dependency condition is not met.
+ */
+.mase-conditional[style*="display: none"],
+.mase-conditional-group[style*="display: none"] {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/**
+ * Visible state for conditional fields
+ * 
+ * Applied by JavaScript when dependency condition is met.
+ */
+.mase-conditional[style*="display: block"],
+.mase-conditional-group[style*="display: block"] {
+  opacity: 1;
+  max-height: 2000px; /* Large enough for any content */
+}
+
 /* 11.7 Accessibility
    ========================================================================== */
 
@@ -10226,4 +10346,135 @@ button:focus-visible {
 
 /* ============================================================================
    END SCROLL POSITION STABILITY & FOCUS RING REMOVAL
+   ============================================================================ */
+
+
+/* ============================================================================
+   MODERN ARCHITECTURE - LOADING & ERROR STATES
+   ============================================================================
+   
+   Loading overlay and error boundary styles for modern architecture.
+   Requirements: 10.1 - Add loading states and error boundaries
+   
+   ============================================================================ */
+
+/* Loading Overlay */
+.mase-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--mase-z-modal);
+  backdrop-filter: blur(4px);
+  transition: opacity var(--mase-transition-normal);
+}
+
+:root[data-theme="dark"] .mase-loading-overlay {
+  background: rgba(26, 26, 26, 0.9);
+}
+
+.mase-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mase-spacing-md);
+  padding: var(--mase-spacing-xl);
+  background: var(--mase-surface);
+  border-radius: var(--mase-radius-lg);
+  box-shadow: var(--mase-shadow-lg);
+}
+
+.mase-loading-spinner .dashicons {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--mase-primary);
+  animation: mase-spin 1s linear infinite;
+}
+
+@keyframes mase-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mase-loading-text {
+  font-size: var(--mase-font-size-md);
+  color: var(--mase-text);
+  font-weight: 500;
+}
+
+/* Error Boundary */
+.mase-error-boundary {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 500px;
+  width: 90%;
+  z-index: var(--mase-z-modal);
+}
+
+.mase-error-content {
+  background: var(--mase-surface);
+  border: 2px solid var(--mase-error);
+  border-radius: var(--mase-radius-lg);
+  padding: var(--mase-spacing-xl);
+  box-shadow: var(--mase-shadow-xl);
+  text-align: center;
+}
+
+.mase-error-content .dashicons {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--mase-error);
+  margin-bottom: var(--mase-spacing-md);
+}
+
+.mase-error-content h3 {
+  margin: 0 0 var(--mase-spacing-md);
+  color: var(--mase-text);
+  font-size: var(--mase-font-size-xl);
+  font-weight: 600;
+}
+
+.mase-error-message {
+  margin: 0 0 var(--mase-spacing-lg);
+  color: var(--mase-text-secondary);
+  font-size: var(--mase-font-size-md);
+  line-height: 1.6;
+}
+
+.mase-error-reload {
+  margin-top: var(--mase-spacing-md);
+}
+
+/* Modern Architecture Data Attributes */
+.mase-settings-wrap[data-mase-modern-enabled="1"] {
+  /* Add any modern-specific styles here */
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .mase-loading-spinner .dashicons {
+    animation: none;
+  }
+  
+  .mase-loading-overlay,
+  .mase-error-boundary {
+    transition: none;
+  }
+}
+
+/* ============================================================================
+   END MODERN ARCHITECTURE - LOADING & ERROR STATES
    ============================================================================ */

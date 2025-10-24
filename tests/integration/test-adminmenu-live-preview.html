@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Admin Menu Live Preview Integration Test - Task 6</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1d2327; margin-top: 0; }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-section h2 { margin-top: 0; color: #2271b1; }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover { background: #135e96; }
+        .controls {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .control-row label {
+            min-width: 200px;
+            font-weight: 600;
+        }
+        input[type="range"], select {
+            padding: 5px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        input[type="range"] { width: 200px; }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+        .mock-adminmenu {
+            background: #23282d;
+            color: #ffffff;
+            width: 160px;
+            min-height: 400px;
+            padding: 10px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .mock-menu-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .mock-menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        .range-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Admin Menu Live Preview Integration Test</h1>
+        <p><strong>Task 6:</strong> Implement live preview for all visual effects</p>
+        <p>This test verifies that all admin menu visual effects update in real-time when controls change.</p>
+
+        <!-- Test Section: Height Mode -->
+        <div class="test-section">
+            <h2>Test 6.1: Height Mode Live Preview</h2>
+            <p>Requirement 5.1: Height mode changes should update menu height in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-height-mode">Height Mode:</label>
+                    <select id="admin-menu-height-mode">
+                        <option value="full">Full Height (100%)</option>
+                        <option value="content">Fit to Content</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button onclick="testHeightMode()">Run Test</button>
+            <div id="height-mode-results"></div>
+        </div>
+
+        <!-- Test Section: Glassmorphism -->
+        <div class="test-section">
+            <h2>Test 6.2: Glassmorphism Live Preview</h2>
+            <p>Requirement 5.2: Glassmorphism toggle should apply frosted glass effect in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-glassmorphism">Enable Glassmorphism:</label>
+                    <input type="checkbox" id="admin-menu-glassmorphism">
+                </div>
+            </div>
+            
+            <button onclick="testGlassmorphism()">Run Test</button>
+            <div id="glassmorphism-results"></div>
+        </div>
+
+        <!-- Test Section: Blur Intensity -->
+        <div class="test-section">
+            <h2>Test 6.3: Blur Intensity Live Preview</h2>
+            <p>Requirement 5.3: Blur intensity slider should update blur effect in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-blur-intensity">Blur Intensity:</label>
+                    <input type="range" id="admin-menu-blur-intensity" min="0" max="50" value="20">
+                    <span class="range-value mase-range-value">20px</span>
+                </div>
+            </div>
+            
+            <button onclick="testBlurIntensity()">Run Test</button>
+            <div id="blur-results"></div>
+        </div>
+
+        <!-- Test Section: Border Radius -->
+        <div class="test-section">
+            <h2>Test 6.4: Border Radius Live Preview</h2>
+            <p>Requirement 5.4: Border radius slider should update corner rounding in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-border-radius">Border Radius:</label>
+                    <input type="range" id="admin-menu-border-radius" min="0" max="20" value="0">
+                    <span class="range-value mase-range-value">0px</span>
+                </div>
+            </div>
+            
+            <button onclick="testBorderRadius()">Run Test</button>
+            <div id="border-radius-results"></div>
+        </div>
+
+        <!-- Test Section: Shadow Preset -->
+        <div class="test-section">
+            <h2>Test 6.5: Shadow Preset Live Preview</h2>
+            <p>Requirement 5.5: Shadow preset selector should apply shadow styles in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-shadow">Shadow Preset:</label>
+                    <select id="admin-menu-shadow">
+                        <option value="none">None</option>
+                        <option value="flat">Flat</option>
+                        <option value="subtle">Subtle</option>
+                        <option value="elevated">Elevated</option>
+                        <option value="floating">Floating</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button onclick="testShadow()">Run Test</button>
+            <div id="shadow-results"></div>
+        </div>
+
+        <!-- Test Section: Floating Mode -->
+        <div class="test-section">
+            <h2>Test 6.6: Floating Mode Live Preview</h2>
+            <p>Requirement 5.6: Floating toggle should apply floating margins in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-floating">Enable Floating Mode:</label>
+                    <input type="checkbox" id="admin-menu-floating">
+                </div>
+            </div>
+            
+            <button onclick="testFloating()">Run Test</button>
+            <div id="floating-results"></div>
+        </div>
+
+        <!-- Test Section: Floating Margins -->
+        <div class="test-section">
+            <h2>Test 6.7: Floating Margins Live Preview</h2>
+            <p>Requirement 5.7: Floating margin slider should update menu positioning in real-time</p>
+            
+            <div class="controls">
+                <div class="control-row">
+                    <label for="admin-menu-floating-margin">Floating Margin:</label>
+                    <input type="range" id="admin-menu-floating-margin" min="0" max="100" value="8">
+                    <span class="range-value mase-range-value">8px</span>
+                </div>
+            </div>
+            
+            <button onclick="testFloatingMargins()">Run Test</button>
+            <div id="floating-margins-results"></div>
+        </div>
+
+        <!-- Mock Admin Menu -->
+        <div class="test-section">
+            <h2>Visual Preview</h2>
+            <p>Mock admin menu to visualize changes:</p>
+            <div class="mock-adminmenu" id="mock-adminmenu">
+                <div class="mock-menu-item">Dashboard</div>
+                <div class="mock-menu-item">Posts</div>
+                <div class="mock-menu-item">Media</div>
+                <div class="mock-menu-item">Pages</div>
+                <div class="mock-menu-item">Comments</div>
+                <div class="mock-menu-item">Appearance</div>
+                <div class="mock-menu-item">Plugins</div>
+                <div class="mock-menu-item">Users</div>
+                <div class="mock-menu-item">Tools</div>
+                <div class="mock-menu-item">Settings</div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>Test Summary</h2>
+            <div id="test-summary">
+                <p>Run tests to see results...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load jQuery (required by MASE) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        // Mock MASE object with state
+        var MASE = {
+            state: {
+                livePreviewEnabled: true
+            },
+            adminMenuPreview: {}
+        };
+
+        // Test results tracking
+        var testResults = {
+            passed: 0,
+            failed: 0,
+            total: 0
+        };
+
+        function logResult(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'test-result ' + type;
+            resultDiv.textContent = message;
+            container.appendChild(resultDiv);
+            
+            if (type === 'pass') testResults.passed++;
+            if (type === 'fail') testResults.failed++;
+            testResults.total++;
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summary = document.getElementById('test-summary');
+            summary.innerHTML = `
+                <p><strong>Total Tests:</strong> ${testResults.total}</p>
+                <p><strong>Passed:</strong> ${testResults.passed}</p>
+                <p><strong>Failed:</strong> ${testResults.failed}</p>
+                <p><strong>Success Rate:</strong> ${testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0}%</p>
+            `;
+        }
+
+        // Test 6.1: Height Mode
+        function testHeightMode() {
+            const container = document.getElementById('height-mode-results');
+            container.innerHTML = '';
+            
+            logResult('height-mode-results', 'Testing height mode live preview...', 'info');
+            
+            // Check if method exists
+            if (typeof MASE.adminMenuPreview.updateHeightMode === 'function') {
+                logResult('height-mode-results', '✓ updateHeightMode() method exists', 'pass');
+                
+                // Test full height mode
+                $('#admin-menu-height-mode').val('full');
+                MASE.adminMenuPreview.updateHeightMode();
+                
+                const styleElement = $('#mase-menu-preview-height-mode');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('height: 100%')) {
+                        logResult('height-mode-results', '✓ Full height mode CSS applied correctly', 'pass');
+                    } else {
+                        logResult('height-mode-results', '✗ Full height mode CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('height-mode-results', '✗ Style element not created', 'fail');
+                }
+                
+                // Test content mode
+                $('#admin-menu-height-mode').val('content');
+                MASE.adminMenuPreview.updateHeightMode();
+                
+                const css2 = styleElement.text();
+                if (css2.includes('height: auto') && css2.includes('min-height: 100vh')) {
+                    logResult('height-mode-results', '✓ Content mode CSS applied correctly', 'pass');
+                } else {
+                    logResult('height-mode-results', '✗ Content mode CSS incorrect', 'fail');
+                }
+            } else {
+                logResult('height-mode-results', '✗ updateHeightMode() method not found', 'fail');
+            }
+        }
+
+        // Test 6.2: Glassmorphism
+        function testGlassmorphism() {
+            const container = document.getElementById('glassmorphism-results');
+            container.innerHTML = '';
+            
+            logResult('glassmorphism-results', 'Testing glassmorphism live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateGlassmorphism === 'function') {
+                logResult('glassmorphism-results', '✓ updateGlassmorphism() method exists', 'pass');
+                
+                // Enable glassmorphism
+                $('#admin-menu-glassmorphism').prop('checked', true);
+                MASE.adminMenuPreview.updateGlassmorphism();
+                
+                const styleElement = $('#mase-menu-preview-glassmorphism');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('backdrop-filter: blur')) {
+                        logResult('glassmorphism-results', '✓ Glassmorphism CSS applied correctly', 'pass');
+                    } else {
+                        logResult('glassmorphism-results', '✗ Glassmorphism CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('glassmorphism-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('glassmorphism-results', '✗ updateGlassmorphism() method not found', 'fail');
+            }
+        }
+
+        // Test 6.3: Blur Intensity
+        function testBlurIntensity() {
+            const container = document.getElementById('blur-results');
+            container.innerHTML = '';
+            
+            logResult('blur-results', 'Testing blur intensity live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateBlurIntensity === 'function') {
+                logResult('blur-results', '✓ updateBlurIntensity() method exists', 'pass');
+                
+                // Enable glassmorphism first
+                $('#admin-menu-glassmorphism').prop('checked', true);
+                $('#admin-menu-blur-intensity').val(30);
+                MASE.adminMenuPreview.updateBlurIntensity();
+                
+                const styleElement = $('#mase-menu-preview-blur-intensity');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('blur(30px)')) {
+                        logResult('blur-results', '✓ Blur intensity CSS applied correctly', 'pass');
+                    } else {
+                        logResult('blur-results', '✗ Blur intensity CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('blur-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('blur-results', '✗ updateBlurIntensity() method not found', 'fail');
+            }
+        }
+
+        // Test 6.4: Border Radius
+        function testBorderRadius() {
+            const container = document.getElementById('border-radius-results');
+            container.innerHTML = '';
+            
+            logResult('border-radius-results', 'Testing border radius live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateBorderRadius === 'function') {
+                logResult('border-radius-results', '✓ updateBorderRadius() method exists', 'pass');
+                
+                $('#admin-menu-border-radius').val(10);
+                MASE.adminMenuPreview.updateBorderRadius();
+                
+                const styleElement = $('#mase-menu-preview-border-radius');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('border-radius: 10px')) {
+                        logResult('border-radius-results', '✓ Border radius CSS applied correctly', 'pass');
+                    } else {
+                        logResult('border-radius-results', '✗ Border radius CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('border-radius-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('border-radius-results', '✗ updateBorderRadius() method not found', 'fail');
+            }
+        }
+
+        // Test 6.5: Shadow
+        function testShadow() {
+            const container = document.getElementById('shadow-results');
+            container.innerHTML = '';
+            
+            logResult('shadow-results', 'Testing shadow preset live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateShadow === 'function') {
+                logResult('shadow-results', '✓ updateShadow() method exists', 'pass');
+                
+                $('#admin-menu-shadow').val('elevated');
+                MASE.adminMenuPreview.updateShadow();
+                
+                const styleElement = $('#mase-menu-preview-shadow');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('box-shadow:') && css.includes('rgba')) {
+                        logResult('shadow-results', '✓ Shadow CSS applied correctly', 'pass');
+                    } else {
+                        logResult('shadow-results', '✗ Shadow CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('shadow-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('shadow-results', '✗ updateShadow() method not found', 'fail');
+            }
+        }
+
+        // Test 6.6: Floating Mode
+        function testFloating() {
+            const container = document.getElementById('floating-results');
+            container.innerHTML = '';
+            
+            logResult('floating-results', 'Testing floating mode live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateFloating === 'function') {
+                logResult('floating-results', '✓ updateFloating() method exists', 'pass');
+                
+                $('#admin-menu-floating').prop('checked', true);
+                MASE.adminMenuPreview.updateFloating();
+                
+                const styleElement = $('#mase-menu-preview-floating');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('margin:') && css.includes('calc(100%')) {
+                        logResult('floating-results', '✓ Floating mode CSS applied correctly', 'pass');
+                    } else {
+                        logResult('floating-results', '✗ Floating mode CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('floating-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('floating-results', '✗ updateFloating() method not found', 'fail');
+            }
+        }
+
+        // Test 6.7: Floating Margins
+        function testFloatingMargins() {
+            const container = document.getElementById('floating-margins-results');
+            container.innerHTML = '';
+            
+            logResult('floating-margins-results', 'Testing floating margins live preview...', 'info');
+            
+            if (typeof MASE.adminMenuPreview.updateFloatingMargins === 'function') {
+                logResult('floating-margins-results', '✓ updateFloatingMargins() method exists', 'pass');
+                
+                $('#admin-menu-floating').prop('checked', true);
+                $('#admin-menu-floating-margin').val(15);
+                MASE.adminMenuPreview.updateFloatingMargins();
+                
+                const styleElement = $('#mase-menu-preview-floating-margins');
+                if (styleElement.length > 0) {
+                    const css = styleElement.text();
+                    if (css.includes('margin: 15px')) {
+                        logResult('floating-margins-results', '✓ Floating margins CSS applied correctly', 'pass');
+                    } else {
+                        logResult('floating-margins-results', '✗ Floating margins CSS incorrect', 'fail');
+                    }
+                } else {
+                    logResult('floating-margins-results', '✗ Style element not created', 'fail');
+                }
+            } else {
+                logResult('floating-margins-results', '✗ updateFloatingMargins() method not found', 'fail');
+            }
+        }
+
+        // Load the actual MASE admin script
+        $(document).ready(function() {
+            // Load the MASE admin script
+            $.getScript('../assets/js/mase-admin.js')
+                .done(function() {
+                    console.log('MASE admin script loaded successfully');
+                    
+                    // Initialize the adminMenuPreview module
+                    if (MASE && MASE.adminMenuPreview && MASE.adminMenuPreview.init) {
+                        MASE.adminMenuPreview.init();
+                        console.log('Admin menu preview initialized');
+                    }
+                })
+                .fail(function(jqxhr, settings, exception) {
+                    console.error('Failed to load MASE admin script:', exception);
+                    alert('Failed to load MASE admin script. Make sure the path is correct.');
+                });
+        });
+    </script>
+</body>
+</html>

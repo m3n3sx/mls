@@ -740,6 +740,435 @@
 
 ---
 
+## Admin Menu Enhancement Issues
+
+### Height Mode Not Persisting
+
+**Symptoms:**
+- Height Mode setting reverts to "Full Height" after save
+- Selected "Fit to Content" but menu shows full height after page refresh
+- Setting appears correct in UI but doesn't apply
+
+**Root Cause:**
+This was a known issue in earlier versions where the `height_mode` setting wasn't properly saved to the database. The setting was being lost during the save process.
+
+**Solutions:**
+
+1. **Verify Current Version**
+   - Ensure you're running the latest version of MASE
+   - The Height Mode persistence issue was fixed in v1.2.0+
+   - Update plugin if necessary
+
+2. **Check Settings Save**
+   ```php
+   // Verify height_mode is in saved settings
+   $settings = get_option('mase_settings');
+   error_log('Height Mode: ' . ($settings['admin_menu']['height_mode'] ?? 'not set'));
+   ```
+
+3. **Manual Fix (if needed)**
+   - Open browser console
+   - Run:
+   ```javascript
+   // Force save height mode
+   var settings = MASE.state.settings;
+   settings.admin_menu.height_mode = 'content'; // or 'full'
+   MASE.saveSettings(settings);
+   ```
+
+4. **Clear Cache**
+   - Clear WordPress transients
+   - Clear browser cache
+   - Hard refresh (Ctrl+Shift+R)
+   - Save settings again
+
+5. **Check for Conflicts**
+   - Deactivate other admin styling plugins
+   - Test Height Mode alone
+   - Reactivate plugins one by one
+
+**Verification:**
+1. Set Height Mode to "Fit to Content"
+2. Click "Save Settings"
+3. Refresh the page (F5)
+4. Check if menu height is auto (not 100%)
+5. Inspect element: should show `height: auto; min-height: 100vh`
+
+**Technical Details:**
+- Location: `includes/class-mase-settings.php` line ~142
+- The fix ensures `height_mode` is properly validated and saved
+- Valid values: 'full' or 'content'
+- Default: 'full'
+
+### Submenu Positioning Incorrect
+
+**Symptoms:**
+- Submenus don't align with menu edge
+- Gap between menu and submenu
+- Submenu overlaps with menu
+- Submenu position doesn't update when menu width changes
+
+**Root Cause:**
+Submenu positioning is calculated dynamically based on menu width. If the calculation is incorrect or not updating, submenus won't align properly.
+
+**Solutions:**
+
+1. **Check Menu Width Setting**
+   - Verify menu width is set correctly
+   - Default is 160px
+   - Range: 160-400px
+   - Check in Settings → Menu → Width
+
+2. **Verify Submenu Spacing**
+   - Check submenu spacing setting
+   - Default is 0px
+   - Range: 0-50px
+   - Located in Settings → Menu → Submenu Spacing
+
+3. **Check CSS Generation**
+   ```php
+   // Verify submenu CSS is generated correctly
+   $settings = get_option('mase_settings');
+   $width = $settings['admin_menu']['width'] ?? 160;
+   $spacing = $settings['admin_menu_submenu']['spacing'] ?? 0;
+   
+   // Expected CSS:
+   // #adminmenu .wp-submenu {
+   //     left: {$width}px !important;
+   //     top: {$spacing}px !important;
+   // }
+   ```
+
+4. **Inspect Generated CSS**
+   - View page source
+   - Find `<style id="mase-custom-css">`
+   - Look for `#adminmenu .wp-submenu` rules
+   - Verify `left` value matches menu width
+
+5. **Clear CSS Cache**
+   - Save settings to regenerate CSS
+   - Clear WordPress transients:
+   ```php
+   delete_transient('mase_css_cache');
+   ```
+   - Hard refresh browser
+
+6. **Check for CSS Conflicts**
+   - Use browser DevTools
+   - Inspect submenu element
+   - Check which CSS rules are applied
+   - Look for conflicting `left` or `position` rules
+
+7. **Test Live Preview**
+   - Enable Live Preview
+   - Change menu width
+   - Submenu should reposition immediately
+   - If not, check JavaScript console for errors
+
+**Manual Fix:**
+```javascript
+// Force submenu repositioning
+jQuery(document).ready(function($) {
+    var width = $('#admin-menu-width').val() || 160;
+    var spacing = $('#admin-menu-submenu-spacing').val() || 0;
+    $('#adminmenu .wp-submenu').css({
+        'left': width + 'px',
+        'top': spacing + 'px'
+    });
+});
+```
+
+**Verification:**
+1. Set menu width to 200px
+2. Save settings
+3. Inspect submenu: should show `left: 200px`
+4. Change width to 250px
+5. Save settings
+6. Inspect submenu: should show `left: 250px`
+
+**Technical Details:**
+- Location: `includes/class-mase-css-generator.php` method `generate_submenu_positioning_css()`
+- Formula: `left = menu_width + spacing_offset`
+- Live preview: `assets/js/mase-admin.js` method `updateWidth()`
+
+### Google Fonts Not Loading
+
+**Symptoms:**
+- Selected Google Font doesn't appear
+- Menu text shows system font instead
+- Font loads initially but disappears after refresh
+- Console shows font loading errors
+
+**Root Cause:**
+Google Fonts are loaded dynamically from Google's CDN. Loading can fail due to network issues, browser blocking, or incorrect font names.
+
+**Solutions:**
+
+1. **Check Internet Connection**
+   - Verify internet connectivity
+   - Test Google Fonts CDN: https://fonts.googleapis.com/
+   - Check if site can access external resources
+
+2. **Verify Font Name**
+   - Font names are case-sensitive
+   - Check spelling in dropdown
+   - Valid format: "Inter", "Roboto", "Open Sans"
+   - Invalid: "inter", "ROBOTO", "OpenSans"
+
+3. **Check Browser Console**
+   - Open DevTools (F12)
+   - Look for font loading errors
+   - Common errors:
+     - `Failed to load resource: net::ERR_BLOCKED_BY_CLIENT` (ad blocker)
+     - `Failed to load resource: net::ERR_NAME_NOT_RESOLVED` (DNS issue)
+     - `Failed to load resource: 404` (font not found)
+
+4. **Check Browser Extensions**
+   - Disable ad blockers temporarily
+   - Disable privacy extensions
+   - Test in incognito/private mode
+   - Re-enable extensions one by one
+
+5. **Check Content Security Policy**
+   - Some servers block external fonts
+   - Add to .htaccess or server config:
+   ```apache
+   Header set Content-Security-Policy "font-src 'self' https://fonts.gstatic.com;"
+   ```
+
+6. **Clear Font Cache**
+   - Navigate to Advanced tab
+   - Click "Clear Font Cache"
+   - Or manually:
+   ```javascript
+   localStorage.removeItem('mase_google_fonts_cache');
+   ```
+
+7. **Check Generated CSS**
+   - View page source
+   - Look for `@import url('https://fonts.googleapis.com/...')`
+   - Verify font URL is correct
+   - Test URL directly in browser
+
+8. **Fallback to System Fonts**
+   - If Google Fonts consistently fail
+   - Select "System Default" from dropdown
+   - Or use system font stack:
+   ```css
+   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+   ```
+
+**Manual Font Loading:**
+```javascript
+// Manually load Google Font
+(function() {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+    
+    link.onerror = function() {
+        console.error('Failed to load Google Font');
+    };
+    
+    link.onload = function() {
+        document.querySelector('#adminmenu').style.fontFamily = '"Inter", sans-serif';
+    };
+    
+    document.head.appendChild(link);
+})();
+```
+
+**Verification:**
+1. Select "Inter" from Font Family dropdown
+2. Check browser console for loading messages
+3. Inspect menu element
+4. Verify `font-family` includes "Inter"
+5. Check Network tab for font file requests
+
+**Technical Details:**
+- Location: `assets/js/mase-admin.js` method `loadGoogleFont()`
+- Fonts load asynchronously to avoid blocking
+- Fallback to system fonts on error
+- Cache duration: 7 days in localStorage
+
+### Logo Not Displaying
+
+**Symptoms:**
+- Uploaded logo doesn't appear in menu
+- Logo upload button doesn't work
+- Logo shows briefly then disappears
+- "Upload failed" error message
+
+**Root Cause:**
+Logo upload can fail due to file validation, server configuration, or permission issues.
+
+**Solutions:**
+
+1. **Check File Format**
+   - Supported formats: PNG, JPG, SVG
+   - File extension must match content type
+   - Verify file isn't corrupted
+   - Try different file format
+
+2. **Check File Size**
+   - Maximum size: 2MB
+   - Compress large images
+   - Use online tools: TinyPNG, ImageOptim
+   - Recommended: < 500KB for performance
+
+3. **Check Upload Permissions**
+   - Verify you have `manage_options` capability
+   - Check WordPress upload directory is writable:
+   ```bash
+   chmod 755 /wp-content/uploads
+   ```
+
+4. **Check PHP Upload Settings**
+   - Verify PHP settings in php.ini:
+   ```ini
+   upload_max_filesize = 2M
+   post_max_size = 8M
+   max_execution_time = 300
+   ```
+
+5. **Check Server Logs**
+   - Enable WP_DEBUG
+   - Check /wp-content/debug.log
+   - Look for upload errors
+   - Check Apache/Nginx error logs
+
+6. **SVG Security Issues**
+   - SVG files are sanitized for security
+   - Complex SVGs may be rejected
+   - Try simpler SVG
+   - Or use PNG/JPG instead
+
+7. **Check Logo Enable Toggle**
+   - Verify "Enable Logo" is checked
+   - Logo won't display if disabled
+   - Check in Settings → Menu → Logo
+
+8. **Check Logo URL**
+   - Verify logo URL is saved in settings:
+   ```php
+   $settings = get_option('mase_settings');
+   error_log('Logo URL: ' . ($settings['admin_menu']['logo_url'] ?? 'not set'));
+   ```
+
+9. **Clear Cache**
+   - Clear WordPress cache
+   - Clear browser cache
+   - Hard refresh (Ctrl+Shift+R)
+
+**Manual Upload via Media Library:**
+1. Go to Media → Add New
+2. Upload logo file
+3. Copy file URL
+4. Open browser console
+5. Run:
+```javascript
+var settings = MASE.state.settings;
+settings.admin_menu.logo_enabled = true;
+settings.admin_menu.logo_url = 'YOUR_LOGO_URL_HERE';
+MASE.saveSettings(settings);
+```
+
+**Verification:**
+1. Upload logo file
+2. Check for success message
+3. Verify logo appears in preview
+4. Save settings
+5. Refresh page
+6. Logo should still be visible
+
+**Technical Details:**
+- Location: `includes/class-mase-admin.php` method `handle_logo_upload()`
+- Upload handler: WordPress `wp_handle_upload()`
+- SVG sanitization: Removes scripts and event handlers
+- Security: Nonce verification and capability check
+
+### Icon Colors Not Synchronizing
+
+**Symptoms:**
+- Menu icons don't match text color
+- Icons stay white when text color changes
+- Icon color setting doesn't work
+- Some icons change color, others don't
+
+**Root Cause:**
+Icon color synchronization depends on the Icon Color Mode setting. In "Auto" mode, icons should match text color. In "Custom" mode, icons use independent color.
+
+**Solutions:**
+
+1. **Check Icon Color Mode**
+   - Navigate to Settings → Menu → Icon Colors
+   - Verify mode is set correctly:
+     - **Auto**: Icons match text color (default)
+     - **Custom**: Icons use independent color
+
+2. **Verify CSS Generation**
+   ```php
+   // Check generated CSS
+   $settings = get_option('mase_settings');
+   $mode = $settings['admin_menu']['icon_color_mode'] ?? 'auto';
+   
+   if ($mode === 'auto') {
+       $color = $settings['admin_menu']['text_color'];
+   } else {
+       $color = $settings['admin_menu']['icon_color'];
+   }
+   
+   // Expected CSS:
+   // #adminmenu .wp-menu-image,
+   // #adminmenu .dashicons {
+   //     color: {$color} !important;
+   // }
+   ```
+
+3. **Check for CSS Conflicts**
+   - Use browser DevTools
+   - Inspect icon element
+   - Check which CSS rules are applied
+   - Look for conflicting `color` rules with higher specificity
+
+4. **Clear CSS Cache**
+   - Save settings to regenerate CSS
+   - Clear WordPress transients
+   - Hard refresh browser
+
+5. **Test Live Preview**
+   - Enable Live Preview
+   - Change text color
+   - Icons should update immediately (if in Auto mode)
+   - If not, check JavaScript console
+
+6. **Check Icon Selectors**
+   - Some plugins use custom icon classes
+   - MASE targets: `.wp-menu-image`, `.dashicons`
+   - Custom icons may need additional CSS
+
+**Manual Fix:**
+```javascript
+// Force icon color synchronization
+jQuery(document).ready(function($) {
+    var textColor = $('#admin-menu-text-color').val();
+    $('#adminmenu .wp-menu-image, #adminmenu .dashicons').css('color', textColor);
+});
+```
+
+**Verification:**
+1. Set Icon Color Mode to "Auto"
+2. Change text color to red (#ff0000)
+3. Icons should turn red
+4. Set Icon Color Mode to "Custom"
+5. Set icon color to blue (#0000ff)
+6. Icons should turn blue (independent of text color)
+
+**Technical Details:**
+- Location: `includes/class-mase-css-generator.php` method `generate_menu_icon_color_css()`
+- Live preview: `assets/js/mase-admin.js` method `updateTextAndIconColor()`
+- Selectors: `#adminmenu .wp-menu-image`, `#adminmenu .dashicons`
+
 ## Getting Help
 
 If you've tried these solutions and still have issues:

@@ -75,18 +75,34 @@ class MASE_Mobile_Optimizer {
 	/**
 	 * Check if effects should be reduced based on device and settings.
 	 * Requirement 7.3: Disable expensive visual effects on mobile when reduced effects mode is enabled.
+	 * Task 9.3: Fixed circular dependency by accepting optional $settings parameter.
 	 *
+	 * @param array|null $settings Optional settings array to avoid circular dependency.
 	 * @return bool True if effects should be reduced, false otherwise.
 	 */
-	public function should_reduce_effects() {
+	public function should_reduce_effects( $settings = null ) {
 		// Check if mobile device.
 		if ( ! $this->is_mobile() ) {
 			return false;
 		}
 
-		// Get current settings.
-		$settings_obj = new MASE_Settings();
-		$settings = $settings_obj->get_option();
+		// Get settings - use provided settings or fetch from database
+		// Task 9.3: Avoid creating new MASE_Settings instance during save operation
+		try {
+			if ( null === $settings ) {
+				// Only create MASE_Settings instance if settings not provided
+				if ( class_exists( 'MASE_Settings' ) ) {
+					$settings_obj = new MASE_Settings();
+					$settings = $settings_obj->get_option();
+				} else {
+					error_log( 'MASE: MASE_Settings class not found in should_reduce_effects()' );
+					return false;
+				}
+			}
+		} catch ( Exception $e ) {
+			error_log( 'MASE: Error getting settings in should_reduce_effects(): ' . $e->getMessage() );
+			return false;
+		}
 
 		// Check if reduced effects mode is enabled for mobile.
 		$mobile_settings = isset( $settings['mobile'] ) ? $settings['mobile'] : array();
@@ -108,92 +124,108 @@ class MASE_Mobile_Optimizer {
 	 * Requirement 7.2: Increase touch target sizes to minimum 44px × 44px.
 	 * Requirement 7.3: Disable expensive visual effects on mobile.
 	 * Requirement 7.4: Reduce padding and spacing by 25% in compact mode.
+	 * Task 9.4: Added comprehensive error handling with graceful degradation.
 	 *
 	 * @param array $settings Original settings array.
 	 * @return array Optimized settings for mobile devices.
 	 */
 	public function get_optimized_settings( $settings ) {
-		// If not mobile, return original settings.
-		if ( ! $this->is_mobile() ) {
+		// Task 9.4: Wrap entire method in try-catch for error handling
+		try {
+			// If not mobile, return original settings.
+			if ( ! $this->is_mobile() ) {
+				return $settings;
+			}
+
+			$optimized = $settings;
+			$mobile_settings = isset( $settings['mobile'] ) ? $settings['mobile'] : array();
+
+			// Apply mobile optimization if enabled (Requirement 7.1).
+			if ( isset( $mobile_settings['optimized'] ) && $mobile_settings['optimized'] ) {
+				
+				// Increase touch target sizes (Requirement 7.2).
+				if ( isset( $mobile_settings['touch_friendly'] ) && $mobile_settings['touch_friendly'] ) {
+					// Increase admin bar height for better touch targets.
+					if ( isset( $optimized['admin_bar']['height'] ) ) {
+						$optimized['admin_bar']['height'] = max( 44, $optimized['admin_bar']['height'] );
+					}
+
+					// Increase admin menu item height.
+					if ( isset( $optimized['admin_menu']['item_height'] ) ) {
+						$optimized['admin_menu']['item_height'] = max( 44, $optimized['admin_menu']['item_height'] );
+					}
+				}
+
+				// Reduce padding and spacing in compact mode (Requirement 7.4).
+				if ( isset( $mobile_settings['compact_mode'] ) && $mobile_settings['compact_mode'] ) {
+					// Reduce admin bar padding by 25%.
+					if ( isset( $optimized['admin_bar']['padding'] ) ) {
+						$optimized['admin_bar']['padding'] = (int) ( $optimized['admin_bar']['padding'] * 0.75 );
+					}
+
+					// Reduce admin menu padding by 25%.
+					if ( isset( $optimized['admin_menu']['padding'] ) ) {
+						$optimized['admin_menu']['padding'] = (int) ( $optimized['admin_menu']['padding'] * 0.75 );
+					}
+
+					// Reduce content area padding by 25%.
+					if ( isset( $optimized['content']['padding'] ) ) {
+						$optimized['content']['padding'] = (int) ( $optimized['content']['padding'] * 0.75 );
+					}
+				}
+
+				// Disable expensive visual effects (Requirement 7.3).
+				// Task 9.3: Pass $settings to avoid circular dependency
+				if ( $this->should_reduce_effects( $settings ) ) {
+					// Disable glassmorphism (blur effects).
+					if ( isset( $optimized['visual_effects']['admin_bar']['glassmorphism'] ) ) {
+						$optimized['visual_effects']['admin_bar']['glassmorphism'] = false;
+					}
+					if ( isset( $optimized['visual_effects']['admin_menu']['glassmorphism'] ) ) {
+						$optimized['visual_effects']['admin_menu']['glassmorphism'] = false;
+					}
+
+					// Disable shadows.
+					if ( isset( $optimized['visual_effects']['admin_bar']['shadow'] ) ) {
+						$optimized['visual_effects']['admin_bar']['shadow'] = 'none';
+					}
+					if ( isset( $optimized['visual_effects']['admin_menu']['shadow'] ) ) {
+						$optimized['visual_effects']['admin_menu']['shadow'] = 'none';
+					}
+
+					// Disable animations.
+					if ( isset( $optimized['visual_effects']['animations_enabled'] ) ) {
+						$optimized['visual_effects']['animations_enabled'] = false;
+					}
+					if ( isset( $optimized['visual_effects']['microanimations_enabled'] ) ) {
+						$optimized['visual_effects']['microanimations_enabled'] = false;
+					}
+
+					// Disable particle system.
+					if ( isset( $optimized['visual_effects']['particle_system'] ) ) {
+						$optimized['visual_effects']['particle_system'] = false;
+					}
+
+					// Disable 3D effects.
+					if ( isset( $optimized['visual_effects']['3d_effects'] ) ) {
+						$optimized['visual_effects']['3d_effects'] = false;
+					}
+				}
+			}
+
+			return $optimized;
+			
+		} catch ( Exception $e ) {
+			// Task 9.4: Graceful degradation - return original settings on error
+			error_log( 'MASE: Exception in get_optimized_settings(): ' . $e->getMessage() );
+			error_log( 'MASE: Stack trace: ' . $e->getTraceAsString() );
+			return $settings;
+		} catch ( Error $e ) {
+			// Task 9.4: Catch PHP 7+ fatal errors
+			error_log( 'MASE: Fatal error in get_optimized_settings(): ' . $e->getMessage() );
+			error_log( 'MASE: Stack trace: ' . $e->getTraceAsString() );
 			return $settings;
 		}
-
-		$optimized = $settings;
-		$mobile_settings = isset( $settings['mobile'] ) ? $settings['mobile'] : array();
-
-		// Apply mobile optimization if enabled (Requirement 7.1).
-		if ( isset( $mobile_settings['optimized'] ) && $mobile_settings['optimized'] ) {
-			
-			// Increase touch target sizes (Requirement 7.2).
-			if ( isset( $mobile_settings['touch_friendly'] ) && $mobile_settings['touch_friendly'] ) {
-				// Increase admin bar height for better touch targets.
-				if ( isset( $optimized['admin_bar']['height'] ) ) {
-					$optimized['admin_bar']['height'] = max( 44, $optimized['admin_bar']['height'] );
-				}
-
-				// Increase admin menu item height.
-				if ( isset( $optimized['admin_menu']['item_height'] ) ) {
-					$optimized['admin_menu']['item_height'] = max( 44, $optimized['admin_menu']['item_height'] );
-				}
-			}
-
-			// Reduce padding and spacing in compact mode (Requirement 7.4).
-			if ( isset( $mobile_settings['compact_mode'] ) && $mobile_settings['compact_mode'] ) {
-				// Reduce admin bar padding by 25%.
-				if ( isset( $optimized['admin_bar']['padding'] ) ) {
-					$optimized['admin_bar']['padding'] = (int) ( $optimized['admin_bar']['padding'] * 0.75 );
-				}
-
-				// Reduce admin menu padding by 25%.
-				if ( isset( $optimized['admin_menu']['padding'] ) ) {
-					$optimized['admin_menu']['padding'] = (int) ( $optimized['admin_menu']['padding'] * 0.75 );
-				}
-
-				// Reduce content area padding by 25%.
-				if ( isset( $optimized['content']['padding'] ) ) {
-					$optimized['content']['padding'] = (int) ( $optimized['content']['padding'] * 0.75 );
-				}
-			}
-
-			// Disable expensive visual effects (Requirement 7.3).
-			if ( $this->should_reduce_effects() ) {
-				// Disable glassmorphism (blur effects).
-				if ( isset( $optimized['visual_effects']['admin_bar']['glassmorphism'] ) ) {
-					$optimized['visual_effects']['admin_bar']['glassmorphism'] = false;
-				}
-				if ( isset( $optimized['visual_effects']['admin_menu']['glassmorphism'] ) ) {
-					$optimized['visual_effects']['admin_menu']['glassmorphism'] = false;
-				}
-
-				// Disable shadows.
-				if ( isset( $optimized['visual_effects']['admin_bar']['shadow'] ) ) {
-					$optimized['visual_effects']['admin_bar']['shadow'] = 'none';
-				}
-				if ( isset( $optimized['visual_effects']['admin_menu']['shadow'] ) ) {
-					$optimized['visual_effects']['admin_menu']['shadow'] = 'none';
-				}
-
-				// Disable animations.
-				if ( isset( $optimized['visual_effects']['animations_enabled'] ) ) {
-					$optimized['visual_effects']['animations_enabled'] = false;
-				}
-				if ( isset( $optimized['visual_effects']['microanimations_enabled'] ) ) {
-					$optimized['visual_effects']['microanimations_enabled'] = false;
-				}
-
-				// Disable particle system.
-				if ( isset( $optimized['visual_effects']['particle_system'] ) ) {
-					$optimized['visual_effects']['particle_system'] = false;
-				}
-
-				// Disable 3D effects.
-				if ( isset( $optimized['visual_effects']['3d_effects'] ) ) {
-					$optimized['visual_effects']['3d_effects'] = false;
-				}
-			}
-		}
-
-		return $optimized;
 	}
 
 	/**

@@ -28,7 +28,31 @@ $palettes     = $settings_obj->get_all_palettes();
 $templates    = $settings_obj->get_all_templates();
 ?>
 
-<div class="wrap mase-settings-wrap">
+<div class="wrap mase-settings-wrap" 
+	data-mase-version="<?php echo esc_attr( MASE_VERSION ); ?>"
+	data-mase-rest-url="<?php echo esc_attr( rest_url( 'mase/v1' ) ); ?>"
+	data-mase-nonce="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ); ?>">
+	
+	<!-- Loading State Container (Requirement 10.1) -->
+	<div id="mase-loading-overlay" class="mase-loading-overlay" style="display: none;" role="status" aria-live="polite">
+		<div class="mase-loading-spinner">
+			<span class="dashicons dashicons-update" aria-hidden="true"></span>
+			<span class="mase-loading-text"><?php esc_html_e( 'Loading...', 'modern-admin-styler' ); ?></span>
+		</div>
+	</div>
+	
+	<!-- Error Boundary Container (Requirement 10.1) -->
+	<div id="mase-error-boundary" class="mase-error-boundary" style="display: none;" role="alert" aria-live="assertive">
+		<div class="mase-error-content">
+			<span class="dashicons dashicons-warning" aria-hidden="true"></span>
+			<h3><?php esc_html_e( 'Something went wrong', 'modern-admin-styler' ); ?></h3>
+			<p class="mase-error-message"></p>
+			<button type="button" class="button button-primary mase-error-reload">
+				<?php esc_html_e( 'Reload Page', 'modern-admin-styler' ); ?>
+			</button>
+		</div>
+	</div>
+	
 	<!-- ARIA Live Region for Dynamic Notices (Requirement 13.5) -->
 	<div id="mase-notice-region" class="mase-notice-region" role="status" aria-live="polite" aria-atomic="true"></div>
 	
@@ -391,6 +415,124 @@ $templates    = $settings_obj->get_all_templates();
 					</div>
 				</div>
 
+				<!-- Admin Bar Gradient Background (Requirements 5.1, 5.2, 5.3, 5.4, 5.5) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Background Gradient', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Apply gradient backgrounds to the admin bar.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-bg-type">
+										<?php esc_html_e( 'Background Type', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-bg-type" name="admin_bar[bg_type]">
+										<option value="solid" <?php selected( $settings['admin_bar']['bg_type'] ?? 'solid', 'solid' ); ?>>
+											<?php esc_html_e( 'Solid Color', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="gradient" <?php selected( $settings['admin_bar']['bg_type'] ?? 'solid', 'gradient' ); ?>>
+											<?php esc_html_e( 'Gradient', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+								</div>
+							</div>
+							
+							<!-- Gradient Controls (shown when bg_type = gradient) -->
+							<div class="mase-conditional-group" data-depends-on="admin-bar-bg-type" data-value="gradient" style="display: <?php echo ( isset( $settings['admin_bar']['bg_type'] ) && $settings['admin_bar']['bg_type'] === 'gradient' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-gradient-type">
+											<?php esc_html_e( 'Gradient Type', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<select id="admin-bar-gradient-type" name="admin_bar[gradient_type]">
+											<option value="linear" <?php selected( $settings['admin_bar']['gradient_type'] ?? 'linear', 'linear' ); ?>>
+												<?php esc_html_e( 'Linear', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="radial" <?php selected( $settings['admin_bar']['gradient_type'] ?? 'linear', 'radial' ); ?>>
+												<?php esc_html_e( 'Radial', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="conic" <?php selected( $settings['admin_bar']['gradient_type'] ?? 'linear', 'conic' ); ?>>
+												<?php esc_html_e( 'Conic', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-gradient-angle">
+											<?php esc_html_e( 'Angle (degrees)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-gradient-angle"
+											name="admin_bar[gradient_angle]" 
+											min="0"
+											max="360"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['gradient_angle'] ?? 90 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['gradient_angle'] ?? 90 ); ?>°</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-gradient-color-1">
+											<?php esc_html_e( 'Color Stop 1', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-bar-gradient-color-1"
+											name="admin_bar[gradient_colors][0][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['admin_bar']['gradient_colors'][0]['color'] ?? '#23282d' ); ?>"
+											data-default-color="#23282d"
+										/>
+										<input 
+											type="hidden" 
+											name="admin_bar[gradient_colors][0][position]" 
+											value="0"
+										/>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-gradient-color-2">
+											<?php esc_html_e( 'Color Stop 2', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-bar-gradient-color-2"
+											name="admin_bar[gradient_colors][1][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['admin_bar']['gradient_colors'][1]['color'] ?? '#32373c' ); ?>"
+											data-default-color="#32373c"
+										/>
+										<input 
+											type="hidden" 
+											name="admin_bar[gradient_colors][1][position]" 
+											value="100"
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- Admin Bar Typography -->
 				<div class="mase-section">
 					<div class="mase-section-card">
@@ -488,6 +630,40 @@ $templates    = $settings_obj->get_all_templates();
 										<option value="lowercase" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
 										<option value="capitalize" <?php selected( $settings['typography']['admin_bar']['text_transform'] ?? 'none', 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
 									</select>
+								</div>
+							</div>
+							
+							<!-- NEW: Font Family Selector (Requirement 8.1, 8.4) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-font-family">
+										<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-font-family" name="typography[admin_bar][font_family]">
+										<optgroup label="<?php esc_attr_e( 'System Fonts', 'modern-admin-styler' ); ?>">
+											<option value="system" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'system' ); ?>><?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?></option>
+											<option value="Arial, sans-serif" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+											<option value="Helvetica, sans-serif" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+											<option value="Georgia, serif" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+											<option value="'Courier New', monospace" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', "'Courier New', monospace" ); ?>>Courier New</option>
+											<option value="'Times New Roman', serif" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', "'Times New Roman', serif" ); ?>>Times New Roman</option>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Google Fonts', 'modern-admin-styler' ); ?>">
+											<option value="google:Roboto" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Roboto' ); ?>>Roboto</option>
+											<option value="google:Open Sans" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Open Sans' ); ?>>Open Sans</option>
+											<option value="google:Lato" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Lato' ); ?>>Lato</option>
+											<option value="google:Montserrat" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Montserrat' ); ?>>Montserrat</option>
+											<option value="google:Poppins" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Poppins' ); ?>>Poppins</option>
+											<option value="google:Inter" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Inter' ); ?>>Inter</option>
+											<option value="google:Raleway" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Raleway' ); ?>>Raleway</option>
+											<option value="google:Source Sans Pro" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Source Sans Pro' ); ?>>Source Sans Pro</option>
+											<option value="google:Nunito" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Nunito' ); ?>>Nunito</option>
+											<option value="google:Ubuntu" <?php selected( $settings['typography']['admin_bar']['font_family'] ?? 'system', 'google:Ubuntu' ); ?>>Ubuntu</option>
+										</optgroup>
+									</select>
+									<input type="hidden" id="admin-bar-google-font-url" name="typography[admin_bar][google_font_url]" value="<?php echo esc_attr( $settings['typography']['admin_bar']['google_font_url'] ?? '' ); ?>" />
 								</div>
 							</div>
 						</div>
@@ -589,40 +765,592 @@ $templates    = $settings_obj->get_all_templates();
 								</div>
 							</div>
 							
+							<!-- Individual Corner Radius Controls (Requirements 9.1, 9.2, 9.3) -->
 							<div class="mase-setting-row">
 								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius-mode">
+										<?php esc_html_e( 'Border Radius Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-border-radius-mode" name="admin_bar[border_radius_mode]">
+										<option value="uniform" <?php selected( $settings['admin_bar']['border_radius_mode'] ?? 'uniform', 'uniform' ); ?>><?php esc_html_e( 'Uniform', 'modern-admin-styler' ); ?></option>
+										<option value="individual" <?php selected( $settings['admin_bar']['border_radius_mode'] ?? 'uniform', 'individual' ); ?>><?php esc_html_e( 'Individual Corners', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between uniform radius for all corners or individual control.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-border-radius-mode" data-value="uniform">
+								<div class="mase-setting-label">
 									<label for="admin-bar-border-radius">
-										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
+										<?php esc_html_e( 'All Corners (px)', 'modern-admin-styler' ); ?>
 									</label>
 								</div>
 								<div class="mase-setting-control">
 									<input 
 										type="range" 
 										id="admin-bar-border-radius"
-										name="visual_effects[admin_bar][border_radius]" 
-										value="<?php echo esc_attr( $settings['visual_effects']['admin_bar']['border_radius'] ?? 0 ); ?>"
+										name="admin_bar[border_radius]" 
+										value="<?php echo esc_attr( $settings['admin_bar']['border_radius'] ?? 0 ); ?>"
 										min="0"
-										max="20"
+										max="50"
 										step="1"
 									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['visual_effects']['admin_bar']['border_radius'] ?? 0 ); ?>px</span>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['border_radius'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-border-radius-mode" data-value="individual">
+								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius-tl">
+										<?php esc_html_e( 'Top Left (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-border-radius-tl"
+										name="admin_bar[border_radius_tl]" 
+										value="<?php echo esc_attr( $settings['admin_bar']['border_radius_tl'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['border_radius_tl'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-border-radius-mode" data-value="individual">
+								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius-tr">
+										<?php esc_html_e( 'Top Right (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-border-radius-tr"
+										name="admin_bar[border_radius_tr]" 
+										value="<?php echo esc_attr( $settings['admin_bar']['border_radius_tr'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['border_radius_tr'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-border-radius-mode" data-value="individual">
+								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius-bl">
+										<?php esc_html_e( 'Bottom Left (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-border-radius-bl"
+										name="admin_bar[border_radius_bl]" 
+										value="<?php echo esc_attr( $settings['admin_bar']['border_radius_bl'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['border_radius_bl'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-border-radius-mode" data-value="individual">
+								<div class="mase-setting-label">
+									<label for="admin-bar-border-radius-br">
+										<?php esc_html_e( 'Bottom Right (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-border-radius-br"
+										name="admin_bar[border_radius_br]" 
+										value="<?php echo esc_attr( $settings['admin_bar']['border_radius_br'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['border_radius_br'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<!-- Advanced Shadow Controls (Requirements 10.1, 10.2, 10.3, 10.4) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-shadow-mode">
+										<?php esc_html_e( 'Shadow Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-shadow-mode" name="admin_bar[shadow_mode]">
+										<option value="preset" <?php selected( $settings['admin_bar']['shadow_mode'] ?? 'preset', 'preset' ); ?>><?php esc_html_e( 'Preset', 'modern-admin-styler' ); ?></option>
+										<option value="custom" <?php selected( $settings['admin_bar']['shadow_mode'] ?? 'preset', 'custom' ); ?>><?php esc_html_e( 'Custom', 'modern-admin-styler' ); ?></option>
+									</select>
+								</div>
+							</div>
+
+							<!-- Preset Shadow Controls (Requirement 10.1) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-bar-shadow-mode" data-value="preset">
+								<div class="mase-setting-label">
+									<label for="admin-bar-shadow-preset">
+										<?php esc_html_e( 'Shadow Preset', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-shadow-preset" name="admin_bar[shadow_preset]">
+										<option value="none" <?php selected( $settings['admin_bar']['shadow_preset'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+										<option value="subtle" <?php selected( $settings['admin_bar']['shadow_preset'] ?? 'none', 'subtle' ); ?>><?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?></option>
+										<option value="medium" <?php selected( $settings['admin_bar']['shadow_preset'] ?? 'none', 'medium' ); ?>><?php esc_html_e( 'Medium', 'modern-admin-styler' ); ?></option>
+										<option value="strong" <?php selected( $settings['admin_bar']['shadow_preset'] ?? 'none', 'strong' ); ?>><?php esc_html_e( 'Strong', 'modern-admin-styler' ); ?></option>
+										<option value="dramatic" <?php selected( $settings['admin_bar']['shadow_preset'] ?? 'none', 'dramatic' ); ?>><?php esc_html_e( 'Dramatic', 'modern-admin-styler' ); ?></option>
+									</select>
+								</div>
+							</div>
+
+							<!-- Custom Shadow Controls (Requirements 10.2, 10.3, 10.4) -->
+							<div class="mase-conditional" data-depends-on="admin-bar-shadow-mode" data-value="custom">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-h-offset">
+											<?php esc_html_e( 'Horizontal Offset (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-shadow-h-offset"
+											name="admin_bar[shadow_h_offset]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_h_offset'] ?? 0 ); ?>"
+											min="-50"
+											max="50"
+											step="1"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['shadow_h_offset'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-v-offset">
+											<?php esc_html_e( 'Vertical Offset (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-shadow-v-offset"
+											name="admin_bar[shadow_v_offset]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_v_offset'] ?? 4 ); ?>"
+											min="-50"
+											max="50"
+											step="1"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['shadow_v_offset'] ?? 4 ); ?>px</span>
+									</div>
+								</div>
+
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-blur">
+											<?php esc_html_e( 'Blur Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-shadow-blur"
+											name="admin_bar[shadow_blur]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_blur'] ?? 8 ); ?>"
+											min="0"
+											max="100"
+											step="1"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['shadow_blur'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-spread">
+											<?php esc_html_e( 'Spread Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-shadow-spread"
+											name="admin_bar[shadow_spread]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_spread'] ?? 0 ); ?>"
+											min="-50"
+											max="50"
+											step="1"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['shadow_spread'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-color">
+											<?php esc_html_e( 'Shadow Color', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-bar-shadow-color"
+											class="mase-color-picker"
+											name="admin_bar[shadow_color]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_color'] ?? '#000000' ); ?>"
+										/>
+									</div>
+								</div>
+
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-shadow-opacity">
+											<?php esc_html_e( 'Shadow Opacity', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-shadow-opacity"
+											name="admin_bar[shadow_opacity]"
+											value="<?php echo esc_attr( $settings['admin_bar']['shadow_opacity'] ?? 0.15 ); ?>"
+											min="0"
+											max="1"
+											step="0.05"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['shadow_opacity'] ?? 0.15 ); ?></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Admin Bar Width Controls (Requirements 11.1, 11.2, 11.3) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Width Controls', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Control the width of the admin bar in pixels or percentage.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-width-unit">
+										<?php esc_html_e( 'Width Unit', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-width-unit" name="admin_bar[width_unit]">
+										<option value="percent" <?php selected( $settings['admin_bar']['width_unit'] ?? 'percent', 'percent' ); ?>>
+											<?php esc_html_e( 'Percentage (%)', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="pixels" <?php selected( $settings['admin_bar']['width_unit'] ?? 'percent', 'pixels' ); ?>>
+											<?php esc_html_e( 'Pixels (px)', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between percentage or pixel-based width.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Percentage Width Control (shown when width_unit = percent) -->
+							<div class="mase-conditional-group" data-depends-on="admin-bar-width-unit" data-value="percent" style="display: <?php echo ( ! isset( $settings['admin_bar']['width_unit'] ) || $settings['admin_bar']['width_unit'] === 'percent' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-width-value-percent">
+											<?php esc_html_e( 'Width (%)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-width-value-percent"
+											name="admin_bar[width_value]" 
+											min="50"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['width_value'] ?? 100 ); ?>"
+											data-unit="percent"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['width_value'] ?? 100 ); ?>%</span>
+										<p class="description"><?php esc_html_e( 'Range: 50-100%. Admin bar will be centered if less than 100%.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Pixel Width Control (shown when width_unit = pixels) -->
+							<div class="mase-conditional-group" data-depends-on="admin-bar-width-unit" data-value="pixels" style="display: <?php echo ( isset( $settings['admin_bar']['width_unit'] ) && $settings['admin_bar']['width_unit'] === 'pixels' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-width-value-pixels">
+											<?php esc_html_e( 'Width (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-width-value-pixels"
+											name="admin_bar[width_value]" 
+											min="800"
+											max="3000"
+											step="10"
+											value="<?php echo esc_attr( $settings['admin_bar']['width_value'] ?? 1920 ); ?>"
+											data-unit="pixels"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['width_value'] ?? 1920 ); ?>px</span>
+										<p class="description"><?php esc_html_e( 'Range: 800-3000px. Admin bar will be centered.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Individual Floating Margin Controls (Requirements 12.1, 12.2, 12.3) -->
+				<div class="mase-section mase-conditional" data-depends-on="admin-bar-floating">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Floating Margins', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Control the margins around the floating admin bar. Only visible when floating mode is enabled.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-floating-margin-mode">
+										<?php esc_html_e( 'Margin Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-floating-margin-mode" name="admin_bar[floating_margin_mode]">
+										<option value="uniform" <?php selected( $settings['admin_bar']['floating_margin_mode'] ?? 'uniform', 'uniform' ); ?>>
+											<?php esc_html_e( 'Uniform', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="individual" <?php selected( $settings['admin_bar']['floating_margin_mode'] ?? 'uniform', 'individual' ); ?>>
+											<?php esc_html_e( 'Individual Sides', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between uniform margin for all sides or individual control.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Uniform Margin Control (shown when floating_margin_mode = uniform) -->
+							<div class="mase-conditional-group" data-depends-on="admin-bar-floating-margin-mode" data-value="uniform" style="display: <?php echo ( ! isset( $settings['admin_bar']['floating_margin_mode'] ) || $settings['admin_bar']['floating_margin_mode'] === 'uniform' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-floating-margin-uniform">
+											<?php esc_html_e( 'All Sides (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-floating-margin-uniform"
+											name="admin_bar[floating_margin]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['floating_margin'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['floating_margin'] ?? 8 ); ?>px</span>
+										<p class="description"><?php esc_html_e( 'Apply the same margin to all sides.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Individual Margin Controls (shown when floating_margin_mode = individual) -->
+							<div class="mase-conditional-group" data-depends-on="admin-bar-floating-margin-mode" data-value="individual" style="display: <?php echo ( isset( $settings['admin_bar']['floating_margin_mode'] ) && $settings['admin_bar']['floating_margin_mode'] === 'individual' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-floating-margin-top">
+											<?php esc_html_e( 'Top (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-floating-margin-top"
+											name="admin_bar[floating_margin_top]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['floating_margin_top'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['floating_margin_top'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-floating-margin-right">
+											<?php esc_html_e( 'Right (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-floating-margin-right"
+											name="admin_bar[floating_margin_right]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['floating_margin_right'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['floating_margin_right'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-floating-margin-bottom">
+											<?php esc_html_e( 'Bottom (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-floating-margin-bottom"
+											name="admin_bar[floating_margin_bottom]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['floating_margin_bottom'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['floating_margin_bottom'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-bar-floating-margin-left">
+											<?php esc_html_e( 'Left (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-bar-floating-margin-left"
+											name="admin_bar[floating_margin_left]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_bar']['floating_margin_left'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar']['floating_margin_left'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Admin Bar Submenu Styling (Requirements 6.1, 6.2, 6.3) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Submenu Styling', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the appearance of admin bar dropdown submenus.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-submenu-bg-color">
+										<?php esc_html_e( 'Background Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="admin-bar-submenu-bg-color"
+										name="admin_bar_submenu[bg_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['admin_bar_submenu']['bg_color'] ?? '#32373c' ); ?>"
+										data-default-color="#32373c"
+									/>
+									<p class="description"><?php esc_html_e( 'Background color for submenu dropdowns.', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
 							
 							<div class="mase-setting-row">
 								<div class="mase-setting-label">
-									<label for="admin-bar-shadow">
-										<?php esc_html_e( 'Shadow Preset', 'modern-admin-styler' ); ?>
+									<label for="admin-bar-submenu-border-radius">
+										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
 									</label>
 								</div>
 								<div class="mase-setting-control">
-									<select id="admin-bar-shadow" name="visual_effects[admin_bar][shadow]">
-										<option value="none" <?php selected( $settings['visual_effects']['admin_bar']['shadow'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
-										<option value="flat" <?php selected( $settings['visual_effects']['admin_bar']['shadow'] ?? 'none', 'flat' ); ?>><?php esc_html_e( 'Flat', 'modern-admin-styler' ); ?></option>
-										<option value="subtle" <?php selected( $settings['visual_effects']['admin_bar']['shadow'] ?? 'none', 'subtle' ); ?>><?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?></option>
-										<option value="elevated" <?php selected( $settings['visual_effects']['admin_bar']['shadow'] ?? 'none', 'elevated' ); ?>><?php esc_html_e( 'Elevated', 'modern-admin-styler' ); ?></option>
-										<option value="floating" <?php selected( $settings['visual_effects']['admin_bar']['shadow'] ?? 'none', 'floating' ); ?>><?php esc_html_e( 'Floating', 'modern-admin-styler' ); ?></option>
+									<input 
+										type="range" 
+										id="admin-bar-submenu-border-radius"
+										name="admin_bar_submenu[border_radius]" 
+										value="<?php echo esc_attr( $settings['admin_bar_submenu']['border_radius'] ?? 0 ); ?>"
+										min="0"
+										max="20"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar_submenu']['border_radius'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Rounded corners for submenu dropdowns.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-submenu-spacing">
+										<?php esc_html_e( 'Spacing from Admin Bar (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-bar-submenu-spacing"
+										name="admin_bar_submenu[spacing]" 
+										value="<?php echo esc_attr( $settings['admin_bar_submenu']['spacing'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_bar_submenu']['spacing'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Vertical distance between admin bar and submenu.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- NEW: Submenu Font Family Selector (Requirement 8.1, 8.4) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-bar-submenu-font-family">
+										<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-bar-submenu-font-family" name="admin_bar_submenu[font_family]">
+										<optgroup label="<?php esc_attr_e( 'System Fonts', 'modern-admin-styler' ); ?>">
+											<option value="system" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'system' ); ?>><?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?></option>
+											<option value="Arial, sans-serif" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+											<option value="Helvetica, sans-serif" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+											<option value="Georgia, serif" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+											<option value="'Courier New', monospace" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', "'Courier New', monospace" ); ?>>Courier New</option>
+											<option value="'Times New Roman', serif" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', "'Times New Roman', serif" ); ?>>Times New Roman</option>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Google Fonts', 'modern-admin-styler' ); ?>">
+											<option value="google:Roboto" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Roboto' ); ?>>Roboto</option>
+											<option value="google:Open Sans" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Open Sans' ); ?>>Open Sans</option>
+											<option value="google:Lato" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Lato' ); ?>>Lato</option>
+											<option value="google:Montserrat" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Montserrat' ); ?>>Montserrat</option>
+											<option value="google:Poppins" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Poppins' ); ?>>Poppins</option>
+											<option value="google:Inter" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Inter' ); ?>>Inter</option>
+											<option value="google:Raleway" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Raleway' ); ?>>Raleway</option>
+											<option value="google:Source Sans Pro" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Source Sans Pro' ); ?>>Source Sans Pro</option>
+											<option value="google:Nunito" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Nunito' ); ?>>Nunito</option>
+											<option value="google:Ubuntu" <?php selected( $settings['admin_bar_submenu']['font_family'] ?? 'system', 'google:Ubuntu' ); ?>>Ubuntu</option>
+										</optgroup>
 									</select>
+									<p class="description"><?php esc_html_e( 'Font family for submenu text.', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
 						</div>
@@ -719,21 +1447,45 @@ $templates    = $settings_obj->get_all_templates();
 							<div class="mase-setting-row">
 								<div class="mase-setting-label">
 									<label for="admin-menu-width">
-										<?php esc_html_e( 'Width (px)', 'modern-admin-styler' ); ?>
+										<?php esc_html_e( 'Width', 'modern-admin-styler' ); ?>
 									</label>
 								</div>
 								<div class="mase-setting-control">
-									<input 
-										type="number" 
-										id="admin-menu-width"
-										name="admin_menu[width]" 
-										class="small-text"
-										value="<?php echo esc_attr( $settings['admin_menu']['width'] ); ?>"
-										min="160"
-										max="400"
-										step="1"
-									/>
-									<p class="description"><?php esc_html_e( 'Default: 160px. Range: 160-400px.', 'modern-admin-styler' ); ?></p>
+									<div class="mase-control-group">
+										<select id="admin-menu-width-unit" name="admin_menu[width_unit]" class="mase-unit-toggle">
+											<option value="pixels" <?php selected( $settings['admin_menu']['width_unit'] ?? 'pixels', 'pixels' ); ?>>
+												<?php esc_html_e( 'Pixels', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="percent" <?php selected( $settings['admin_menu']['width_unit'] ?? 'pixels', 'percent' ); ?>>
+												<?php esc_html_e( 'Percentage', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+										<input 
+											type="number" 
+											id="admin-menu-width"
+											name="admin_menu[width_value]" 
+											class="small-text"
+											value="<?php echo esc_attr( $settings['admin_menu']['width_value'] ?? $settings['admin_menu']['width'] ?? 160 ); ?>"
+											min="<?php echo ( isset( $settings['admin_menu']['width_unit'] ) && $settings['admin_menu']['width_unit'] === 'percent' ) ? '50' : '160'; ?>"
+											max="<?php echo ( isset( $settings['admin_menu']['width_unit'] ) && $settings['admin_menu']['width_unit'] === 'percent' ) ? '100' : '400'; ?>"
+											step="1"
+											data-min-pixels="160"
+											data-max-pixels="400"
+											data-min-percent="50"
+											data-max-percent="100"
+										/>
+										<span class="mase-unit-label">
+											<?php echo ( isset( $settings['admin_menu']['width_unit'] ) && $settings['admin_menu']['width_unit'] === 'percent' ) ? '%' : 'px'; ?>
+										</span>
+									</div>
+									<p class="description">
+										<span class="mase-width-desc-pixels" style="display: <?php echo ( ! isset( $settings['admin_menu']['width_unit'] ) || $settings['admin_menu']['width_unit'] === 'pixels' ) ? 'inline' : 'none'; ?>;">
+											<?php esc_html_e( 'Default: 160px. Range: 160-400px.', 'modern-admin-styler' ); ?>
+										</span>
+										<span class="mase-width-desc-percent" style="display: <?php echo ( isset( $settings['admin_menu']['width_unit'] ) && $settings['admin_menu']['width_unit'] === 'percent' ) ? 'inline' : 'none'; ?>;">
+											<?php esc_html_e( 'Default: 100%. Range: 50-100%.', 'modern-admin-styler' ); ?>
+										</span>
+									</p>
 								</div>
 							</div>
 							
@@ -749,6 +1501,221 @@ $templates    = $settings_obj->get_all_templates();
 										<option value="content" <?php selected( $settings['admin_menu']['height_mode'] ?? 'full', 'content' ); ?>><?php esc_html_e( 'Fit to Content', 'modern-admin-styler' ); ?></option>
 									</select>
 									<p class="description"><?php esc_html_e( 'Full Height: Menu spans entire viewport. Fit to Content: Menu height adjusts to menu items.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Menu Gradient Background (Requirements 6.1, 6.2, 6.4) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Background Gradient', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Apply gradient backgrounds to the admin menu.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-bg-type">
+										<?php esc_html_e( 'Background Type', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-bg-type" name="admin_menu[bg_type]">
+										<option value="solid" <?php selected( $settings['admin_menu']['bg_type'] ?? 'solid', 'solid' ); ?>>
+											<?php esc_html_e( 'Solid Color', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="gradient" <?php selected( $settings['admin_menu']['bg_type'] ?? 'solid', 'gradient' ); ?>>
+											<?php esc_html_e( 'Gradient', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+								</div>
+							</div>
+							
+							<!-- Gradient Controls (shown when bg_type = gradient) -->
+							<div class="mase-conditional-group" data-depends-on="admin-menu-bg-type" data-value="gradient" style="display: <?php echo ( isset( $settings['admin_menu']['bg_type'] ) && $settings['admin_menu']['bg_type'] === 'gradient' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-gradient-type">
+											<?php esc_html_e( 'Gradient Type', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<select id="admin-menu-gradient-type" name="admin_menu[gradient_type]">
+											<option value="linear" <?php selected( $settings['admin_menu']['gradient_type'] ?? 'linear', 'linear' ); ?>>
+												<?php esc_html_e( 'Linear', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="radial" <?php selected( $settings['admin_menu']['gradient_type'] ?? 'linear', 'radial' ); ?>>
+												<?php esc_html_e( 'Radial', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="conic" <?php selected( $settings['admin_menu']['gradient_type'] ?? 'linear', 'conic' ); ?>>
+												<?php esc_html_e( 'Conic', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-gradient-angle">
+											<?php esc_html_e( 'Angle (degrees)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-gradient-angle"
+											name="admin_menu[gradient_angle]" 
+											min="0"
+											max="360"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['gradient_angle'] ?? 90 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['gradient_angle'] ?? 90 ); ?>°</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-gradient-color-1">
+											<?php esc_html_e( 'Color Stop 1', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-menu-gradient-color-1"
+											name="admin_menu[gradient_colors][0][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['admin_menu']['gradient_colors'][0]['color'] ?? '#23282d' ); ?>"
+											data-default-color="#23282d"
+										/>
+										<input 
+											type="hidden" 
+											name="admin_menu[gradient_colors][0][position]" 
+											value="0"
+										/>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-gradient-color-2">
+											<?php esc_html_e( 'Color Stop 2', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-menu-gradient-color-2"
+											name="admin_menu[gradient_colors][1][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['admin_menu']['gradient_colors'][1]['color'] ?? '#32373c' ); ?>"
+											data-default-color="#32373c"
+										/>
+										<input 
+											type="hidden" 
+											name="admin_menu[gradient_colors][1][position]" 
+											value="100"
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Icon Color Synchronization (Requirement 2.3) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Icon Color', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Control how menu icons are colored. Auto mode syncs with text color, custom mode allows independent icon color.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-icon-color-mode">
+										<?php esc_html_e( 'Icon Color Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-icon-color-mode" name="admin_menu[icon_color_mode]">
+										<option value="auto" <?php selected( $settings['admin_menu']['icon_color_mode'] ?? 'auto', 'auto' ); ?>><?php esc_html_e( 'Auto (Sync with Text Color)', 'modern-admin-styler' ); ?></option>
+										<option value="custom" <?php selected( $settings['admin_menu']['icon_color_mode'] ?? 'auto', 'custom' ); ?>><?php esc_html_e( 'Custom', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Auto mode automatically matches icon color to text color. Custom mode allows independent icon color selection.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Custom Icon Color (shown when icon_color_mode = custom) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-icon-color-mode" data-value="custom" style="display: <?php echo ( isset( $settings['admin_menu']['icon_color_mode'] ) && $settings['admin_menu']['icon_color_mode'] === 'custom' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-icon-color">
+										<?php esc_html_e( 'Custom Icon Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="admin-menu-icon-color"
+										name="admin_menu[icon_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['admin_menu']['icon_color'] ?? '#ffffff' ); ?>"
+										data-default-color="#ffffff"
+									/>
+									<p class="description"><?php esc_html_e( 'Choose a custom color for menu icons.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Menu Item Spacing (Requirement 1.2, 1.3) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Menu Item Spacing', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Control padding for menu items to create a compact, professional appearance.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-padding-vertical">
+										<?php esc_html_e( 'Vertical Padding (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-padding-vertical"
+										name="admin_menu[padding_vertical]" 
+										value="<?php echo esc_attr( $settings['admin_menu']['padding_vertical'] ?? 10 ); ?>"
+										min="5"
+										max="30"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['padding_vertical'] ?? 10 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Default: 10px. Range: 5-30px.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-padding-horizontal">
+										<?php esc_html_e( 'Horizontal Padding (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-padding-horizontal"
+										name="admin_menu[padding_horizontal]" 
+										value="<?php echo esc_attr( $settings['admin_menu']['padding_horizontal'] ?? 15 ); ?>"
+										min="5"
+										max="30"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['padding_horizontal'] ?? 15 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Default: 15px. Range: 5-30px.', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
 						</div>
@@ -854,6 +1821,41 @@ $templates    = $settings_obj->get_all_templates();
 									</select>
 								</div>
 							</div>
+							
+							<!-- Font Family Control (Requirement 11.1, 11.4, 11.6) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-font-family">
+										<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-font-family" name="typography[admin_menu][font_family]">
+										<optgroup label="<?php esc_attr_e( 'System Fonts', 'modern-admin-styler' ); ?>">
+											<option value="system" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'system' ); ?>><?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?></option>
+											<option value="Arial, sans-serif" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+											<option value="Helvetica, sans-serif" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+											<option value="Georgia, serif" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+											<option value="'Courier New', monospace" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', "'Courier New', monospace" ); ?>>Courier New</option>
+											<option value="'Times New Roman', serif" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', "'Times New Roman', serif" ); ?>>Times New Roman</option>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Google Fonts', 'modern-admin-styler' ); ?>">
+											<option value="google:Roboto" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Roboto' ); ?>>Roboto</option>
+											<option value="google:Open Sans" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Open Sans' ); ?>>Open Sans</option>
+											<option value="google:Lato" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Lato' ); ?>>Lato</option>
+											<option value="google:Montserrat" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Montserrat' ); ?>>Montserrat</option>
+											<option value="google:Poppins" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Poppins' ); ?>>Poppins</option>
+											<option value="google:Inter" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Inter' ); ?>>Inter</option>
+											<option value="google:Raleway" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Raleway' ); ?>>Raleway</option>
+											<option value="google:Source Sans Pro" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Source Sans Pro' ); ?>>Source Sans Pro</option>
+											<option value="google:Nunito" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Nunito' ); ?>>Nunito</option>
+											<option value="google:Ubuntu" <?php selected( $settings['typography']['admin_menu']['font_family'] ?? 'system', 'google:Ubuntu' ); ?>>Ubuntu</option>
+										</optgroup>
+									</select>
+									<input type="hidden" id="admin-menu-google-font-url" name="typography[admin_menu][google_font_url]" value="<?php echo esc_attr( $settings['typography']['admin_menu']['google_font_url'] ?? '' ); ?>" />
+									<p class="description"><?php esc_html_e( 'Choose a font family for menu items. Google Fonts are loaded dynamically.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -909,7 +1911,28 @@ $templates    = $settings_obj->get_all_templates();
 								</div>
 							</div>
 							
+							<!-- Border Radius Mode (Requirements 12.1, 12.2, 12.3, 12.4) -->
 							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-border-radius-mode">
+										<?php esc_html_e( 'Border Radius Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-border-radius-mode" name="admin_menu[border_radius_mode]">
+										<option value="uniform" <?php selected( $settings['admin_menu']['border_radius_mode'] ?? 'uniform', 'uniform' ); ?>>
+											<?php esc_html_e( 'Uniform (All Corners)', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="individual" <?php selected( $settings['admin_menu']['border_radius_mode'] ?? 'uniform', 'individual' ); ?>>
+											<?php esc_html_e( 'Individual Corners', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between uniform or individual corner radius.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Uniform Border Radius (shown when mode = uniform) -->
+							<div class="mase-setting-row mase-conditional-group" data-depends-on="admin-menu-border-radius-mode" data-value="uniform" style="display: <?php echo ( isset( $settings['admin_menu']['border_radius_mode'] ) && $settings['admin_menu']['border_radius_mode'] === 'individual' ) ? 'none' : 'flex'; ?>;">
 								<div class="mase-setting-label">
 									<label for="admin-menu-border-radius">
 										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
@@ -919,32 +1942,870 @@ $templates    = $settings_obj->get_all_templates();
 									<input 
 										type="range" 
 										id="admin-menu-border-radius"
-										name="visual_effects[admin_menu][border_radius]" 
-										value="<?php echo esc_attr( $settings['visual_effects']['admin_menu']['border_radius'] ?? 0 ); ?>"
+										name="admin_menu[border_radius]" 
+										value="<?php echo esc_attr( $settings['admin_menu']['border_radius'] ?? 0 ); ?>"
 										min="0"
-										max="20"
+										max="50"
 										step="1"
 									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['visual_effects']['admin_menu']['border_radius'] ?? 0 ); ?>px</span>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['border_radius'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Uniform corner rounding for all corners (0-50px).', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
 							
+							<!-- Individual Border Radius (shown when mode = individual) -->
+							<div class="mase-conditional-group" data-depends-on="admin-menu-border-radius-mode" data-value="individual" style="display: <?php echo ( isset( $settings['admin_menu']['border_radius_mode'] ) && $settings['admin_menu']['border_radius_mode'] === 'individual' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-border-radius-tl">
+											<?php esc_html_e( 'Top-Left Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-border-radius-tl"
+											name="admin_menu[border_radius_tl]" 
+											min="0"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['border_radius_tl'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['border_radius_tl'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-border-radius-tr">
+											<?php esc_html_e( 'Top-Right Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-border-radius-tr"
+											name="admin_menu[border_radius_tr]" 
+											min="0"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['border_radius_tr'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['border_radius_tr'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-border-radius-br">
+											<?php esc_html_e( 'Bottom-Right Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-border-radius-br"
+											name="admin_menu[border_radius_br]" 
+											min="0"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['border_radius_br'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['border_radius_br'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-border-radius-bl">
+											<?php esc_html_e( 'Bottom-Left Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-border-radius-bl"
+											name="admin_menu[border_radius_bl]" 
+											min="0"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['border_radius_bl'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['border_radius_bl'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Shadow Mode (Requirements 13.1, 13.4) -->
 							<div class="mase-setting-row">
 								<div class="mase-setting-label">
-									<label for="admin-menu-shadow">
+									<label for="admin-menu-shadow-mode">
+										<?php esc_html_e( 'Shadow Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-shadow-mode" name="admin_menu[shadow_mode]">
+										<option value="preset" <?php selected( $settings['admin_menu']['shadow_mode'] ?? 'preset', 'preset' ); ?>>
+											<?php esc_html_e( 'Preset Shadows', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="custom" <?php selected( $settings['admin_menu']['shadow_mode'] ?? 'preset', 'custom' ); ?>>
+											<?php esc_html_e( 'Custom Shadow', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between preset shadows or create a custom shadow.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Shadow Preset (shown when mode = preset) (Requirement 13.1) -->
+							<div class="mase-setting-row mase-conditional-group" data-depends-on="admin-menu-shadow-mode" data-value="preset" style="display: <?php echo ( isset( $settings['admin_menu']['shadow_mode'] ) && $settings['admin_menu']['shadow_mode'] === 'custom' ) ? 'none' : 'flex'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-shadow-preset">
 										<?php esc_html_e( 'Shadow Preset', 'modern-admin-styler' ); ?>
 									</label>
 								</div>
 								<div class="mase-setting-control">
-									<select id="admin-menu-shadow" name="visual_effects[admin_menu][shadow]">
-										<option value="none" <?php selected( $settings['visual_effects']['admin_menu']['shadow'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
-										<option value="flat" <?php selected( $settings['visual_effects']['admin_menu']['shadow'] ?? 'none', 'flat' ); ?>><?php esc_html_e( 'Flat', 'modern-admin-styler' ); ?></option>
-										<option value="subtle" <?php selected( $settings['visual_effects']['admin_menu']['shadow'] ?? 'none', 'subtle' ); ?>><?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?></option>
-										<option value="elevated" <?php selected( $settings['visual_effects']['admin_menu']['shadow'] ?? 'none', 'elevated' ); ?>><?php esc_html_e( 'Elevated', 'modern-admin-styler' ); ?></option>
-										<option value="floating" <?php selected( $settings['visual_effects']['admin_menu']['shadow'] ?? 'none', 'floating' ); ?>><?php esc_html_e( 'Floating', 'modern-admin-styler' ); ?></option>
+									<select id="admin-menu-shadow-preset" name="admin_menu[shadow_preset]">
+										<option value="none" <?php selected( $settings['admin_menu']['shadow_preset'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+										<option value="subtle" <?php selected( $settings['admin_menu']['shadow_preset'] ?? 'none', 'subtle' ); ?>><?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?></option>
+										<option value="medium" <?php selected( $settings['admin_menu']['shadow_preset'] ?? 'none', 'medium' ); ?>><?php esc_html_e( 'Medium', 'modern-admin-styler' ); ?></option>
+										<option value="strong" <?php selected( $settings['admin_menu']['shadow_preset'] ?? 'none', 'strong' ); ?>><?php esc_html_e( 'Strong', 'modern-admin-styler' ); ?></option>
+										<option value="dramatic" <?php selected( $settings['admin_menu']['shadow_preset'] ?? 'none', 'dramatic' ); ?>><?php esc_html_e( 'Dramatic', 'modern-admin-styler' ); ?></option>
 									</select>
+									<p class="description"><?php esc_html_e( 'Select from predefined shadow styles.', 'modern-admin-styler' ); ?></p>
 								</div>
 							</div>
+							
+							<!-- Custom Shadow Controls (shown when mode = custom) (Requirements 13.2, 13.3) -->
+							<div class="mase-conditional-group" data-depends-on="admin-menu-shadow-mode" data-value="custom" style="display: <?php echo ( isset( $settings['admin_menu']['shadow_mode'] ) && $settings['admin_menu']['shadow_mode'] === 'custom' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-h-offset">
+											<?php esc_html_e( 'Horizontal Offset (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-shadow-h-offset"
+											name="admin_menu[shadow_h_offset]" 
+											min="-50"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_h_offset'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['shadow_h_offset'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-v-offset">
+											<?php esc_html_e( 'Vertical Offset (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-shadow-v-offset"
+											name="admin_menu[shadow_v_offset]" 
+											min="-50"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_v_offset'] ?? 4 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['shadow_v_offset'] ?? 4 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-blur">
+											<?php esc_html_e( 'Blur Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-shadow-blur"
+											name="admin_menu[shadow_blur]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_blur'] ?? 8 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['shadow_blur'] ?? 8 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-spread">
+											<?php esc_html_e( 'Spread Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-shadow-spread"
+											name="admin_menu[shadow_spread]" 
+											min="-50"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_spread'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['shadow_spread'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-color">
+											<?php esc_html_e( 'Shadow Color', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="admin-menu-shadow-color"
+											name="admin_menu[shadow_color]" 
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_color'] ?? '#000000' ); ?>"
+											class="mase-color-picker"
+											data-alpha-enabled="false"
+										/>
+										<p class="description"><?php esc_html_e( 'Base color for the shadow.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-shadow-opacity">
+											<?php esc_html_e( 'Shadow Opacity', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-shadow-opacity"
+											name="admin_menu[shadow_opacity]" 
+											min="0"
+											max="1"
+											step="0.01"
+											value="<?php echo esc_attr( $settings['admin_menu']['shadow_opacity'] ?? 0.15 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( round( ( $settings['admin_menu']['shadow_opacity'] ?? 0.15 ) * 100 ) ); ?>%</span>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Floating Mode (Requirements 15.1, 15.2, 15.3, 15.4) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-floating">
+										<?php esc_html_e( 'Floating Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="admin-menu-floating"
+											name="visual_effects[admin_menu][floating]" 
+											value="1"
+											<?php checked( $settings['visual_effects']['admin_menu']['floating'] ?? false, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['visual_effects']['admin_menu']['floating'] ?? false ) ? 'true' : 'false'; ?>"
+											aria-describedby="admin-menu-floating-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="admin-menu-floating-desc"><?php esc_html_e( 'Add margins around the menu to create a floating effect.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Floating Margin Controls (shown when floating is enabled) -->
+							<div class="mase-conditional-group" data-depends-on="admin-menu-floating" style="display: <?php echo ( $settings['visual_effects']['admin_menu']['floating'] ?? false ) ? 'block' : 'none'; ?>;">
+								<!-- Floating Margin Mode (Requirements 15.1, 15.2) -->
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-floating-margin-mode">
+											<?php esc_html_e( 'Margin Mode', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<select id="admin-menu-floating-margin-mode" name="admin_menu[floating_margin_mode]">
+											<option value="uniform" <?php selected( $settings['admin_menu']['floating_margin_mode'] ?? 'uniform', 'uniform' ); ?>>
+												<?php esc_html_e( 'Uniform', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="individual" <?php selected( $settings['admin_menu']['floating_margin_mode'] ?? 'uniform', 'individual' ); ?>>
+												<?php esc_html_e( 'Individual Sides', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+										<p class="description"><?php esc_html_e( 'Choose between uniform or individual side margins.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+								
+								<!-- Uniform Margin Control (shown when floating_margin_mode = uniform) (Requirement 15.1) -->
+								<div class="mase-conditional-group" data-depends-on="admin-menu-floating-margin-mode" data-value="uniform" style="display: <?php echo ( ! isset( $settings['admin_menu']['floating_margin_mode'] ) || $settings['admin_menu']['floating_margin_mode'] === 'uniform' ) ? 'block' : 'none'; ?>;">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="admin-menu-floating-margin-uniform">
+												<?php esc_html_e( 'Margin (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="admin-menu-floating-margin-uniform"
+												name="admin_menu[floating_margin]" 
+												min="0"
+												max="100"
+												step="1"
+												value="<?php echo esc_attr( $settings['admin_menu']['floating_margin'] ?? 8 ); ?>"
+											/>
+											<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['floating_margin'] ?? 8 ); ?>px</span>
+											<p class="description"><?php esc_html_e( 'Apply the same margin to all sides.', 'modern-admin-styler' ); ?></p>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Individual Margin Controls (shown when floating_margin_mode = individual) (Requirements 15.2, 15.3) -->
+								<div class="mase-conditional-group" data-depends-on="admin-menu-floating-margin-mode" data-value="individual" style="display: <?php echo ( isset( $settings['admin_menu']['floating_margin_mode'] ) && $settings['admin_menu']['floating_margin_mode'] === 'individual' ) ? 'block' : 'none'; ?>;">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="admin-menu-floating-margin-top">
+												<?php esc_html_e( 'Top Margin (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="admin-menu-floating-margin-top"
+												name="admin_menu[floating_margin_top]" 
+												min="0"
+												max="100"
+												step="1"
+												value="<?php echo esc_attr( $settings['admin_menu']['floating_margin_top'] ?? 8 ); ?>"
+											/>
+											<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['floating_margin_top'] ?? 8 ); ?>px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="admin-menu-floating-margin-right">
+												<?php esc_html_e( 'Right Margin (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="admin-menu-floating-margin-right"
+												name="admin_menu[floating_margin_right]" 
+												min="0"
+												max="100"
+												step="1"
+												value="<?php echo esc_attr( $settings['admin_menu']['floating_margin_right'] ?? 8 ); ?>"
+											/>
+											<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['floating_margin_right'] ?? 8 ); ?>px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="admin-menu-floating-margin-bottom">
+												<?php esc_html_e( 'Bottom Margin (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="admin-menu-floating-margin-bottom"
+												name="admin_menu[floating_margin_bottom]" 
+												min="0"
+												max="100"
+												step="1"
+												value="<?php echo esc_attr( $settings['admin_menu']['floating_margin_bottom'] ?? 8 ); ?>"
+											/>
+											<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['floating_margin_bottom'] ?? 8 ); ?>px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="admin-menu-floating-margin-left">
+												<?php esc_html_e( 'Left Margin (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="admin-menu-floating-margin-left"
+												name="admin_menu[floating_margin_left]" 
+												min="0"
+												max="100"
+												step="1"
+												value="<?php echo esc_attr( $settings['admin_menu']['floating_margin_left'] ?? 8 ); ?>"
+											/>
+											<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['floating_margin_left'] ?? 8 ); ?>px</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Menu Submenu Styling (Requirements 7.1, 7.2, 7.3, 7.4, 8.1, 8.2) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Submenu Styling', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the appearance of admin menu dropdown submenus.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-bg-color">
+										<?php esc_html_e( 'Background Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="admin-menu-submenu-bg-color"
+										name="admin_menu_submenu[bg_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['bg_color'] ?? '#32373c' ); ?>"
+										data-default-color="#32373c"
+									/>
+									<p class="description"><?php esc_html_e( 'Background color for submenu dropdowns.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Border Radius Controls (Requirement 8.1, 8.2) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-border-radius-mode">
+										<?php esc_html_e( 'Border Radius Mode', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-submenu-border-radius-mode" name="admin_menu_submenu[border_radius_mode]">
+										<option value="uniform" <?php selected( $settings['admin_menu_submenu']['border_radius_mode'] ?? 'uniform', 'uniform' ); ?>>
+											<?php esc_html_e( 'Uniform (All Corners)', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="individual" <?php selected( $settings['admin_menu_submenu']['border_radius_mode'] ?? 'uniform', 'individual' ); ?>>
+											<?php esc_html_e( 'Individual Corners', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Choose between uniform or individual corner radius.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Uniform Border Radius (shown when mode = uniform) -->
+							<div class="mase-setting-row mase-conditional-group" data-depends-on="admin-menu-submenu-border-radius-mode" data-value="uniform" style="display: <?php echo ( isset( $settings['admin_menu_submenu']['border_radius_mode'] ) && $settings['admin_menu_submenu']['border_radius_mode'] === 'individual' ) ? 'none' : 'flex'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-border-radius">
+										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-submenu-border-radius"
+										name="admin_menu_submenu[border_radius]" 
+										min="0"
+										max="20"
+										step="1"
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['border_radius'] ?? 0 ); ?>"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['border_radius'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Uniform corner rounding for all corners (0-20px).', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Individual Border Radius (shown when mode = individual) -->
+							<div class="mase-conditional-group" data-depends-on="admin-menu-submenu-border-radius-mode" data-value="individual" style="display: <?php echo ( isset( $settings['admin_menu_submenu']['border_radius_mode'] ) && $settings['admin_menu_submenu']['border_radius_mode'] === 'individual' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-submenu-border-radius-tl">
+											<?php esc_html_e( 'Top-Left Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-submenu-border-radius-tl"
+											name="admin_menu_submenu[border_radius_tl]" 
+											min="0"
+											max="20"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu_submenu']['border_radius_tl'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['border_radius_tl'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-submenu-border-radius-tr">
+											<?php esc_html_e( 'Top-Right Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-submenu-border-radius-tr"
+											name="admin_menu_submenu[border_radius_tr]" 
+											min="0"
+											max="20"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu_submenu']['border_radius_tr'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['border_radius_tr'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-submenu-border-radius-br">
+											<?php esc_html_e( 'Bottom-Right Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-submenu-border-radius-br"
+											name="admin_menu_submenu[border_radius_br]" 
+											min="0"
+											max="20"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu_submenu']['border_radius_br'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['border_radius_br'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="admin-menu-submenu-border-radius-bl">
+											<?php esc_html_e( 'Bottom-Left Radius (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="admin-menu-submenu-border-radius-bl"
+											name="admin_menu_submenu[border_radius_bl]" 
+											min="0"
+											max="20"
+											step="1"
+											value="<?php echo esc_attr( $settings['admin_menu_submenu']['border_radius_bl'] ?? 0 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['border_radius_bl'] ?? 0 ); ?>px</span>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Submenu Spacing Control (Requirement 9.1) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-spacing">
+										<?php esc_html_e( 'Spacing from Menu (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-submenu-spacing"
+										name="admin_menu_submenu[spacing]" 
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['spacing'] ?? 0 ); ?>"
+										min="0"
+										max="50"
+										step="1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['spacing'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Vertical distance between menu and submenu.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Submenu Typography (Requirements 10.1, 10.2, 10.3, 10.4, 10.5) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Submenu Typography', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the typography of submenu items independently from the main menu.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<!-- Font Size Control (Requirement 10.1) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-font-size">
+										<?php esc_html_e( 'Font Size (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="number" 
+										id="admin-menu-submenu-font-size"
+										name="admin_menu_submenu[font_size]" 
+										class="small-text"
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['font_size'] ?? 13 ); ?>"
+										min="10"
+										max="24"
+										step="1"
+									/>
+									<p class="description"><?php esc_html_e( 'Font size for submenu items (10-24px).', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Text Color Control (Requirement 10.2) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-text-color">
+										<?php esc_html_e( 'Text Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="admin-menu-submenu-text-color"
+										name="admin_menu_submenu[text_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['text_color'] ?? '#ffffff' ); ?>"
+										data-default-color="#ffffff"
+									/>
+									<p class="description"><?php esc_html_e( 'Text color for submenu items.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Line Height Control (Requirement 10.3) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-line-height">
+										<?php esc_html_e( 'Line Height', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-submenu-line-height"
+										name="admin_menu_submenu[line_height]" 
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['line_height'] ?? 1.5 ); ?>"
+										min="1.0"
+										max="3.0"
+										step="0.1"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['line_height'] ?? 1.5 ); ?></span>
+									<p class="description"><?php esc_html_e( 'Line height for submenu items (1.0-3.0).', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Letter Spacing Control (Requirement 10.4) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-letter-spacing">
+										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-submenu-letter-spacing"
+										name="admin_menu_submenu[letter_spacing]" 
+										value="<?php echo esc_attr( $settings['admin_menu_submenu']['letter_spacing'] ?? 0 ); ?>"
+										min="-2"
+										max="5"
+										step="0.5"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu_submenu']['letter_spacing'] ?? 0 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Letter spacing for submenu items (-2 to 5px).', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Text Transform Control (Requirement 10.5) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-text-transform">
+										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-submenu-text-transform" name="admin_menu_submenu[text_transform]">
+										<option value="none" <?php selected( $settings['admin_menu_submenu']['text_transform'] ?? 'none', 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+										<option value="uppercase" <?php selected( $settings['admin_menu_submenu']['text_transform'] ?? 'none', 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
+										<option value="lowercase" <?php selected( $settings['admin_menu_submenu']['text_transform'] ?? 'none', 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
+										<option value="capitalize" <?php selected( $settings['admin_menu_submenu']['text_transform'] ?? 'none', 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Text transformation for submenu items.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Font Family Control (Requirement 11.1) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-submenu-font-family">
+										<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-submenu-font-family" name="admin_menu_submenu[font_family]">
+										<optgroup label="<?php esc_attr_e( 'System Fonts', 'modern-admin-styler' ); ?>">
+											<option value="system" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'system' ); ?>><?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?></option>
+											<option value="Arial, sans-serif" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+											<option value="Helvetica, sans-serif" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+											<option value="Georgia, serif" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+											<option value="'Courier New', monospace" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', "'Courier New', monospace" ); ?>>Courier New</option>
+											<option value="'Times New Roman', serif" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', "'Times New Roman', serif" ); ?>>Times New Roman</option>
+										</optgroup>
+										<optgroup label="<?php esc_attr_e( 'Google Fonts', 'modern-admin-styler' ); ?>">
+											<option value="google:Roboto" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Roboto' ); ?>>Roboto</option>
+											<option value="google:Open Sans" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Open Sans' ); ?>>Open Sans</option>
+											<option value="google:Lato" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Lato' ); ?>>Lato</option>
+											<option value="google:Montserrat" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Montserrat' ); ?>>Montserrat</option>
+											<option value="google:Poppins" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Poppins' ); ?>>Poppins</option>
+											<option value="google:Inter" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Inter' ); ?>>Inter</option>
+											<option value="google:Raleway" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Raleway' ); ?>>Raleway</option>
+											<option value="google:Source Sans Pro" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Source Sans Pro' ); ?>>Source Sans Pro</option>
+											<option value="google:Nunito" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Nunito' ); ?>>Nunito</option>
+											<option value="google:Ubuntu" <?php selected( $settings['admin_menu_submenu']['font_family'] ?? 'system', 'google:Ubuntu' ); ?>>Ubuntu</option>
+										</optgroup>
+									</select>
+									<p class="description"><?php esc_html_e( 'Font family for submenu items.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Logo Placement Section (Requirement 16) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Logo Placement', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Add and position a custom logo in the admin menu.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							
+							<!-- Logo Enable Toggle (Requirement 16.1) -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="admin-menu-logo-enabled">
+										<?php esc_html_e( 'Enable Logo', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="admin-menu-logo-enabled"
+											name="admin_menu[logo_enabled]" 
+											value="1"
+											<?php checked( $settings['admin_menu']['logo_enabled'] ?? false, true ); ?>
+										/>
+										<span class="mase-toggle-slider"></span>
+									</label>
+									<p class="description"><?php esc_html_e( 'Enable custom logo in the admin menu.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Logo Upload Control (Requirement 16.1) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-logo-enabled" style="display: <?php echo ( $settings['admin_menu']['logo_enabled'] ?? false ) ? 'flex' : 'none'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-logo-upload">
+										<?php esc_html_e( 'Logo Image', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<div class="mase-logo-upload-wrapper">
+										<input 
+											type="hidden" 
+											id="admin-menu-logo-url"
+											name="admin_menu[logo_url]" 
+											value="<?php echo esc_attr( $settings['admin_menu']['logo_url'] ?? '' ); ?>"
+										/>
+										<button 
+											type="button" 
+											id="admin-menu-logo-upload-btn"
+											class="button button-secondary mase-logo-upload-btn"
+										>
+											<span class="dashicons dashicons-upload"></span>
+											<?php esc_html_e( 'Upload Logo', 'modern-admin-styler' ); ?>
+										</button>
+										<button 
+											type="button" 
+											id="admin-menu-logo-remove-btn"
+											class="button button-secondary mase-logo-remove-btn"
+											style="<?php echo empty( $settings['admin_menu']['logo_url'] ) ? 'display: none;' : ''; ?>"
+										>
+											<span class="dashicons dashicons-no"></span>
+											<?php esc_html_e( 'Remove Logo', 'modern-admin-styler' ); ?>
+										</button>
+										<div id="admin-menu-logo-preview" class="mase-logo-preview" style="<?php echo empty( $settings['admin_menu']['logo_url'] ) ? 'display: none;' : ''; ?>">
+											<?php if ( ! empty( $settings['admin_menu']['logo_url'] ) ) : ?>
+												<img src="<?php echo esc_url( $settings['admin_menu']['logo_url'] ); ?>" alt="<?php esc_attr_e( 'Menu Logo', 'modern-admin-styler' ); ?>" />
+											<?php endif; ?>
+										</div>
+									</div>
+									<p class="description"><?php esc_html_e( 'Upload a logo image (PNG, JPG, or SVG, max 2MB).', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Logo Position Control (Requirement 16.2) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-logo-enabled" style="display: <?php echo ( $settings['admin_menu']['logo_enabled'] ?? false ) ? 'flex' : 'none'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-logo-position">
+										<?php esc_html_e( 'Logo Position', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-logo-position" name="admin_menu[logo_position]">
+										<option value="top" <?php selected( $settings['admin_menu']['logo_position'] ?? 'top', 'top' ); ?>><?php esc_html_e( 'Top', 'modern-admin-styler' ); ?></option>
+										<option value="bottom" <?php selected( $settings['admin_menu']['logo_position'] ?? 'top', 'bottom' ); ?>><?php esc_html_e( 'Bottom', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Position logo at the top or bottom of the menu.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Logo Width Control (Requirement 16.3) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-logo-enabled" style="display: <?php echo ( $settings['admin_menu']['logo_enabled'] ?? false ) ? 'flex' : 'none'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-logo-width">
+										<?php esc_html_e( 'Logo Width (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="admin-menu-logo-width"
+										name="admin_menu[logo_width]" 
+										value="<?php echo esc_attr( $settings['admin_menu']['logo_width'] ?? 100 ); ?>"
+										min="20"
+										max="200"
+										step="5"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['admin_menu']['logo_width'] ?? 100 ); ?>px</span>
+									<p class="description"><?php esc_html_e( 'Logo width in pixels (20-200px). Height adjusts automatically.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<!-- Logo Alignment Control (Requirement 16.4) -->
+							<div class="mase-setting-row mase-conditional" data-depends-on="admin-menu-logo-enabled" style="display: <?php echo ( $settings['admin_menu']['logo_enabled'] ?? false ) ? 'flex' : 'none'; ?>;">
+								<div class="mase-setting-label">
+									<label for="admin-menu-logo-alignment">
+										<?php esc_html_e( 'Logo Alignment', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="admin-menu-logo-alignment" name="admin_menu[logo_alignment]">
+										<option value="left" <?php selected( $settings['admin_menu']['logo_alignment'] ?? 'center', 'left' ); ?>><?php esc_html_e( 'Left', 'modern-admin-styler' ); ?></option>
+										<option value="center" <?php selected( $settings['admin_menu']['logo_alignment'] ?? 'center', 'center' ); ?>><?php esc_html_e( 'Center', 'modern-admin-styler' ); ?></option>
+										<option value="right" <?php selected( $settings['admin_menu']['logo_alignment'] ?? 'center', 'right' ); ?>><?php esc_html_e( 'Right', 'modern-admin-styler' ); ?></option>
+									</select>
+									<p class="description"><?php esc_html_e( 'Horizontal alignment of the logo.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -1953,6 +3814,7 @@ $templates    = $settings_obj->get_all_templates();
 						</tbody>
 					</table>
 				</div>
+
 				
 			</div><!-- #tab-advanced -->
 			
