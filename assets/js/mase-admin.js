@@ -17,14 +17,21 @@
         
         /**
          * Configuration
+         * Updated to use localized data from wp_localize_script (Task 20)
          */
         config: {
-            ajaxUrl: typeof ajaxurl !== 'undefined' ? ajaxurl : '',
-            nonce: '',
+            ajaxUrl: typeof maseL10n !== 'undefined' ? maseL10n.ajaxUrl : (typeof ajaxurl !== 'undefined' ? ajaxurl : ''),
+            nonce: typeof maseL10n !== 'undefined' ? maseL10n.nonce : '',
             debounceDelay: 300,
             autoSaveDelay: 2000,
             noticeTimeout: 3000
         },
+        
+        /**
+         * Localized strings
+         * Translations provided via wp_localize_script (Task 20, Requirement 1.8)
+         */
+        i18n: typeof maseL10n !== 'undefined' ? maseL10n : {},
         
         /**
          * State management
@@ -66,8 +73,8 @@
                 }
                 self.state.isApplyingPalette = true;
                 
-                // Show loading state
-                self.showNotice('info', 'Applying palette...', false);
+                // Show loading state (Task 20: Use localized string)
+                self.showNotice('info', self.i18n.applyingPalette || 'Applying palette...', false);
                 
                 // Disable all palette buttons during operation
                 $('.mase-palette-apply-btn').prop('disabled', true).css('opacity', '0.6');
@@ -95,8 +102,8 @@
                             // Update UI to show active palette badge (Requirement 1.4)
                             self.paletteManager.updateActiveBadge(paletteId);
                             
-                            // Show success message
-                            self.showNotice('success', response.data.message || 'Palette applied successfully!');
+                            // Show success message (Task 20: Use localized string)
+                            self.showNotice('success', response.data.message || self.i18n.paletteApplied || 'Palette applied successfully!');
                             
                             // Reload page to show new settings
                             setTimeout(function() {
@@ -154,7 +161,7 @@
                 }
                 
                 // Show loading state
-                self.showNotice('info', 'Saving custom palette...', false);
+                self.showNotice('info', self.i18n.saving || 'Saving custom palette...', false);
                 
                 // Disable save button
                 $('#mase-save-custom-palette-btn').prop('disabled', true);
@@ -314,7 +321,7 @@
                 // Create automatic backup before applying template (Requirement 16.2)
                 self.backupManager.createAutoBackupBeforeTemplate(function() {
                     // Show loading state
-                    self.showNotice('info', 'Applying template...', false);
+                    self.showNotice('info', self.i18n.applyingTemplate || 'Applying template...', false);
                     
                     // Disable all template buttons during operation
                     $('.mase-template-apply-btn').prop('disabled', true).css('opacity', '0.6');
@@ -442,7 +449,7 @@
                     success: function(response) {
                         if (response.success) {
                             // Show success notification with template name
-                            self.showNotice('success', 'Template "' + templateName + '" applied successfully!');
+                            self.showNotice('success', self.i18n.templateApplied || 'Template "' + templateName + '" applied successfully!');
                             
                             // Set timeout to reload page after 1 second
                             setTimeout(function() {
@@ -526,7 +533,7 @@
                 }
                 
                 // Show loading state
-                self.showNotice('info', 'Saving custom template...', false);
+                self.showNotice('info', self.i18n.saving || 'Saving custom template...', false);
                 
                 // Disable save button
                 $('#mase-save-custom-template-btn').prop('disabled', true);
@@ -683,6 +690,551 @@
                 }
                 
                 return settings;
+            }
+        },
+        
+        /**
+         * Button Styler Module
+         * Handles universal button styling with live preview
+         * Requirements: 5.1, 5.2, 5.3, 12.1, 12.2
+         */
+        buttonStyler: {
+            /**
+             * Initialize button styler
+             * Subtask 4.1: Create buttonStyler module structure
+             * Requirements: 5.1, 5.2, 5.3, 12.1, 12.2
+             */
+            init: function() {
+                var self = MASE;
+                
+                console.log('MASE: Initializing button styler module');
+                
+                // Bind button type tab switching
+                $(document).on('click', '.mase-button-type-tab', function(e) {
+                    e.preventDefault();
+                    var buttonType = $(this).data('button-type');
+                    if (buttonType) {
+                        self.buttonStyler.switchButtonType(buttonType);
+                    }
+                });
+                
+                // Bind button state tab switching
+                $(document).on('click', '.mase-button-state-tab', function(e) {
+                    e.preventDefault();
+                    var buttonState = $(this).data('button-state');
+                    if (buttonState) {
+                        self.buttonStyler.switchButtonState(buttonState);
+                    }
+                });
+                
+                // Bind property controls to live preview (debounced)
+                $(document).on('change input', '.mase-button-control', self.debounce(function() {
+                    self.buttonStyler.updatePreview();
+                }, 300));
+                
+                // Bind reset buttons
+                $(document).on('click', '.mase-button-reset', function(e) {
+                    e.preventDefault();
+                    var type = $(this).data('button-type');
+                    if (type) {
+                        self.buttonStyler.resetButtonType(type);
+                    }
+                });
+                
+                $(document).on('click', '.mase-button-reset-all', function(e) {
+                    e.preventDefault();
+                    self.buttonStyler.resetAllButtons();
+                });
+                
+                // Initialize ripple effect
+                self.buttonStyler.initRippleEffect();
+                
+                console.log('MASE: Button styler module initialized');
+            },
+            
+            /**
+             * Switch active button type tab
+             * Subtask 4.2: Implement tab switching functionality
+             * Requirements: 1.1, 3.1
+             * 
+             * @param {string} type - Button type to switch to
+             */
+            switchButtonType: function(type) {
+                console.log('MASE: Switching button type to:', type);
+                
+                // Update tab active states
+                $('.mase-button-type-tab').removeClass('active');
+                $('.mase-button-type-tab[data-button-type="' + type + '"]').addClass('active');
+                
+                // Show/hide corresponding panels
+                $('.mase-button-type-panel').removeClass('active').hide();
+                $('.mase-button-type-panel[data-button-type="' + type + '"]').addClass('active').show();
+                
+                // Trigger preview update
+                this.updatePreview();
+            },
+            
+            /**
+             * Switch active button state tab
+             * Subtask 4.2: Implement tab switching functionality
+             * Requirements: 1.1, 3.1
+             * 
+             * @param {string} state - Button state to switch to
+             */
+            switchButtonState: function(state) {
+                console.log('MASE: Switching button state to:', state);
+                
+                // Update tab active states
+                $('.mase-button-state-tab').removeClass('active');
+                $('.mase-button-state-tab[data-button-state="' + state + '"]').addClass('active');
+                
+                // Show/hide corresponding panels
+                $('.mase-button-state-panel').removeClass('active').hide();
+                $('.mase-button-state-panel[data-button-state="' + state + '"]').addClass('active').show();
+                
+                // Trigger preview update
+                this.updatePreview();
+            },
+            
+            /**
+             * Update live preview
+             * Subtask 4.3: Implement live preview update
+             * Requirements: 5.1, 5.2, 5.3
+             */
+            updatePreview: function() {
+                try {
+                    var self = MASE;
+                    
+                    // Get active type and state
+                    var $activeTypeTab = $('.mase-button-type-tab.active');
+                    var $activeStateTab = $('.mase-button-state-tab.active');
+                    
+                    if (!$activeTypeTab.length || !$activeStateTab.length) {
+                        console.log('MASE: No active button type or state tab found');
+                        return;
+                    }
+                    
+                    var activeType = $activeTypeTab.data('button-type');
+                    var activeState = $activeStateTab.data('button-state');
+                    
+                    console.log('MASE: Updating preview for', activeType, activeState);
+                    
+                    // Collect current values from form
+                    var props = self.buttonStyler.collectProperties(activeType, activeState);
+                    
+                    // Generate CSS for preview
+                    var css = self.buttonStyler.generatePreviewCSS(activeType, activeState, props);
+                    
+                    // Apply CSS to preview button
+                    var $previewButton = $('.mase-button-preview[data-button-type="' + activeType + '"][data-button-state="' + activeState + '"]');
+                    if ($previewButton.length) {
+                        $previewButton.attr('style', css);
+                        
+                        // Update ripple effect data attribute
+                        $previewButton.data('ripple-enabled', props.ripple_effect);
+                    }
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating button preview:', error);
+                    console.error('MASE: Error stack:', error.stack);
+                }
+            },
+            
+            /**
+             * Collect property values from form
+             * Subtask 4.4: Implement property collection
+             * Requirements: 5.1
+             * 
+             * @param {string} type - Button type
+             * @param {string} state - Button state
+             * @return {Object} Properties object
+             */
+            collectProperties: function(type, state) {
+                var prefix = 'mase_button_' + type + '_' + state + '_';
+                
+                return {
+                    bg_type: $('#' + prefix + 'bg_type').val() || 'solid',
+                    bg_color: $('#' + prefix + 'bg_color').val() || '#0073aa',
+                    gradient_type: $('#' + prefix + 'gradient_type').val() || 'linear',
+                    gradient_angle: $('#' + prefix + 'gradient_angle').val() || 90,
+                    gradient_colors: this.collectGradientColors(type, state),
+                    text_color: $('#' + prefix + 'text_color').val() || '#ffffff',
+                    border_width: $('#' + prefix + 'border_width').val() || 1,
+                    border_style: $('#' + prefix + 'border_style').val() || 'solid',
+                    border_color: $('#' + prefix + 'border_color').val() || '#0073aa',
+                    border_radius_mode: $('#' + prefix + 'border_radius_mode').val() || 'uniform',
+                    border_radius: $('#' + prefix + 'border_radius').val() || 3,
+                    border_radius_tl: $('#' + prefix + 'border_radius_tl').val() || 3,
+                    border_radius_tr: $('#' + prefix + 'border_radius_tr').val() || 3,
+                    border_radius_bl: $('#' + prefix + 'border_radius_bl').val() || 3,
+                    border_radius_br: $('#' + prefix + 'border_radius_br').val() || 3,
+                    padding_horizontal: $('#' + prefix + 'padding_horizontal').val() || 12,
+                    padding_vertical: $('#' + prefix + 'padding_vertical').val() || 6,
+                    font_size: $('#' + prefix + 'font_size').val() || 13,
+                    font_weight: $('#' + prefix + 'font_weight').val() || 400,
+                    text_transform: $('#' + prefix + 'text_transform').val() || 'none',
+                    shadow_mode: $('#' + prefix + 'shadow_mode').val() || 'preset',
+                    shadow_preset: $('#' + prefix + 'shadow_preset').val() || 'subtle',
+                    shadow_h_offset: $('#' + prefix + 'shadow_h_offset').val() || 0,
+                    shadow_v_offset: $('#' + prefix + 'shadow_v_offset').val() || 2,
+                    shadow_blur: $('#' + prefix + 'shadow_blur').val() || 4,
+                    shadow_spread: $('#' + prefix + 'shadow_spread').val() || 0,
+                    shadow_color: $('#' + prefix + 'shadow_color').val() || 'rgba(0,0,0,0.1)',
+                    transition_duration: $('#' + prefix + 'transition_duration').val() || 200,
+                    ripple_effect: $('#' + prefix + 'ripple_effect').is(':checked')
+                };
+            },
+            
+            /**
+             * Collect gradient color stops
+             * Helper for collectProperties
+             * 
+             * @param {string} type - Button type
+             * @param {string} state - Button state
+             * @return {Array} Array of gradient color stops
+             */
+            collectGradientColors: function(type, state) {
+                var prefix = 'mase_button_' + type + '_' + state + '_gradient_color_';
+                var colors = [];
+                
+                // Collect up to 5 gradient color stops
+                for (var i = 0; i < 5; i++) {
+                    var color = $('#' + prefix + i + '_color').val();
+                    var position = $('#' + prefix + i + '_position').val();
+                    
+                    if (color) {
+                        colors.push({
+                            color: color,
+                            position: position || (i * 25)
+                        });
+                    }
+                }
+                
+                // Default gradient if none specified
+                if (colors.length === 0) {
+                    colors = [
+                        { color: '#0073aa', position: 0 },
+                        { color: '#005177', position: 100 }
+                    ];
+                }
+                
+                return colors;
+            },
+            
+            /**
+             * Generate CSS for preview
+             * Subtask 4.5: Implement preview CSS generation
+             * Requirements: 5.1, 5.2
+             * 
+             * @param {string} type - Button type
+             * @param {string} state - Button state
+             * @param {Object} props - Properties object
+             * @return {string} CSS string
+             */
+            generatePreviewCSS: function(type, state, props) {
+                var css = '';
+                
+                // Background
+                if (props.bg_type === 'gradient') {
+                    css += this.generateGradientCSS(props);
+                } else {
+                    css += 'background-color: ' + props.bg_color + ';';
+                }
+                
+                // Text color
+                css += 'color: ' + props.text_color + ';';
+                
+                // Border
+                if (props.border_width > 0 && props.border_style !== 'none') {
+                    css += 'border: ' + props.border_width + 'px ' + props.border_style + ' ' + props.border_color + ';';
+                } else {
+                    css += 'border: none;';
+                }
+                
+                // Border radius
+                if (props.border_radius_mode === 'individual') {
+                    css += 'border-radius: ' + props.border_radius_tl + 'px ' + props.border_radius_tr + 'px ' + 
+                           props.border_radius_br + 'px ' + props.border_radius_bl + 'px;';
+                } else {
+                    css += 'border-radius: ' + props.border_radius + 'px;';
+                }
+                
+                // Padding
+                css += 'padding: ' + props.padding_vertical + 'px ' + props.padding_horizontal + 'px;';
+                
+                // Typography
+                css += 'font-size: ' + props.font_size + 'px;';
+                css += 'font-weight: ' + props.font_weight + ';';
+                css += 'text-transform: ' + props.text_transform + ';';
+                
+                // Shadow
+                if (props.shadow_mode !== 'none') {
+                    var shadowValue = this.getShadowValue(props);
+                    if (shadowValue !== 'none') {
+                        css += 'box-shadow: ' + shadowValue + ';';
+                    }
+                }
+                
+                // Transition
+                if (props.transition_duration > 0) {
+                    css += 'transition: all ' + props.transition_duration + 'ms ease;';
+                }
+                
+                // Ripple effect positioning
+                if (props.ripple_effect) {
+                    css += 'position: relative;';
+                    css += 'overflow: hidden;';
+                }
+                
+                return css;
+            },
+            
+            /**
+             * Generate gradient CSS
+             * Subtask 4.6: Implement gradient CSS helper
+             * Requirements: 1.1
+             * 
+             * @param {Object} props - Properties object
+             * @return {string} Gradient CSS
+             */
+            generateGradientCSS: function(props) {
+                var colors = props.gradient_colors;
+                var colorStops = colors.map(function(stop) {
+                    return stop.color + ' ' + stop.position + '%';
+                }).join(', ');
+                
+                if (props.gradient_type === 'radial') {
+                    return 'background: radial-gradient(circle, ' + colorStops + ');';
+                } else {
+                    return 'background: linear-gradient(' + props.gradient_angle + 'deg, ' + colorStops + ');';
+                }
+            },
+            
+            /**
+             * Get shadow value
+             * Subtask 4.7: Implement shadow value helper
+             * Requirements: 4.1, 4.2
+             * 
+             * @param {Object} props - Properties object
+             * @return {string} Shadow CSS value
+             */
+            getShadowValue: function(props) {
+                if (props.shadow_mode === 'preset') {
+                    var presets = {
+                        'none': 'none',
+                        'subtle': '0 1px 2px rgba(0,0,0,0.1)',
+                        'medium': '0 2px 4px rgba(0,0,0,0.15)',
+                        'strong': '0 4px 8px rgba(0,0,0,0.2)'
+                    };
+                    return presets[props.shadow_preset] || 'none';
+                } else {
+                    return props.shadow_h_offset + 'px ' + props.shadow_v_offset + 'px ' + 
+                           props.shadow_blur + 'px ' + props.shadow_spread + 'px ' + props.shadow_color;
+                }
+            },
+            
+            /**
+             * Initialize ripple effect
+             * Subtask 4.8: Implement ripple effect
+             * Requirements: 4.3
+             */
+            initRippleEffect: function() {
+                console.log('MASE: Initializing ripple effect');
+                
+                $(document).on('click', '.mase-button-preview', function(e) {
+                    var $button = $(this);
+                    var rippleEnabled = $button.data('ripple-enabled');
+                    
+                    if (!rippleEnabled) {
+                        return;
+                    }
+                    
+                    // Create ripple element
+                    var $ripple = $('<span class="mase-ripple-effect"></span>');
+                    
+                    // Calculate position
+                    var btnOffset = $button.offset();
+                    var x = e.pageX - btnOffset.left;
+                    var y = e.pageY - btnOffset.top;
+                    
+                    // Set ripple position and size
+                    $ripple.css({
+                        left: x + 'px',
+                        top: y + 'px',
+                        width: '10px',
+                        height: '10px'
+                    });
+                    
+                    // Add ripple to button
+                    $button.append($ripple);
+                    
+                    // Remove ripple after animation (600ms)
+                    setTimeout(function() {
+                        $ripple.remove();
+                    }, 600);
+                });
+            },
+            
+            /**
+             * Reset button type to defaults
+             * Subtask 4.9: Implement reset functionality
+             * Requirements: 12.1, 12.2
+             * 
+             * @param {string} type - Button type to reset
+             */
+            resetButtonType: function(type) {
+                var self = MASE;
+                
+                // Confirmation dialog (Task 10.1: Use localized strings)
+                var confirmMessage = (maseAdmin.strings.buttonResetConfirm || 'Reset all settings for %s buttons to defaults?').replace('%s', type);
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                
+                console.log('MASE: Resetting button type:', type);
+                
+                // Show loading state (Task 10.1: Use localized strings)
+                self.showNotice('info', maseAdmin.strings.buttonResetting || 'Resetting button settings...', false);
+                
+                // Load defaults via AJAX
+                $.ajax({
+                    url: self.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_get_button_defaults',
+                        nonce: self.config.nonce,
+                        button_type: type
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Populate form with defaults
+                            self.buttonStyler.populateForm(type, response.data.defaults);
+                            self.buttonStyler.updatePreview();
+                            // Task 10.1: Use localized strings
+                            self.showNotice('success', maseAdmin.strings.buttonResetSuccess || 'Button settings reset to defaults');
+                        } else {
+                            // Task 10.1: Use localized strings
+                            self.showNotice('error', response.data.message || maseAdmin.strings.buttonResetFailed || 'Failed to reset button settings');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Task 10.1: Use localized strings
+                        var message = maseAdmin.strings.networkError || 'Network error. Please try again.';
+                        if (xhr.status === 403) {
+                            message = maseAdmin.strings.permissionDenied || 'Permission denied. You do not have access to perform this action.';
+                        }
+                        self.showNotice('error', message);
+                    }
+                });
+            },
+            
+            /**
+             * Reset all buttons to defaults
+             * Subtask 4.9: Implement reset functionality
+             * Requirements: 12.1, 12.2
+             */
+            resetAllButtons: function() {
+                var self = MASE;
+                
+                // Confirmation dialog (Task 10.1: Use localized strings)
+                if (!confirm(maseAdmin.strings.buttonResetAllConfirm || 'Reset ALL button settings to defaults? This cannot be undone.')) {
+                    return;
+                }
+                
+                console.log('MASE: Resetting all buttons');
+                
+                // Show loading state (Task 10.1: Use localized strings)
+                self.showNotice('info', maseAdmin.strings.buttonResettingAll || 'Resetting all button settings...', false);
+                
+                $.ajax({
+                    url: self.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_reset_all_buttons',
+                        nonce: self.config.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Task 10.1: Use localized strings
+                            self.showNotice('success', maseAdmin.strings.buttonResetAllSuccess || 'All button settings reset to defaults. Reloading page...');
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+                        } else {
+                            // Task 10.1: Use localized strings
+                            self.showNotice('error', response.data.message || maseAdmin.strings.buttonResetAllFailed || 'Failed to reset button settings');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Task 10.1: Use localized strings
+                        var message = maseAdmin.strings.networkError || 'Network error. Please try again.';
+                        if (xhr.status === 403) {
+                            message = maseAdmin.strings.permissionDenied || 'Permission denied. You do not have access to perform this action.';
+                        }
+                        self.showNotice('error', message);
+                    }
+                });
+            },
+            
+            /**
+             * Populate form with button settings
+             * Subtask 4.10: Implement form population helper
+             * Requirements: 12.1
+             * 
+             * @param {string} type - Button type
+             * @param {Object} data - Settings data object
+             */
+            populateForm: function(type, data) {
+                console.log('MASE: Populating form for button type:', type);
+                
+                // Iterate through all states
+                var states = ['normal', 'hover', 'active', 'focus', 'disabled'];
+                
+                states.forEach(function(state) {
+                    if (!data[state]) {
+                        return;
+                    }
+                    
+                    var stateData = data[state];
+                    var prefix = 'mase_button_' + type + '_' + state + '_';
+                    
+                    // Set all form field values
+                    for (var key in stateData) {
+                        if (stateData.hasOwnProperty(key)) {
+                            var $field = $('#' + prefix + key);
+                            
+                            if ($field.length) {
+                                if ($field.attr('type') === 'checkbox') {
+                                    $field.prop('checked', stateData[key]);
+                                } else if ($field.hasClass('mase-color-picker')) {
+                                    // Color picker
+                                    $field.val(stateData[key]).trigger('change');
+                                } else if ($field.attr('type') === 'range') {
+                                    // Slider - update value and display
+                                    $field.val(stateData[key]);
+                                    var $display = $field.siblings('.mase-range-value, .mase-slider-value');
+                                    if ($display.length) {
+                                        $display.text(stateData[key]);
+                                    }
+                                } else {
+                                    // Regular input or select
+                                    $field.val(stateData[key]);
+                                }
+                                
+                                // Trigger change event for dependent fields
+                                $field.trigger('change');
+                            }
+                        }
+                    }
+                    
+                    // Handle gradient colors separately
+                    if (stateData.gradient_colors && Array.isArray(stateData.gradient_colors)) {
+                        stateData.gradient_colors.forEach(function(stop, index) {
+                            $('#' + prefix + 'gradient_color_' + index + '_color').val(stop.color).trigger('change');
+                            $('#' + prefix + 'gradient_color_' + index + '_position').val(stop.position);
+                        });
+                    }
+                });
             }
         },
         
@@ -979,6 +1531,132 @@
                             console.error('MASE: Error stack:', error.stack);
                         }
                     }, self.config.debounceDelay));
+                    
+                    // Bind background controls (Task 10: Advanced Background System)
+                    // Requirement 10.1: Update within 500ms
+                    // Requirement 10.3: Apply changes temporarily
+                    
+                    // Background type selector
+                    $('.mase-background-type').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from type selector:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Background image URL (after upload/selection)
+                    $('.mase-background-url').on('change.livepreview', self.debounce(function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from URL:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, self.config.debounceDelay));
+                    
+                    // Background position
+                    $('.mase-background-position').on('change.livepreview', self.debounce(function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from position:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, self.config.debounceDelay));
+                    
+                    // Background size
+                    $('.mase-background-size').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from size:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Background repeat
+                    $('.mase-background-repeat').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from repeat:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Background attachment
+                    $('.mase-background-attachment').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from attachment:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Background opacity slider
+                    $('.mase-background-opacity').on('input.livepreview', self.debounce(function() {
+                        try {
+                            // Update slider value display
+                            var $slider = $(this);
+                            var value = $slider.val();
+                            $slider.siblings('.mase-range-value').text(value + '%');
+                            
+                            var area = $slider.closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from opacity:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    }, self.config.debounceDelay));
+                    
+                    // Background blend mode
+                    $('.mase-background-blend-mode').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from blend mode:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
+                    
+                    // Background enabled toggle
+                    $('.mase-background-enabled').on('change.livepreview', function() {
+                        try {
+                            var area = $(this).closest('.mase-background-config').data('area');
+                            if (area && self.state.livePreviewEnabled) {
+                                self.livePreview.updateBackground(area);
+                            }
+                        } catch (error) {
+                            console.error('MASE: Error updating background preview from enabled toggle:', error);
+                            console.error('MASE: Error stack:', error.stack);
+                        }
+                    });
                     
                 } catch (error) {
                     // Requirement 9.5: Log error with stack trace
@@ -1812,6 +2490,160 @@
              */
             remove: function() {
                 $('#mase-live-preview-css').remove();
+            },
+            
+            /**
+             * Update background preview for a specific area
+             * Requirement 10.1: Update preview within 500ms
+             * Requirement 10.2: Display in simulated admin interface
+             * Requirement 10.3: Apply changes temporarily without persisting
+             * 
+             * @param {string} area - Area identifier (dashboard, admin_menu, post_lists, post_editor, widgets, login)
+             */
+            updateBackground: function(area) {
+                if (!MASE.state.livePreviewEnabled) {
+                    return;
+                }
+                
+                try {
+                    var config = this.getBackgroundConfig(area);
+                    var selector = this.getAreaSelector(area);
+                    
+                    if (!selector) {
+                        console.warn('MASE: Invalid area selector for:', area);
+                        return;
+                    }
+                    
+                    // Generate CSS based on background type
+                    var css = '';
+                    var $target = $(selector);
+                    
+                    if (!$target.length) {
+                        console.warn('MASE: Target element not found for selector:', selector);
+                        return;
+                    }
+                    
+                    // Clear existing background styles
+                    $target.css({
+                        'background-image': '',
+                        'background-color': '',
+                        'background-position': '',
+                        'background-size': '',
+                        'background-repeat': '',
+                        'background-attachment': '',
+                        'opacity': '',
+                        'mix-blend-mode': ''
+                    });
+                    
+                    // Apply background based on type
+                    switch (config.type) {
+                        case 'image':
+                            if (config.image_url) {
+                                $target.css({
+                                    'background-image': 'url(' + config.image_url + ')',
+                                    'background-position': config.position || 'center center',
+                                    'background-size': config.size || 'cover',
+                                    'background-repeat': config.repeat || 'no-repeat',
+                                    'background-attachment': config.attachment || 'scroll'
+                                });
+                            }
+                            break;
+                            
+                        case 'gradient':
+                            // Gradient preview will be handled by gradient builder module
+                            // For now, just clear the background
+                            break;
+                            
+                        case 'pattern':
+                            // Pattern preview will be handled by pattern library module
+                            // For now, just clear the background
+                            break;
+                            
+                        case 'none':
+                        default:
+                            // Background cleared above
+                            break;
+                    }
+                    
+                    // Apply opacity and blend mode for all types
+                    if (config.opacity !== undefined && config.opacity !== 100) {
+                        $target.css('opacity', config.opacity / 100);
+                    }
+                    
+                    if (config.blend_mode && config.blend_mode !== 'normal') {
+                        $target.css('mix-blend-mode', config.blend_mode);
+                    }
+                    
+                } catch (error) {
+                    console.error('MASE: Error updating background preview:', error);
+                    console.error('MASE: Error stack:', error.stack);
+                }
+            },
+            
+            /**
+             * Get background configuration for a specific area
+             * Requirement 10.3: Read current settings from form
+             * 
+             * @param {string} area - Area identifier
+             * @return {Object} Background configuration object
+             */
+            getBackgroundConfig: function(area) {
+                var $config = $('.mase-background-config[data-area="' + area + '"]');
+                
+                if (!$config.length) {
+                    console.warn('MASE: Background config not found for area:', area);
+                    return {
+                        type: 'none',
+                        enabled: false
+                    };
+                }
+                
+                return {
+                    enabled: $config.find('.mase-background-enabled').is(':checked'),
+                    type: $config.find('.mase-background-type').val() || 'none',
+                    
+                    // Image settings
+                    image_url: $config.find('.mase-background-url').val() || '',
+                    image_id: $config.find('.mase-background-id').val() || 0,
+                    position: $config.find('.mase-background-position').val() || 'center center',
+                    size: $config.find('.mase-background-size').val() || 'cover',
+                    repeat: $config.find('.mase-background-repeat').val() || 'no-repeat',
+                    attachment: $config.find('.mase-background-attachment').val() || 'scroll',
+                    
+                    // Gradient settings
+                    gradient_type: $config.find('.mase-gradient-type').val() || 'linear',
+                    gradient_angle: parseInt($config.find('.mase-gradient-angle-input').val()) || 90,
+                    
+                    // Pattern settings
+                    pattern_id: $config.find('.mase-pattern-id').val() || '',
+                    pattern_color: $config.find('.mase-pattern-color').val() || '#000000',
+                    pattern_opacity: parseInt($config.find('.mase-pattern-opacity').val()) || 100,
+                    pattern_scale: parseInt($config.find('.mase-pattern-scale').val()) || 100,
+                    
+                    // Advanced options
+                    opacity: parseInt($config.find('.mase-background-opacity').val()) || 100,
+                    blend_mode: $config.find('.mase-background-blend-mode').val() || 'normal'
+                };
+            },
+            
+            /**
+             * Get CSS selector for a specific admin area
+             * Requirement 10.2: Map area identifiers to CSS selectors
+             * 
+             * @param {string} area - Area identifier
+             * @return {string} CSS selector
+             */
+            getAreaSelector: function(area) {
+                var selectors = {
+                    'dashboard': '#wpbody-content',
+                    'admin_menu': '#adminmenu',
+                    'post_lists': '.wp-list-table',
+                    'post_editor': '#post-body',
+                    'widgets': '.postbox',
+                    'login': 'body.login'
+                };
+                
+                return selectors[area] || '';
             }
         },
         
@@ -4274,9 +5106,9 @@
                 var $button = $('#mase-export-settings');
                 var originalText = $button.text();
                 
-                // Show loading state
-                $button.prop('disabled', true).text('Exporting...');
-                self.showNotice('info', 'Preparing export...', false);
+                // Show loading state (Task 20: Use localized string)
+                $button.prop('disabled', true).text(self.i18n.saving || 'Exporting...');
+                self.showNotice('info', self.i18n.loading || 'Preparing export...', false);
                 
                 $.ajax({
                     url: self.config.ajaxUrl,
@@ -4312,18 +5144,19 @@
                             // Clean up blob URL
                             URL.revokeObjectURL(url);
                             
-                            // Show success message (Requirement 8.1)
-                            self.showNotice('success', 'Settings exported successfully!');
+                            // Show success message (Requirement 8.1, Task 20: Use localized string)
+                            self.showNotice('success', self.i18n.saved || 'Settings exported successfully!');
                         } else {
-                            self.showNotice('error', response.data.message || 'Failed to export settings');
+                            self.showNotice('error', response.data.message || self.i18n.error || 'Failed to export settings');
                         }
                     },
                     error: function(xhr) {
-                        var message = 'Network error during export. Please try again.';
+                        // Task 20: Use localized error messages
+                        var message = self.i18n.error || 'Network error during export. Please try again.';
                         if (xhr.status === 403) {
-                            message = 'Permission denied. You do not have access to export settings.';
+                            message = self.i18n.darkModePermissionError || 'Permission denied. You do not have access to export settings.';
                         } else if (xhr.status === 500) {
-                            message = 'Server error during export. Please try again later.';
+                            message = self.i18n.darkModeServerError || 'Server error during export. Please try again later.';
                         }
                         self.showNotice('error', message);
                     },
@@ -4701,6 +5534,435 @@
                         if (callback) callback();
                     }
                 });
+            }
+        },
+        
+        /**
+         * Login Customization Module
+         * Handles file uploads, conditional field visibility, and validation for login page customization
+         * Requirements: 7.3 (Task 10.1, 10.2, 10.3)
+         */
+        loginCustomization: {
+            /**
+             * Initialize login customization handlers
+             * Called from main init()
+             */
+            init: function() {
+                var self = MASE;
+                
+                console.log('MASE: Initializing login customization module');
+                
+                // Bind file upload handlers (Task 10.1)
+                this.bindUploadHandlers();
+                
+                // Bind conditional field visibility (Task 10.2)
+                this.bindConditionalFields();
+                
+                // Bind validation handlers (Task 10.3)
+                this.bindValidationHandlers();
+                
+                console.log('MASE: Login customization module initialized');
+            },
+            
+            /**
+             * Bind file upload handlers
+             * Task 10.1: Handle logo and background file uploads
+             * Requirements: 7.3
+             */
+            bindUploadHandlers: function() {
+                var self = MASE;
+                
+                // Handle upload button clicks
+                $(document).on('click', '.mase-upload-btn', function(e) {
+                    e.preventDefault();
+                    
+                    var $button = $(this);
+                    var uploadType = $button.data('upload-type');
+                    
+                    console.log('MASE: Upload button clicked, type:', uploadType);
+                    
+                    // Determine which upload handler to use
+                    if (uploadType === 'login-logo') {
+                        self.loginCustomization.handleLogoUpload($button);
+                    } else if (uploadType === 'login-background') {
+                        self.loginCustomization.handleBackgroundUpload($button);
+                    }
+                });
+                
+                // Handle remove button clicks
+                $(document).on('click', '.mase-remove-upload', function(e) {
+                    e.preventDefault();
+                    
+                    var $button = $(this);
+                    var targetId = $button.data('target');
+                    
+                    console.log('MASE: Remove button clicked, target:', targetId);
+                    
+                    self.loginCustomization.removeUpload(targetId);
+                });
+            },
+            
+            /**
+             * Handle logo file upload
+             * Task 10.1: Upload logo file via AJAX
+             * Requirements: 7.3
+             */
+            handleLogoUpload: function($button) {
+                var self = MASE;
+                
+                // Create file input
+                var $fileInput = $('<input type="file" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display:none;">');
+                
+                // Handle file selection
+                $fileInput.on('change', function() {
+                    var file = this.files[0];
+                    
+                    if (!file) {
+                        return;
+                    }
+                    
+                    console.log('MASE: Logo file selected:', file.name, file.type, file.size);
+                    
+                    // Validate file type (Task 10.3)
+                    var validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+                    if (validTypes.indexOf(file.type) === -1) {
+                        self.showNotice('error', 'Invalid file type. Please upload PNG, JPG, or SVG files only.');
+                        return;
+                    }
+                    
+                    // Validate file size (Task 10.3) - 2MB max for logos
+                    var maxSize = 2 * 1024 * 1024; // 2MB
+                    if (file.size > maxSize) {
+                        self.showNotice('error', 'File size exceeds 2MB limit. Please choose a smaller file.');
+                        return;
+                    }
+                    
+                    // Show upload progress (Task 10.1)
+                    $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Uploading...');
+                    
+                    // Prepare form data
+                    var formData = new FormData();
+                    formData.append('action', 'mase_upload_login_logo');
+                    formData.append('nonce', self.config.nonce);
+                    formData.append('logo_file', file);
+                    
+                    // Upload file via AJAX
+                    $.ajax({
+                        url: self.config.ajaxUrl,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                // Update hidden input field (Task 10.1)
+                                $('#login-logo-url').val(response.data.logo_url);
+                                
+                                // Display preview (Task 10.1)
+                                self.loginCustomization.showPreview('login-logo-preview', response.data.logo_url);
+                                
+                                // Show remove button
+                                var $removeBtn = $button.siblings('.mase-remove-upload');
+                                if ($removeBtn.length === 0) {
+                                    $removeBtn = $('<button type="button" class="button button-link-delete mase-remove-upload" data-target="login-logo-url">Remove</button>');
+                                    $button.after($removeBtn);
+                                }
+                                $removeBtn.show();
+                                
+                                // Show success message (Task 10.3)
+                                self.showNotice('success', response.data.message || 'Logo uploaded successfully!');
+                                
+                                // Mark form as dirty
+                                self.state.isDirty = true;
+                            } else {
+                                // Show error message (Task 10.3)
+                                self.showNotice('error', response.data.message || 'Failed to upload logo');
+                            }
+                            
+                            // Restore button state
+                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Logo');
+                        },
+                        error: function(xhr) {
+                            // Show error message (Task 10.3)
+                            var message = 'Network error. Please try again.';
+                            if (xhr.status === 403) {
+                                message = 'Permission denied. You do not have access to upload files.';
+                            } else if (xhr.status === 413) {
+                                message = 'File too large. Please choose a smaller file.';
+                            }
+                            self.showNotice('error', message);
+                            
+                            // Restore button state
+                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Logo');
+                        }
+                    });
+                });
+                
+                // Trigger file input click
+                $fileInput.trigger('click');
+            },
+            
+            /**
+             * Handle background image upload
+             * Task 10.1: Upload background image via AJAX
+             * Requirements: 7.3
+             */
+            handleBackgroundUpload: function($button) {
+                var self = MASE;
+                
+                // Create file input
+                var $fileInput = $('<input type="file" accept="image/png,image/jpeg,image/jpg" style="display:none;">');
+                
+                // Handle file selection
+                $fileInput.on('change', function() {
+                    var file = this.files[0];
+                    
+                    if (!file) {
+                        return;
+                    }
+                    
+                    console.log('MASE: Background file selected:', file.name, file.type, file.size);
+                    
+                    // Validate file type (Task 10.3) - No SVG for backgrounds
+                    var validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                    if (validTypes.indexOf(file.type) === -1) {
+                        self.showNotice('error', 'Invalid file type. Please upload PNG or JPG files only.');
+                        return;
+                    }
+                    
+                    // Validate file size (Task 10.3) - 5MB max for backgrounds
+                    var maxSize = 5 * 1024 * 1024; // 5MB
+                    if (file.size > maxSize) {
+                        self.showNotice('error', 'File size exceeds 5MB limit. Please choose a smaller file.');
+                        return;
+                    }
+                    
+                    // Show upload progress (Task 10.1)
+                    $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Uploading...');
+                    
+                    // Prepare form data
+                    var formData = new FormData();
+                    formData.append('action', 'mase_upload_login_background');
+                    formData.append('nonce', self.config.nonce);
+                    formData.append('background_file', file);
+                    
+                    // Upload file via AJAX
+                    $.ajax({
+                        url: self.config.ajaxUrl,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                // Update hidden input field (Task 10.1)
+                                $('#login-background-image').val(response.data.background_url);
+                                
+                                // Display preview (Task 10.1)
+                                self.loginCustomization.showPreview('login-background-preview', response.data.background_url);
+                                
+                                // Show remove button
+                                var $removeBtn = $button.siblings('.mase-remove-upload');
+                                if ($removeBtn.length === 0) {
+                                    $removeBtn = $('<button type="button" class="button button-link-delete mase-remove-upload" data-target="login-background-image">Remove</button>');
+                                    $button.after($removeBtn);
+                                }
+                                $removeBtn.show();
+                                
+                                // Show success message (Task 10.3)
+                                self.showNotice('success', response.data.message || 'Background image uploaded successfully!');
+                                
+                                // Mark form as dirty
+                                self.state.isDirty = true;
+                            } else {
+                                // Show error message (Task 10.3)
+                                self.showNotice('error', response.data.message || 'Failed to upload background image');
+                            }
+                            
+                            // Restore button state
+                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Image');
+                        },
+                        error: function(xhr) {
+                            // Show error message (Task 10.3)
+                            var message = 'Network error. Please try again.';
+                            if (xhr.status === 403) {
+                                message = 'Permission denied. You do not have access to upload files.';
+                            } else if (xhr.status === 413) {
+                                message = 'File too large. Please choose a smaller file.';
+                            }
+                            self.showNotice('error', message);
+                            
+                            // Restore button state
+                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Image');
+                        }
+                    });
+                });
+                
+                // Trigger file input click
+                $fileInput.trigger('click');
+            },
+            
+            /**
+             * Remove uploaded file
+             * Task 10.1: Handle remove button clicks
+             * Requirements: 7.3
+             */
+            removeUpload: function(targetId) {
+                var self = MASE;
+                
+                // Clear hidden input
+                $('#' + targetId).val('');
+                
+                // Remove preview
+                var previewId = targetId.replace('-url', '-preview').replace('-image', '-preview');
+                $('#' + previewId).remove();
+                
+                // Hide remove button
+                $('.mase-remove-upload[data-target="' + targetId + '"]').hide();
+                
+                // Mark form as dirty
+                self.state.isDirty = true;
+                
+                console.log('MASE: Upload removed for', targetId);
+            },
+            
+            /**
+             * Show image preview
+             * Task 10.1: Display preview after upload
+             * Requirements: 7.3
+             */
+            showPreview: function(previewId, imageUrl) {
+                var $preview = $('#' + previewId);
+                
+                if ($preview.length === 0) {
+                    // Create preview container
+                    var $uploadWrapper = $('.mase-upload-btn[data-upload-type="' + previewId.replace('-preview', '') + '"]').closest('.mase-file-upload-wrapper');
+                    $preview = $('<div class="mase-image-preview" id="' + previewId + '"></div>');
+                    $uploadWrapper.after($preview);
+                }
+                
+                // Set preview image
+                var maxWidth = previewId.indexOf('logo') !== -1 ? '200px' : '300px';
+                var maxHeight = previewId.indexOf('logo') !== -1 ? '100px' : '200px';
+                $preview.html('<img src="' + imageUrl + '" alt="Preview" style="max-width: ' + maxWidth + '; max-height: ' + maxHeight + ';" />');
+                
+                console.log('MASE: Preview displayed for', previewId);
+            },
+            
+            /**
+             * Bind conditional field visibility
+             * Task 10.2: Show/hide fields based on other field values
+             * Requirements: 7.3
+             */
+            bindConditionalFields: function() {
+                var self = MASE;
+                
+                // Show/hide custom logo options based on checkbox (Task 10.2)
+                $('#login-logo-enabled').on('change', function() {
+                    var $conditionalGroup = $('.mase-conditional-group[data-depends-on="login-logo-enabled"]');
+                    if ($(this).is(':checked')) {
+                        $conditionalGroup.slideDown(200);
+                    } else {
+                        $conditionalGroup.slideUp(200);
+                    }
+                });
+                
+                // Show/hide gradient options based on background type (Task 10.2)
+                $('#login-background-type').on('change', function() {
+                    var selectedType = $(this).val();
+                    
+                    // Hide all conditional groups
+                    $('.mase-conditional-group[data-depends-on="login-background-type"]').hide();
+                    
+                    // Show selected group
+                    $('.mase-conditional-group[data-depends-on="login-background-type"][data-value="' + selectedType + '"]').show();
+                });
+                
+                // Show/hide glassmorphism options based on checkbox (Task 10.2)
+                $('#login-glassmorphism-enabled').on('change', function() {
+                    var $conditionalGroup = $('.mase-conditional-group[data-depends-on="login-glassmorphism-enabled"]');
+                    if ($(this).is(':checked')) {
+                        $conditionalGroup.slideDown(200);
+                    } else {
+                        $conditionalGroup.slideUp(200);
+                    }
+                });
+                
+                console.log('MASE: Login customization conditional fields bound');
+            },
+            
+            /**
+             * Bind validation handlers
+             * Task 10.3: Validate inputs and show feedback
+             * Requirements: 7.3
+             */
+            bindValidationHandlers: function() {
+                var self = MASE;
+                
+                // Validate logo dimensions (Task 10.3)
+                $('#login-logo-width, #login-logo-height').on('change', function() {
+                    var value = parseInt($(this).val());
+                    var min = parseInt($(this).attr('min'));
+                    var max = parseInt($(this).attr('max'));
+                    
+                    if (value < min || value > max) {
+                        self.showNotice('error', 'Value must be between ' + min + ' and ' + max);
+                        $(this).val($(this).data('previous-value') || min);
+                    } else {
+                        $(this).data('previous-value', value);
+                    }
+                });
+                
+                // Validate opacity (Task 10.3)
+                $('#login-background-opacity, #login-glassmorphism-opacity').on('change', function() {
+                    var value = parseInt($(this).val());
+                    
+                    if (value < 0 || value > 100) {
+                        self.showNotice('error', 'Opacity must be between 0 and 100');
+                        $(this).val($(this).data('previous-value') || 100);
+                    } else {
+                        $(this).data('previous-value', value);
+                    }
+                });
+                
+                // Validate border radius (Task 10.3)
+                $('#login-form-border-radius').on('change', function() {
+                    var value = parseInt($(this).val());
+                    
+                    if (value < 0 || value > 25) {
+                        self.showNotice('error', 'Border radius must be between 0 and 25 pixels');
+                        $(this).val($(this).data('previous-value') || 0);
+                    } else {
+                        $(this).data('previous-value', value);
+                    }
+                });
+                
+                // Validate URL fields (Task 10.3)
+                $('#login-logo-link-url').on('blur', function() {
+                    var value = $(this).val().trim();
+                    
+                    if (value !== '' && !self.loginCustomization.isValidUrl(value)) {
+                        self.showNotice('error', 'Please enter a valid URL (e.g., https://example.com)');
+                        $(this).addClass('error');
+                    } else {
+                        $(this).removeClass('error');
+                    }
+                });
+                
+                console.log('MASE: Login customization validation handlers bound');
+            },
+            
+            /**
+             * Validate URL format
+             * Helper function for URL validation
+             */
+            isValidUrl: function(url) {
+                try {
+                    var urlObj = new URL(url);
+                    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+                } catch (e) {
+                    return false;
+                }
             }
         },
         
@@ -5472,6 +6734,7 @@
                 this.bindTemplateEvents();
                 this.bindImportExportEvents();
                 this.bindBackupEvents();
+                this.loginCustomization.init();
                 
                 // Initialize tab navigation (Requirement 8.1, 8.2, 8.3, 8.4, 8.5)
                 this.tabNavigation.init();
@@ -5484,6 +6747,9 @@
                 
                 // Initialize dark mode synchronization (Requirement 6.1, 6.2, 6.3)
                 this.darkModeSync.init();
+                
+                // Initialize button styler module (Requirements 5.1, 5.2, 5.3, 12.1, 12.2)
+                this.buttonStyler.init();
                 
                 // Apply initial dark mode state from settings (Requirement 6.5)
                 try {
@@ -5513,6 +6779,9 @@
                 // Initialize conditional fields (Requirement 15.6)
                 this.initConditionalFields();
                 console.log('MASE: Conditional fields initialized');
+                
+                // Initialize accessibility validator (Task 11.2)
+                this.accessibilityValidator.init();
                 
                 // CRITICAL FIX: Remove gray circle bug in Dark Mode
                 this.removeGrayCircleBug();
@@ -5927,6 +7196,558 @@
         },
         
         /**
+         * Accessibility Validation Module
+         * Task 11.2: Real-time accessibility warnings
+         * Requirements: 10.1, 10.2
+         */
+        accessibilityValidator: {
+            /**
+             * Calculate relative luminance (WCAG 2.1 formula)
+             * 
+             * @param {number} r - Red value (0-255)
+             * @param {number} g - Green value (0-255)
+             * @param {number} b - Blue value (0-255)
+             * @return {number} Relative luminance (0.0-1.0)
+             */
+            calculateLuminance: function(r, g, b) {
+                // Normalize to 0-1 range
+                r = r / 255.0;
+                g = g / 255.0;
+                b = b / 255.0;
+                
+                // Apply gamma correction
+                r = (r <= 0.03928) ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+                g = (g <= 0.03928) ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+                b = (b <= 0.03928) ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+                
+                // Calculate luminance
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            },
+            
+            /**
+             * Convert hex color to RGB
+             * 
+             * @param {string} hex - Hex color code (with or without #)
+             * @return {object} RGB object with r, g, b properties
+             */
+            hexToRgb: function(hex) {
+                // Remove # if present
+                hex = hex.replace(/^#/, '');
+                
+                // Handle short hex format (#abc -> #aabbcc)
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                
+                return {
+                    r: parseInt(hex.substr(0, 2), 16),
+                    g: parseInt(hex.substr(2, 2), 16),
+                    b: parseInt(hex.substr(4, 2), 16)
+                };
+            },
+            
+            /**
+             * Calculate contrast ratio between two colors
+             * Task 11.2: WCAG 2.1 contrast ratio formula
+             * 
+             * @param {string} fg - Foreground color (hex)
+             * @param {string} bg - Background color (hex)
+             * @return {number} Contrast ratio (1.0-21.0)
+             */
+            calculateContrastRatio: function(fg, bg) {
+                try {
+                    var fgRgb = this.hexToRgb(fg);
+                    var bgRgb = this.hexToRgb(bg);
+                    
+                    var fgLum = this.calculateLuminance(fgRgb.r, fgRgb.g, fgRgb.b);
+                    var bgLum = this.calculateLuminance(bgRgb.r, bgRgb.g, bgRgb.b);
+                    
+                    var lighter = Math.max(fgLum, bgLum);
+                    var darker = Math.min(fgLum, bgLum);
+                    
+                    return (lighter + 0.05) / (darker + 0.05);
+                } catch (error) {
+                    console.error('MASE: Contrast calculation error:', error);
+                    return 1.0;
+                }
+            },
+            
+            /**
+             * Validate contrast and show warnings
+             * Task 11.2: Real-time accessibility feedback
+             * Requirements: 10.1, 10.2
+             * 
+             * @param {string} fgSelector - Selector for foreground color input
+             * @param {string} bgSelector - Selector for background color input
+             * @param {string} warningSelector - Selector for warning message container
+             * @param {number} minRatio - Minimum required contrast ratio (default: 4.5)
+             */
+            validateContrast: function(fgSelector, bgSelector, warningSelector, minRatio) {
+                minRatio = minRatio || 4.5;
+                
+                var $fg = $(fgSelector);
+                var $bg = $(bgSelector);
+                var $warning = $(warningSelector);
+                
+                if ($fg.length === 0 || $bg.length === 0) {
+                    return;
+                }
+                
+                var fgColor = $fg.val();
+                var bgColor = $bg.val();
+                
+                if (!fgColor || !bgColor) {
+                    return;
+                }
+                
+                var ratio = this.calculateContrastRatio(fgColor, bgColor);
+                
+                // Create or update warning message
+                if (!$warning.length) {
+                    $warning = $('<div class="mase-a11y-warning"></div>');
+                    $bg.closest('.mase-field').append($warning);
+                }
+                
+                if (ratio < minRatio) {
+                    var message = 'Contrast ratio: ' + ratio.toFixed(2) + ':1. ';
+                    message += 'WCAG AA requires ' + minRatio + ':1 minimum. ';
+                    message += 'Consider adjusting colors for better accessibility.';
+                    
+                    $warning
+                        .html('<span class="dashicons dashicons-warning"></span> ' + message)
+                        .addClass('warning')
+                        .removeClass('success')
+                        .show();
+                } else {
+                    $warning
+                        .html('<span class="dashicons dashicons-yes"></span> Good contrast: ' + ratio.toFixed(2) + ':1')
+                        .addClass('success')
+                        .removeClass('warning')
+                        .show();
+                }
+            },
+            
+            /**
+             * Suggest alternative colors
+             * Task 11.2: Provide color suggestions
+             * 
+             * @param {string} baseColor - Base color (hex)
+             * @param {string} targetColor - Target color to contrast with (hex)
+             * @param {number} minRatio - Minimum required contrast ratio
+             * @return {array} Array of suggested colors
+             */
+            suggestAlternatives: function(baseColor, targetColor, minRatio) {
+                minRatio = minRatio || 4.5;
+                var suggestions = [];
+                
+                var baseRgb = this.hexToRgb(baseColor);
+                var targetRgb = this.hexToRgb(targetColor);
+                var targetLum = this.calculateLuminance(targetRgb.r, targetRgb.g, targetRgb.b);
+                
+                // Try darker versions
+                for (var factor = 0.9; factor >= 0.1; factor -= 0.1) {
+                    var r = Math.round(baseRgb.r * factor);
+                    var g = Math.round(baseRgb.g * factor);
+                    var b = Math.round(baseRgb.b * factor);
+                    
+                    var testLum = this.calculateLuminance(r, g, b);
+                    var ratio = (Math.max(testLum, targetLum) + 0.05) / (Math.min(testLum, targetLum) + 0.05);
+                    
+                    if (ratio >= minRatio) {
+                        var hex = '#' + 
+                            ('0' + r.toString(16)).slice(-2) +
+                            ('0' + g.toString(16)).slice(-2) +
+                            ('0' + b.toString(16)).slice(-2);
+                        suggestions.push({color: hex, ratio: ratio});
+                        break;
+                    }
+                }
+                
+                // Try lighter versions
+                for (var factor = 1.1; factor <= 2.0; factor += 0.1) {
+                    var r = Math.min(255, Math.round(baseRgb.r * factor));
+                    var g = Math.min(255, Math.round(baseRgb.g * factor));
+                    var b = Math.min(255, Math.round(baseRgb.b * factor));
+                    
+                    var testLum = this.calculateLuminance(r, g, b);
+                    var ratio = (Math.max(testLum, targetLum) + 0.05) / (Math.min(testLum, targetLum) + 0.05);
+                    
+                    if (ratio >= minRatio) {
+                        var hex = '#' + 
+                            ('0' + r.toString(16)).slice(-2) +
+                            ('0' + g.toString(16)).slice(-2) +
+                            ('0' + b.toString(16)).slice(-2);
+                        suggestions.push({color: hex, ratio: ratio});
+                        break;
+                    }
+                }
+                
+                return suggestions;
+            },
+            
+            /**
+             * Validate glassmorphism opacity
+             * Task 11.2: Warn about low opacity
+             * 
+             * @param {string} opacitySelector - Selector for opacity input
+             * @param {string} warningSelector - Selector for warning container
+             */
+            validateGlassmorphism: function(opacitySelector, warningSelector) {
+                var $opacity = $(opacitySelector);
+                var $warning = $(warningSelector);
+                
+                if ($opacity.length === 0) {
+                    return;
+                }
+                
+                var opacity = parseInt($opacity.val(), 10);
+                
+                if (!$warning.length) {
+                    $warning = $('<div class="mase-a11y-warning"></div>');
+                    $opacity.closest('.mase-field').append($warning);
+                }
+                
+                if (opacity < 70) {
+                    $warning
+                        .html('<span class="dashicons dashicons-warning"></span> Opacity below 70% may reduce text readability. Consider increasing for better accessibility.')
+                        .addClass('warning')
+                        .removeClass('success')
+                        .show();
+                } else {
+                    $warning.hide();
+                }
+            },
+            
+            /**
+             * Add ARIA labels and descriptions
+             * Task 11.4: Enhance accessibility with ARIA attributes
+             * Requirements: 10.4
+             */
+            enhanceAriaAttributes: function() {
+                var $loginTab = $('#tab-login');
+                
+                if ($loginTab.length === 0) {
+                    return;
+                }
+                
+                // Add aria-describedby to inputs with description text
+                $loginTab.find('.mase-setting-control').each(function() {
+                    var $control = $(this);
+                    var $input = $control.find('input, select, textarea').first();
+                    var $description = $control.find('.description');
+                    
+                    if ($input.length && $description.length) {
+                        // Generate unique ID for description if not present
+                        if (!$description.attr('id')) {
+                            var descId = $input.attr('id') + '-description';
+                            $description.attr('id', descId);
+                        }
+                        
+                        // Link input to description
+                        var descId = $description.attr('id');
+                        var existingDescribedBy = $input.attr('aria-describedby');
+                        
+                        if (existingDescribedBy) {
+                            // Append to existing aria-describedby
+                            if (existingDescribedBy.indexOf(descId) === -1) {
+                                $input.attr('aria-describedby', existingDescribedBy + ' ' + descId);
+                            }
+                        } else {
+                            $input.attr('aria-describedby', descId);
+                        }
+                    }
+                });
+                
+                // Add role="group" to setting groups
+                $loginTab.find('.mase-settings-group').each(function() {
+                    var $group = $(this);
+                    if (!$group.attr('role')) {
+                        $group.attr('role', 'group');
+                    }
+                    
+                    // Add aria-labelledby if there's a heading
+                    var $heading = $group.closest('.mase-section-card').find('h2').first();
+                    if ($heading.length && !$group.attr('aria-labelledby')) {
+                        if (!$heading.attr('id')) {
+                            var headingId = 'heading-' + Math.random().toString(36).substr(2, 9);
+                            $heading.attr('id', headingId);
+                        }
+                        $group.attr('aria-labelledby', $heading.attr('id'));
+                    }
+                });
+                
+                // Add aria-label to file upload buttons if not present
+                $('.mase-upload-btn').each(function() {
+                    var $btn = $(this);
+                    if (!$btn.attr('aria-label')) {
+                        var uploadType = $btn.data('upload-type');
+                        var label = 'Upload file';
+                        
+                        if (uploadType === 'login-logo') {
+                            label = 'Upload login logo image';
+                        } else if (uploadType === 'login-background') {
+                            label = 'Upload login background image';
+                        }
+                        
+                        $btn.attr('aria-label', label);
+                    }
+                });
+                
+                // Add aria-label to remove buttons
+                $('.mase-remove-upload').each(function() {
+                    var $btn = $(this);
+                    if (!$btn.attr('aria-label')) {
+                        var target = $btn.data('target');
+                        var label = 'Remove uploaded file';
+                        
+                        if (target && target.indexOf('logo') !== -1) {
+                            label = 'Remove logo image';
+                        } else if (target && target.indexOf('background') !== -1) {
+                            label = 'Remove background image';
+                        }
+                        
+                        $btn.attr('aria-label', label);
+                    }
+                });
+                
+                // Add aria-valuemin, aria-valuemax, aria-valuenow to range sliders
+                $('input[type="range"]').each(function() {
+                    var $slider = $(this);
+                    
+                    if (!$slider.attr('aria-valuemin')) {
+                        $slider.attr('aria-valuemin', $slider.attr('min') || '0');
+                    }
+                    
+                    if (!$slider.attr('aria-valuemax')) {
+                        $slider.attr('aria-valuemax', $slider.attr('max') || '100');
+                    }
+                    
+                    if (!$slider.attr('aria-valuenow')) {
+                        $slider.attr('aria-valuenow', $slider.val());
+                    }
+                    
+                    // Update aria-valuenow on change
+                    $slider.on('input change', function() {
+                        $(this).attr('aria-valuenow', $(this).val());
+                    });
+                });
+                
+                // Add role="status" to warning containers for screen readers
+                $('.mase-a11y-warning').each(function() {
+                    var $warning = $(this);
+                    if (!$warning.attr('role')) {
+                        $warning.attr('role', 'status');
+                        $warning.attr('aria-live', 'polite');
+                    }
+                });
+                
+                // Add aria-label to color pickers
+                $('.mase-color-picker').each(function() {
+                    var $picker = $(this);
+                    if (!$picker.attr('aria-label')) {
+                        var $label = $picker.closest('.mase-setting-row').find('label');
+                        if ($label.length) {
+                            $picker.attr('aria-label', $label.text().trim());
+                        }
+                    }
+                });
+                
+                // Add aria-expanded to conditional toggles
+                $('input[type="checkbox"][role="switch"]').each(function() {
+                    var $toggle = $(this);
+                    var dependentId = $toggle.attr('id');
+                    
+                    if (dependentId) {
+                        var $dependent = $('.mase-conditional-group[data-depends-on="' + dependentId + '"]');
+                        
+                        if ($dependent.length) {
+                            $toggle.attr('aria-expanded', $toggle.is(':checked') ? 'true' : 'false');
+                            
+                            // Update aria-expanded on change
+                            $toggle.on('change', function() {
+                                $(this).attr('aria-expanded', $(this).is(':checked') ? 'true' : 'false');
+                            });
+                        }
+                    }
+                });
+                
+                console.log('MASE: ARIA attributes enhanced for login customization');
+            },
+            
+            /**
+             * Ensure keyboard navigation
+             * Task 11.3: Verify tab order and focus indicators
+             * Requirements: 10.3
+             */
+            ensureKeyboardNavigation: function() {
+                // Ensure all interactive elements in login customization have proper tabindex
+                var $loginTab = $('#tab-login');
+                
+                if ($loginTab.length === 0) {
+                    return;
+                }
+                
+                // Find all interactive elements
+                var $interactiveElements = $loginTab.find('input, select, textarea, button, a[href]');
+                
+                // Ensure proper tab order (remove negative tabindex from visible elements)
+                $interactiveElements.each(function() {
+                    var $el = $(this);
+                    
+                    // Skip if element is hidden or disabled
+                    if ($el.is(':hidden') || $el.prop('disabled')) {
+                        return;
+                    }
+                    
+                    // Remove negative tabindex if present
+                    if ($el.attr('tabindex') === '-1') {
+                        $el.removeAttr('tabindex');
+                    }
+                    
+                    // Ensure focus indicators are visible
+                    $el.on('focus', function() {
+                        $(this).addClass('mase-keyboard-focus');
+                    }).on('blur', function() {
+                        $(this).removeClass('mase-keyboard-focus');
+                    });
+                });
+                
+                // Ensure upload buttons are keyboard accessible
+                $('.mase-upload-btn').each(function() {
+                    var $btn = $(this);
+                    
+                    // Add keyboard handler
+                    $btn.on('keydown', function(e) {
+                        // Activate on Enter or Space
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            $(this).click();
+                        }
+                    });
+                });
+                
+                // Ensure remove buttons are keyboard accessible
+                $('.mase-remove-upload').each(function() {
+                    var $btn = $(this);
+                    
+                    $btn.on('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            $(this).click();
+                        }
+                    });
+                });
+                
+                // Ensure color pickers are keyboard accessible
+                $('.mase-color-picker').each(function() {
+                    var $picker = $(this);
+                    
+                    // Add aria-label if not present
+                    if (!$picker.attr('aria-label')) {
+                        var label = $picker.closest('.mase-setting-row').find('label').text();
+                        if (label) {
+                            $picker.attr('aria-label', label);
+                        }
+                    }
+                });
+                
+                // Ensure range sliders are keyboard accessible
+                $('input[type="range"]').each(function() {
+                    var $slider = $(this);
+                    
+                    // Add aria-label if not present
+                    if (!$slider.attr('aria-label')) {
+                        var label = $slider.closest('.mase-setting-row').find('label').text();
+                        if (label) {
+                            $slider.attr('aria-label', label);
+                        }
+                    }
+                    
+                    // Update value display on keyboard input
+                    $slider.on('input change', function() {
+                        var $valueDisplay = $(this).siblings('.mase-range-value');
+                        if ($valueDisplay.length) {
+                            $valueDisplay.text($(this).val() + 'px');
+                        }
+                    });
+                });
+                
+                console.log('MASE: Keyboard navigation ensured for login customization');
+            },
+            
+            /**
+             * Initialize accessibility validation
+             * Task 11.2: Bind validation to color pickers
+             */
+            init: function() {
+                var self = this;
+                
+                // Enhance ARIA attributes (Task 11.4)
+                self.enhanceAriaAttributes();
+                
+                // Ensure keyboard navigation (Task 11.3)
+                self.ensureKeyboardNavigation();
+                
+                // Validate login form text/background contrast
+                if ($('#login_form_text_color').length && $('#login_form_bg_color').length) {
+                    // Initial validation
+                    self.validateContrast(
+                        '#login_form_text_color',
+                        '#login_form_bg_color',
+                        '#login_form_contrast_warning',
+                        4.5
+                    );
+                    
+                    // Bind to color picker changes
+                    $('#login_form_text_color, #login_form_bg_color').on('change input', function() {
+                        self.validateContrast(
+                            '#login_form_text_color',
+                            '#login_form_bg_color',
+                            '#login_form_contrast_warning',
+                            4.5
+                        );
+                    });
+                }
+                
+                // Validate focus color contrast
+                if ($('#login_form_focus_color').length && $('#login_form_bg_color').length) {
+                    self.validateContrast(
+                        '#login_form_focus_color',
+                        '#login_form_bg_color',
+                        '#login_focus_contrast_warning',
+                        3.0
+                    );
+                    
+                    $('#login_form_focus_color, #login_form_bg_color').on('change input', function() {
+                        self.validateContrast(
+                            '#login_form_focus_color',
+                            '#login_form_bg_color',
+                            '#login_focus_contrast_warning',
+                            3.0
+                        );
+                    });
+                }
+                
+                // Validate glassmorphism opacity
+                if ($('#login_glassmorphism_opacity').length) {
+                    self.validateGlassmorphism(
+                        '#login_glassmorphism_opacity',
+                        '#login_glassmorphism_warning'
+                    );
+                    
+                    $('#login_glassmorphism_opacity').on('change input', function() {
+                        self.validateGlassmorphism(
+                            '#login_glassmorphism_opacity',
+                            '#login_glassmorphism_warning'
+                        );
+                    });
+                }
+                
+                console.log('MASE: Accessibility validator initialized');
+            }
+        },
+        
+        /**
          * Cleanup all event listeners
          * Prevents memory leaks by removing all bound events
          * Called on page unload
@@ -6223,7 +8044,7 @@
             this.state.isSaving = true;
             
             // Show loading state: disable button, show spinner (Requirement 11.1)
-            $button.prop('disabled', true).val('Saving...').css('opacity', '0.6');
+            $button.prop('disabled', true).val(this.i18n.saving || 'Saving...').css('opacity', '0.6');
             
             // Add spinner next to button
             var $spinner = $('<span class="mase-spinner" style="display:inline-block;margin-left:8px;width:16px;height:16px;border:2px solid #f3f3f3;border-top:2px solid #3498db;border-radius:50%;animation:mase-spin 1s linear infinite;"></span>');
@@ -6277,7 +8098,7 @@
                         console.log('MASE: Settings saved successfully');
                         
                         // Show success notice (Requirement 11.4, 18.1)
-                        self.showNotice('success', response.data.message || 'Settings saved successfully!');
+                        self.showNotice('success', response.data.message || self.i18n.saved || 'Settings saved successfully!');
                         
                         // Update state (Requirement 11.4)
                         self.state.isDirty = false;
@@ -7260,13 +9081,1044 @@
             }
             
             console.log('MASE: Conditional fields initialized successfully');
+        },
+        
+        /**
+         * Button Styler Module
+         * Handles Universal Button styling controls, live preview, and state management
+         * Requirements: 5.1, 5.2, 5.3, 12.1, 12.2
+         */
+        buttonStyler: {
+            currentType: 'primary',
+            currentState: 'normal',
+            previewTimeout: null,
+            
+            /**
+             * Initialize button styler
+             * Subtask 4.1: Create buttonStyler module structure
+             */
+            init: function() {
+                var self = this;
+                
+                // Bind button type tab switching
+                $('.mase-button-type-tab').on('click', function() {
+                    var buttonType = $(this).data('button-type');
+                    self.switchButtonType(buttonType);
+                });
+                
+                // Bind button state tab switching
+                $('.mase-button-state-tab').on('click', function() {
+                    var buttonState = $(this).data('button-state');
+                    self.switchButtonState(buttonState);
+                });
+                
+                // Bind property control changes to live preview
+                $('.mase-button-control').on('change input', function() {
+                    self.updatePreview();
+                });
+                
+                // Bind reset buttons
+                $('#reset-button-type').on('click', function() {
+                    self.resetButtonType();
+                });
+                
+                $('#reset-all-buttons').on('click', function() {
+                    self.resetAllButtons();
+                });
+                
+                // Initialize ripple effect
+                self.initRippleEffect();
+                
+                // Initial preview update
+                self.updatePreview();
+            },
+            
+            /**
+             * Switch button type
+             * Subtask 4.2: Implement tab switching functionality
+             */
+            switchButtonType: function(buttonType) {
+                this.currentType = buttonType;
+                
+                // Update active tab classes
+                $('.mase-button-type-tab').removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
+                $('.mase-button-type-tab[data-button-type="' + buttonType + '"]')
+                    .addClass('active')
+                    .attr('aria-selected', 'true')
+                    .attr('tabindex', '0');
+                
+                // Update form field names to match current type
+                this.updateFormFieldNames();
+                
+                // Trigger preview update
+                this.updatePreview();
+            },
+            
+            /**
+             * Switch button state
+             * Subtask 4.2: Implement tab switching functionality
+             */
+            switchButtonState: function(buttonState) {
+                this.currentState = buttonState;
+                
+                // Update active tab classes
+                $('.mase-button-state-tab').removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
+                $('.mase-button-state-tab[data-button-state="' + buttonState + '"]')
+                    .addClass('active')
+                    .attr('aria-selected', 'true')
+                    .attr('tabindex', '0');
+                
+                // Update form field names to match current state
+                this.updateFormFieldNames();
+                
+                // Trigger preview update
+                this.updatePreview();
+            },
+            
+            /**
+             * Update form field names based on current type and state
+             */
+            updateFormFieldNames: function() {
+                var type = this.currentType;
+                var state = this.currentState;
+                
+                $('.mase-button-control').each(function() {
+                    var $field = $(this);
+                    var property = $field.data('property');
+                    var baseName = 'universal_buttons[' + type + '][' + state + ']';
+                    
+                    // Handle nested properties like gradient_colors
+                    if (property && property.includes('gradient_colors')) {
+                        var parts = property.split('_');
+                        var index = parts[2];
+                        var subProp = parts[3];
+                        $field.attr('name', baseName + '[gradient_colors][' + index + '][' + subProp + ']');
+                    } else if (property) {
+                        $field.attr('name', baseName + '[' + property + ']');
+                    }
+                });
+            },
+            
+            /**
+             * Update live preview
+             * Subtask 4.3: Implement live preview update
+             */
+            updatePreview: function() {
+                var self = this;
+                
+                // Debounce preview updates
+                clearTimeout(this.previewTimeout);
+                this.previewTimeout = setTimeout(function() {
+                    self.doUpdatePreview();
+                }, 300);
+            },
+            
+            /**
+             * Perform preview update
+             */
+            doUpdatePreview: function() {
+                var properties = this.collectProperties();
+                var css = this.generatePreviewCSS(properties);
+                
+                // Apply CSS to preview button for current state
+                var $previewButton = $('#button-preview-' + this.currentState);
+                if ($previewButton.length) {
+                    $previewButton.attr('style', css);
+                }
+                
+                // Update contrast ratio indicator
+                if (properties.bg_color && properties.text_color) {
+                    this.updateContrastRatio(properties.bg_color, properties.text_color);
+                }
+            },
+            
+            /**
+             * Collect current property values
+             * Subtask 4.4: Implement property collection
+             */
+            collectProperties: function() {
+                var properties = {};
+                
+                $('.mase-button-control').each(function() {
+                    var $field = $(this);
+                    var property = $field.data('property');
+                    if (!property) return;
+                    
+                    var value;
+                    
+                    if ($field.is(':checkbox')) {
+                        value = $field.is(':checked');
+                    } else if ($field.is('select') || $field.is('input[type="text"]')) {
+                        value = $field.val();
+                    } else if ($field.is('input[type="range"]')) {
+                        value = parseFloat($field.val());
+                    } else {
+                        value = $field.val();
+                    }
+                    
+                    properties[property] = value;
+                });
+                
+                return properties;
+            },
+            
+            /**
+             * Generate preview CSS from properties
+             * Subtask 4.5: Implement preview CSS generation
+             */
+            generatePreviewCSS: function(props) {
+                var css = '';
+                
+                // Background
+                if (props.bg_type === 'gradient') {
+                    css += this.generateGradientCSS(props);
+                } else {
+                    css += 'background-color: ' + (props.bg_color || '#0073aa') + ' !important;';
+                }
+                
+                // Text color
+                css += 'color: ' + (props.text_color || '#ffffff') + ' !important;';
+                
+                // Border
+                if (props.border_width > 0 && props.border_style !== 'none') {
+                    css += 'border: ' + props.border_width + 'px ' + props.border_style + ' ' + (props.border_color || '#0073aa') + ' !important;';
+                } else {
+                    css += 'border: none !important;';
+                }
+                
+                // Border radius
+                if (props.border_radius_mode === 'individual') {
+                    css += 'border-radius: ' + (props.border_radius_tl || 3) + 'px ' + (props.border_radius_tr || 3) + 'px ' + 
+                           (props.border_radius_br || 3) + 'px ' + (props.border_radius_bl || 3) + 'px !important;';
+                } else {
+                    css += 'border-radius: ' + (props.border_radius || 3) + 'px !important;';
+                }
+                
+                // Padding
+                css += 'padding: ' + (props.padding_vertical || 6) + 'px ' + (props.padding_horizontal || 12) + 'px !important;';
+                
+                // Typography
+                css += 'font-size: ' + (props.font_size || 13) + 'px !important;';
+                css += 'font-weight: ' + (props.font_weight || 400) + ' !important;';
+                css += 'text-transform: ' + (props.text_transform || 'none') + ' !important;';
+                
+                // Shadow
+                if (props.shadow_mode && props.shadow_mode !== 'none') {
+                    var shadowValue = this.getShadowValue(props);
+                    if (shadowValue !== 'none') {
+                        css += 'box-shadow: ' + shadowValue + ' !important;';
+                    }
+                }
+                
+                // Transition
+                if (props.transition_duration > 0) {
+                    css += 'transition: all ' + props.transition_duration + 'ms ease !important;';
+                }
+                
+                return css;
+            },
+            
+            /**
+             * Generate gradient CSS
+             * Subtask 4.6: Implement gradient CSS helper
+             */
+            generateGradientCSS: function(props) {
+                var gradientType = props.gradient_type || 'linear';
+                var angle = props.gradient_angle || 90;
+                var color1 = props.gradient_colors_0_color || '#0073aa';
+                var color2 = props.gradient_colors_1_color || '#005177';
+                
+                if (gradientType === 'radial') {
+                    return 'background: radial-gradient(circle, ' + color1 + ' 0%, ' + color2 + ' 100%) !important;';
+                } else {
+                    return 'background: linear-gradient(' + angle + 'deg, ' + color1 + ' 0%, ' + color2 + ' 100%) !important;';
+                }
+            },
+            
+            /**
+             * Get shadow value
+             * Subtask 4.7: Implement shadow value helper
+             */
+            getShadowValue: function(props) {
+                if (props.shadow_mode === 'preset') {
+                    var presets = {
+                        'none': 'none',
+                        'subtle': '0 1px 2px rgba(0,0,0,0.1)',
+                        'medium': '0 2px 4px rgba(0,0,0,0.15)',
+                        'strong': '0 4px 8px rgba(0,0,0,0.2)'
+                    };
+                    return presets[props.shadow_preset] || 'none';
+                } else {
+                    return (props.shadow_h_offset || 0) + 'px ' + (props.shadow_v_offset || 2) + 'px ' + 
+                           (props.shadow_blur || 4) + 'px ' + (props.shadow_spread || 0) + 'px ' + (props.shadow_color || 'rgba(0,0,0,0.1)');
+                }
+            },
+            
+            /**
+             * Update contrast ratio indicator
+             * Subtask 5.5: Show contrast ratio indicator
+             */
+            updateContrastRatio: function(bgColor, textColor) {
+                var ratio = this.calculateContrastRatio(bgColor, textColor);
+                var $ratioValue = $('#button-contrast-ratio');
+                var $ratioStatus = $('#button-contrast-status');
+                
+                if ($ratioValue.length) {
+                    $ratioValue.text(ratio.toFixed(2) + ':1');
+                }
+                
+                if ($ratioStatus.length) {
+                    if (ratio >= 4.5) {
+                        $ratioStatus.text('PASS').removeClass('fail').addClass('pass');
+                    } else {
+                        $ratioStatus.text('FAIL').removeClass('pass').addClass('fail');
+                    }
+                }
+            },
+            
+            /**
+             * Calculate contrast ratio between two colors
+             */
+            calculateContrastRatio: function(color1, color2) {
+                var lum1 = this.getLuminance(color1);
+                var lum2 = this.getLuminance(color2);
+                var lighter = Math.max(lum1, lum2);
+                var darker = Math.min(lum1, lum2);
+                return (lighter + 0.05) / (darker + 0.05);
+            },
+            
+            /**
+             * Get relative luminance of a color
+             */
+            getLuminance: function(color) {
+                var rgb = this.hexToRgb(color);
+                var r = rgb.r / 255;
+                var g = rgb.g / 255;
+                var b = rgb.b / 255;
+                
+                r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+                g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+                b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+                
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            },
+            
+            /**
+             * Convert hex color to RGB
+             */
+            hexToRgb: function(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                return {
+                    r: parseInt(hex.substr(0, 2), 16) || 0,
+                    g: parseInt(hex.substr(2, 2), 16) || 0,
+                    b: parseInt(hex.substr(4, 2), 16) || 0
+                };
+            },
+            
+            /**
+             * Initialize ripple effect
+             * Subtask 4.8: Implement ripple effect
+             */
+            initRippleEffect: function() {
+                $('.mase-button-preview').on('click', function(e) {
+                    var $button = $(this);
+                    var rippleEffect = $('#button-ripple-effect').is(':checked');
+                    
+                    if (!rippleEffect) return;
+                    
+                    var $ripple = $('<span class="mase-ripple-effect"></span>');
+                    var btnOffset = $button.offset();
+                    var x = e.pageX - btnOffset.left;
+                    var y = e.pageY - btnOffset.top;
+                    
+                    $ripple.css({
+                        left: x + 'px',
+                        top: y + 'px',
+                        width: '10px',
+                        height: '10px'
+                    });
+                    
+                    $button.append($ripple);
+                    
+                    setTimeout(function() {
+                        $ripple.remove();
+                    }, 600);
+                });
+            },
+            
+            /**
+             * Reset button type to defaults
+             * Subtask 4.9: Implement reset functionality
+             */
+            resetButtonType: function() {
+                var self = this;
+                var buttonType = this.currentType;
+                
+                if (!confirm(MASE.i18n.confirmResetButtonType || 'Reset this button type to defaults?')) {
+                    return;
+                }
+                
+                $.ajax({
+                    url: MASE.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_reset_button_type',
+                        nonce: MASE.config.nonce,
+                        button_type: buttonType
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            MASE.showNotice('success', MASE.i18n.buttonTypeReset || 'Button type reset successfully');
+                            self.populateForm(response.data.defaults);
+                            self.updatePreview();
+                        } else {
+                            MASE.showNotice('error', response.data.message || 'Failed to reset button type');
+                        }
+                    },
+                    error: function() {
+                        MASE.showNotice('error', MASE.i18n.ajaxError || 'An error occurred');
+                    }
+                });
+            },
+            
+            /**
+             * Reset all buttons to defaults
+             * Subtask 4.9: Implement reset functionality
+             */
+            resetAllButtons: function() {
+                var self = this;
+                
+                if (!confirm(MASE.i18n.confirmResetAllButtons || 'Reset all button types to defaults?')) {
+                    return;
+                }
+                
+                $.ajax({
+                    url: MASE.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_reset_all_buttons',
+                        nonce: MASE.config.nonce
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            MASE.showNotice('success', MASE.i18n.allButtonsReset || 'All buttons reset successfully');
+                            self.populateForm(response.data.defaults);
+                            self.updatePreview();
+                        } else {
+                            MASE.showNotice('error', response.data.message || 'Failed to reset buttons');
+                        }
+                    },
+                    error: function() {
+                        MASE.showNotice('error', MASE.i18n.ajaxError || 'An error occurred');
+                    }
+                });
+            },
+            
+            /**
+             * Populate form with data
+             * Subtask 4.10: Implement form population helper
+             */
+            populateForm: function(data) {
+                $('.mase-button-control').each(function() {
+                    var $field = $(this);
+                    var property = $field.data('property');
+                    var value = data[property];
+                    
+                    if (value === undefined) return;
+                    
+                    if ($field.is(':checkbox')) {
+                        $field.prop('checked', value).trigger('change');
+                    } else if ($field.is('select') || $field.is('input[type="text"]')) {
+                        $field.val(value).trigger('change');
+                    } else if ($field.is('input[type="range"]')) {
+                        $field.val(value);
+                        var unit = $field.attr('max') === '360' ? '°' : ($field.attr('max') === '1' ? '' : 'px');
+                        $field.next('.mase-range-value').text(value + unit);
+                        $field.trigger('change');
+                    }
+                });
+            }
         }
 
+    };
+    
+    /**
+     * Live Preview Module
+     * Handles real-time background preview updates
+     * Requirements: 2.4, 10.1
+     * Task 18: Integrate gradient builder with live preview
+     */
+    MASE.livePreview = {
+        
+        /**
+         * Live preview enabled state
+         */
+        enabled: true,
+        
+        /**
+         * Area selector mapping
+         * Maps admin area identifiers to CSS selectors
+         */
+        areaSelectors: {
+            'dashboard': '#wpbody-content',
+            'admin_menu': '#adminmenu',
+            'post_lists': '.wp-list-table',
+            'post_editor': '#post-body',
+            'widgets': '.postbox',
+            'login': 'body.login'
+        },
+        
+        /**
+         * Get CSS selector for an admin area
+         * 
+         * @param {string} area - Area identifier
+         * @return {string} CSS selector or empty string if not found
+         */
+        getAreaSelector: function(area) {
+            return this.areaSelectors[area] || '';
+        },
+        
+        /**
+         * Get background configuration for an area
+         * Reads current form values for the specified area
+         * 
+         * @param {string} area - Area identifier
+         * @return {Object} Background configuration object
+         */
+        getBackgroundConfig: function(area) {
+            var $config = $('.mase-background-config[data-area="' + area + '"]');
+            
+            if ($config.length === 0) {
+                console.warn('MASE: Background config not found for area:', area);
+                return null;
+            }
+            
+            // Check if background is enabled
+            var enabled = $config.find('.mase-background-enabled').is(':checked');
+            if (!enabled) {
+                return { type: 'none', enabled: false };
+            }
+            
+            // Get background type
+            var type = $config.find('.mase-background-type').val() || 'none';
+            
+            // Base configuration
+            var config = {
+                type: type,
+                enabled: enabled,
+                opacity: parseInt($config.find('.mase-background-opacity').val()) || 100,
+                blend_mode: $config.find('.mase-background-blend-mode').val() || 'normal'
+            };
+            
+            // Type-specific configuration
+            if (type === 'image') {
+                config.image_url = $config.find('.mase-background-url').val() || '';
+                config.position = $config.find('.mase-background-position').val() || 'center center';
+                config.size = $config.find('.mase-background-size').val() || 'cover';
+                config.repeat = $config.find('.mase-background-repeat').val() || 'no-repeat';
+                config.attachment = $config.find('.mase-background-attachment').val() || 'scroll';
+            } else if (type === 'gradient') {
+                // Get gradient configuration from gradient builder
+                if (window.MASE && window.MASE.gradientBuilder) {
+                    var gradientConfig = MASE.gradientBuilder.getGradientConfig(area);
+                    config.gradient_type = gradientConfig.type;
+                    config.gradient_angle = gradientConfig.angle;
+                    config.gradient_colors = gradientConfig.colors;
+                }
+            } else if (type === 'pattern') {
+                config.pattern_id = $config.find('.mase-pattern-id').val() || '';
+                config.pattern_color = $config.find('.mase-pattern-color').val() || '#000000';
+                config.pattern_opacity = parseInt($config.find('.mase-pattern-opacity').val()) || 100;
+                config.pattern_scale = parseInt($config.find('.mase-pattern-scale').val()) || 100;
+            }
+            
+            return config;
+        },
+        
+        /**
+         * Generate CSS for background configuration
+         * 
+         * @param {Object} config - Background configuration
+         * @return {Object} CSS properties object
+         */
+        generateBackgroundCSS: function(config) {
+            var css = {};
+            
+            if (!config || !config.enabled || config.type === 'none') {
+                css['background-image'] = 'none';
+                css['background-color'] = 'transparent';
+                return css;
+            }
+            
+            // Handle image backgrounds
+            if (config.type === 'image' && config.image_url) {
+                css['background-image'] = 'url(' + config.image_url + ')';
+                css['background-position'] = config.position || 'center center';
+                css['background-size'] = config.size || 'cover';
+                css['background-repeat'] = config.repeat || 'no-repeat';
+                css['background-attachment'] = config.attachment || 'scroll';
+            }
+            
+            // Handle gradient backgrounds
+            else if (config.type === 'gradient') {
+                var gradientCSS = this.generateGradientCSS(config);
+                if (gradientCSS) {
+                    css['background-image'] = gradientCSS;
+                    css['background-position'] = 'center center';
+                    css['background-size'] = 'cover';
+                    css['background-repeat'] = 'no-repeat';
+                    css['background-attachment'] = 'scroll';
+                }
+            }
+            
+            // Handle pattern backgrounds
+            else if (config.type === 'pattern' && config.pattern_id) {
+                // Pattern CSS generation would go here
+                // For now, just set a placeholder
+                css['background-color'] = config.pattern_color || '#f0f0f0';
+            }
+            
+            // Apply opacity and blend mode
+            if (config.opacity !== undefined && config.opacity < 100) {
+                css['opacity'] = config.opacity / 100;
+            }
+            
+            if (config.blend_mode && config.blend_mode !== 'normal') {
+                css['mix-blend-mode'] = config.blend_mode;
+            }
+            
+            return css;
+        },
+        
+        /**
+         * Generate CSS gradient string from configuration
+         * Task 18: Generate CSS gradient string in JavaScript
+         * 
+         * @param {Object} config - Gradient configuration
+         * @return {string} CSS gradient string
+         */
+        generateGradientCSS: function(config) {
+            // Validate colors
+            if (!config.gradient_colors || config.gradient_colors.length < 2) {
+                return 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)';
+            }
+            
+            // Build color stops string
+            var colorStops = config.gradient_colors
+                .map(function(stop) {
+                    return stop.color + ' ' + stop.position + '%';
+                })
+                .join(', ');
+            
+            // Generate gradient based on type
+            // Task 18: Handle both linear and radial gradients
+            if (config.gradient_type === 'radial') {
+                return 'radial-gradient(circle, ' + colorStops + ')';
+            } else {
+                var angle = config.gradient_angle || 90;
+                return 'linear-gradient(' + angle + 'deg, ' + colorStops + ')';
+            }
+        },
+        
+        /**
+         * Update background preview for an area
+         * Task 18: Apply gradient to preview area in real-time
+         * 
+         * @param {string} area - Area identifier
+         */
+        updateBackground: function(area) {
+            if (!this.enabled) {
+                return;
+            }
+            
+            // Get selector for the area
+            var selector = this.getAreaSelector(area);
+            if (!selector) {
+                console.warn('MASE: No selector found for area:', area);
+                return;
+            }
+            
+            // Get background configuration
+            var config = this.getBackgroundConfig(area);
+            if (!config) {
+                console.warn('MASE: No config found for area:', area);
+                return;
+            }
+            
+            // Generate CSS
+            var css = this.generateBackgroundCSS(config);
+            
+            // Apply CSS to the target element
+            var $target = $(selector);
+            if ($target.length > 0) {
+                $target.css(css);
+                console.log('MASE: Applied background to', selector, css);
+            } else {
+                console.warn('MASE: Target element not found:', selector);
+            }
+        }
+    };
+    
+    /**
+     * Background Upload Interface Module
+     * Handles drag & drop file uploads, media library integration, and image preview
+     * Requirements: 1.1, 9.2
+     */
+    MASE.backgrounds = {
+        
+        /**
+         * Initialize background upload interfaces
+         */
+        init: function() {
+            this.initUploadZones();
+            this.initFileInputs();
+            this.initRemoveButtons();
+            this.initChangeButtons();
+            this.initBackgroundTypeSelector();
+            this.initAccordion();
+        },
+        
+        /**
+         * Initialize accordion toggle for background areas
+         */
+        initAccordion: function() {
+            $('.mase-background-area-header').on('click', function(e) {
+                // Don't toggle if clicking on toggle switch
+                if ($(e.target).closest('.mase-toggle-switch').length) {
+                    return;
+                }
+                
+                var $header = $(this);
+                var $content = $header.next('.mase-background-area-content');
+                var $toggle = $header.find('.mase-background-area-toggle');
+                var isExpanded = $toggle.attr('aria-expanded') === 'true';
+                
+                if (isExpanded) {
+                    $content.slideUp(300);
+                    $toggle.attr('aria-expanded', 'false');
+                } else {
+                    $content.slideDown(300);
+                    $toggle.attr('aria-expanded', 'true');
+                }
+            });
+            
+            // Also handle toggle button click
+            $('.mase-background-area-toggle').on('click', function(e) {
+                e.stopPropagation();
+                $(this).closest('.mase-background-area-header').trigger('click');
+            });
+        },
+        
+        /**
+         * Initialize drag & drop upload zones
+         */
+        initUploadZones: function() {
+            var self = this;
+            
+            $('.mase-background-upload-zone').each(function() {
+                var $zone = $(this);
+                var area = $zone.data('area');
+                
+                // Drag over handler
+                $zone.on('dragover', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $zone.addClass('mase-drag-over');
+                });
+                
+                // Drag leave handler
+                $zone.on('dragleave', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $zone.removeClass('mase-drag-over');
+                });
+                
+                // Drop handler
+                $zone.on('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $zone.removeClass('mase-drag-over');
+                    
+                    var files = e.originalEvent.dataTransfer.files;
+                    if (files.length > 0) {
+                        self.handleFileUpload(files[0], area);
+                    }
+                });
+                
+                // Click to upload - open file input
+                $zone.on('click', function(e) {
+                    if (!$(e.target).is('input[type="file"]')) {
+                        $zone.find('.mase-background-file-input').trigger('click');
+                    }
+                });
+                
+                // Keyboard accessibility
+                $zone.on('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        $zone.find('.mase-background-file-input').trigger('click');
+                    }
+                });
+            });
+        },
+        
+        /**
+         * Initialize file input change handlers
+         */
+        initFileInputs: function() {
+            var self = this;
+            
+            $('.mase-background-file-input').on('change', function() {
+                var area = $(this).data('area');
+                var files = this.files;
+                
+                if (files.length > 0) {
+                    self.handleFileUpload(files[0], area);
+                }
+                
+                // Reset input so same file can be selected again
+                $(this).val('');
+            });
+        },
+        
+        /**
+         * Initialize remove image buttons
+         */
+        initRemoveButtons: function() {
+            var self = this;
+            
+            $(document).on('click', '.mase-remove-image-btn', function(e) {
+                e.preventDefault();
+                var area = $(this).data('area');
+                self.removeImage(area);
+            });
+        },
+        
+        /**
+         * Initialize change image buttons
+         */
+        initChangeButtons: function() {
+            $(document).on('click', '.mase-change-image-btn', function(e) {
+                e.preventDefault();
+                var area = $(this).data('area');
+                var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+                $zone.find('.mase-background-file-input').trigger('click');
+            });
+        },
+        
+        /**
+         * Initialize background type selector to show/hide upload zone
+         */
+        initBackgroundTypeSelector: function() {
+            $('.mase-background-type-selector').on('change', function() {
+                var area = $(this).data('area');
+                var type = $(this).val();
+                
+                // Show/hide appropriate controls
+                var $controls = $('.mase-background-config[data-area="' + area + '"] .mase-background-type-controls');
+                $controls.hide();
+                $controls.filter('[data-type="' + type + '"]').show();
+            });
+        },
+        
+        /**
+         * Handle file upload with validation
+         * @param {File} file - The file to upload
+         * @param {string} area - The admin area identifier
+         */
+        handleFileUpload: function(file, area) {
+            var self = this;
+            
+            // Validate file type
+            var allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+            if (!allowedTypes.includes(file.type)) {
+                self.showError(area, MASE.i18n.invalidFileType || 'Invalid file type. Please upload JPG, PNG, WebP, or SVG.');
+                return;
+            }
+            
+            // Validate file size (5MB max)
+            var maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (file.size > maxSize) {
+                self.showError(area, MASE.i18n.fileTooLarge || 'File too large. Maximum size is 5MB.');
+                return;
+            }
+            
+            // Clear any previous errors
+            self.hideError(area);
+            
+            // Show upload progress
+            self.showProgress(area, 0);
+            
+            // Prepare form data
+            var formData = new FormData();
+            formData.append('action', 'mase_upload_background_image');
+            formData.append('nonce', MASE.config.nonce);
+            formData.append('area', area);
+            formData.append('file', file);
+            
+            // Upload via AJAX
+            $.ajax({
+                url: MASE.config.ajaxUrl,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    // Upload progress
+                    xhr.upload.addEventListener('progress', function(e) {
+                        if (e.lengthComputable) {
+                            var percentComplete = Math.round((e.loaded / e.total) * 100);
+                            self.updateProgress(area, percentComplete);
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(response) {
+                    if (response.success) {
+                        self.hideProgress(area);
+                        self.updatePreview(area, response.data);
+                        MASE.showNotice('success', MASE.i18n.imageUploaded || 'Image uploaded successfully!');
+                    } else {
+                        self.hideProgress(area);
+                        self.showError(area, response.data.message || 'Upload failed. Please try again.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    self.hideProgress(area);
+                    self.showError(area, MASE.i18n.uploadFailed || 'Upload failed. Please check your connection and try again.');
+                    console.error('Upload error:', error);
+                }
+            });
+        },
+        
+        /**
+         * Update preview after successful upload
+         * @param {string} area - The admin area identifier
+         * @param {Object} data - Response data with attachment info
+         */
+        updatePreview: function(area, data) {
+            var $preview = $('.mase-background-image-preview[data-area="' + area + '"]');
+            var $uploadZone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+            
+            // Update hidden fields
+            $('.mase-background-image-url[data-area="' + area + '"]').val(data.url);
+            $('.mase-background-image-id[data-area="' + area + '"]').val(data.attachment_id);
+            
+            // Update preview thumbnail
+            $preview.find('.mase-preview-thumbnail img').attr('src', data.thumbnail || data.url);
+            
+            // Show preview, hide upload zone
+            $uploadZone.hide();
+            $preview.show();
+            
+            // Trigger live preview update if enabled
+            if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                MASE.livePreview.updateBackground(area);
+            }
+        },
+        
+        /**
+         * Remove image
+         * @param {string} area - The admin area identifier
+         */
+        removeImage: function(area) {
+            var $preview = $('.mase-background-image-preview[data-area="' + area + '"]');
+            var $uploadZone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+            
+            // Clear hidden fields
+            $('.mase-background-image-url[data-area="' + area + '"]').val('');
+            $('.mase-background-image-id[data-area="' + area + '"]').val('0');
+            
+            // Clear preview thumbnail
+            $preview.find('.mase-preview-thumbnail img').attr('src', '');
+            
+            // Hide preview, show upload zone
+            $preview.hide();
+            $uploadZone.show();
+            
+            // Trigger live preview update if enabled
+            if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                MASE.livePreview.updateBackground(area);
+            }
+        },
+        
+        /**
+         * Show upload progress
+         * @param {string} area - The admin area identifier
+         * @param {number} percent - Progress percentage (0-100)
+         */
+        showProgress: function(area, percent) {
+            var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+            $zone.find('.mase-upload-zone-content').hide();
+            $zone.find('.mase-upload-progress').show();
+            $zone.addClass('mase-uploading');
+            this.updateProgress(area, percent);
+        },
+        
+        /**
+         * Update upload progress
+         * @param {string} area - The admin area identifier
+         * @param {number} percent - Progress percentage (0-100)
+         */
+        updateProgress: function(area, percent) {
+            var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+            $zone.find('.mase-upload-progress-fill').css('width', percent + '%');
+            $zone.find('.mase-upload-progress-percent').text(percent + '%');
+        },
+        
+        /**
+         * Hide upload progress
+         * @param {string} area - The admin area identifier
+         */
+        hideProgress: function(area) {
+            var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+            $zone.find('.mase-upload-progress').hide();
+            $zone.find('.mase-upload-zone-content').show();
+            $zone.removeClass('mase-uploading');
+        },
+        
+        /**
+         * Show validation error
+         * @param {string} area - The admin area identifier
+         * @param {string} message - Error message to display
+         */
+        showError: function(area, message) {
+            var $error = $('.mase-upload-error[data-area="' + area + '"]');
+            $error.find('.mase-upload-error-message').text(message);
+            $error.show();
+            
+            // Auto-hide after 5 seconds
+            setTimeout(function() {
+                $error.fadeOut();
+            }, 5000);
+        },
+        
+        /**
+         * Hide validation error
+         * @param {string} area - The admin area identifier
+         */
+        hideError: function(area) {
+            $('.mase-upload-error[data-area="' + area + '"]').hide();
+        }
     };
     
     // Initialize on document ready
     $(document).ready(function() {
         MASE.init();
+        
+        // Initialize button styler if on buttons tab
+        if ($('#tab-buttons').length) {
+            MASE.buttonStyler.init();
+        }
+        
+        // Initialize backgrounds module if on backgrounds tab
+        if ($('#tab-backgrounds').length || $('.mase-backgrounds-wrapper').length) {
+            MASE.backgrounds.init();
+        }
         
         // Bind admin menu preview events if live preview is enabled
         if (MASE.state.livePreviewEnabled) {
@@ -7290,3 +10142,4 @@
     });
     
 })(jQuery);
+

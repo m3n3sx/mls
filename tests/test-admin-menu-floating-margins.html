@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Menu Floating Margins Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #2c3338;
+            font-size: 18px;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #1d2327;
+        }
+        
+        select, input[type="range"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .value-display {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: 600;
+            color: #2271b1;
+        }
+        
+        .admin-menu-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 160px;
+            height: 100vh;
+            background: #23282d;
+            color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-menu-preview.floating {
+            position: fixed;
+        }
+        
+        .menu-item {
+            padding: 10px 15px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background: #0073aa;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d7f0ff;
+            border-left: 4px solid #2271b1;
+            border-radius: 4px;
+        }
+        
+        .status.success {
+            background: #d5f5e3;
+            border-left-color: #00a32a;
+        }
+        
+        .status.error {
+            background: #ffd8d8;
+            border-left-color: #d63638;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background: #f0f0f1;
+        }
+        
+        .test-result.pass {
+            background: #d5f5e3;
+            color: #00a32a;
+        }
+        
+        .test-result.fail {
+            background: #ffd8d8;
+            color: #d63638;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-menu-preview" id="adminMenu">
+        <h3 style="margin-top: 0;">Admin Menu</h3>
+        <div class="menu-item">Dashboard</div>
+        <div class="menu-item">Posts</div>
+        <div class="menu-item">Media</div>
+        <div class="menu-item">Pages</div>
+        <div class="menu-item">Comments</div>
+        <div class="menu-item">Appearance</div>
+        <div class="menu-item">Plugins</div>
+        <div class="menu-item">Users</div>
+        <div class="menu-item">Tools</div>
+        <div class="menu-item">Settings</div>
+    </div>
+
+    <div class="test-container" style="margin-left: 200px;">
+        <h1>🧪 Admin Menu Floating Margins Test</h1>
+        <p><strong>Task 16:</strong> Individual Floating Margin Controls</p>
+        
+        <div class="test-section">
+            <h2>✅ Test Requirements</h2>
+            <ul>
+                <li><strong>Requirement 15.1:</strong> Uniform margin mode (0-100px)</li>
+                <li><strong>Requirement 15.2:</strong> Individual margin mode toggle</li>
+                <li><strong>Requirement 15.3:</strong> Four separate sliders for individual margins</li>
+                <li><strong>Requirement 15.4:</strong> Single slider for uniform mode</li>
+                <li><strong>Requirement 15.5:</strong> Live preview updates menu positioning in real-time</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>🎛️ Floating Mode Controls</h2>
+            
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="floatingEnabled" onchange="updateFloating()">
+                    Enable Floating Mode
+                </label>
+            </div>
+            
+            <div id="floatingControls" style="display: none;">
+                <div class="control-group">
+                    <label for="marginMode">Margin Mode:</label>
+                    <select id="marginMode" onchange="updateMarginMode()">
+                        <option value="uniform">Uniform</option>
+                        <option value="individual">Individual Sides</option>
+                    </select>
+                </div>
+                
+                <!-- Uniform Margin Control -->
+                <div id="uniformControl" class="control-group">
+                    <label for="uniformMargin">
+                        Margin (px):
+                        <span class="value-display" id="uniformValue">8</span>
+                    </label>
+                    <input type="range" id="uniformMargin" min="0" max="100" value="8" 
+                           oninput="updateUniformMargin(this.value)">
+                </div>
+                
+                <!-- Individual Margin Controls -->
+                <div id="individualControls" style="display: none;">
+                    <div class="control-group">
+                        <label for="topMargin">
+                            Top Margin (px):
+                            <span class="value-display" id="topValue">8</span>
+                        </label>
+                        <input type="range" id="topMargin" min="0" max="100" value="8" 
+                               oninput="updateIndividualMargins()">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="rightMargin">
+                            Right Margin (px):
+                            <span class="value-display" id="rightValue">8</span>
+                        </label>
+                        <input type="range" id="rightMargin" min="0" max="100" value="8" 
+                               oninput="updateIndividualMargins()">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="bottomMargin">
+                            Bottom Margin (px):
+                            <span class="value-display" id="bottomValue">8</span>
+                        </label>
+                        <input type="range" id="bottomMargin" min="0" max="100" value="8" 
+                               oninput="updateIndividualMargins()">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="leftMargin">
+                            Left Margin (px):
+                            <span class="value-display" id="leftValue">8</span>
+                        </label>
+                        <input type="range" id="leftMargin" min="0" max="100" value="8" 
+                               oninput="updateIndividualMargins()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 Automated Tests</h2>
+            <button onclick="runTests()" style="padding: 10px 20px; background: #2271b1; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                Run Tests
+            </button>
+            <div id="testResults" class="test-results"></div>
+        </div>
+
+        <div class="status" id="status">
+            <strong>Status:</strong> Ready to test. Enable floating mode and adjust margins to see live preview.
+        </div>
+    </div>
+
+    <script>
+        const menu = document.getElementById('adminMenu');
+        const floatingControls = document.getElementById('floatingControls');
+        const uniformControl = document.getElementById('uniformControl');
+        const individualControls = document.getElementById('individualControls');
+        
+        function updateFloating() {
+            const enabled = document.getElementById('floatingEnabled').checked;
+            floatingControls.style.display = enabled ? 'block' : 'none';
+            
+            if (enabled) {
+                menu.classList.add('floating');
+                updateMarginMode();
+                updateStatus('Floating mode enabled', 'success');
+            } else {
+                menu.classList.remove('floating');
+                menu.style.top = '0';
+                menu.style.left = '0';
+                menu.style.height = '100vh';
+                updateStatus('Floating mode disabled', 'info');
+            }
+        }
+        
+        function updateMarginMode() {
+            const mode = document.getElementById('marginMode').value;
+            
+            if (mode === 'uniform') {
+                uniformControl.style.display = 'block';
+                individualControls.style.display = 'none';
+                updateUniformMargin(document.getElementById('uniformMargin').value);
+            } else {
+                uniformControl.style.display = 'none';
+                individualControls.style.display = 'block';
+                updateIndividualMargins();
+            }
+        }
+        
+        function updateUniformMargin(value) {
+            document.getElementById('uniformValue').textContent = value;
+            
+            const margin = parseInt(value);
+            menu.style.top = margin + 'px';
+            menu.style.left = margin + 'px';
+            menu.style.height = 'calc(100vh - ' + (margin * 2) + 'px)';
+            
+            updateStatus('Uniform margin: ' + margin + 'px', 'success');
+        }
+        
+        function updateIndividualMargins() {
+            const top = parseInt(document.getElementById('topMargin').value);
+            const right = parseInt(document.getElementById('rightMargin').value);
+            const bottom = parseInt(document.getElementById('bottomMargin').value);
+            const left = parseInt(document.getElementById('leftMargin').value);
+            
+            document.getElementById('topValue').textContent = top;
+            document.getElementById('rightValue').textContent = right;
+            document.getElementById('bottomValue').textContent = bottom;
+            document.getElementById('leftValue').textContent = left;
+            
+            menu.style.top = top + 'px';
+            menu.style.left = left + 'px';
+            menu.style.height = 'calc(100vh - ' + (top + bottom) + 'px)';
+            
+            updateStatus('Individual margins - T:' + top + ' R:' + right + ' B:' + bottom + ' L:' + left, 'success');
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.innerHTML = '<strong>Status:</strong> ' + message;
+            status.className = 'status ' + type;
+        }
+        
+        function runTests() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<h3>Test Results:</h3>';
+            
+            const tests = [
+                {
+                    name: 'Floating mode toggle exists',
+                    test: () => document.getElementById('floatingEnabled') !== null
+                },
+                {
+                    name: 'Margin mode selector exists',
+                    test: () => document.getElementById('marginMode') !== null
+                },
+                {
+                    name: 'Uniform margin control exists',
+                    test: () => document.getElementById('uniformMargin') !== null
+                },
+                {
+                    name: 'Individual margin controls exist (4 sliders)',
+                    test: () => {
+                        return document.getElementById('topMargin') !== null &&
+                               document.getElementById('rightMargin') !== null &&
+                               document.getElementById('bottomMargin') !== null &&
+                               document.getElementById('leftMargin') !== null;
+                    }
+                },
+                {
+                    name: 'Uniform margin range is 0-100px',
+                    test: () => {
+                        const input = document.getElementById('uniformMargin');
+                        return input.min === '0' && input.max === '100';
+                    }
+                },
+                {
+                    name: 'Individual margin ranges are 0-100px',
+                    test: () => {
+                        const inputs = ['topMargin', 'rightMargin', 'bottomMargin', 'leftMargin'];
+                        return inputs.every(id => {
+                            const input = document.getElementById(id);
+                            return input.min === '0' && input.max === '100';
+                        });
+                    }
+                },
+                {
+                    name: 'Floating mode applies position: fixed',
+                    test: () => {
+                        document.getElementById('floatingEnabled').checked = true;
+                        updateFloating();
+                        const hasFloating = menu.classList.contains('floating');
+                        document.getElementById('floatingEnabled').checked = false;
+                        updateFloating();
+                        return hasFloating;
+                    }
+                },
+                {
+                    name: 'Uniform margin updates menu position',
+                    test: () => {
+                        document.getElementById('floatingEnabled').checked = true;
+                        updateFloating();
+                        document.getElementById('marginMode').value = 'uniform';
+                        updateMarginMode();
+                        updateUniformMargin(20);
+                        const result = menu.style.top === '20px' && menu.style.left === '20px';
+                        document.getElementById('floatingEnabled').checked = false;
+                        updateFloating();
+                        return result;
+                    }
+                },
+                {
+                    name: 'Individual margins update menu position independently',
+                    test: () => {
+                        document.getElementById('floatingEnabled').checked = true;
+                        updateFloating();
+                        document.getElementById('marginMode').value = 'individual';
+                        updateMarginMode();
+                        document.getElementById('topMargin').value = 10;
+                        document.getElementById('leftMargin').value = 20;
+                        updateIndividualMargins();
+                        const result = menu.style.top === '10px' && menu.style.left === '20px';
+                        document.getElementById('floatingEnabled').checked = false;
+                        updateFloating();
+                        return result;
+                    }
+                }
+            ];
+            
+            let passed = 0;
+            let failed = 0;
+            
+            tests.forEach(test => {
+                try {
+                    const result = test.test();
+                    const div = document.createElement('div');
+                    div.className = 'test-result ' + (result ? 'pass' : 'fail');
+                    div.textContent = (result ? '✅ PASS' : '❌ FAIL') + ': ' + test.name;
+                    results.appendChild(div);
+                    
+                    if (result) passed++;
+                    else failed++;
+                } catch (error) {
+                    const div = document.createElement('div');
+                    div.className = 'test-result fail';
+                    div.textContent = '❌ ERROR: ' + test.name + ' - ' + error.message;
+                    results.appendChild(div);
+                    failed++;
+                }
+            });
+            
+            const summary = document.createElement('div');
+            summary.className = 'test-result ' + (failed === 0 ? 'pass' : 'fail');
+            summary.innerHTML = '<strong>Summary:</strong> ' + passed + ' passed, ' + failed + ' failed';
+            results.appendChild(summary);
+            
+            updateStatus('Tests completed: ' + passed + '/' + tests.length + ' passed', failed === 0 ? 'success' : 'error');
+        }
+    </script>
+</body>
+</html>

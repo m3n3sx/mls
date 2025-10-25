@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Menu Logo Placement Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        
+        .control-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        select, input[type="range"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 6px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #2271b1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .button:hover {
+            background: #135e96;
+        }
+        
+        .button-secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+            border: 1px solid #8c8f94;
+        }
+        
+        .button-secondary:hover {
+            background: #e5e5e5;
+        }
+        
+        .button-danger {
+            background: #dc3232;
+            color: white;
+        }
+        
+        .button-danger:hover {
+            background: #c62d2d;
+        }
+        
+        .logo-preview {
+            margin-top: 10px;
+            padding: 12px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-width: 200px;
+            display: none;
+        }
+        
+        .logo-preview.active {
+            display: block;
+        }
+        
+        .logo-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .range-value {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: 600;
+            color: #2271b1;
+        }
+        
+        /* Admin Menu Preview */
+        #adminmenu {
+            position: fixed;
+            left: 0;
+            top: 32px;
+            width: 160px;
+            height: calc(100vh - 32px);
+            background: #23282d;
+            color: white;
+            overflow-y: auto;
+            z-index: 9990;
+        }
+        
+        #adminmenu::before,
+        #adminmenu::after {
+            content: "";
+            display: none;
+        }
+        
+        .menu-item {
+            padding: 10px 15px;
+            color: #fff;
+            border-bottom: 1px solid #32373c;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 12px;
+            background: #d7f0ff;
+            border-left: 4px solid #2271b1;
+            border-radius: 4px;
+        }
+        
+        .status.success {
+            background: #d5f4e6;
+            border-left-color: #00a32a;
+        }
+        
+        .status.error {
+            background: #ffd7d7;
+            border-left-color: #dc3232;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎨 Admin Menu Logo Placement Test</h1>
+        <p>Test the logo placement functionality for the admin menu (Task 17).</p>
+        
+        <!-- Test Section 1: Logo Enable/Disable -->
+        <div class="test-section">
+            <h2>Test 1: Logo Enable/Disable (Requirement 16.1)</h2>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="logo-enabled">
+                    Enable Logo
+                </label>
+            </div>
+            <div id="status-1" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Test Section 2: Logo Upload -->
+        <div class="test-section">
+            <h2>Test 2: Logo Upload (Requirement 16.1)</h2>
+            <div class="control-group">
+                <button class="button" id="upload-btn">
+                    📤 Upload Logo
+                </button>
+                <button class="button button-danger" id="remove-btn" style="display: none;">
+                    ❌ Remove Logo
+                </button>
+                <input type="file" id="file-input" accept="image/png,image/jpeg,image/svg+xml" style="display: none;">
+                <div class="logo-preview" id="logo-preview"></div>
+            </div>
+            <div id="status-2" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Test Section 3: Logo Position -->
+        <div class="test-section">
+            <h2>Test 3: Logo Position (Requirement 16.2)</h2>
+            <div class="control-group">
+                <label for="logo-position">Logo Position:</label>
+                <select id="logo-position">
+                    <option value="top">Top</option>
+                    <option value="bottom">Bottom</option>
+                </select>
+            </div>
+            <div id="status-3" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Test Section 4: Logo Width -->
+        <div class="test-section">
+            <h2>Test 4: Logo Width (Requirement 16.3)</h2>
+            <div class="control-group">
+                <label for="logo-width">Logo Width: <span class="range-value" id="width-value">100px</span></label>
+                <input type="range" id="logo-width" min="20" max="200" step="5" value="100">
+            </div>
+            <div id="status-4" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Test Section 5: Logo Alignment -->
+        <div class="test-section">
+            <h2>Test 5: Logo Alignment (Requirement 16.4)</h2>
+            <div class="control-group">
+                <label for="logo-alignment">Logo Alignment:</label>
+                <select id="logo-alignment">
+                    <option value="left">Left</option>
+                    <option value="center" selected>Center</option>
+                    <option value="right">Right</option>
+                </select>
+            </div>
+            <div id="status-5" class="status" style="display: none;"></div>
+        </div>
+        
+        <!-- Test Section 6: Live Preview -->
+        <div class="test-section">
+            <h2>Test 6: Live Preview (Requirements 16.5, 16.6)</h2>
+            <p>The admin menu preview should update in real-time as you change settings.</p>
+            <div id="status-6" class="status" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Admin Menu Preview -->
+    <div id="adminmenu">
+        <div class="menu-item">Dashboard</div>
+        <div class="menu-item">Posts</div>
+        <div class="menu-item">Media</div>
+        <div class="menu-item">Pages</div>
+        <div class="menu-item">Comments</div>
+        <div class="menu-item">Appearance</div>
+        <div class="menu-item">Plugins</div>
+        <div class="menu-item">Users</div>
+        <div class="menu-item">Tools</div>
+        <div class="menu-item">Settings</div>
+    </div>
+    
+    <script>
+        // Test state
+        let logoUrl = '';
+        
+        // Test 1: Logo Enable/Disable
+        document.getElementById('logo-enabled').addEventListener('change', function(e) {
+            const enabled = e.target.checked;
+            updateLogoVisibility(enabled);
+            showStatus(1, 'success', `Logo ${enabled ? 'enabled' : 'disabled'} successfully`);
+        });
+        
+        // Test 2: Logo Upload
+        document.getElementById('upload-btn').addEventListener('click', function() {
+            document.getElementById('file-input').click();
+        });
+        
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+            if (!allowedTypes.includes(file.type)) {
+                showStatus(2, 'error', 'Only PNG, JPG, and SVG files are allowed.');
+                return;
+            }
+            
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                showStatus(2, 'error', 'File size must be less than 2MB.');
+                return;
+            }
+            
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoUrl = e.target.result;
+                const preview = document.getElementById('logo-preview');
+                preview.innerHTML = '<img src="' + logoUrl + '" alt="Logo Preview">';
+                preview.classList.add('active');
+                document.getElementById('remove-btn').style.display = 'inline-flex';
+                updateLogoDisplay();
+                showStatus(2, 'success', 'Logo uploaded successfully: ' + file.name);
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        document.getElementById('remove-btn').addEventListener('click', function() {
+            logoUrl = '';
+            document.getElementById('logo-preview').classList.remove('active');
+            document.getElementById('logo-preview').innerHTML = '';
+            document.getElementById('remove-btn').style.display = 'none';
+            document.getElementById('file-input').value = '';
+            updateLogoDisplay();
+            showStatus(2, 'success', 'Logo removed successfully');
+        });
+        
+        // Test 3: Logo Position
+        document.getElementById('logo-position').addEventListener('change', function() {
+            updateLogoDisplay();
+            showStatus(3, 'success', 'Logo position changed to: ' + this.value);
+        });
+        
+        // Test 4: Logo Width
+        document.getElementById('logo-width').addEventListener('input', function() {
+            document.getElementById('width-value').textContent = this.value + 'px';
+            updateLogoDisplay();
+            showStatus(4, 'success', 'Logo width changed to: ' + this.value + 'px');
+        });
+        
+        // Test 5: Logo Alignment
+        document.getElementById('logo-alignment').addEventListener('change', function() {
+            updateLogoDisplay();
+            showStatus(5, 'success', 'Logo alignment changed to: ' + this.value);
+        });
+        
+        // Helper functions
+        function updateLogoVisibility(enabled) {
+            if (enabled && logoUrl) {
+                updateLogoDisplay();
+            } else {
+                clearLogoCSS();
+            }
+        }
+        
+        function updateLogoDisplay() {
+            const enabled = document.getElementById('logo-enabled').checked;
+            if (!enabled || !logoUrl) {
+                clearLogoCSS();
+                return;
+            }
+            
+            const position = document.getElementById('logo-position').value;
+            const width = document.getElementById('logo-width').value;
+            const alignment = document.getElementById('logo-alignment').value;
+            
+            let css = '#adminmenu::' + (position === 'top' ? 'before' : 'after') + '{';
+            css += 'content:"";';
+            css += 'display:block;';
+            css += 'width:' + width + 'px;';
+            css += 'height:auto;';
+            css += 'max-width:100%;';
+            css += 'padding:15px;';
+            css += 'box-sizing:border-box;';
+            css += 'background-image:url("' + logoUrl + '");';
+            css += 'background-size:contain;';
+            css += 'background-repeat:no-repeat;';
+            css += 'background-position:center;';
+            
+            if (alignment === 'left') {
+                css += 'margin-left:0;margin-right:auto;background-position:left center;';
+            } else if (alignment === 'right') {
+                css += 'margin-left:auto;margin-right:0;background-position:right center;';
+            } else {
+                css += 'margin-left:auto;margin-right:auto;background-position:center;';
+            }
+            
+            css += 'aspect-ratio:auto;min-height:40px;}';
+            
+            if (position === 'top') {
+                css += '#adminmenu{padding-top:10px;}';
+            } else {
+                css += '#adminmenu{padding-bottom:10px;}';
+            }
+            
+            applyCSS(css);
+            showStatus(6, 'success', 'Live preview updated successfully');
+        }
+        
+        function clearLogoCSS() {
+            applyCSS('');
+        }
+        
+        function applyCSS(css) {
+            let style = document.getElementById('logo-preview-style');
+            if (!style) {
+                style = document.createElement('style');
+                style.id = 'logo-preview-style';
+                document.head.appendChild(style);
+            }
+            style.textContent = css;
+        }
+        
+        function showStatus(testNum, type, message) {
+            const status = document.getElementById('status-' + testNum);
+            status.className = 'status ' + type;
+            status.textContent = message;
+            status.style.display = 'block';
+            
+            setTimeout(function() {
+                status.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

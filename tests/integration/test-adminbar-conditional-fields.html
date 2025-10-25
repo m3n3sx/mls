@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Conditional Field Visibility Integration Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1d2327; margin-top: 0; }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-section h2 { margin-top: 0; color: #2271b1; }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover { background: #135e96; }
+        .control-group {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .control-row label {
+            min-width: 150px;
+            font-weight: 600;
+        }
+        .conditional-field {
+            margin-left: 30px;
+            padding: 10px;
+            border-left: 3px solid #2271b1;
+            background: #fff;
+        }
+        .conditional-field.hidden {
+            display: none;
+        }
+        select, input[type="checkbox"] {
+            padding: 5px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .stat {
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .stat.pass { background: #d4edda; color: #155724; }
+        .stat.fail { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 MASE Conditional Field Visibility Integration Test</h1>
+        <p>Testing Task 17.4: Conditional field visibility</p>
+        <p><strong>Requirements:</strong> 5.5, 9.3, 10.3, 11.3</p>
+        
+        <div class="test-section">
+            <h2>Test 1: Gradient Controls Show/Hide</h2>
+            <p>Tests gradient controls visibility based on background type</p>
+            
+            <div class="control-group">
+                <div class="control-row">
+                    <label>Background Type:</label>
+                    <select id="bg-type">
+                        <option value="solid">Solid</option>
+                        <option value="gradient">Gradient</option>
+                    </select>
+                </div>
+                
+                <div class="conditional-field hidden" id="gradient-controls" data-depends-on="bg-type" data-value="gradient">
+                    <div class="control-row">
+                        <label>Gradient Type:</label>
+                        <select id="gradient-type">
+                            <option value="linear">Linear</option>
+                            <option value="radial">Radial</option>
+                            <option value="conic">Conic</option>
+                        </select>
+                    </div>
+                    <div class="control-row">
+                        <label>Gradient Angle:</label>
+                        <input type="range" id="gradient-angle" min="0" max="360" value="90">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="runTest1()">Run Test 1</button>
+            <div id="test1-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Individual Corners Show/Hide</h2>
+            <p>Tests individual corner controls visibility based on radius mode</p>
+            
+            <div class="control-group">
+                <div class="control-row">
+                    <label>Border Radius Mode:</label>
+                    <select id="radius-mode">
+                        <option value="uniform">Uniform</option>
+                        <option value="individual">Individual</option>
+                    </select>
+                </div>
+                
+                <div class="conditional-field hidden" id="individual-corners" data-depends-on="radius-mode" data-value="individual">
+                    <div class="control-row">
+                        <label>Top Left:</label>
+                        <input type="range" min="0" max="50" value="0">
+                    </div>
+                    <div class="control-row">
+                        <label>Top Right:</label>
+                        <input type="range" min="0" max="50" value="0">
+                    </div>
+                    <div class="control-row">
+                        <label>Bottom Left:</label>
+                        <input type="range" min="0" max="50" value="0">
+                    </div>
+                    <div class="control-row">
+                        <label>Bottom Right:</label>
+                        <input type="range" min="0" max="50" value="0">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="runTest2()">Run Test 2</button>
+            <div id="test2-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Individual Margins Show/Hide</h2>
+            <p>Tests individual margin controls visibility based on margin mode</p>
+            
+            <div class="control-group">
+                <div class="control-row">
+                    <label>Floating Margin Mode:</label>
+                    <select id="margin-mode">
+                        <option value="uniform">Uniform</option>
+                        <option value="individual">Individual</option>
+                    </select>
+                </div>
+                
+                <div class="conditional-field hidden" id="individual-margins" data-depends-on="margin-mode" data-value="individual">
+                    <div class="control-row">
+                        <label>Top Margin:</label>
+                        <input type="range" min="0" max="100" value="8">
+                    </div>
+                    <div class="control-row">
+                        <label>Right Margin:</label>
+                        <input type="range" min="0" max="100" value="8">
+                    </div>
+                    <div class="control-row">
+                        <label>Bottom Margin:</label>
+                        <input type="range" min="0" max="100" value="8">
+                    </div>
+                    <div class="control-row">
+                        <label>Left Margin:</label>
+                        <input type="range" min="0" max="100" value="8">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="runTest3()">Run Test 3</button>
+            <div id="test3-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 4: Custom Shadow Show/Hide</h2>
+            <p>Tests custom shadow controls visibility based on shadow mode</p>
+            
+            <div class="control-group">
+                <div class="control-row">
+                    <label>Shadow Mode:</label>
+                    <select id="shadow-mode">
+                        <option value="preset">Preset</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div class="conditional-field hidden" id="custom-shadow" data-depends-on="shadow-mode" data-value="custom">
+                    <div class="control-row">
+                        <label>Horizontal Offset:</label>
+                        <input type="range" min="-50" max="50" value="0">
+                    </div>
+                    <div class="control-row">
+                        <label>Vertical Offset:</label>
+                        <input type="range" min="-50" max="50" value="4">
+                    </div>
+                    <div class="control-row">
+                        <label>Blur Radius:</label>
+                        <input type="range" min="0" max="100" value="8">
+                    </div>
+                    <div class="control-row">
+                        <label>Spread Radius:</label>
+                        <input type="range" min="-50" max="50" value="0">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="runTest4()">Run Test 4</button>
+            <div id="test4-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 5: Multiple Conditional Fields</h2>
+            <p>Tests handling multiple conditional fields simultaneously</p>
+            <button onclick="runTest5()">Run Test 5</button>
+            <div id="test5-results"></div>
+        </div>
+        
+        <div class="summary" id="summary" style="display:none;">
+            <h3>Test Summary</h3>
+            <div class="stats">
+                <div class="stat pass">Passed: <span id="pass-count">0</span></div>
+                <div class="stat fail">Failed: <span id="fail-count">0</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var testResults = { passed: 0, failed: 0 };
+        
+        function logResult(testId, message, passed) {
+            var resultDiv = document.getElementById(testId + '-results');
+            var resultClass = passed ? 'pass' : 'fail';
+            var icon = passed ? '✓' : '✗';
+            resultDiv.innerHTML += '<div class="test-result ' + resultClass + '">' + icon + ' ' + message + '</div>';
+            
+            if (passed) {
+                testResults.passed++;
+            } else {
+                testResults.failed++;
+            }
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('pass-count').textContent = testResults.passed;
+            document.getElementById('fail-count').textContent = testResults.failed;
+        }
+        
+        // Conditional field handler (Requirements 5.5, 9.3, 10.3, 11.3)
+        function handleConditionalFields() {
+            $('.conditional-field').each(function() {
+                var $field = $(this);
+                var dependsOn = $field.data('depends-on');
+                var requiredValue = $field.data('value');
+                
+                if (dependsOn) {
+                    var $parent = $('#' + dependsOn);
+                    var currentValue = $parent.val();
+                    
+                    if (currentValue === requiredValue) {
+                        $field.removeClass('hidden').show();
+                    } else {
+                        $field.addClass('hidden').hide();
+                    }
+                }
+            });
+        }
+        
+        // Test 1: Gradient Controls Show/Hide
+        function runTest1() {
+            document.getElementById('test1-results').innerHTML = '';
+            
+            // Test initial state (solid - should be hidden)
+            $('#bg-type').val('solid').trigger('change');
+            handleConditionalFields();
+            
+            var isHidden = $('#gradient-controls').hasClass('hidden');
+            if (isHidden) {
+                logResult('test1', 'Gradient controls hidden when background type is solid', true);
+            } else {
+                logResult('test1', 'Gradient controls not hidden (should be hidden)', false);
+            }
+            
+            // Test show state (gradient - should be visible)
+            $('#bg-type').val('gradient').trigger('change');
+            handleConditionalFields();
+            
+            var isVisible = !$('#gradient-controls').hasClass('hidden');
+            if (isVisible) {
+                logResult('test1', 'Gradient controls shown when background type is gradient', true);
+            } else {
+                logResult('test1', 'Gradient controls not shown (should be visible)', false);
+            }
+            
+            // Test toggle back to hidden
+            $('#bg-type').val('solid').trigger('change');
+            handleConditionalFields();
+            
+            isHidden = $('#gradient-controls').hasClass('hidden');
+            if (isHidden) {
+                logResult('test1', 'Gradient controls hidden again when toggled back to solid', true);
+            } else {
+                logResult('test1', 'Gradient controls not hidden on toggle back', false);
+            }
+        }
+        
+        // Test 2: Individual Corners Show/Hide
+        function runTest2() {
+            document.getElementById('test2-results').innerHTML = '';
+            
+            // Test initial state (uniform - should be hidden)
+            $('#radius-mode').val('uniform').trigger('change');
+            handleConditionalFields();
+            
+            var isHidden = $('#individual-corners').hasClass('hidden');
+            if (isHidden) {
+                logResult('test2', 'Individual corners hidden when mode is uniform', true);
+            } else {
+                logResult('test2', 'Individual corners not hidden (should be hidden)', false);
+            }
+            
+            // Test show state (individual - should be visible)
+            $('#radius-mode').val('individual').trigger('change');
+            handleConditionalFields();
+            
+            var isVisible = !$('#individual-corners').hasClass('hidden');
+            if (isVisible) {
+                logResult('test2', 'Individual corners shown when mode is individual', true);
+            } else {
+                logResult('test2', 'Individual corners not shown (should be visible)', false);
+            }
+            
+            // Verify all 4 corner controls are present
+            var cornerControls = $('#individual-corners input[type="range"]').length;
+            if (cornerControls === 4) {
+                logResult('test2', 'All 4 corner controls present (4/4)', true);
+            } else {
+                logResult('test2', 'Missing corner controls (' + cornerControls + '/4)', false);
+            }
+        }
+        
+        // Test 3: Individual Margins Show/Hide
+        function runTest3() {
+            document.getElementById('test3-results').innerHTML = '';
+            
+            // Test initial state (uniform - should be hidden)
+            $('#margin-mode').val('uniform').trigger('change');
+            handleConditionalFields();
+            
+            var isHidden = $('#individual-margins').hasClass('hidden');
+            if (isHidden) {
+                logResult('test3', 'Individual margins hidden when mode is uniform', true);
+            } else {
+                logResult('test3', 'Individual margins not hidden (should be hidden)', false);
+            }
+            
+            // Test show state (individual - should be visible)
+            $('#margin-mode').val('individual').trigger('change');
+            handleConditionalFields();
+            
+            var isVisible = !$('#individual-margins').hasClass('hidden');
+            if (isVisible) {
+                logResult('test3', 'Individual margins shown when mode is individual', true);
+            } else {
+                logResult('test3', 'Individual margins not shown (should be visible)', false);
+            }
+            
+            // Verify all 4 margin controls are present
+            var marginControls = $('#individual-margins input[type="range"]').length;
+            if (marginControls === 4) {
+                logResult('test3', 'All 4 margin controls present (4/4)', true);
+            } else {
+                logResult('test3', 'Missing margin controls (' + marginControls + '/4)', false);
+            }
+        }
+        
+        // Test 4: Custom Shadow Show/Hide
+        function runTest4() {
+            document.getElementById('test4-results').innerHTML = '';
+            
+            // Test initial state (preset - should be hidden)
+            $('#shadow-mode').val('preset').trigger('change');
+            handleConditionalFields();
+            
+            var isHidden = $('#custom-shadow').hasClass('hidden');
+            if (isHidden) {
+                logResult('test4', 'Custom shadow controls hidden when mode is preset', true);
+            } else {
+                logResult('test4', 'Custom shadow controls not hidden (should be hidden)', false);
+            }
+            
+            // Test show state (custom - should be visible)
+            $('#shadow-mode').val('custom').trigger('change');
+            handleConditionalFields();
+            
+            var isVisible = !$('#custom-shadow').hasClass('hidden');
+            if (isVisible) {
+                logResult('test4', 'Custom shadow controls shown when mode is custom', true);
+            } else {
+                logResult('test4', 'Custom shadow controls not shown (should be visible)', false);
+            }
+            
+            // Verify all 4 shadow controls are present
+            var shadowControls = $('#custom-shadow input[type="range"]').length;
+            if (shadowControls === 4) {
+                logResult('test4', 'All 4 shadow controls present (4/4)', true);
+            } else {
+                logResult('test4', 'Missing shadow controls (' + shadowControls + '/4)', false);
+            }
+        }
+        
+        // Test 5: Multiple Conditional Fields
+        function runTest5() {
+            document.getElementById('test5-results').innerHTML = '';
+            
+            // Show all conditional fields
+            $('#bg-type').val('gradient');
+            $('#radius-mode').val('individual');
+            $('#margin-mode').val('individual');
+            $('#shadow-mode').val('custom');
+            handleConditionalFields();
+            
+            var visibleFields = $('.conditional-field:not(.hidden)').length;
+            if (visibleFields === 4) {
+                logResult('test5', 'All 4 conditional field groups shown simultaneously', true);
+            } else {
+                logResult('test5', 'Not all conditional fields shown (' + visibleFields + '/4)', false);
+            }
+            
+            // Hide all conditional fields
+            $('#bg-type').val('solid');
+            $('#radius-mode').val('uniform');
+            $('#margin-mode').val('uniform');
+            $('#shadow-mode').val('preset');
+            handleConditionalFields();
+            
+            var hiddenFields = $('.conditional-field.hidden').length;
+            if (hiddenFields === 4) {
+                logResult('test5', 'All 4 conditional field groups hidden simultaneously', true);
+            } else {
+                logResult('test5', 'Not all conditional fields hidden (' + hiddenFields + '/4)', false);
+            }
+            
+            // Test mixed state
+            $('#bg-type').val('gradient');
+            $('#radius-mode').val('uniform');
+            $('#margin-mode').val('individual');
+            $('#shadow-mode').val('preset');
+            handleConditionalFields();
+            
+            var mixedVisible = $('.conditional-field:not(.hidden)').length;
+            if (mixedVisible === 2) {
+                logResult('test5', 'Mixed state handled correctly (2/4 visible)', true);
+            } else {
+                logResult('test5', 'Mixed state not handled correctly (' + mixedVisible + '/4 visible)', false);
+            }
+        }
+        
+        // Initialize
+        $(document).ready(function() {
+            console.log('MASE Conditional Field Visibility Test loaded');
+            
+            // Attach change handlers to parent controls
+            $('#bg-type, #radius-mode, #margin-mode, #shadow-mode').on('change', function() {
+                handleConditionalFields();
+            });
+            
+            // Initialize conditional fields
+            handleConditionalFields();
+        });
+    </script>
+</body>
+</html>

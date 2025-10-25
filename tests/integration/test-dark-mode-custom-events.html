@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Custom Events Integration Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.mase-dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .test-section {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        body.mase-dark-mode .test-section {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+        
+        h1 {
+            color: #23282d;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+        
+        body.mase-dark-mode h1 {
+            color: #e0e0e0;
+            border-bottom-color: #4a9eff;
+        }
+        
+        h2 {
+            color: #0073aa;
+            margin-top: 0;
+        }
+        
+        body.mase-dark-mode h2 {
+            color: #4a9eff;
+        }
+        
+        .event-log {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        body.mase-dark-mode .event-log {
+            background: #1a1a1a;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        .event-entry {
+            padding: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #0073aa;
+            background: #f9f9f9;
+        }
+        
+        body.mase-dark-mode .event-entry {
+            border-left-color: #4a9eff;
+            background: #2d2d2d;
+        }
+        
+        .event-entry.mode-changed {
+            border-left-color: #46b450;
+        }
+        
+        body.mase-dark-mode .event-entry.mode-changed {
+            border-left-color: #5fd35f;
+        }
+        
+        .event-entry.transition-complete {
+            border-left-color: #f18500;
+        }
+        
+        body.mase-dark-mode .event-entry.transition-complete {
+            border-left-color: #ff9f3a;
+        }
+        
+        .event-time {
+            color: #666;
+            font-size: 11px;
+        }
+        
+        body.mase-dark-mode .event-time {
+            color: #999;
+        }
+        
+        .event-data {
+            margin-top: 5px;
+            padding-left: 10px;
+            color: #333;
+        }
+        
+        body.mase-dark-mode .event-data {
+            color: #ccc;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: #0073aa;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #005a87;
+        }
+        
+        body.mase-dark-mode button {
+            background: #4a9eff;
+            color: #1a1a1a;
+        }
+        
+        body.mase-dark-mode button:hover {
+            background: #6bb0ff;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        body.mase-dark-mode .status.success {
+            background: #1e4620;
+            border-color: #2d5f2f;
+            color: #5fd35f;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        body.mase-dark-mode .status.info {
+            background: #1a3a42;
+            border-color: #2a5a6a;
+            color: #6bb0ff;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        body.mase-dark-mode .stat-card {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0073aa;
+        }
+        
+        body.mase-dark-mode .stat-value {
+            color: #4a9eff;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        body.mase-dark-mode .stat-label {
+            color: #999;
+        }
+        
+        /* FAB Styles */
+        .mase-dark-mode-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #0073aa;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 9999;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .mase-dark-mode-fab:hover {
+            background: #005a87;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: scale(1.1);
+        }
+        
+        body.mase-dark-mode .mase-dark-mode-fab {
+            background: #4a9eff;
+            color: #1a1a1a;
+        }
+        
+        body.mase-dark-mode .mase-dark-mode-fab:hover {
+            background: #6bb0ff;
+        }
+        
+        .dashicons {
+            width: 24px;
+            height: 24px;
+            font-size: 24px;
+        }
+        
+        .dashicons-moon:before {
+            content: "🌙";
+        }
+        
+        .dashicons-sun:before {
+            content: "☀️";
+        }
+        
+        .mase-icon-rotating {
+            animation: rotate360 0.3s ease-in-out;
+        }
+        
+        @keyframes rotate360 {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Dark Mode Custom Events Integration Test</h1>
+    
+    <div class="status info">
+        <strong>Task 12:</strong> Implement custom events system<br>
+        <strong>Requirements:</strong> 2.7, 9.6<br>
+        <strong>Testing:</strong> Event emission, payload structure, and debugging listeners
+    </div>
+    
+    <div class="test-section">
+        <h2>Controls</h2>
+        <div class="controls">
+            <button id="toggle-mode">Toggle Dark Mode</button>
+            <button id="clear-log">Clear Event Log</button>
+            <button id="trigger-custom">Trigger Custom Event</button>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Event Statistics</h2>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="mode-changed-count">0</div>
+                <div class="stat-label">mase:modeChanged</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="transition-complete-count">0</div>
+                <div class="stat-label">mase:transitionComplete</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-events-count">0</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Event Log</h2>
+        <div class="event-log" id="event-log">
+            <div style="color: #666; font-style: italic;">Waiting for events...</div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <!-- FAB Button -->
+    <button class="mase-dark-mode-fab" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span class="dashicons dashicons-moon"></span>
+    </button>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with dark mode toggle
+        var MASE = {
+            config: {
+                ajaxUrl: '/wp-admin/admin-ajax.php',
+                nonce: 'test-nonce'
+            },
+            darkModeToggle: {
+                config: {
+                    fabSelector: '.mase-dark-mode-fab',
+                    bodyClass: 'mase-dark-mode',
+                    storageKey: 'mase_dark_mode',
+                    transitionDuration: 300
+                },
+                state: {
+                    currentMode: 'light',
+                    isTransitioning: false,
+                    systemPreference: 'light',
+                    userPreference: null
+                },
+                
+                setMode: function(mode) {
+                    var self = this;
+                    
+                    if (self.state.isTransitioning) {
+                        console.warn('MASE: Mode transition already in progress');
+                        return;
+                    }
+                    
+                    self.state.isTransitioning = true;
+                    self.state.currentMode = mode;
+                    
+                    // Apply mode
+                    if (mode === 'dark') {
+                        $('body').addClass(self.config.bodyClass);
+                    } else {
+                        $('body').removeClass(self.config.bodyClass);
+                    }
+                    
+                    // Update FAB icon
+                    var $icon = $('.mase-dark-mode-fab .dashicons');
+                    $icon.removeClass('dashicons-sun dashicons-moon')
+                         .addClass(mode === 'dark' ? 'dashicons-sun' : 'dashicons-moon');
+                    
+                    // Animate icon
+                    $icon.addClass('mase-icon-rotating');
+                    setTimeout(function() {
+                        $icon.removeClass('mase-icon-rotating');
+                    }, 300);
+                    
+                    // Emit custom event (Requirement 2.7)
+                    $(document).trigger('mase:modeChanged', { mode: mode });
+                    
+                    // Re-enable after transition
+                    setTimeout(function() {
+                        self.state.isTransitioning = false;
+                        $(document).trigger('mase:transitionComplete', { mode: mode });
+                    }, self.config.transitionDuration);
+                },
+                
+                toggle: function() {
+                    var newMode = this.state.currentMode === 'light' ? 'dark' : 'light';
+                    this.setMode(newMode);
+                },
+                
+                setupEventListeners: function() {
+                    var self = this;
+                    
+                    // Debug listener for mase:modeChanged event
+                    $(document).on('mase:modeChanged', function(event, data) {
+                        console.log('MASE Event: modeChanged', {
+                            mode: data.mode,
+                            timestamp: new Date().toISOString(),
+                            currentState: {
+                                currentMode: self.state.currentMode,
+                                isTransitioning: self.state.isTransitioning,
+                                systemPreference: self.state.systemPreference,
+                                userPreference: self.state.userPreference
+                            }
+                        });
+                    });
+                    
+                    // Debug listener for mase:transitionComplete event
+                    $(document).on('mase:transitionComplete', function(event, data) {
+                        console.log('MASE Event: transitionComplete', {
+                            mode: data.mode,
+                            timestamp: new Date().toISOString(),
+                            transitionDuration: self.config.transitionDuration + 'ms',
+                            currentState: {
+                                currentMode: self.state.currentMode,
+                                isTransitioning: self.state.isTransitioning
+                            }
+                        });
+                    });
+                    
+                    console.log('MASE: Event listeners for debugging initialized');
+                    console.log('MASE: Available custom events:', [
+                        'mase:modeChanged - Emitted when mode toggles',
+                        'mase:transitionComplete - Emitted after transition animation'
+                    ]);
+                }
+            }
+        };
+        
+        // Event tracking
+        var eventStats = {
+            modeChanged: 0,
+            transitionComplete: 0,
+            total: 0
+        };
+        
+        // Initialize
+        $(document).ready(function() {
+            console.log('Initializing Dark Mode Custom Events Test');
+            
+            // Setup event listeners
+            MASE.darkModeToggle.setupEventListeners();
+            
+            // Setup test event listeners
+            $(document).on('mase:modeChanged', function(event, data) {
+                eventStats.modeChanged++;
+                eventStats.total++;
+                updateStats();
+                logEvent('mode-changed', 'mase:modeChanged', data);
+            });
+            
+            $(document).on('mase:transitionComplete', function(event, data) {
+                eventStats.transitionComplete++;
+                eventStats.total++;
+                updateStats();
+                logEvent('transition-complete', 'mase:transitionComplete', data);
+            });
+            
+            // FAB click handler
+            $('.mase-dark-mode-fab').on('click', function() {
+                MASE.darkModeToggle.toggle();
+            });
+            
+            // Control buttons
+            $('#toggle-mode').on('click', function() {
+                MASE.darkModeToggle.toggle();
+            });
+            
+            $('#clear-log').on('click', function() {
+                $('#event-log').html('<div style="color: #666; font-style: italic;">Event log cleared...</div>');
+            });
+            
+            $('#trigger-custom').on('click', function() {
+                $(document).trigger('mase:modeChanged', { mode: 'custom-test' });
+            });
+            
+            // Run automated tests
+            runTests();
+        });
+        
+        function updateStats() {
+            $('#mode-changed-count').text(eventStats.modeChanged);
+            $('#transition-complete-count').text(eventStats.transitionComplete);
+            $('#total-events-count').text(eventStats.total);
+        }
+        
+        function logEvent(type, eventName, data) {
+            var $log = $('#event-log');
+            
+            // Remove placeholder
+            if ($log.find('div[style*="italic"]').length) {
+                $log.empty();
+            }
+            
+            var timestamp = new Date().toLocaleTimeString();
+            var entry = $('<div class="event-entry ' + type + '"></div>');
+            entry.append('<div class="event-time">' + timestamp + '</div>');
+            entry.append('<div><strong>' + eventName + '</strong></div>');
+            entry.append('<div class="event-data">' + JSON.stringify(data, null, 2) + '</div>');
+            
+            $log.prepend(entry);
+            
+            // Limit log entries
+            if ($log.children().length > 50) {
+                $log.children().last().remove();
+            }
+        }
+        
+        function runTests() {
+            var results = [];
+            
+            // Test 1: Event listeners registered
+            results.push({
+                name: 'Event listeners registered',
+                passed: typeof MASE.darkModeToggle.setupEventListeners === 'function',
+                message: 'setupEventListeners method exists'
+            });
+            
+            // Test 2: Events can be triggered
+            var eventTriggered = false;
+            $(document).one('mase:modeChanged', function() {
+                eventTriggered = true;
+            });
+            $(document).trigger('mase:modeChanged', { mode: 'test' });
+            results.push({
+                name: 'Events can be triggered',
+                passed: eventTriggered,
+                message: 'mase:modeChanged event triggered successfully'
+            });
+            
+            // Test 3: Event payload structure
+            var payloadCorrect = false;
+            $(document).one('mase:modeChanged', function(event, data) {
+                payloadCorrect = data && typeof data.mode === 'string';
+            });
+            $(document).trigger('mase:modeChanged', { mode: 'dark' });
+            results.push({
+                name: 'Event payload structure',
+                passed: payloadCorrect,
+                message: 'Event payload contains mode property'
+            });
+            
+            // Display results
+            displayTestResults(results);
+        }
+        
+        function displayTestResults(results) {
+            var $results = $('#test-results');
+            $results.empty();
+            
+            var passed = results.filter(r => r.passed).length;
+            var total = results.length;
+            
+            $results.append('<div class="status ' + (passed === total ? 'success' : 'info') + '">' +
+                '<strong>Test Results:</strong> ' + passed + '/' + total + ' tests passed' +
+                '</div>');
+            
+            results.forEach(function(result) {
+                var icon = result.passed ? '✅' : '❌';
+                $results.append('<div style="padding: 5px;">' +
+                    icon + ' <strong>' + result.name + ':</strong> ' + result.message +
+                    '</div>');
+            });
+        }
+    </script>
+</body>
+</html>

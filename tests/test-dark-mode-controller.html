@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Controller Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 40px;
+            transition: all 0.3s ease-in-out;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.mase-dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        body.mase-transitioning {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f5f5f5;
+        }
+        
+        body.mase-dark-mode .test-container {
+            background: #2d2d2d;
+            border-color: #444;
+        }
+        
+        h1 {
+            margin-top: 0;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        body.mase-dark-mode .test-section {
+            background: #3a3a3a;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background: #0073aa;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #005a87;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background: #e7f5ff;
+            border-left: 4px solid #0073aa;
+        }
+        
+        body.mase-dark-mode .status {
+            background: #1e3a4f;
+            border-left-color: #4a9eff;
+        }
+        
+        .log {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        body.mase-dark-mode .log {
+            background: #2a2a2a;
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 0;
+        }
+        
+        .log-entry.info { color: #0073aa; }
+        body.mase-dark-mode .log-entry.info { color: #4a9eff; }
+        
+        .log-entry.success { color: #46b450; }
+        body.mase-dark-mode .log-entry.success { color: #5fd35f; }
+        
+        .log-entry.error { color: #dc3232; }
+        body.mase-dark-mode .log-entry.error { color: #ff5555; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Dark Mode Controller Test</h1>
+        
+        <div class="test-section">
+            <h2>Current State</h2>
+            <div class="status">
+                <strong>Mode:</strong> <span id="current-mode">light</span><br>
+                <strong>System Preference:</strong> <span id="system-preference">-</span><br>
+                <strong>Saved Preference:</strong> <span id="saved-preference">-</span><br>
+                <strong>Is Transitioning:</strong> <span id="is-transitioning">false</span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Actions</h2>
+            <button onclick="testToggle()">Toggle Mode</button>
+            <button onclick="testSetLight()">Set Light Mode</button>
+            <button onclick="testSetDark()">Set Dark Mode</button>
+            <button onclick="testDetectSystem()">Detect System Preference</button>
+            <button onclick="testLoadPreference()">Load Saved Preference</button>
+            <button onclick="clearStorage()">Clear Storage</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>Event Log</h2>
+            <div class="log" id="event-log">
+                <div class="log-entry info">Test page loaded. Waiting for actions...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock MASE object with dark mode toggle module
+        var MASE = {
+            config: {
+                ajaxUrl: '/wp-admin/admin-ajax.php',
+                nonce: 'test-nonce'
+            },
+            
+            darkModeToggle: {
+                config: {
+                    fabSelector: '.mase-dark-mode-fab',
+                    bodyClass: 'mase-dark-mode',
+                    storageKey: 'mase_dark_mode',
+                    transitionDuration: 300,
+                    keyboardShortcut: { ctrl: true, shift: true, key: 'D' }
+                },
+                
+                state: {
+                    currentMode: 'light',
+                    isTransitioning: false,
+                    systemPreference: null,
+                    userPreference: null
+                },
+                
+                init: function() {
+                    var self = this;
+                    
+                    try {
+                        log('info', 'Initializing dark mode toggle');
+                        
+                        self.detectSystemPreference();
+                        self.loadSavedPreference();
+                        self.applyMode(self.state.currentMode, false);
+                        
+                        log('success', 'Dark mode initialized - Current mode: ' + self.state.currentMode);
+                        updateUI();
+                    } catch (error) {
+                        log('error', 'Error initializing dark mode: ' + error.message);
+                    }
+                },
+                
+                detectSystemPreference: function() {
+                    var self = this;
+                    
+                    if (!window.matchMedia) {
+                        log('info', 'matchMedia not supported, defaulting to light mode');
+                        self.state.systemPreference = 'light';
+                        return 'light';
+                    }
+                    
+                    try {
+                        var darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                        self.state.systemPreference = darkModeQuery.matches ? 'dark' : 'light';
+                        
+                        log('info', 'System preference detected: ' + self.state.systemPreference);
+                        updateUI();
+                        
+                        return self.state.systemPreference;
+                    } catch (error) {
+                        log('error', 'System preference detection failed: ' + error.message);
+                        self.state.systemPreference = 'light';
+                        return 'light';
+                    }
+                },
+                
+                loadSavedPreference: function() {
+                    var self = this;
+                    var mode = null;
+                    
+                    try {
+                        var localStorageMode = localStorage.getItem(self.config.storageKey);
+                        if (localStorageMode && (localStorageMode === 'light' || localStorageMode === 'dark')) {
+                            mode = localStorageMode;
+                            log('info', 'Loaded mode from localStorage: ' + mode);
+                        }
+                    } catch (error) {
+                        log('error', 'localStorage unavailable: ' + error.message);
+                    }
+                    
+                    if (!mode) {
+                        mode = self.state.systemPreference || 'light';
+                        log('info', 'Using system preference: ' + mode);
+                    }
+                    
+                    self.state.userPreference = mode;
+                    self.state.currentMode = mode;
+                    
+                    updateUI();
+                    return mode;
+                },
+                
+                setMode: function(mode) {
+                    var self = this;
+                    
+                    if (mode !== 'light' && mode !== 'dark') {
+                        log('error', 'Invalid mode: ' + mode);
+                        return;
+                    }
+                    
+                    if (self.state.isTransitioning) {
+                        log('info', 'Mode transition already in progress');
+                        return;
+                    }
+                    
+                    self.state.isTransitioning = true;
+                    self.state.currentMode = mode;
+                    self.state.userPreference = mode;
+                    
+                    updateUI();
+                    
+                    self.applyMode(mode, true);
+                    self.savePreference(mode);
+                    
+                    $(document).trigger('mase:modeChanged', { mode: mode });
+                    log('success', 'Mode changed to: ' + mode);
+                    
+                    setTimeout(function() {
+                        self.state.isTransitioning = false;
+                        $(document).trigger('mase:transitionComplete', { mode: mode });
+                        log('info', 'Transition complete');
+                        updateUI();
+                    }, self.config.transitionDuration);
+                },
+                
+                toggle: function() {
+                    var self = this;
+                    var newMode = self.state.currentMode === 'light' ? 'dark' : 'light';
+                    log('info', 'Toggling mode from ' + self.state.currentMode + ' to ' + newMode);
+                    self.setMode(newMode);
+                },
+                
+                applyMode: function(mode, animate) {
+                    var self = this;
+                    
+                    try {
+                        var $body = $('body');
+                        
+                        if (animate) {
+                            $body.addClass('mase-transitioning');
+                        }
+                        
+                        if (mode === 'dark') {
+                            $body.addClass(self.config.bodyClass);
+                        } else {
+                            $body.removeClass(self.config.bodyClass);
+                        }
+                        
+                        if (animate) {
+                            setTimeout(function() {
+                                $body.removeClass('mase-transitioning');
+                            }, self.config.transitionDuration);
+                        }
+                        
+                        log('info', 'Applied mode: ' + mode);
+                    } catch (error) {
+                        log('error', 'Error applying mode: ' + error.message);
+                    }
+                },
+                
+                savePreference: function(mode) {
+                    var self = this;
+                    
+                    try {
+                        localStorage.setItem(self.config.storageKey, mode);
+                        log('success', 'Saved mode to localStorage: ' + mode);
+                        updateUI();
+                    } catch (error) {
+                        log('error', 'localStorage unavailable: ' + error.message);
+                    }
+                }
+            }
+        };
+        
+        // Helper functions
+        function log(type, message) {
+            var $log = $('#event-log');
+            var timestamp = new Date().toLocaleTimeString();
+            var entry = '<div class="log-entry ' + type + '">[' + timestamp + '] ' + message + '</div>';
+            $log.append(entry);
+            $log.scrollTop($log[0].scrollHeight);
+        }
+        
+        function updateUI() {
+            var state = MASE.darkModeToggle.state;
+            $('#current-mode').text(state.currentMode);
+            $('#system-preference').text(state.systemPreference || '-');
+            
+            try {
+                var saved = localStorage.getItem(MASE.darkModeToggle.config.storageKey);
+                $('#saved-preference').text(saved || 'none');
+            } catch (e) {
+                $('#saved-preference').text('unavailable');
+            }
+            
+            $('#is-transitioning').text(state.isTransitioning);
+        }
+        
+        // Test functions
+        function testToggle() {
+            log('info', '=== Testing toggle() ===');
+            MASE.darkModeToggle.toggle();
+        }
+        
+        function testSetLight() {
+            log('info', '=== Testing setMode("light") ===');
+            MASE.darkModeToggle.setMode('light');
+        }
+        
+        function testSetDark() {
+            log('info', '=== Testing setMode("dark") ===');
+            MASE.darkModeToggle.setMode('dark');
+        }
+        
+        function testDetectSystem() {
+            log('info', '=== Testing detectSystemPreference() ===');
+            MASE.darkModeToggle.detectSystemPreference();
+        }
+        
+        function testLoadPreference() {
+            log('info', '=== Testing loadSavedPreference() ===');
+            MASE.darkModeToggle.loadSavedPreference();
+        }
+        
+        function clearStorage() {
+            log('info', '=== Clearing localStorage ===');
+            try {
+                localStorage.removeItem(MASE.darkModeToggle.config.storageKey);
+                log('success', 'localStorage cleared');
+                updateUI();
+            } catch (e) {
+                log('error', 'Failed to clear localStorage: ' + e.message);
+            }
+        }
+        
+        // Listen for custom events
+        $(document).on('mase:modeChanged', function(e, data) {
+            log('info', 'Event: mase:modeChanged - mode: ' + data.mode);
+        });
+        
+        $(document).on('mase:transitionComplete', function(e, data) {
+            log('info', 'Event: mase:transitionComplete - mode: ' + data.mode);
+        });
+        
+        // Initialize on page load
+        $(document).ready(function() {
+            log('info', 'Document ready, initializing dark mode controller');
+            MASE.darkModeToggle.init();
+        });
+    </script>
+</body>
+</html>

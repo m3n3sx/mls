@@ -139,9 +139,21 @@ $templates    = $settings_obj->get_all_templates();
 			<span class="dashicons dashicons-art" aria-hidden="true"></span>
 			<span class="mase-tab-label"><?php esc_html_e( 'Effects', 'modern-admin-styler' ); ?></span>
 		</button>
+		<button type="button" class="mase-tab-button" data-tab="buttons" role="tab" aria-selected="false" aria-controls="tab-buttons" id="tab-button-buttons" tabindex="-1">
+			<span class="dashicons dashicons-editor-bold" aria-hidden="true"></span>
+			<span class="mase-tab-label"><?php esc_html_e( 'Universal Buttons', 'modern-admin-styler' ); ?></span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="backgrounds" role="tab" aria-selected="false" aria-controls="tab-backgrounds" id="tab-button-backgrounds" tabindex="-1">
+			<span class="dashicons dashicons-format-image" aria-hidden="true"></span>
+			<span class="mase-tab-label"><?php esc_html_e( 'Backgrounds', 'modern-admin-styler' ); ?></span>
+		</button>
 		<button type="button" class="mase-tab-button" data-tab="templates" role="tab" aria-selected="false" aria-controls="tab-templates" id="tab-button-templates" tabindex="-1">
 			<span class="dashicons dashicons-portfolio" aria-hidden="true"></span>
 			<span class="mase-tab-label"><?php esc_html_e( 'Templates', 'modern-admin-styler' ); ?></span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="login" role="tab" aria-selected="false" aria-controls="tab-login" id="tab-button-login" tabindex="-1">
+			<span class="dashicons dashicons-lock" aria-hidden="true"></span>
+			<span class="mase-tab-label"><?php esc_html_e( 'Login Page', 'modern-admin-styler' ); ?></span>
 		</button>
 		<button type="button" class="mase-tab-button" data-tab="advanced" role="tab" aria-selected="false" aria-controls="tab-advanced" id="tab-button-advanced" tabindex="-1">
 			<span class="dashicons dashicons-admin-tools" aria-hidden="true"></span>
@@ -3515,6 +3527,716 @@ $templates    = $settings_obj->get_all_templates();
 			</div><!-- #tab-templates -->
 
 			<!-- ============================================ -->
+			<!-- LOGIN PAGE TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-login" data-tab-content="login" role="tabpanel" aria-labelledby="tab-button-login" tabindex="0">
+				
+				<!-- Logo Settings Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Custom Logo', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Upload a custom logo to replace the default WordPress logo on the login page.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-logo-enabled">
+										<?php esc_html_e( 'Enable Custom Logo', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="login-logo-enabled"
+											name="login_customization[logo_enabled]" 
+											value="1"
+											<?php checked( $settings['login_customization']['logo_enabled'] ?? false, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['login_customization']['logo_enabled'] ?? false ) ? 'true' : 'false'; ?>"
+											aria-describedby="login-logo-enabled-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="login-logo-enabled-desc"><?php esc_html_e( 'Replace the WordPress logo with your own branding.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-conditional-group" data-depends-on="login-logo-enabled" style="display: <?php echo ( $settings['login_customization']['logo_enabled'] ?? false ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-logo-upload">
+											<?php esc_html_e( 'Logo Image', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<div class="mase-file-upload-wrapper">
+											<input type="hidden" id="login-logo-url" name="login_customization[logo_url]" value="<?php echo esc_attr( $settings['login_customization']['logo_url'] ?? '' ); ?>" />
+											<button type="button" class="button button-secondary mase-upload-btn" data-upload-type="login-logo" aria-label="<?php esc_attr_e( 'Upload logo image', 'modern-admin-styler' ); ?>">
+												<span class="dashicons dashicons-upload"></span>
+												<?php esc_html_e( 'Upload Logo', 'modern-admin-styler' ); ?>
+											</button>
+											<?php if ( ! empty( $settings['login_customization']['logo_url'] ) ) : ?>
+												<button type="button" class="button button-link-delete mase-remove-upload" data-target="login-logo-url" aria-label="<?php esc_attr_e( 'Remove logo', 'modern-admin-styler' ); ?>">
+													<?php esc_html_e( 'Remove', 'modern-admin-styler' ); ?>
+												</button>
+											<?php endif; ?>
+										</div>
+										<?php if ( ! empty( $settings['login_customization']['logo_url'] ) ) : ?>
+											<div class="mase-image-preview" id="login-logo-preview">
+												<img src="<?php echo esc_url( $settings['login_customization']['logo_url'] ); ?>" alt="<?php esc_attr_e( 'Login logo preview', 'modern-admin-styler' ); ?>" style="max-width: 200px; max-height: 100px;" />
+											</div>
+										<?php endif; ?>
+										<p class="description"><?php esc_html_e( 'Supported formats: PNG, JPG, SVG. Maximum size: 2MB.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-logo-width">
+											<?php esc_html_e( 'Logo Width (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-logo-width"
+											name="login_customization[logo_width]" 
+											min="50"
+											max="400"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['logo_width'] ?? 84 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['logo_width'] ?? 84 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-logo-height">
+											<?php esc_html_e( 'Logo Height (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-logo-height"
+											name="login_customization[logo_height]" 
+											min="50"
+											max="400"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['logo_height'] ?? 84 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['logo_height'] ?? 84 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-logo-link-url">
+											<?php esc_html_e( 'Logo Link URL', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="url" 
+											id="login-logo-link-url"
+											name="login_customization[logo_link_url]" 
+											class="regular-text"
+											value="<?php echo esc_attr( $settings['login_customization']['logo_link_url'] ?? '' ); ?>"
+											placeholder="<?php esc_attr_e( 'https://yoursite.com', 'modern-admin-styler' ); ?>"
+										/>
+										<p class="description"><?php esc_html_e( 'Optional. Leave empty to link to WordPress.org (default).', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Background Settings Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Background Customization', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the login page background with colors, images, or gradients.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-background-type">
+										<?php esc_html_e( 'Background Type', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="login-background-type" name="login_customization[background_type]">
+										<option value="color" <?php selected( $settings['login_customization']['background_type'] ?? 'color', 'color' ); ?>>
+											<?php esc_html_e( 'Solid Color', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="image" <?php selected( $settings['login_customization']['background_type'] ?? 'color', 'image' ); ?>>
+											<?php esc_html_e( 'Image', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="gradient" <?php selected( $settings['login_customization']['background_type'] ?? 'color', 'gradient' ); ?>>
+											<?php esc_html_e( 'Gradient', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+								</div>
+							</div>
+							
+							<!-- Solid Color Background -->
+							<div class="mase-conditional-group" data-depends-on="login-background-type" data-value="color" style="display: <?php echo ( ! isset( $settings['login_customization']['background_type'] ) || $settings['login_customization']['background_type'] === 'color' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-background-color">
+											<?php esc_html_e( 'Background Color', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="login-background-color"
+											name="login_customization[background_color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['login_customization']['background_color'] ?? '#f0f0f1' ); ?>"
+											data-default-color="#f0f0f1"
+										/>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Image Background -->
+							<div class="mase-conditional-group" data-depends-on="login-background-type" data-value="image" style="display: <?php echo ( isset( $settings['login_customization']['background_type'] ) && $settings['login_customization']['background_type'] === 'image' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-background-image">
+											<?php esc_html_e( 'Background Image', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<div class="mase-file-upload-wrapper">
+											<input type="hidden" id="login-background-image" name="login_customization[background_image]" value="<?php echo esc_attr( $settings['login_customization']['background_image'] ?? '' ); ?>" />
+											<button type="button" class="button button-secondary mase-upload-btn" data-upload-type="login-background" aria-label="<?php esc_attr_e( 'Upload background image', 'modern-admin-styler' ); ?>">
+												<span class="dashicons dashicons-upload"></span>
+												<?php esc_html_e( 'Upload Image', 'modern-admin-styler' ); ?>
+											</button>
+											<?php if ( ! empty( $settings['login_customization']['background_image'] ) ) : ?>
+												<button type="button" class="button button-link-delete mase-remove-upload" data-target="login-background-image" aria-label="<?php esc_attr_e( 'Remove background image', 'modern-admin-styler' ); ?>">
+													<?php esc_html_e( 'Remove', 'modern-admin-styler' ); ?>
+												</button>
+											<?php endif; ?>
+										</div>
+										<?php if ( ! empty( $settings['login_customization']['background_image'] ) ) : ?>
+											<div class="mase-image-preview" id="login-background-preview">
+												<img src="<?php echo esc_url( $settings['login_customization']['background_image'] ); ?>" alt="<?php esc_attr_e( 'Background preview', 'modern-admin-styler' ); ?>" style="max-width: 200px; max-height: 100px;" />
+											</div>
+										<?php endif; ?>
+										<p class="description"><?php esc_html_e( 'Supported formats: PNG, JPG. Maximum size: 5MB.', 'modern-admin-styler' ); ?></p>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-background-size">
+											<?php esc_html_e( 'Background Size', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<select id="login-background-size" name="login_customization[background_size]">
+											<option value="cover" <?php selected( $settings['login_customization']['background_size'] ?? 'cover', 'cover' ); ?>>
+												<?php esc_html_e( 'Cover', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="contain" <?php selected( $settings['login_customization']['background_size'] ?? 'cover', 'contain' ); ?>>
+												<?php esc_html_e( 'Contain', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="auto" <?php selected( $settings['login_customization']['background_size'] ?? 'cover', 'auto' ); ?>>
+												<?php esc_html_e( 'Auto', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-background-opacity">
+											<?php esc_html_e( 'Background Opacity', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-background-opacity"
+											name="login_customization[background_opacity]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['background_opacity'] ?? 100 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['background_opacity'] ?? 100 ); ?>%</span>
+									</div>
+								</div>
+							</div>
+							
+							<!-- Gradient Background -->
+							<div class="mase-conditional-group" data-depends-on="login-background-type" data-value="gradient" style="display: <?php echo ( isset( $settings['login_customization']['background_type'] ) && $settings['login_customization']['background_type'] === 'gradient' ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-gradient-type">
+											<?php esc_html_e( 'Gradient Type', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<select id="login-gradient-type" name="login_customization[gradient_type]">
+											<option value="linear" <?php selected( $settings['login_customization']['gradient_type'] ?? 'linear', 'linear' ); ?>>
+												<?php esc_html_e( 'Linear', 'modern-admin-styler' ); ?>
+											</option>
+											<option value="radial" <?php selected( $settings['login_customization']['gradient_type'] ?? 'linear', 'radial' ); ?>>
+												<?php esc_html_e( 'Radial', 'modern-admin-styler' ); ?>
+											</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-gradient-angle">
+											<?php esc_html_e( 'Gradient Angle', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-gradient-angle"
+											name="login_customization[gradient_angle]" 
+											min="0"
+											max="360"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['gradient_angle'] ?? 135 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['gradient_angle'] ?? 135 ); ?>°</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-gradient-color-1">
+											<?php esc_html_e( 'Color Stop 1', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="login-gradient-color-1"
+											name="login_customization[gradient_colors][0][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['login_customization']['gradient_colors'][0]['color'] ?? '#667eea' ); ?>"
+											data-default-color="#667eea"
+										/>
+										<input 
+											type="hidden" 
+											name="login_customization[gradient_colors][0][position]" 
+											value="0"
+										/>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-gradient-color-2">
+											<?php esc_html_e( 'Color Stop 2', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="text" 
+											id="login-gradient-color-2"
+											name="login_customization[gradient_colors][1][color]" 
+											class="mase-color-picker"
+											value="<?php echo esc_attr( $settings['login_customization']['gradient_colors'][1]['color'] ?? '#764ba2' ); ?>"
+											data-default-color="#764ba2"
+										/>
+										<input 
+											type="hidden" 
+											name="login_customization[gradient_colors][1][position]" 
+											value="100"
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Form Styling Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Login Form Styling', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the appearance of the login form container and input fields.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-bg-color">
+										<?php esc_html_e( 'Form Background Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="login-form-bg-color"
+										name="login_customization[form_bg_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['login_customization']['form_bg_color'] ?? '#ffffff' ); ?>"
+										data-default-color="#ffffff"
+									/>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-border-color">
+										<?php esc_html_e( 'Form Border Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="login-form-border-color"
+										name="login_customization[form_border_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['login_customization']['form_border_color'] ?? '#c3c4c7' ); ?>"
+										data-default-color="#c3c4c7"
+									/>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-text-color">
+										<?php esc_html_e( 'Form Text Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="login-form-text-color"
+										name="login_customization[form_text_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['login_customization']['form_text_color'] ?? '#2c3338' ); ?>"
+										data-default-color="#2c3338"
+									/>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-focus-color">
+										<?php esc_html_e( 'Focus State Color', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="text" 
+										id="login-form-focus-color"
+										name="login_customization[form_focus_color]" 
+										class="mase-color-picker"
+										value="<?php echo esc_attr( $settings['login_customization']['form_focus_color'] ?? '#2271b1' ); ?>"
+										data-default-color="#2271b1"
+									/>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-border-radius">
+										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="login-form-border-radius"
+										name="login_customization[form_border_radius]" 
+										min="0"
+										max="25"
+										step="1"
+										value="<?php echo esc_attr( $settings['login_customization']['form_border_radius'] ?? 0 ); ?>"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['form_border_radius'] ?? 0 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-form-box-shadow">
+										<?php esc_html_e( 'Box Shadow', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="login-form-box-shadow" name="login_customization[form_box_shadow]">
+										<option value="none" <?php selected( $settings['login_customization']['form_box_shadow'] ?? 'default', 'none' ); ?>>
+											<?php esc_html_e( 'None', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="default" <?php selected( $settings['login_customization']['form_box_shadow'] ?? 'default', 'default' ); ?>>
+											<?php esc_html_e( 'Default', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="subtle" <?php selected( $settings['login_customization']['form_box_shadow'] ?? 'default', 'subtle' ); ?>>
+											<?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="medium" <?php selected( $settings['login_customization']['form_box_shadow'] ?? 'default', 'medium' ); ?>>
+											<?php esc_html_e( 'Medium', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="strong" <?php selected( $settings['login_customization']['form_box_shadow'] ?? 'default', 'strong' ); ?>>
+											<?php esc_html_e( 'Strong', 'modern-admin-styler' ); ?>
+										</option>
+									</select>
+								</div>
+							</div>
+							
+							<!-- Glassmorphism Effect -->
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-glassmorphism-enabled">
+										<?php esc_html_e( 'Glassmorphism Effect', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="login-glassmorphism-enabled"
+											name="login_customization[glassmorphism_enabled]" 
+											value="1"
+											<?php checked( $settings['login_customization']['glassmorphism_enabled'] ?? false, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['login_customization']['glassmorphism_enabled'] ?? false ) ? 'true' : 'false'; ?>"
+											aria-describedby="login-glassmorphism-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="login-glassmorphism-desc"><?php esc_html_e( 'Apply frosted glass effect with backdrop blur.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-conditional-group" data-depends-on="login-glassmorphism-enabled" style="display: <?php echo ( $settings['login_customization']['glassmorphism_enabled'] ?? false ) ? 'block' : 'none'; ?>;">
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-glassmorphism-blur">
+											<?php esc_html_e( 'Blur Intensity (px)', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-glassmorphism-blur"
+											name="login_customization[glassmorphism_blur]" 
+											min="0"
+											max="50"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['glassmorphism_blur'] ?? 10 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['glassmorphism_blur'] ?? 10 ); ?>px</span>
+									</div>
+								</div>
+								
+								<div class="mase-setting-row">
+									<div class="mase-setting-label">
+										<label for="login-glassmorphism-opacity">
+											<?php esc_html_e( 'Opacity', 'modern-admin-styler' ); ?>
+										</label>
+									</div>
+									<div class="mase-setting-control">
+										<input 
+											type="range" 
+											id="login-glassmorphism-opacity"
+											name="login_customization[glassmorphism_opacity]" 
+											min="0"
+											max="100"
+											step="1"
+											value="<?php echo esc_attr( $settings['login_customization']['glassmorphism_opacity'] ?? 80 ); ?>"
+										/>
+										<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['glassmorphism_opacity'] ?? 80 ); ?>%</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Typography Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Typography', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Customize the typography of the login form labels and input fields.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-label-font-family">
+										<?php esc_html_e( 'Label Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="login-label-font-family" name="login_customization[label_font_family]">
+										<option value="system" <?php selected( $settings['login_customization']['label_font_family'] ?? 'system', 'system' ); ?>>
+											<?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="Arial, sans-serif" <?php selected( $settings['login_customization']['label_font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+										<option value="Helvetica, sans-serif" <?php selected( $settings['login_customization']['label_font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+										<option value="Georgia, serif" <?php selected( $settings['login_customization']['label_font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-label-font-size">
+										<?php esc_html_e( 'Label Font Size (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="login-label-font-size"
+										name="login_customization[label_font_size]" 
+										min="10"
+										max="24"
+										step="1"
+										value="<?php echo esc_attr( $settings['login_customization']['label_font_size'] ?? 14 ); ?>"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['label_font_size'] ?? 14 ); ?>px</span>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-label-font-weight">
+										<?php esc_html_e( 'Label Font Weight', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="login-label-font-weight" name="login_customization[label_font_weight]">
+										<option value="300" <?php selected( $settings['login_customization']['label_font_weight'] ?? 400, 300 ); ?>>300 (Light)</option>
+										<option value="400" <?php selected( $settings['login_customization']['label_font_weight'] ?? 400, 400 ); ?>>400 (Normal)</option>
+										<option value="500" <?php selected( $settings['login_customization']['label_font_weight'] ?? 400, 500 ); ?>>500 (Medium)</option>
+										<option value="600" <?php selected( $settings['login_customization']['label_font_weight'] ?? 400, 600 ); ?>>600 (Semi-Bold)</option>
+										<option value="700" <?php selected( $settings['login_customization']['label_font_weight'] ?? 400, 700 ); ?>>700 (Bold)</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-input-font-family">
+										<?php esc_html_e( 'Input Font Family', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<select id="login-input-font-family" name="login_customization[input_font_family]">
+										<option value="system" <?php selected( $settings['login_customization']['input_font_family'] ?? 'system', 'system' ); ?>>
+											<?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?>
+										</option>
+										<option value="Arial, sans-serif" <?php selected( $settings['login_customization']['input_font_family'] ?? 'system', 'Arial, sans-serif' ); ?>>Arial</option>
+										<option value="Helvetica, sans-serif" <?php selected( $settings['login_customization']['input_font_family'] ?? 'system', 'Helvetica, sans-serif' ); ?>>Helvetica</option>
+										<option value="Georgia, serif" <?php selected( $settings['login_customization']['input_font_family'] ?? 'system', 'Georgia, serif' ); ?>>Georgia</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-input-font-size">
+										<?php esc_html_e( 'Input Font Size (px)', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<input 
+										type="range" 
+										id="login-input-font-size"
+										name="login_customization[input_font_size]" 
+										min="16"
+										max="32"
+										step="1"
+										value="<?php echo esc_attr( $settings['login_customization']['input_font_size'] ?? 24 ); ?>"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['login_customization']['input_font_size'] ?? 24 ); ?>px</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Additional Options Section -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h2><?php esc_html_e( 'Additional Options', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Additional customization options for the login page.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-hide-wp-branding">
+										<?php esc_html_e( 'Hide WordPress Branding', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="login-hide-wp-branding"
+											name="login_customization[hide_wp_branding]" 
+											value="1"
+											<?php checked( $settings['login_customization']['hide_wp_branding'] ?? false, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['login_customization']['hide_wp_branding'] ?? false ) ? 'true' : 'false'; ?>"
+											aria-describedby="login-hide-wp-branding-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="login-hide-wp-branding-desc"><?php esc_html_e( 'Hide "Powered by WordPress" and "Back to" links.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-footer-text">
+										<?php esc_html_e( 'Custom Footer Text', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<textarea 
+										id="login-footer-text"
+										name="login_customization[footer_text]" 
+										class="large-text"
+										rows="3"
+										placeholder="<?php esc_attr_e( 'Enter custom footer text (HTML allowed)...', 'modern-admin-styler' ); ?>"
+									><?php echo esc_textarea( $settings['login_customization']['footer_text'] ?? '' ); ?></textarea>
+									<p class="description"><?php esc_html_e( 'Optional custom text to display in the login page footer. HTML is allowed.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+							
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="login-custom-css">
+										<?php esc_html_e( 'Custom CSS', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<textarea 
+										id="login-custom-css"
+										name="login_customization[custom_css]" 
+										class="large-text code"
+										rows="10"
+										placeholder="<?php esc_attr_e( '/* Add custom CSS here */', 'modern-admin-styler' ); ?>"
+									><?php echo esc_textarea( $settings['login_customization']['custom_css'] ?? '' ); ?></textarea>
+									<p class="description"><?php esc_html_e( 'Add custom CSS to further customize the login page appearance.', 'modern-admin-styler' ); ?></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div><!-- #tab-login -->
+
+			<!-- ============================================ -->
 			<!-- ADVANCED TAB -->
 			<!-- ============================================ -->
 			<div class="mase-tab-content" id="tab-advanced" data-tab-content="advanced" role="tabpanel" aria-labelledby="tab-button-advanced" tabindex="0">
@@ -3575,6 +4297,216 @@ $templates    = $settings_obj->get_all_templates();
 									<p class="description">
 										<strong><?php esc_html_e( 'Warning:', 'modern-admin-styler' ); ?></strong> 
 										<?php esc_html_e( 'Custom JavaScript can break your admin interface. Use with caution.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- Dark Mode Settings (Requirements 10.1-10.7) -->
+				<div class="mase-section">
+					<div class="mase-section-header">
+						<h2><?php esc_html_e( 'Dark Mode Settings', 'modern-admin-styler' ); ?></h2>
+						<p class="description"><?php esc_html_e( 'Configure the global dark/light mode toggle feature with FAB button and keyboard shortcuts.', 'modern-admin-styler' ); ?></p>
+					</div>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<!-- Enable/Disable Toggle (Requirement 10.1) -->
+							<tr>
+								<th scope="row">
+									<label for="dark-mode-enabled">
+										<?php esc_html_e( 'Enable Dark Mode Toggle', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="dark-mode-enabled"
+											name="dark_light_toggle[enabled]" 
+											value="1"
+											<?php checked( $settings['dark_light_toggle']['enabled'] ?? true, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['dark_light_toggle']['enabled'] ?? true ) ? 'true' : 'false'; ?>"
+											aria-describedby="dark-mode-enabled-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="dark-mode-enabled-desc">
+										<?php esc_html_e( 'Enable the floating action button (FAB) for quick dark/light mode switching.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- Respect System Preference (Requirement 10.2) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<label for="dark-mode-respect-system">
+										<?php esc_html_e( 'Respect System Preference', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="dark-mode-respect-system"
+											name="dark_light_toggle[respect_system_preference]" 
+											value="1"
+											<?php checked( $settings['dark_light_toggle']['respect_system_preference'] ?? true, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['dark_light_toggle']['respect_system_preference'] ?? true ) ? 'true' : 'false'; ?>"
+											aria-describedby="dark-mode-respect-system-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="dark-mode-respect-system-desc">
+										<?php esc_html_e( 'Automatically detect and apply OS dark mode preference on first load.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- Light Palette Selector (Requirement 10.3) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<label for="dark-mode-light-palette">
+										<?php esc_html_e( 'Light Mode Palette', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<select id="dark-mode-light-palette" name="dark_light_toggle[light_palette]" class="regular-text">
+										<?php foreach ( $palettes as $palette_id => $palette ) : ?>
+											<?php if ( ( $palette['type'] ?? 'light' ) === 'light' ) : ?>
+												<option value="<?php echo esc_attr( $palette_id ); ?>" <?php selected( $settings['dark_light_toggle']['light_palette'] ?? 'professional-blue', $palette_id ); ?>>
+													<?php echo esc_html( $palette['name'] ); ?>
+												</option>
+											<?php endif; ?>
+										<?php endforeach; ?>
+									</select>
+									<p class="description">
+										<?php esc_html_e( 'Color palette to use when light mode is active.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- Dark Palette Selector (Requirement 10.4) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<label for="dark-mode-dark-palette">
+										<?php esc_html_e( 'Dark Mode Palette', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<select id="dark-mode-dark-palette" name="dark_light_toggle[dark_palette]" class="regular-text">
+										<?php foreach ( $palettes as $palette_id => $palette ) : ?>
+											<?php if ( ( $palette['type'] ?? 'light' ) === 'dark' ) : ?>
+												<option value="<?php echo esc_attr( $palette_id ); ?>" <?php selected( $settings['dark_light_toggle']['dark_palette'] ?? 'dark-elegance', $palette_id ); ?>>
+													<?php echo esc_html( $palette['name'] ); ?>
+												</option>
+											<?php endif; ?>
+										<?php endforeach; ?>
+									</select>
+									<p class="description">
+										<?php esc_html_e( 'Color palette to use when dark mode is active.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- Transition Duration Slider (Requirement 10.5) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<label for="dark-mode-transition-duration">
+										<?php esc_html_e( 'Transition Duration', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<input 
+										type="range" 
+										id="dark-mode-transition-duration"
+										name="dark_light_toggle[transition_duration]" 
+										min="0"
+										max="1000"
+										step="50"
+										value="<?php echo esc_attr( $settings['dark_light_toggle']['transition_duration'] ?? 300 ); ?>"
+										aria-describedby="dark-mode-transition-duration-desc"
+									/>
+									<span class="mase-range-value"><?php echo esc_html( $settings['dark_light_toggle']['transition_duration'] ?? 300 ); ?>ms</span>
+									<p class="description" id="dark-mode-transition-duration-desc">
+										<?php esc_html_e( 'Animation duration when switching modes (0ms = instant, 1000ms = 1 second).', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- Keyboard Shortcut Enable/Disable (Requirement 10.6) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<label for="dark-mode-keyboard-shortcut">
+										<?php esc_html_e( 'Keyboard Shortcut', 'modern-admin-styler' ); ?>
+									</label>
+								</th>
+								<td>
+									<label class="mase-toggle-switch">
+										<input 
+											type="checkbox" 
+											id="dark-mode-keyboard-shortcut"
+											name="dark_light_toggle[keyboard_shortcut_enabled]" 
+											value="1"
+											<?php checked( $settings['dark_light_toggle']['keyboard_shortcut_enabled'] ?? true, true ); ?>
+											role="switch"
+											aria-checked="<?php echo ( $settings['dark_light_toggle']['keyboard_shortcut_enabled'] ?? true ) ? 'true' : 'false'; ?>"
+											aria-describedby="dark-mode-keyboard-shortcut-desc"
+										/>
+										<span class="mase-toggle-slider" aria-hidden="true"></span>
+									</label>
+									<p class="description" id="dark-mode-keyboard-shortcut-desc">
+										<?php esc_html_e( 'Enable Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (Mac) to toggle dark mode.', 'modern-admin-styler' ); ?>
+									</p>
+								</td>
+							</tr>
+							
+							<!-- FAB Position Controls (Requirement 10.7) -->
+							<tr class="mase-conditional" data-depends-on="dark-mode-enabled">
+								<th scope="row">
+									<?php esc_html_e( 'FAB Position', 'modern-admin-styler' ); ?>
+								</th>
+								<td>
+									<div class="mase-settings-group">
+										<div class="mase-setting-row">
+											<label for="dark-mode-fab-bottom" class="mase-inline-label">
+												<?php esc_html_e( 'Bottom:', 'modern-admin-styler' ); ?>
+											</label>
+											<input 
+												type="number" 
+												id="dark-mode-fab-bottom"
+												name="dark_light_toggle[fab_position][bottom]" 
+												class="small-text"
+												value="<?php echo esc_attr( $settings['dark_light_toggle']['fab_position']['bottom'] ?? 20 ); ?>"
+												min="0"
+												max="200"
+												step="5"
+											/>
+											<span class="mase-unit-label">px</span>
+										</div>
+										<div class="mase-setting-row">
+											<label for="dark-mode-fab-right" class="mase-inline-label">
+												<?php esc_html_e( 'Right:', 'modern-admin-styler' ); ?>
+											</label>
+											<input 
+												type="number" 
+												id="dark-mode-fab-right"
+												name="dark_light_toggle[fab_position][right]" 
+												class="small-text"
+												value="<?php echo esc_attr( $settings['dark_light_toggle']['fab_position']['right'] ?? 20 ); ?>"
+												min="0"
+												max="200"
+												step="5"
+											/>
+											<span class="mase-unit-label">px</span>
+										</div>
+									</div>
+									<p class="description">
+										<?php esc_html_e( 'Position of the floating action button from bottom-right corner (in pixels).', 'modern-admin-styler' ); ?>
 									</p>
 								</td>
 							</tr>
@@ -3817,6 +4749,851 @@ $templates    = $settings_obj->get_all_templates();
 
 				
 			</div><!-- #tab-advanced -->
+
+			<!-- ============================================ -->
+			<!-- UNIVERSAL BUTTONS TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-buttons" data-tab-content="buttons" role="tabpanel" aria-labelledby="tab-button-buttons" tabindex="0">
+				
+				<!-- Button Type Selector Tabs (Subtask 5.2) -->
+				<div class="mase-section">
+					<div class="mase-button-type-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Button types', 'modern-admin-styler' ); ?>">
+						<button type="button" class="mase-button-type-tab active" data-button-type="primary" role="tab" aria-selected="true" aria-controls="button-type-primary" tabindex="0">
+							<?php esc_html_e( 'Primary', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-type-tab" data-button-type="secondary" role="tab" aria-selected="false" aria-controls="button-type-secondary" tabindex="-1">
+							<?php esc_html_e( 'Secondary', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-type-tab" data-button-type="danger" role="tab" aria-selected="false" aria-controls="button-type-danger" tabindex="-1">
+							<?php esc_html_e( 'Danger', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-type-tab" data-button-type="success" role="tab" aria-selected="false" aria-controls="button-type-success" tabindex="-1">
+							<?php esc_html_e( 'Success', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-type-tab" data-button-type="ghost" role="tab" aria-selected="false" aria-controls="button-type-ghost" tabindex="-1">
+							<?php esc_html_e( 'Ghost', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-type-tab" data-button-type="tabs" role="tab" aria-selected="false" aria-controls="button-type-tabs" tabindex="-1">
+							<?php esc_html_e( 'Tabs', 'modern-admin-styler' ); ?>
+						</button>
+					</div>
+				</div>
+
+				<!-- Button State Selector Tabs (Subtask 5.3) -->
+				<div class="mase-section">
+					<div class="mase-button-state-tabs" role="tablist" aria-label="<?php esc_attr_e( 'Button states', 'modern-admin-styler' ); ?>">
+						<button type="button" class="mase-button-state-tab active" data-button-state="normal" role="tab" aria-selected="true" aria-controls="button-state-normal" tabindex="0">
+							<?php esc_html_e( 'Normal', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-state-tab" data-button-state="hover" role="tab" aria-selected="false" aria-controls="button-state-hover" tabindex="-1">
+							<?php esc_html_e( 'Hover', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-state-tab" data-button-state="active" role="tab" aria-selected="false" aria-controls="button-state-active" tabindex="-1">
+							<?php esc_html_e( 'Active', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-state-tab" data-button-state="focus" role="tab" aria-selected="false" aria-controls="button-state-focus" tabindex="-1">
+							<?php esc_html_e( 'Focus', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="mase-button-state-tab" data-button-state="disabled" role="tab" aria-selected="false" aria-controls="button-state-disabled" tabindex="-1">
+							<?php esc_html_e( 'Disabled', 'modern-admin-styler' ); ?>
+						</button>
+					</div>
+				</div>
+
+				<!-- Button Controls Container -->
+				<div class="mase-button-controls-wrapper">
+					<div class="mase-button-controls-left">
+						
+						<!-- Background Controls Section (Subtask 5.4) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Background', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-bg-type">
+												<?php esc_html_e( 'Background Type', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-bg-type" name="universal_buttons[primary][normal][bg_type]" class="mase-button-control" data-property="bg_type">
+												<option value="solid"><?php esc_html_e( 'Solid Color', 'modern-admin-styler' ); ?></option>
+												<option value="gradient"><?php esc_html_e( 'Gradient', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+									
+									<!-- Solid Color Control -->
+									<div class="mase-setting-row mase-conditional" data-depends-on="button-bg-type" data-value="solid">
+										<div class="mase-setting-label">
+											<label for="button-bg-color">
+												<?php esc_html_e( 'Background Color', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="text" 
+												id="button-bg-color"
+												name="universal_buttons[primary][normal][bg_color]" 
+												class="mase-color-picker mase-button-control"
+												data-property="bg_color"
+												value="#0073aa"
+												data-default-color="#0073aa"
+											/>
+										</div>
+									</div>
+									
+									<!-- Gradient Controls -->
+									<div class="mase-conditional" data-depends-on="button-bg-type" data-value="gradient">
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-gradient-type">
+													<?php esc_html_e( 'Gradient Type', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<select id="button-gradient-type" name="universal_buttons[primary][normal][gradient_type]" class="mase-button-control" data-property="gradient_type">
+													<option value="linear"><?php esc_html_e( 'Linear', 'modern-admin-styler' ); ?></option>
+													<option value="radial"><?php esc_html_e( 'Radial', 'modern-admin-styler' ); ?></option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-gradient-angle">
+													<?php esc_html_e( 'Angle (degrees)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-gradient-angle"
+													name="universal_buttons[primary][normal][gradient_angle]" 
+													class="mase-button-control"
+													data-property="gradient_angle"
+													min="0"
+													max="360"
+													step="1"
+													value="90"
+												/>
+												<span class="mase-range-value">90°</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-gradient-color-1">
+													<?php esc_html_e( 'Color Stop 1', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="text" 
+													id="button-gradient-color-1"
+													name="universal_buttons[primary][normal][gradient_colors][0][color]" 
+													class="mase-color-picker mase-button-control"
+													data-property="gradient_colors_0_color"
+													value="#0073aa"
+													data-default-color="#0073aa"
+												/>
+												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][0][position]" value="0" />
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-gradient-color-2">
+													<?php esc_html_e( 'Color Stop 2', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="text" 
+													id="button-gradient-color-2"
+													name="universal_buttons[primary][normal][gradient_colors][1][color]" 
+													class="mase-color-picker mase-button-control"
+													data-property="gradient_colors_1_color"
+													value="#005177"
+													data-default-color="#005177"
+												/>
+												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][1][position]" value="100" />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Text Color Control (Subtask 5.5) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Text Color', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-text-color">
+												<?php esc_html_e( 'Text Color', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="text" 
+												id="button-text-color"
+												name="universal_buttons[primary][normal][text_color]" 
+												class="mase-color-picker mase-button-control"
+												data-property="text_color"
+												value="#ffffff"
+												data-default-color="#ffffff"
+											/>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<?php esc_html_e( 'Contrast Ratio', 'modern-admin-styler' ); ?>
+										</div>
+										<div class="mase-setting-control">
+											<div class="mase-contrast-indicator">
+												<span class="mase-contrast-value" id="button-contrast-ratio">--</span>
+												<span class="mase-contrast-status" id="button-contrast-status"></span>
+											</div>
+											<p class="description"><?php esc_html_e( 'WCAG AA requires 4.5:1 minimum', 'modern-admin-styler' ); ?></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div><!-- .mase-button-controls-left -->
+					
+					<div class="mase-button-controls-right">
+						
+						<!-- Border Controls Section (Subtask 5.6) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Border', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-border-width">
+												<?php esc_html_e( 'Border Width (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-border-width"
+												name="universal_buttons[primary][normal][border_width]" 
+												class="mase-button-control"
+												data-property="border_width"
+												min="0"
+												max="5"
+												step="1"
+												value="1"
+											/>
+											<span class="mase-range-value">1px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-border-style">
+												<?php esc_html_e( 'Border Style', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-border-style" name="universal_buttons[primary][normal][border_style]" class="mase-button-control" data-property="border_style">
+												<option value="solid"><?php esc_html_e( 'Solid', 'modern-admin-styler' ); ?></option>
+												<option value="dashed"><?php esc_html_e( 'Dashed', 'modern-admin-styler' ); ?></option>
+												<option value="dotted"><?php esc_html_e( 'Dotted', 'modern-admin-styler' ); ?></option>
+												<option value="none"><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-border-color">
+												<?php esc_html_e( 'Border Color', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="text" 
+												id="button-border-color"
+												name="universal_buttons[primary][normal][border_color]" 
+												class="mase-color-picker mase-button-control"
+												data-property="border_color"
+												value="#0073aa"
+												data-default-color="#0073aa"
+											/>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-border-radius-mode">
+												<?php esc_html_e( 'Border Radius Mode', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-border-radius-mode" name="universal_buttons[primary][normal][border_radius_mode]" class="mase-button-control" data-property="border_radius_mode">
+												<option value="uniform"><?php esc_html_e( 'Uniform', 'modern-admin-styler' ); ?></option>
+												<option value="individual"><?php esc_html_e( 'Individual Corners', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+									
+									<!-- Uniform Radius -->
+									<div class="mase-setting-row mase-conditional" data-depends-on="button-border-radius-mode" data-value="uniform">
+										<div class="mase-setting-label">
+											<label for="button-border-radius">
+												<?php esc_html_e( 'All Corners (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-border-radius"
+												name="universal_buttons[primary][normal][border_radius]" 
+												class="mase-button-control"
+												data-property="border_radius"
+												min="0"
+												max="25"
+												step="1"
+												value="3"
+											/>
+											<span class="mase-range-value">3px</span>
+										</div>
+									</div>
+									
+									<!-- Individual Corners -->
+									<div class="mase-conditional" data-depends-on="button-border-radius-mode" data-value="individual">
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-border-radius-tl">
+													<?php esc_html_e( 'Top Left (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-border-radius-tl"
+													name="universal_buttons[primary][normal][border_radius_tl]" 
+													class="mase-button-control"
+													data-property="border_radius_tl"
+													min="0"
+													max="25"
+													step="1"
+													value="3"
+												/>
+												<span class="mase-range-value">3px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-border-radius-tr">
+													<?php esc_html_e( 'Top Right (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-border-radius-tr"
+													name="universal_buttons[primary][normal][border_radius_tr]" 
+													class="mase-button-control"
+													data-property="border_radius_tr"
+													min="0"
+													max="25"
+													step="1"
+													value="3"
+												/>
+												<span class="mase-range-value">3px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-border-radius-bl">
+													<?php esc_html_e( 'Bottom Left (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-border-radius-bl"
+													name="universal_buttons[primary][normal][border_radius_bl]" 
+													class="mase-button-control"
+													data-property="border_radius_bl"
+													min="0"
+													max="25"
+													step="1"
+													value="3"
+												/>
+												<span class="mase-range-value">3px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-border-radius-br">
+													<?php esc_html_e( 'Bottom Right (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-border-radius-br"
+													name="universal_buttons[primary][normal][border_radius_br]" 
+													class="mase-button-control"
+													data-property="border_radius_br"
+													min="0"
+													max="25"
+													step="1"
+													value="3"
+												/>
+												<span class="mase-range-value">3px</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Padding Controls Section (Subtask 5.7) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Padding', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-padding-horizontal">
+												<?php esc_html_e( 'Horizontal (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-padding-horizontal"
+												name="universal_buttons[primary][normal][padding_horizontal]" 
+												class="mase-button-control"
+												data-property="padding_horizontal"
+												min="5"
+												max="30"
+												step="1"
+												value="12"
+											/>
+											<span class="mase-range-value">12px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-padding-vertical">
+												<?php esc_html_e( 'Vertical (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-padding-vertical"
+												name="universal_buttons[primary][normal][padding_vertical]" 
+												class="mase-button-control"
+												data-property="padding_vertical"
+												min="3"
+												max="20"
+												step="1"
+												value="6"
+											/>
+											<span class="mase-range-value">6px</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Typography Controls Section (Subtask 5.8) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Typography', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-font-size">
+												<?php esc_html_e( 'Font Size (px)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-font-size"
+												name="universal_buttons[primary][normal][font_size]" 
+												class="mase-button-control"
+												data-property="font_size"
+												min="11"
+												max="18"
+												step="1"
+												value="13"
+											/>
+											<span class="mase-range-value">13px</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-font-weight">
+												<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-font-weight" name="universal_buttons[primary][normal][font_weight]" class="mase-button-control" data-property="font_weight">
+												<option value="300">300 (Light)</option>
+												<option value="400" selected>400 (Normal)</option>
+												<option value="500">500 (Medium)</option>
+												<option value="600">600 (Semi-Bold)</option>
+												<option value="700">700 (Bold)</option>
+											</select>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-text-transform">
+												<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-text-transform" name="universal_buttons[primary][normal][text_transform]" class="mase-button-control" data-property="text_transform">
+												<option value="none" selected><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+												<option value="uppercase"><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
+												<option value="lowercase"><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
+												<option value="capitalize"><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Effects Controls Section (Subtask 5.9) -->
+						<div class="mase-section">
+							<div class="mase-section-card">
+								<h3><?php esc_html_e( 'Effects', 'modern-admin-styler' ); ?></h3>
+								
+								<div class="mase-settings-group">
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-shadow-mode">
+												<?php esc_html_e( 'Shadow Mode', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-shadow-mode" name="universal_buttons[primary][normal][shadow_mode]" class="mase-button-control" data-property="shadow_mode">
+												<option value="preset" selected><?php esc_html_e( 'Preset', 'modern-admin-styler' ); ?></option>
+												<option value="custom"><?php esc_html_e( 'Custom', 'modern-admin-styler' ); ?></option>
+												<option value="none"><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+									
+									<!-- Preset Shadow -->
+									<div class="mase-setting-row mase-conditional" data-depends-on="button-shadow-mode" data-value="preset">
+										<div class="mase-setting-label">
+											<label for="button-shadow-preset">
+												<?php esc_html_e( 'Shadow Preset', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<select id="button-shadow-preset" name="universal_buttons[primary][normal][shadow_preset]" class="mase-button-control" data-property="shadow_preset">
+												<option value="none"><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+												<option value="subtle" selected><?php esc_html_e( 'Subtle', 'modern-admin-styler' ); ?></option>
+												<option value="medium"><?php esc_html_e( 'Medium', 'modern-admin-styler' ); ?></option>
+												<option value="strong"><?php esc_html_e( 'Strong', 'modern-admin-styler' ); ?></option>
+											</select>
+										</div>
+									</div>
+									
+									<!-- Custom Shadow Controls -->
+									<div class="mase-conditional" data-depends-on="button-shadow-mode" data-value="custom">
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-shadow-h-offset">
+													<?php esc_html_e( 'Horizontal Offset (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-shadow-h-offset"
+													name="universal_buttons[primary][normal][shadow_h_offset]" 
+													class="mase-button-control"
+													data-property="shadow_h_offset"
+													min="-20"
+													max="20"
+													step="1"
+													value="0"
+												/>
+												<span class="mase-range-value">0px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-shadow-v-offset">
+													<?php esc_html_e( 'Vertical Offset (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-shadow-v-offset"
+													name="universal_buttons[primary][normal][shadow_v_offset]" 
+													class="mase-button-control"
+													data-property="shadow_v_offset"
+													min="-20"
+													max="20"
+													step="1"
+													value="2"
+												/>
+												<span class="mase-range-value">2px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-shadow-blur">
+													<?php esc_html_e( 'Blur Radius (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-shadow-blur"
+													name="universal_buttons[primary][normal][shadow_blur]" 
+													class="mase-button-control"
+													data-property="shadow_blur"
+													min="0"
+													max="50"
+													step="1"
+													value="4"
+												/>
+												<span class="mase-range-value">4px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-shadow-spread">
+													<?php esc_html_e( 'Spread Radius (px)', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="range" 
+													id="button-shadow-spread"
+													name="universal_buttons[primary][normal][shadow_spread]" 
+													class="mase-button-control"
+													data-property="shadow_spread"
+													min="-10"
+													max="10"
+													step="1"
+													value="0"
+												/>
+												<span class="mase-range-value">0px</span>
+											</div>
+										</div>
+										
+										<div class="mase-setting-row">
+											<div class="mase-setting-label">
+												<label for="button-shadow-color">
+													<?php esc_html_e( 'Shadow Color', 'modern-admin-styler' ); ?>
+												</label>
+											</div>
+											<div class="mase-setting-control">
+												<input 
+													type="text" 
+													id="button-shadow-color"
+													name="universal_buttons[primary][normal][shadow_color]" 
+													class="mase-color-picker mase-button-control"
+													data-property="shadow_color"
+													value="rgba(0,0,0,0.1)"
+												/>
+											</div>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-transition-duration">
+												<?php esc_html_e( 'Transition Duration (ms)', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<input 
+												type="range" 
+												id="button-transition-duration"
+												name="universal_buttons[primary][normal][transition_duration]" 
+												class="mase-button-control"
+												data-property="transition_duration"
+												min="0"
+												max="1000"
+												step="50"
+												value="200"
+											/>
+											<span class="mase-range-value">200ms</span>
+										</div>
+									</div>
+									
+									<div class="mase-setting-row">
+										<div class="mase-setting-label">
+											<label for="button-ripple-effect">
+												<?php esc_html_e( 'Ripple Effect', 'modern-admin-styler' ); ?>
+											</label>
+										</div>
+										<div class="mase-setting-control">
+											<label class="mase-toggle-switch">
+												<input 
+													type="checkbox" 
+													id="button-ripple-effect"
+													name="universal_buttons[primary][normal][ripple_effect]" 
+													class="mase-button-control"
+													data-property="ripple_effect"
+													value="1"
+													role="switch"
+													aria-checked="false"
+												/>
+												<span class="mase-toggle-slider" aria-hidden="true"></span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div><!-- .mase-button-controls-wrapper -->
+
+				<!-- Live Preview Area (Subtask 5.10) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h3><?php esc_html_e( 'Live Preview', 'modern-admin-styler' ); ?></h3>
+						<p class="description"><?php esc_html_e( 'Preview your button styles in real-time across all states.', 'modern-admin-styler' ); ?></p>
+						
+						<div class="mase-button-preview-container">
+							<!-- Normal State -->
+							<div class="mase-button-preview-item">
+								<label class="mase-button-preview-label"><?php esc_html_e( 'Normal', 'modern-admin-styler' ); ?></label>
+								<button type="button" class="mase-button-preview" data-preview-state="normal" id="button-preview-normal">
+									<?php esc_html_e( 'Sample Button', 'modern-admin-styler' ); ?>
+								</button>
+							</div>
+							
+							<!-- Hover State -->
+							<div class="mase-button-preview-item">
+								<label class="mase-button-preview-label"><?php esc_html_e( 'Hover', 'modern-admin-styler' ); ?></label>
+								<button type="button" class="mase-button-preview mase-button-preview-hover" data-preview-state="hover" id="button-preview-hover">
+									<?php esc_html_e( 'Sample Button', 'modern-admin-styler' ); ?>
+								</button>
+							</div>
+							
+							<!-- Active State -->
+							<div class="mase-button-preview-item">
+								<label class="mase-button-preview-label"><?php esc_html_e( 'Active', 'modern-admin-styler' ); ?></label>
+								<button type="button" class="mase-button-preview mase-button-preview-active" data-preview-state="active" id="button-preview-active">
+									<?php esc_html_e( 'Sample Button', 'modern-admin-styler' ); ?>
+								</button>
+							</div>
+							
+							<!-- Focus State -->
+							<div class="mase-button-preview-item">
+								<label class="mase-button-preview-label"><?php esc_html_e( 'Focus', 'modern-admin-styler' ); ?></label>
+								<button type="button" class="mase-button-preview mase-button-preview-focus" data-preview-state="focus" id="button-preview-focus">
+									<?php esc_html_e( 'Sample Button', 'modern-admin-styler' ); ?>
+								</button>
+							</div>
+							
+							<!-- Disabled State -->
+							<div class="mase-button-preview-item">
+								<label class="mase-button-preview-label"><?php esc_html_e( 'Disabled', 'modern-admin-styler' ); ?></label>
+								<button type="button" class="mase-button-preview" data-preview-state="disabled" id="button-preview-disabled" disabled>
+									<?php esc_html_e( 'Sample Button', 'modern-admin-styler' ); ?>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Reset Buttons (Subtask 5.11) -->
+				<div class="mase-section">
+					<div class="mase-button-reset-actions">
+						<button type="button" class="button button-secondary mase-reset-button-type" id="reset-button-type">
+							<span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
+							<?php esc_html_e( 'Reset This Button Type', 'modern-admin-styler' ); ?>
+						</button>
+						<button type="button" class="button button-secondary mase-reset-all-buttons" id="reset-all-buttons">
+							<span class="dashicons dashicons-update" aria-hidden="true"></span>
+							<?php esc_html_e( 'Reset All Buttons', 'modern-admin-styler' ); ?>
+						</button>
+					</div>
+				</div>
+
+				<!-- Plugin Compatibility: Excluded Selectors (Subtask 8.2) -->
+				<div class="mase-section">
+					<div class="mase-section-card">
+						<h3><?php esc_html_e( 'Plugin Compatibility', 'modern-admin-styler' ); ?></h3>
+						<p class="description">
+							<?php esc_html_e( 'Exclude specific button selectors from styling to prevent conflicts with other plugins.', 'modern-admin-styler' ); ?>
+						</p>
+						
+						<div class="mase-settings-group">
+							<div class="mase-setting-row">
+								<div class="mase-setting-label">
+									<label for="excluded-button-selectors">
+										<?php esc_html_e( 'Excluded Selectors', 'modern-admin-styler' ); ?>
+									</label>
+								</div>
+								<div class="mase-setting-control">
+									<textarea 
+										id="excluded-button-selectors"
+										name="excluded_button_selectors"
+										class="large-text code"
+										rows="5"
+										aria-describedby="excluded-selectors-description"
+										placeholder=".my-plugin-button, #special-button, .custom-class"
+									><?php echo esc_textarea( $settings['excluded_button_selectors'] ?? '' ); ?></textarea>
+									<p class="description" id="excluded-selectors-description">
+										<?php
+										echo wp_kses(
+											__( 'Enter CSS selectors (one per line or comma-separated) that should be excluded from button styling.<br><strong>Examples:</strong><br><code>.my-plugin-button</code> - Exclude by class<br><code>#special-button</code> - Exclude by ID<br><code>.button.custom-class</code> - Exclude specific combination<br><code>.wp-core-ui .my-button</code> - Exclude with parent selector', 'modern-admin-styler' ),
+											array(
+												'br' => array(),
+												'strong' => array(),
+												'code' => array(),
+											)
+										);
+										?>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div><!-- #tab-buttons -->
+
+			<!-- ============================================ -->
+			<!-- BACKGROUNDS TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-backgrounds" data-tab-content="backgrounds" role="tabpanel" aria-labelledby="tab-button-backgrounds" tabindex="0">
+				<?php require_once MASE_PLUGIN_DIR . 'includes/backgrounds-tab-content.php'; ?>
+			</div><!-- #tab-backgrounds -->
 			
 		</div><!-- .mase-tab-content-wrapper -->
 		

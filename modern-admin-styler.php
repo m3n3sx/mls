@@ -79,6 +79,21 @@ require_once MASE_PLUGIN_DIR . 'includes/class-mase-migration.php';
 require_once MASE_PLUGIN_DIR . 'includes/class-mase-mobile-optimizer.php';
 
 /**
+ * Load plugin text domain for translations.
+ * Task 20: Add localization support (Requirement 1.8)
+ * 
+ * @since 1.2.0
+ */
+function mase_load_textdomain() {
+	load_plugin_textdomain(
+		'modern-admin-styler',
+		false,
+		dirname( plugin_basename( __FILE__ ) ) . '/languages'
+	);
+}
+add_action( 'plugins_loaded', 'mase_load_textdomain', 1 );
+
+/**
  * Run migration check on plugin load.
  * Requirement 10.1: Detect current version and execute migration if needed.
  * Requirement 10.2: Execute migration script automatically when upgrading from v1.1.0.

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Persistence Layer Integration Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #0073aa;
+            margin-top: 0;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #0073aa;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #005a87;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .state-display {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .state-display pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .log-entry {
+            padding: 5px;
+            margin: 2px 0;
+            font-family: monospace;
+            font-size: 12px;
+            border-left: 3px solid #0073aa;
+            padding-left: 10px;
+        }
+        
+        .log-entry.error {
+            border-left-color: #dc3545;
+            color: #dc3545;
+        }
+        
+        .log-entry.success {
+            border-left-color: #28a745;
+            color: #28a745;
+        }
+        
+        .log-entry.warning {
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Dark Mode Persistence Layer Integration Test</h1>
+    
+    <div class="test-container">
+        <h2>Test Suite: Persistence Layer</h2>
+        <p>This test verifies the dark mode persistence layer implementation including localStorage, AJAX retry logic, and error handling.</p>
+        
+        <div class="controls">
+            <button onclick="runAllTests()">Run All Tests</button>
+            <button onclick="clearLogs()">Clear Logs</button>
+            <button onclick="clearStorage()">Clear Storage</button>
+            <button onclick="showState()">Show State</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Current State</h2>
+        <div id="state-display" class="state-display">
+            <pre>Click "Show State" to display current state</pre>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Test Log</h2>
+        <div id="log" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Mock MASE object
+        window.MASE = {
+            config: {
+                ajaxUrl: '/wp-admin/admin-ajax.php',
+                nonce: 'test-nonce-12345'
+            },
+            showNotice: function(type, message, duration) {
+                log('notice', `Notice [${type}]: ${message} (${duration}ms)`);
+            }
+        };
+        
+        // Mock dark mode toggle with persistence layer
+        window.darkModeToggle = {
+            config: {
+                storageKey: 'mase_dark_mode',
+                transitionDuration: 300
+            },
+            state: {
+                currentMode: 'light',
+                isTransitioning: false,
+                systemPreference: null,
+                userPreference: null,
+                needsSync: false,
+                retryCount: 0,
+                maxRetries: 3
+            },
+            
+            savePreference: function(mode) {
+                var self = this;
+                
+                log('info', `Saving preference: ${mode}`);
+                
+                // Save to localStorage
+                try {
+                    localStorage.setItem(self.config.storageKey, mode);
+                    localStorage.removeItem(self.config.storageKey + '_needsSync');
+                    log('success', 'Saved to localStorage');
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                        log('error', 'localStorage quota exceeded, attempting cleanup...');
+                        
+                        try {
+                            var keysToRemove = [];
+                            for (var i = 0; i < localStorage.length; i++) {
+                                var key = localStorage.key(i);
+                                if (key && key.startsWith('mase_') && key !== self.config.storageKey) {
+                                    keysToRemove.push(key);
+                                }
+                            }
+                            
+                            keysToRemove.forEach(function(key) {
+                                localStorage.removeItem(key);
+                            });
+                            
+                            localStorage.setItem(self.config.storageKey, mode);
+                            log('success', 'Saved after cleanup');
+                        } catch (retryError) {
+                            log('error', 'Failed even after cleanup');
+                            self.state.needsSync = true;
+                            try {
+                                localStorage.setItem(self.config.storageKey + '_needsSync', 'true');
+                            } catch (flagError) {
+                                log('error', 'Cannot save needsSync flag');
+                            }
+                        }
+                    } else {
+                        log('warning', 'localStorage unavailable, using user meta only');
+                        self.state.needsSync = true;
+                        try {
+                            localStorage.setItem(self.config.storageKey + '_needsSync', 'true');
+                        } catch (flagError) {
+                            log('error', 'Cannot save needsSync flag');
+                        }
+                    }
+                }
+                
+                // Save to WordPress user meta via AJAX
+                if (typeof MASE.config.ajaxUrl !== 'undefined' && typeof MASE.config.nonce !== 'undefined') {
+                    log('info', 'Sending AJAX request...');
+                    
+                    $.ajax({
+                        url: MASE.config.ajaxUrl,
+                        type: 'POST',
+                        data: {
+                            action: 'mase_toggle_dark_mode',
+                            nonce: MASE.config.nonce,
+                            mode: mode
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                log('success', 'AJAX save successful');
+                                self.state.retryCount = 0;
+                                self.state.needsSync = false;
+                                
+                                try {
+                                    localStorage.removeItem(self.config.storageKey + '_needsSync');
+                                } catch (error) {
+                                    log('warning', 'Could not clear needsSync flag');
+                                }
+                            } else {
+                                log('error', 'AJAX save failed: ' + response.data.message);
+                                self.state.needsSync = true;
+                                
+                                if (typeof MASE.showNotice === 'function') {
+                                    MASE.showNotice('warning', 
+                                        'Dark mode applied locally. Preference will sync on next save.',
+                                        3000
+                                    );
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            log('error', `AJAX error: ${xhr.status} - ${error}`);
+                            self.state.needsSync = true;
+                            
+                            if (self.state.retryCount < self.state.maxRetries) {
+                                var retryDelay = Math.pow(2, self.state.retryCount) * 1000;
+                                log('info', `Scheduling retry #${self.state.retryCount + 1} in ${retryDelay}ms`);
+                                
+                                setTimeout(function() {
+                                    self.state.retryCount++;
+                                    self.syncPreference(mode);
+                                }, retryDelay);
+                            } else {
+                                log('error', 'Max retries reached');
+                                
+                                if (typeof MASE.showNotice === 'function') {
+                                    var message = 'Dark mode applied locally. ';
+                                    if (xhr.status === 0) {
+                                        message += 'Network unavailable.';
+                                    } else if (xhr.status === 403) {
+                                        message += 'Permission denied.';
+                                    } else if (xhr.status >= 500) {
+                                        message += 'Server error.';
+                                    }
+                                    
+                                    MASE.showNotice('warning', message, 5000);
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            
+            syncPreference: function(mode) {
+                var self = this;
+                
+                if (!self.state.needsSync) {
+                    log('info', 'No sync needed');
+                    return;
+                }
+                
+                log('info', 'Attempting to sync preference...');
+                
+                if (typeof MASE.config.ajaxUrl === 'undefined' || typeof MASE.config.nonce === 'undefined') {
+                    log('error', 'AJAX configuration missing');
+                    return;
+                }
+                
+                $.ajax({
+                    url: MASE.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_toggle_dark_mode',
+                        nonce: MASE.config.nonce,
+                        mode: mode
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            log('success', 'Preference synced successfully');
+                            self.state.needsSync = false;
+                            self.state.retryCount = 0;
+                            
+                            try {
+                                localStorage.removeItem(self.config.storageKey + '_needsSync');
+                            } catch (error) {
+                                log('warning', 'Could not clear needsSync flag');
+                            }
+                            
+                            if (typeof MASE.showNotice === 'function') {
+                                MASE.showNotice('success', 'Dark mode preference synced successfully', 2000);
+                            }
+                        } else {
+                            log('error', 'Sync failed: ' + response.data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        log('error', `Sync AJAX error: ${xhr.status} - ${error}`);
+                    }
+                });
+            },
+            
+            loadSavedPreference: function() {
+                var self = this;
+                var mode = null;
+                
+                log('info', 'Loading saved preference...');
+                
+                try {
+                    var localStorageMode = localStorage.getItem(self.config.storageKey);
+                    if (localStorageMode && (localStorageMode === 'light' || localStorageMode === 'dark')) {
+                        mode = localStorageMode;
+                        log('success', `Loaded mode from localStorage: ${mode}`);
+                    }
+                    
+                    var needsSyncFlag = localStorage.getItem(self.config.storageKey + '_needsSync');
+                    if (needsSyncFlag === 'true') {
+                        self.state.needsSync = true;
+                        log('info', 'Pending sync flag detected');
+                    }
+                } catch (error) {
+                    log('error', 'localStorage unavailable');
+                    self.state.needsSync = true;
+                }
+                
+                if (!mode) {
+                    mode = self.state.systemPreference || 'light';
+                    log('info', `Using default mode: ${mode}`);
+                }
+                
+                self.state.userPreference = mode;
+                self.state.currentMode = mode;
+                
+                return mode;
+            }
+        };
+        
+        // Logging functions
+        function log(type, message) {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+        
+        function clearLogs() {
+            document.getElementById('log').innerHTML = '';
+            log('info', 'Logs cleared');
+        }
+        
+        function clearStorage() {
+            localStorage.clear();
+            log('success', 'localStorage cleared');
+            showState();
+        }
+        
+        function showState() {
+            const state = {
+                darkModeToggle: darkModeToggle.state,
+                localStorage: {
+                    mode: localStorage.getItem('mase_dark_mode'),
+                    needsSync: localStorage.getItem('mase_dark_mode_needsSync')
+                }
+            };
+            
+            document.getElementById('state-display').innerHTML = 
+                '<pre>' + JSON.stringify(state, null, 2) + '</pre>';
+        }
+        
+        function addResult(testName, passed, message) {
+            const resultsDiv = document.getElementById('results');
+            const result = document.createElement('div');
+            result.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            result.innerHTML = `<strong>${testName}:</strong> ${message}`;
+            resultsDiv.appendChild(result);
+        }
+        
+        // Test functions
+        function testLocalStorageSave() {
+            log('info', '=== Test: localStorage Save ===');
+            localStorage.clear();
+            darkModeToggle.state.needsSync = false;
+            darkModeToggle.state.retryCount = 0;
+            
+            darkModeToggle.savePreference('dark');
+            
+            const saved = localStorage.getItem('mase_dark_mode');
+            const passed = saved === 'dark';
+            
+            addResult('localStorage Save', passed, 
+                passed ? 'Mode saved to localStorage' : 'Failed to save mode');
+            
+            return passed;
+        }
+        
+        function testNeedsSyncFlag() {
+            log('info', '=== Test: needsSync Flag ===');
+            localStorage.clear();
+            darkModeToggle.state.needsSync = false;
+            
+            // Simulate localStorage error
+            const originalSetItem = localStorage.setItem;
+            localStorage.setItem = function() {
+                throw new Error('localStorage unavailable');
+            };
+            
+            darkModeToggle.savePreference('dark');
+            
+            localStorage.setItem = originalSetItem;
+            
+            const passed = darkModeToggle.state.needsSync === true;
+            
+            addResult('needsSync Flag', passed, 
+                passed ? 'needsSync flag set on error' : 'needsSync flag not set');
+            
+            return passed;
+        }
+        
+        function testLoadSavedPreference() {
+            log('info', '=== Test: Load Saved Preference ===');
+            localStorage.clear();
+            localStorage.setItem('mase_dark_mode', 'dark');
+            
+            const mode = darkModeToggle.loadSavedPreference();
+            const passed = mode === 'dark' && darkModeToggle.state.currentMode === 'dark';
+            
+            addResult('Load Saved Preference', passed, 
+                passed ? 'Preference loaded correctly' : 'Failed to load preference');
+            
+            return passed;
+        }
+        
+        function testSyncPreference() {
+            log('info', '=== Test: Sync Preference ===');
+            darkModeToggle.state.needsSync = true;
+            
+            // Mock successful AJAX
+            const originalAjax = $.ajax;
+            $.ajax = function(options) {
+                setTimeout(function() {
+                    options.success({ success: true });
+                }, 100);
+            };
+            
+            darkModeToggle.syncPreference('dark');
+            
+            setTimeout(function() {
+                $.ajax = originalAjax;
+                const passed = darkModeToggle.state.needsSync === false;
+                
+                addResult('Sync Preference', passed, 
+                    passed ? 'Preference synced successfully' : 'Sync failed');
+            }, 200);
+            
+            return true;
+        }
+        
+        function testQuotaExceeded() {
+            log('info', '=== Test: Quota Exceeded Handling ===');
+            localStorage.clear();
+            darkModeToggle.state.needsSync = false;
+            
+            // Simulate quota exceeded
+            const originalSetItem = localStorage.setItem;
+            let callCount = 0;
+            localStorage.setItem = function(key, value) {
+                callCount++;
+                if (callCount === 1) {
+                    const error = new Error('QuotaExceededError');
+                    error.name = 'QuotaExceededError';
+                    throw error;
+                } else {
+                    originalSetItem.call(localStorage, key, value);
+                }
+            };
+            
+            darkModeToggle.savePreference('dark');
+            
+            localStorage.setItem = originalSetItem;
+            
+            const passed = callCount > 1; // Should have retried
+            
+            addResult('Quota Exceeded Handling', passed, 
+                passed ? 'Retry attempted after quota error' : 'No retry attempted');
+            
+            return passed;
+        }
+        
+        function runAllTests() {
+            document.getElementById('results').innerHTML = '';
+            log('info', '========================================');
+            log('info', 'Starting test suite...');
+            log('info', '========================================');
+            
+            let passed = 0;
+            let total = 0;
+            
+            total++;
+            if (testLocalStorageSave()) passed++;
+            
+            setTimeout(function() {
+                total++;
+                if (testNeedsSyncFlag()) passed++;
+                
+                setTimeout(function() {
+                    total++;
+                    if (testLoadSavedPreference()) passed++;
+                    
+                    setTimeout(function() {
+                        total++;
+                        testSyncPreference(); // Async test
+                        
+                        setTimeout(function() {
+                            total++;
+                            if (testQuotaExceeded()) passed++;
+                            
+                            log('info', '========================================');
+                            log('success', `Tests completed: ${passed}/${total} passed`);
+                            log('info', '========================================');
+                            
+                            const summary = document.createElement('div');
+                            summary.className = `test-result ${passed === total ? 'pass' : 'fail'}`;
+                            summary.innerHTML = `<strong>Summary:</strong> ${passed}/${total} tests passed`;
+                            document.getElementById('results').appendChild(summary);
+                            
+                            showState();
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }, 500);
+        }
+        
+        // Initialize
+        log('info', 'Test page loaded');
+        log('info', 'Click "Run All Tests" to start');
+        showState();
+    </script>
+</body>
+</html>

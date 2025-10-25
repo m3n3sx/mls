@@ -5,17 +5,18 @@
 1. [Introduction](#introduction)
 2. [What's New in v2.0](#whats-new-in-v20)
 3. [Getting Started](#getting-started)
-4. [Color Palettes](#color-palettes)
-5. [Templates](#templates)
-6. [Admin Bar Customization](#admin-bar-customization)
-7. [Menu Customization](#menu-customization)
-8. [Typography Settings](#typography-settings)
-9. [Visual Effects](#visual-effects)
-10. [Advanced Features](#advanced-features)
-11. [Keyboard Shortcuts](#keyboard-shortcuts)
-12. [Import/Export](#import-export)
-13. [Backup & Restore](#backup-restore)
-14. [Troubleshooting](#troubleshooting-guide)
+4. [Dark/Light Mode Toggle](#darklight-mode-toggle)
+5. [Color Palettes](#color-palettes)
+6. [Templates](#templates)
+7. [Admin Bar Customization](#admin-bar-customization)
+8. [Menu Customization](#menu-customization)
+9. [Typography Settings](#typography-settings)
+10. [Visual Effects](#visual-effects)
+11. [Advanced Features](#advanced-features)
+12. [Keyboard Shortcuts](#keyboard-shortcuts)
+13. [Import/Export](#import-export)
+14. [Backup & Restore](#backup-restore)
+15. [Troubleshooting](#troubleshooting-guide)
 
 ---
 
@@ -25,6 +26,7 @@ Modern Admin Styler Enterprise (MASE) is a comprehensive WordPress plugin that t
 
 ### Key Features
 
+- **Dark/Light Mode Toggle** - Seamless switching with system preference detection
 - **10 Professional Color Palettes** - One-click color schemes with accessibility validation
 - **11 Complete Templates** - Pre-configured designs covering all settings
 - **Real-Time Preview** - Instant visual feedback with sub-50ms updates
@@ -140,7 +142,93 @@ The settings page is organized into 8 tabs:
 - **Typography**: Font controls for all areas
 - **Effects**: Animations and visual effects
 - **Templates**: Full template gallery
-- **Advanced**: Custom CSS/JS, auto palette switching, backups
+- **Advanced**: Custom CSS/JS, auto palette switching, backups, dark mode settings
+
+---
+
+## Dark/Light Mode Toggle
+
+MASE includes a powerful dark/light mode toggle that allows you to seamlessly switch between light and dark color schemes. This feature reduces eye strain, improves readability in different lighting conditions, and provides a modern admin experience.
+
+### Quick Start
+
+1. **Look for the FAB**: A circular button appears in the bottom-right corner of your admin interface
+2. **Click to Toggle**: Click the button to switch between light and dark modes
+3. **Use Keyboard Shortcut**: Press `Ctrl+Shift+D` (Windows/Linux) or `Cmd+Shift+D` (Mac) to toggle
+4. **Your Preference is Saved**: The mode persists across page loads and sessions
+
+### Features
+
+- **Floating Action Button (FAB)**: Always-accessible toggle in bottom-right corner
+- **Keyboard Shortcut**: Quick toggle with Ctrl/Cmd+Shift+D
+- **System Preference Detection**: Automatically matches your OS dark mode setting
+- **Persistent Preferences**: Saved across sessions and devices
+- **Smooth Transitions**: Professional 0.3-second color transitions
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Performance**: Sub-50ms toggle time for instant response
+
+### Dark Mode Palettes
+
+MASE includes three professionally designed dark mode palettes:
+
+1. **Dark Elegance** (Default): Comfortable charcoal with light blue accents
+2. **Midnight Blue**: Professional navy with sky blue accents
+3. **Charcoal**: Maximum contrast with purple accents (OLED-friendly)
+
+All dark palettes meet WCAG AAA contrast standards (7:1+) for optimal readability.
+
+### Configuring Dark Mode
+
+Navigate to **Modern Admin Styler** → **Advanced** tab → **Dark Mode Settings**:
+
+- **Enable/Disable**: Turn the dark mode feature on or off
+- **Light Palette**: Choose the palette for light mode
+- **Dark Palette**: Choose the palette for dark mode
+- **Transition Duration**: Adjust animation speed (100-1000ms)
+- **Keyboard Shortcut**: Enable or disable Ctrl/Cmd+Shift+D
+- **Respect System Preference**: Auto-match OS dark mode setting
+- **FAB Position**: Adjust button placement
+
+### Keyboard Shortcuts
+
+- **Toggle Dark Mode**: `Ctrl+Shift+D` (Windows/Linux) or `Cmd+Shift+D` (Mac)
+- **Tab to FAB**: Press Tab repeatedly to focus the FAB
+- **Activate FAB**: Press Enter or Space when FAB is focused
+
+### System Preference Detection
+
+When enabled, MASE automatically detects your operating system's dark mode preference:
+
+- **First Load**: Checks OS preference and applies matching mode
+- **Auto-Update**: Updates when you change OS dark mode (if no manual preference set)
+- **Manual Override**: Your manual toggle takes precedence over OS setting
+
+To reset to system preference, clear your manual preference in browser settings or reset MASE settings.
+
+### Troubleshooting
+
+**FAB Not Visible**:
+- Check if dark mode is enabled in Advanced → Dark Mode Settings
+- Adjust FAB position if hidden behind other elements
+- Check browser console for JavaScript errors
+
+**Colors Not Changing**:
+- Verify a dark palette is selected in settings
+- Clear browser cache and hard refresh (Ctrl+Shift+R)
+- Check for CSS conflicts with other plugins
+
+**Preference Not Saving**:
+- Ensure browser allows localStorage
+- Check AJAX save completes successfully (Network tab in DevTools)
+- Verify you have admin permissions
+
+For detailed troubleshooting, see the [Dark Mode Troubleshooting Guide](./DARK-MODE-TROUBLESHOOTING.md).
+
+### Additional Resources
+
+- [Dark Mode User Guide](./DARK-MODE-USER-GUIDE.md) - Comprehensive guide
+- [Dark Mode Developer Guide](./DARK-MODE-DEVELOPER-GUIDE.md) - For developers
+- [Dark Mode Troubleshooting](./DARK-MODE-TROUBLESHOOTING.md) - Detailed troubleshooting
 
 ---
 

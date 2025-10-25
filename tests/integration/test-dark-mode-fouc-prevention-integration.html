@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Dark Mode FOUC Prevention - Integration Test</title>
+    
+    <!-- Simulate the inline FOUC prevention script that WordPress would inject -->
+    <script>
+        // Record start time for performance measurement
+        window.maseFoucPreventionStart = performance.now();
+        
+        // This is the exact script that WordPress injects via wp_add_inline_script()
+        (function() {
+            try {
+                var savedMode = localStorage.getItem("mase_dark_mode");
+                var userMeta = ""; // Would be populated by PHP: get_user_meta()
+                var mode = savedMode || userMeta || "light";
+                
+                if (mode === "dark") {
+                    document.body.classList.add("mase-dark-mode");
+                }
+                
+                // Record end time
+                window.maseFoucPreventionEnd = performance.now();
+                window.maseFoucPreventionTime = window.maseFoucPreventionEnd - window.maseFoucPreventionStart;
+                
+            } catch (e) {
+                // Fail silently if localStorage unavailable (private browsing)
+                console.warn("MASE: Could not check dark mode preference", e);
+            }
+        })();
+    </script>
+    
+    <style>
+        /* Base light mode styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f1;
+            color: #1d2327;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark mode styles - applied via .mase-dark-mode class */
+        body.mase-dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        body.mase-dark-mode .header {
+            background: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #1d2327;
+        }
+
+        body.mase-dark-mode h1 {
+            color: #e0e0e0;
+        }
+
+        .subtitle {
+            color: #646970;
+            margin: 0;
+        }
+
+        body.mase-dark-mode .subtitle {
+            color: #b0b0b0;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body.mase-dark-mode .test-card {
+            background: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .test-card h2 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #1d2327;
+        }
+
+        body.mase-dark-mode .test-card h2 {
+            color: #e0e0e0;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dcdcde;
+        }
+
+        body.mase-dark-mode .metric {
+            border-bottom-color: #3a3a3a;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: #646970;
+        }
+
+        body.mase-dark-mode .metric-label {
+            color: #b0b0b0;
+        }
+
+        .metric-value {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 4px 8px;
+            background: #f0f0f1;
+            border-radius: 4px;
+        }
+
+        body.mase-dark-mode .metric-value {
+            background: #3a3a3a;
+        }
+
+        .metric-value.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        body.mase-dark-mode .metric-value.success {
+            background: #1e4620;
+            color: #7dff85;
+        }
+
+        .metric-value.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        body.mase-dark-mode .metric-value.error {
+            background: #4a1f23;
+            color: #ff7d85;
+        }
+
+        .controls {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        body.mase-dark-mode .controls {
+            background: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        button.primary {
+            background: #2271b1;
+            color: white;
+        }
+
+        button.primary:hover {
+            background: #135e96;
+        }
+
+        body.mase-dark-mode button.primary {
+            background: #4a9eff;
+            color: #1a1a1a;
+        }
+
+        body.mase-dark-mode button.primary:hover {
+            background: #6bb0ff;
+        }
+
+        button.secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+        }
+
+        button.secondary:hover {
+            background: #dcdcde;
+        }
+
+        body.mase-dark-mode button.secondary {
+            background: #3a3a3a;
+            color: #e0e0e0;
+        }
+
+        body.mase-dark-mode button.secondary:hover {
+            background: #4a4a4a;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .alert.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+        }
+
+        body.mase-dark-mode .alert.info {
+            background: #1f3a42;
+            color: #7dd8ff;
+            border-left-color: #4a9eff;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        body.mase-dark-mode .alert.success {
+            background: #1e4620;
+            color: #7dff85;
+            border-left-color: #4ade80;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        body.mase-dark-mode .alert.warning {
+            background: #4a3f1f;
+            color: #ffd85d;
+            border-left-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌓 MASE Dark Mode FOUC Prevention</h1>
+            <p class="subtitle">Integration Test - Verifying inline script execution</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="test-grid">
+            <div class="test-card">
+                <h2>⚡ Performance Metrics</h2>
+                <div class="metric">
+                    <span class="metric-label">Execution Time</span>
+                    <span class="metric-value" id="executionTime">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Target (< 50ms)</span>
+                    <span class="metric-value" id="performanceStatus">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">FOUC Risk</span>
+                    <span class="metric-value" id="foucRisk">-</span>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <h2>🎨 Current State</h2>
+                <div class="metric">
+                    <span class="metric-label">Active Mode</span>
+                    <span class="metric-value" id="activeMode">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Body Class</span>
+                    <span class="metric-value" id="bodyClass">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">localStorage</span>
+                    <span class="metric-value" id="localStorageValue">-</span>
+                </div>
+            </div>
+
+            <div class="test-card">
+                <h2>✅ Test Results</h2>
+                <div class="metric">
+                    <span class="metric-label">Script Executed</span>
+                    <span class="metric-value" id="scriptExecuted">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Class Applied</span>
+                    <span class="metric-value" id="classApplied">-</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Timing Valid</span>
+                    <span class="metric-value" id="timingValid">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h2>Test Controls</h2>
+            <div class="button-group">
+                <button class="primary" onclick="setDarkMode()">Set Dark Mode</button>
+                <button class="primary" onclick="setLightMode()">Set Light Mode</button>
+                <button class="secondary" onclick="clearStorage()">Clear Storage</button>
+                <button class="secondary" onclick="reloadPage()">Reload Page</button>
+                <button class="secondary" onclick="runTests()">Run Tests</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test functions
+        function updateMetrics() {
+            const isDarkMode = document.body.classList.contains('mase-dark-mode');
+            const savedMode = localStorage.getItem('mase_dark_mode');
+            const executionTime = window.maseFoucPreventionTime;
+
+            // Performance metrics
+            document.getElementById('executionTime').textContent = 
+                executionTime ? executionTime.toFixed(3) + 'ms' : 'N/A';
+            
+            const performanceStatus = document.getElementById('performanceStatus');
+            if (executionTime !== undefined) {
+                if (executionTime < 50) {
+                    performanceStatus.textContent = 'PASS';
+                    performanceStatus.className = 'metric-value success';
+                } else {
+                    performanceStatus.textContent = 'FAIL';
+                    performanceStatus.className = 'metric-value error';
+                }
+            }
+
+            document.getElementById('foucRisk').textContent = 
+                executionTime && executionTime < 50 ? 'Low' : 'High';
+
+            // Current state
+            document.getElementById('activeMode').textContent = isDarkMode ? 'Dark' : 'Light';
+            document.getElementById('bodyClass').textContent = 
+                document.body.className || 'none';
+            document.getElementById('localStorageValue').textContent = 
+                savedMode || 'not set';
+
+            // Test results
+            document.getElementById('scriptExecuted').textContent = 
+                window.maseFoucPreventionTime !== undefined ? 'Yes' : 'No';
+            
+            const classApplied = document.getElementById('classApplied');
+            if (savedMode === 'dark' && isDarkMode) {
+                classApplied.textContent = 'Correct';
+                classApplied.className = 'metric-value success';
+            } else if (savedMode !== 'dark' && !isDarkMode) {
+                classApplied.textContent = 'Correct';
+                classApplied.className = 'metric-value success';
+            } else {
+                classApplied.textContent = 'Incorrect';
+                classApplied.className = 'metric-value error';
+            }
+
+            const timingValid = document.getElementById('timingValid');
+            if (executionTime !== undefined && executionTime < 50) {
+                timingValid.textContent = 'Yes';
+                timingValid.className = 'metric-value success';
+            } else {
+                timingValid.textContent = 'No';
+                timingValid.className = 'metric-value error';
+            }
+        }
+
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = 'alert ' + type;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        function setDarkMode() {
+            localStorage.setItem('mase_dark_mode', 'dark');
+            showAlert('info', 'Dark mode preference saved. Reload the page to test FOUC prevention.');
+            updateMetrics();
+        }
+
+        function setLightMode() {
+            localStorage.setItem('mase_dark_mode', 'light');
+            showAlert('info', 'Light mode preference saved. Reload the page to test FOUC prevention.');
+            updateMetrics();
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('mase_dark_mode');
+            showAlert('info', 'Storage cleared. Page will default to light mode on reload.');
+            updateMetrics();
+        }
+
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        function runTests() {
+            const results = [];
+            const executionTime = window.maseFoucPreventionTime;
+            const isDarkMode = document.body.classList.contains('mase-dark-mode');
+            const savedMode = localStorage.getItem('mase_dark_mode');
+
+            // Test 1: Script executed
+            if (executionTime !== undefined) {
+                results.push({ type: 'success', message: '✓ Test 1 PASSED: Script executed successfully' });
+            } else {
+                results.push({ type: 'error', message: '✗ Test 1 FAILED: Script did not execute' });
+            }
+
+            // Test 2: Performance requirement
+            if (executionTime !== undefined && executionTime < 50) {
+                results.push({ type: 'success', message: `✓ Test 2 PASSED: Execution time ${executionTime.toFixed(3)}ms < 50ms` });
+            } else {
+                results.push({ type: 'error', message: `✗ Test 2 FAILED: Execution time ${executionTime ? executionTime.toFixed(3) : 'N/A'}ms >= 50ms` });
+            }
+
+            // Test 3: Class application
+            if ((savedMode === 'dark' && isDarkMode) || (savedMode !== 'dark' && !isDarkMode)) {
+                results.push({ type: 'success', message: '✓ Test 3 PASSED: Dark mode class correctly applied/not applied' });
+            } else {
+                results.push({ type: 'error', message: '✗ Test 3 FAILED: Dark mode class state incorrect' });
+            }
+
+            // Display results
+            results.forEach(result => {
+                showAlert(result.type === 'success' ? 'success' : 'warning', result.message);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMetrics();
+            
+            // Show initial status
+            if (window.maseFoucPreventionTime !== undefined) {
+                if (window.maseFoucPreventionTime < 50) {
+                    showAlert('success', `FOUC prevention script executed in ${window.maseFoucPreventionTime.toFixed(3)}ms - PASS`);
+                } else {
+                    showAlert('warning', `FOUC prevention script executed in ${window.maseFoucPreventionTime.toFixed(3)}ms - SLOW`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

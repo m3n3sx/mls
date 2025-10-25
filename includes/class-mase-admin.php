@@ -99,6 +99,35 @@ class MASE_Admin {
 		// Logo upload AJAX handler (Requirement 16.1).
 		add_action( 'wp_ajax_mase_upload_menu_logo', array( $this, 'handle_ajax_upload_menu_logo' ) );
 		
+		// Login logo upload AJAX handler (Requirement 7.1).
+		add_action( 'wp_ajax_mase_upload_login_logo', array( $this, 'handle_ajax_upload_login_logo' ) );
+		
+		// Login background image upload AJAX handler (Requirement 7.1).
+		add_action( 'wp_ajax_mase_upload_login_background', array( $this, 'handle_ajax_upload_login_background' ) );
+		
+		// Background image upload AJAX handler (Advanced Background System - Task 3).
+		add_action( 'wp_ajax_mase_upload_background_image', array( $this, 'handle_ajax_upload_background_image' ) );
+		
+		// Background image selection from media library AJAX handler (Advanced Background System - Task 5).
+		add_action( 'wp_ajax_mase_select_background_image', array( $this, 'handle_ajax_select_background_image' ) );
+		
+		// Background image removal AJAX handler (Advanced Background System - Task 6).
+		add_action( 'wp_ajax_mase_remove_background_image', array( $this, 'handle_ajax_remove_background_image' ) );
+		
+		// Dark mode toggle AJAX handler (Requirements 2.1, 2.2, 4.1, 11.1).
+		add_action( 'wp_ajax_mase_toggle_dark_mode', array( $this, 'handle_ajax_toggle_dark_mode' ) );
+		
+		// Universal Button Styling System AJAX handlers (Requirements 12.1, 12.2).
+		add_action( 'wp_ajax_mase_get_button_defaults', array( $this, 'ajax_get_button_defaults' ) );
+		add_action( 'wp_ajax_mase_reset_button_type', array( $this, 'ajax_reset_button_type' ) );
+		add_action( 'wp_ajax_mase_reset_all_buttons', array( $this, 'ajax_reset_all_buttons' ) );
+		
+		// Login page customization hooks (Requirements 8.1, 1.6, 4.1).
+		add_action( 'login_enqueue_scripts', array( $this, 'inject_login_css' ) );
+		add_filter( 'login_headerurl', array( $this, 'filter_login_logo_url' ) );
+		add_filter( 'login_headertext', array( $this, 'filter_login_logo_title' ) );
+		add_action( 'login_footer', array( $this, 'inject_login_footer' ) );
+		
 		/**
 		 * REMOVED: Duplicate mobile optimizer AJAX handler registration.
 		 * These handlers are already registered in modern-admin-styler.php mase_init() function.
@@ -190,6 +219,134 @@ class MASE_Admin {
 			true
 		);
 
+		// Enqueue gradient builder module (Advanced Background System - Task 14).
+		wp_enqueue_script(
+			'mase-gradient-builder',
+			plugins_url( '../assets/js/modules/mase-gradient-builder.js', __FILE__ ),
+			array( 'jquery', 'wp-color-picker', 'mase-admin' ),
+			MASE_VERSION,
+			true
+		);
+
+		/**
+		 * FOUC Prevention: Inline script for dark mode detection
+		 * 
+		 * CRITICAL: This script MUST execute synchronously before page render to prevent
+		 * Flash of Unstyled Content (FOUC) when dark mode is active.
+		 * 
+		 * REQUIREMENTS (Task 10):
+		 * - Check localStorage synchronously before page render (Requirement 12.1)
+		 * - Apply .mase-dark-mode class immediately if dark mode active (Requirement 12.2)
+		 * - Execute before main mase-admin.js loads (Requirement 12.3)
+		 * - Execute in < 50ms (Requirement 12.4)
+		 * 
+		 * IMPLEMENTATION STRATEGY:
+		 * - Use wp_add_inline_script() with 'before' position to inject before main script
+		 * - Check localStorage first (fastest, no server round-trip)
+		 * - Fall back to user meta (passed via PHP for initial page load)
+		 * - Fall back to 'light' if neither exists
+		 * - Apply body class immediately if dark mode detected
+		 * 
+		 * PERFORMANCE:
+		 * - Synchronous execution ensures no FOUC
+		 * - Minimal code (< 10 lines) ensures < 50ms execution
+		 * - No DOM queries or complex operations
+		 * - Single classList operation
+		 * 
+		 * BROWSER COMPATIBILITY:
+		 * - localStorage supported in all modern browsers (IE8+)
+		 * - classList.add supported in all modern browsers (IE10+)
+		 * - Graceful degradation: if localStorage unavailable, uses user meta
+		 * 
+		 * @see Requirements 12.1, 12.2, 12.3, 12.4
+		 * @see Design Document: Performance Considerations > Initial Load Performance
+		 * @since 1.2.0
+		 */
+		$user_id = get_current_user_id();
+		$user_dark_mode_preference = get_user_meta( $user_id, 'mase_dark_mode_preference', true );
+		
+		wp_add_inline_script(
+			'mase-admin',
+			'(function() {
+				try {
+					var savedMode = localStorage.getItem("mase_dark_mode");
+					var userMeta = "' . esc_js( $user_dark_mode_preference ) . '";
+					var mode = savedMode || userMeta || "light";
+					
+					if (mode === "dark") {
+						document.body.classList.add("mase-dark-mode");
+					}
+				} catch (e) {
+					// Fail silently if localStorage unavailable (private browsing)
+					console.warn("MASE: Could not check dark mode preference", e);
+				}
+			})();',
+			'before'
+		);
+
+		/**
+		 * Localize script with translations and configuration
+		 * 
+		 * LOCALIZATION (Task 20):
+		 * - Wrap all user-facing strings in translation functions (Requirement 1.8)
+		 * - Add translations for FAB tooltip
+		 * - Add translations for mode announcements
+		 * - Add translations for error messages
+		 * - Add translations for settings page labels
+		 * 
+		 * @since 1.2.0
+		 */
+		wp_localize_script(
+			'mase-admin',
+			'maseL10n',
+			array(
+				// AJAX configuration
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'mase_save_settings' ),
+				
+				// Dark mode FAB tooltip translations
+				'switchToDarkMode'  => __( 'Switch to Dark Mode', 'modern-admin-styler' ),
+				'switchToLightMode' => __( 'Switch to Light Mode', 'modern-admin-styler' ),
+				'toggleDarkMode'    => __( 'Toggle Dark Mode', 'modern-admin-styler' ),
+				
+				// Dark mode announcements for screen readers
+				'darkModeActivated'   => __( 'Dark mode activated', 'modern-admin-styler' ),
+				'lightModeActivated'  => __( 'Light mode activated', 'modern-admin-styler' ),
+				'darkModeEnabled'     => __( 'Dark mode enabled', 'modern-admin-styler' ),
+				'lightModeEnabled'    => __( 'Light mode enabled', 'modern-admin-styler' ),
+				'currentModeDark'     => __( 'Current mode: Dark', 'modern-admin-styler' ),
+				'currentModeLight'    => __( 'Current mode: Light', 'modern-admin-styler' ),
+				
+				// Dark mode error messages
+				'darkModeError'              => __( 'Failed to toggle dark mode. Please try again.', 'modern-admin-styler' ),
+				'darkModeSaveError'          => __( 'Dark mode applied locally. Preference will sync on next save.', 'modern-admin-styler' ),
+				'darkModeStorageError'       => __( 'Could not save dark mode preference to browser storage.', 'modern-admin-styler' ),
+				'darkModeNetworkError'       => __( 'Network error while saving dark mode preference.', 'modern-admin-styler' ),
+				'darkModePermissionError'    => __( 'You do not have permission to change dark mode settings.', 'modern-admin-styler' ),
+				'darkModeServerError'        => __( 'Server error while saving dark mode preference. Please try again later.', 'modern-admin-styler' ),
+				
+				// Dark mode settings labels
+				'enableDarkMode'             => __( 'Enable Dark Mode', 'modern-admin-styler' ),
+				'darkModeSettings'           => __( 'Dark Mode Settings', 'modern-admin-styler' ),
+				'lightPalette'               => __( 'Light Palette', 'modern-admin-styler' ),
+				'darkPalette'                => __( 'Dark Palette', 'modern-admin-styler' ),
+				'transitionDuration'         => __( 'Transition Duration', 'modern-admin-styler' ),
+				'keyboardShortcut'           => __( 'Keyboard Shortcut', 'modern-admin-styler' ),
+				'fabPosition'                => __( 'FAB Position', 'modern-admin-styler' ),
+				'respectSystemPreference'    => __( 'Respect System Preference', 'modern-admin-styler' ),
+				
+				// General UI messages
+				'saving'                     => __( 'Saving...', 'modern-admin-styler' ),
+				'saved'                      => __( 'Settings saved successfully!', 'modern-admin-styler' ),
+				'error'                      => __( 'An error occurred. Please try again.', 'modern-admin-styler' ),
+				'loading'                    => __( 'Loading...', 'modern-admin-styler' ),
+				'applyingPalette'            => __( 'Applying palette...', 'modern-admin-styler' ),
+				'paletteApplied'             => __( 'Palette applied successfully!', 'modern-admin-styler' ),
+				'applyingTemplate'           => __( 'Applying template...', 'modern-admin-styler' ),
+				'templateApplied'            => __( 'Template applied successfully!', 'modern-admin-styler' ),
+			)
+		);
+
 		/**
 		 * NOTE: Live preview functionality is handled by MASE.livePreview module.
 		 * All live preview functionality is in assets/js/mase-admin.js
@@ -207,6 +364,7 @@ class MASE_Admin {
 				'nonce'     => wp_create_nonce( 'mase_save_settings' ),
 				'palettes'  => $this->get_palettes_data(),
 				'templates' => $this->get_templates_data(),
+				'gradientPresets' => $this->get_gradient_presets_data(),
 				'strings'   => array(
 					'saving'                => __( 'Saving...', 'mase' ),
 					'saved'                 => __( 'Settings saved successfully!', 'mase' ),
@@ -224,6 +382,16 @@ class MASE_Admin {
 					'backupCreated'         => __( 'Backup created successfully!', 'mase' ),
 					'backupRestored'        => __( 'Backup restored successfully!', 'mase' ),
 					'networkError'          => __( 'Network error. Please check your connection and try again.', 'mase' ),
+					// Button styling strings (Task 10.1: Add translatable strings)
+					'buttonResetConfirm'    => __( 'Reset all settings for %s buttons to defaults?', 'modern-admin-styler' ),
+					'buttonResetAllConfirm' => __( 'Reset ALL button settings to defaults? This cannot be undone.', 'modern-admin-styler' ),
+					'buttonResetting'       => __( 'Resetting button settings...', 'modern-admin-styler' ),
+					'buttonResetSuccess'    => __( 'Button settings reset to defaults', 'modern-admin-styler' ),
+					'buttonResetFailed'     => __( 'Failed to reset button settings', 'modern-admin-styler' ),
+					'buttonResetAllSuccess' => __( 'All button settings reset to defaults. Reloading page...', 'modern-admin-styler' ),
+					'buttonResetAllFailed'  => __( 'Failed to reset button settings', 'modern-admin-styler' ),
+					'buttonResettingAll'    => __( 'Resetting all button settings...', 'modern-admin-styler' ),
+					'permissionDenied'      => __( 'Permission denied. You do not have access to perform this action.', 'modern-admin-styler' ),
 				),
 			)
 		);
@@ -330,6 +498,18 @@ class MASE_Admin {
 		return $this->settings->get_all_templates();
 	}
 
+	/**
+	 * Get gradient presets data for JavaScript.
+	 *
+	 * Prepares gradient presets for localization to JavaScript.
+	 * Requirement 2.3: Provide gradient presets library to JavaScript.
+	 *
+	 * @return array Gradient presets organized by category.
+	 */
+	private function get_gradient_presets_data() {
+		return $this->settings->get_gradient_presets();
+	}
+
 
 	/**
 	 * Inject custom CSS into admin pages.
@@ -400,29 +580,84 @@ class MASE_Admin {
 
 			// Get and validate settings.
 			// CRITICAL FIX: Settings are now sent as JSON string to avoid max_input_vars limit
+			
+			// Debug: Log incoming data
+			error_log( '=== MASE: Save Settings Debug ===' );
+			error_log( 'MASE: POST keys: ' . implode( ', ', array_keys( $_POST ) ) );
+			
 			if ( isset( $_POST['settings'] ) && is_string( $_POST['settings'] ) ) {
+				$settings_size = strlen( $_POST['settings'] );
+				$settings_size_kb = round( $settings_size / 1024, 2 );
+				error_log( 'MASE: POST settings size: ' . $settings_size . ' bytes (' . $settings_size_kb . ' KB)' );
+				error_log( 'MASE: POST settings preview (first 200 chars): ' . substr( $_POST['settings'], 0, 200 ) );
+				
 				// Settings sent as JSON string - decode it
 				$input = json_decode( stripslashes( $_POST['settings'] ), true );
+				
 				if ( json_last_error() !== JSON_ERROR_NONE ) {
 					error_log( 'MASE: JSON decode error: ' . json_last_error_msg() );
-					wp_send_json_error( array( 'message' => __( 'Invalid settings format', 'mase' ) ), 400 );
+					error_log( 'MASE: JSON error code: ' . json_last_error() );
+					error_log( 'MASE: Raw POST data length: ' . strlen( $_POST['settings'] ) );
+					wp_send_json_error( 
+						array( 'message' => __( 'Invalid settings format: ', 'mase' ) . json_last_error_msg() ), 
+						400 
+					);
+				}
+				
+				error_log( 'MASE: JSON decoded successfully' );
+				error_log( 'MASE: Decoded sections: ' . implode( ', ', array_keys( $input ) ) );
+				
+				// Log section sizes
+				foreach ( $input as $section => $data ) {
+					if ( is_array( $data ) ) {
+						$section_json = json_encode( $data );
+						$section_size_kb = round( strlen( $section_json ) / 1024, 2 );
+						error_log( 'MASE: Section "' . $section . '" size: ' . $section_size_kb . ' KB' );
+					}
 				}
 			} else {
+				error_log( 'MASE: Settings not sent as JSON string (fallback to array)' );
 				// Fallback: Settings sent as array (old format)
 				$input = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
 			}
 			
 			// Save settings.
+			error_log( 'MASE: Calling update_option...' );
 			$result = $this->settings->update_option( $input );
 
 			if ( $result ) {
-				// Invalidate cache on successful save.
+				error_log( 'MASE: Settings saved successfully' );
+				
+				// Invalidate both mode caches on settings save (Requirement 12.6).
+				// Settings changes may affect both light and dark modes.
+				$cache = new MASE_Cache();
+				$cache->invalidate_both_mode_caches();
+				
+				// Clear button CSS cache on settings save (Requirement 6.3, 7.6).
+				// Button settings changes require CSS regeneration.
+				$cache->clear_button_css_cache();
+				
+				// Also invalidate legacy cache key for backward compatibility.
 				$this->cache->invalidate( 'generated_css' );
+
+				// Invalidate login CSS cache on settings save (Requirement 5.3, 8.3).
+				// Login customization settings changes require CSS regeneration.
+				$cache->invalidate_login_css_cache();
+
+				// Warm cache for both modes (Requirement 12.7).
+				// Pre-generate CSS for faster subsequent loads.
+				$warm_results = $cache->warm_mode_caches( $this->generator, $input );
+				error_log( sprintf( 
+					'MASE: Cache warming completed - Light: %s, Dark: %s',
+					$warm_results['light'] ? 'success' : 'failed',
+					$warm_results['dark'] ? 'success' : 'failed'
+				) );
 
 				wp_send_json_success( array(
 					'message' => __( 'Settings saved successfully', 'mase' ),
 				) );
 			} else {
+				error_log( 'MASE: Failed to save settings (update_option returned false)' );
 				wp_send_json_error( array(
 					'message' => __( 'Failed to save settings', 'mase' ),
 				) );
@@ -497,7 +732,16 @@ class MASE_Admin {
 			);
 		}
 
-		// Clear cache (Requirement 17.2).
+		// Clear both mode caches (Requirement 12.6, 17.2).
+		// Palette changes affect both light and dark modes.
+		$cache = new MASE_Cache();
+		$cache->invalidate_both_mode_caches();
+		
+		// Clear button CSS cache (Requirement 6.3, 7.6).
+		// Palette changes may affect button colors.
+		$cache->clear_button_css_cache();
+		
+		// Also invalidate legacy cache key for backward compatibility.
 		$this->cache->invalidate( 'generated_css' );
 
 		// Return success response (Requirement 17.4, 17.5).
@@ -1090,19 +1334,15 @@ class MASE_Admin {
 
 		// Security: Check for upload errors (Requirement 22.2).
 		if ( $file['error'] !== UPLOAD_ERR_OK ) {
-			$error_messages = array(
-				UPLOAD_ERR_INI_SIZE   => __( 'File exceeds upload_max_filesize directive.', 'modern-admin-styler' ),
-				UPLOAD_ERR_FORM_SIZE  => __( 'File exceeds MAX_FILE_SIZE directive.', 'modern-admin-styler' ),
-				UPLOAD_ERR_PARTIAL    => __( 'File was only partially uploaded.', 'modern-admin-styler' ),
-				UPLOAD_ERR_NO_FILE    => __( 'No file was uploaded.', 'modern-admin-styler' ),
-				UPLOAD_ERR_NO_TMP_DIR => __( 'Missing temporary folder.', 'modern-admin-styler' ),
-				UPLOAD_ERR_CANT_WRITE => __( 'Failed to write file to disk.', 'modern-admin-styler' ),
-				UPLOAD_ERR_EXTENSION  => __( 'File upload stopped by extension.', 'modern-admin-styler' ),
-			);
+			// Use centralized error message helper (Requirement 6.1).
+			$error_message = $this->get_upload_error_message( $file['error'] );
 			
-			$error_message = isset( $error_messages[ $file['error'] ] ) 
-				? $error_messages[ $file['error'] ] 
-				: __( 'Unknown upload error.', 'modern-admin-styler' );
+			// Log upload error for debugging (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - Error code: %d, Message: %s',
+				$file['error'],
+				$error_message
+			) );
 			
 			wp_send_json_error( array(
 				'message' => $error_message,
@@ -1120,6 +1360,14 @@ class MASE_Admin {
 		
 		// Double-check MIME type from both server and WordPress.
 		if ( ! in_array( $file['type'], $allowed_types, true ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
+			// Log file type validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - Invalid file type. Server MIME: %s, WordPress MIME: %s, Filename: %s',
+				$file['type'],
+				$file_type['type'],
+				$file['name']
+			) );
+			
 			wp_send_json_error( array(
 				'message' => __( 'Only PNG, JPG, and SVG files are allowed.', 'modern-admin-styler' ),
 			), 400 );
@@ -1128,6 +1376,13 @@ class MASE_Admin {
 		// Security: Validate file extension matches MIME type (Requirement 22.2).
 		$allowed_extensions = array( 'png', 'jpg', 'jpeg', 'svg' );
 		if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_extensions, true ) ) {
+			// Log extension validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - Invalid extension. Extension: %s, Filename: %s',
+				$file_type['ext'],
+				$file['name']
+			) );
+			
 			wp_send_json_error( array(
 				'message' => __( 'Invalid file extension.', 'modern-admin-styler' ),
 			), 400 );
@@ -1136,6 +1391,15 @@ class MASE_Admin {
 		// Security: Validate file size (max 2MB) (Requirement 22.2).
 		$max_size = 2 * 1024 * 1024; // 2MB in bytes
 		if ( $file['size'] > $max_size ) {
+			// Log file size validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - File too large. Size: %d bytes (%.2f MB), Max: %d bytes (2 MB), Filename: %s',
+				$file['size'],
+				$file['size'] / 1024 / 1024,
+				$max_size,
+				$file['name']
+			) );
+			
 			wp_send_json_error( array(
 				'message' => __( 'File size must be less than 2MB.', 'modern-admin-styler' ),
 			), 400 );
@@ -1143,6 +1407,12 @@ class MASE_Admin {
 
 		// Security: Validate file is not empty (Requirement 22.2).
 		if ( $file['size'] === 0 ) {
+			// Log empty file failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - File is empty. Filename: %s',
+				$file['name']
+			) );
+			
 			wp_send_json_error( array(
 				'message' => __( 'File is empty.', 'modern-admin-styler' ),
 			), 400 );
@@ -1154,6 +1424,12 @@ class MASE_Admin {
 			$svg_content = $this->sanitize_svg( $svg_content );
 			
 			if ( $svg_content === false ) {
+				// Log SVG sanitization failure (Requirement 6.1).
+				error_log( sprintf(
+					'MASE: Menu logo upload failed - SVG sanitization failed. Filename: %s',
+					$file['name']
+				) );
+				
 				wp_send_json_error( array(
 					'message' => __( 'Invalid SVG file. Please upload a valid SVG.', 'modern-admin-styler' ),
 				) );
@@ -1181,6 +1457,13 @@ class MASE_Admin {
 		$uploaded_file = wp_handle_upload( $file, $upload_overrides );
 
 		if ( isset( $uploaded_file['error'] ) ) {
+			// Log wp_handle_upload failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Menu logo upload failed - wp_handle_upload error: %s, Filename: %s',
+				$uploaded_file['error'],
+				$file['name']
+			) );
+			
 			wp_send_json_error( array(
 				'message' => $uploaded_file['error'],
 			) );
@@ -1194,6 +1477,14 @@ class MASE_Admin {
 		// Clear cache to regenerate CSS with new logo.
 		$this->cache->clear_all_cache();
 
+		// Log successful upload (Requirement 6.1).
+		error_log( sprintf(
+			'MASE: Menu logo uploaded successfully. URL: %s, Size: %d bytes, Type: %s',
+			$uploaded_file['url'],
+			$file['size'],
+			$file['type']
+		) );
+
 		wp_send_json_success( array(
 			'message'  => __( 'Logo uploaded successfully.', 'modern-admin-styler' ),
 			'logo_url' => $uploaded_file['url'],
@@ -1201,34 +1492,881 @@ class MASE_Admin {
 	}
 
 	/**
+	 * Handle AJAX login logo upload request.
+	 * 
+	 * Processes file uploads for custom login page logos. Validates file type, size,
+	 * and content before storing. For SVG files, performs sanitization to remove
+	 * potentially malicious code (scripts, event handlers, external references).
+	 * 
+	 * Security Requirements (6.1, 6.2, 6.3, 6.4):
+	 * - Verify nonce for CSRF protection
+	 * - Check user capability (manage_options)
+	 * - Validate file type (PNG, JPG, SVG only)
+	 * - Validate file size (max 2MB)
+	 * - Validate MIME type matches extension
+	 * - Sanitize SVG content to remove malicious code
+	 * 
+	 * Functional Requirements (1.1, 1.2, 1.3):
+	 * - Upload file using wp_handle_upload()
+	 * - Store logo URL in login_customization settings
+	 * - Invalidate login CSS cache
+	 * - Return JSON success response with logo URL
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @global array $_FILES Contains uploaded file data.
+	 * 
+	 * @return void Sends JSON response and terminates execution.
+	 * 
+	 * @throws WP_Error On file upload failure (handled internally).
+	 * 
+	 * Security Notes:
+	 * - Requires 'manage_options' capability
+	 * - Validates nonce via check_ajax_referer()
+	 * - Sanitizes SVG files using sanitize_svg()
+	 * - Logs all upload attempts for security auditing
+	 * - Maximum file size: 2MB
+	 * - Allowed types: PNG, JPG, JPEG, SVG
+	 */
+	public function handle_ajax_upload_login_logo() {
+		// Security: Verify nonce for CSRF protection (Requirement 6.1).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 6.2).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to upload files.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Validation: Check if file was uploaded (Requirement 1.1).
+		if ( empty( $_FILES['logo_file'] ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'No file was uploaded.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		$file = $_FILES['logo_file'];
+
+		// Security: Check for upload errors (Requirement 6.1).
+		if ( $file['error'] !== UPLOAD_ERR_OK ) {
+			// Use centralized error message helper (Requirement 6.1).
+			$error_message = $this->get_upload_error_message( $file['error'] );
+			
+			// Log upload error for debugging (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - Error code: %d, Message: %s',
+				$file['error'],
+				$error_message
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $error_message,
+			), 400 );
+		}
+
+		// Security: Validate file type using WordPress function (Requirement 1.2, 6.3).
+		$allowed_types = array( 'image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml' );
+		$file_type = wp_check_filetype( $file['name'], array(
+			'png'  => 'image/png',
+			'jpg'  => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'svg'  => 'image/svg+xml',
+		) );
+		
+		// Double-check MIME type from both server and WordPress (Requirement 6.3).
+		if ( ! in_array( $file['type'], $allowed_types, true ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
+			// Log file type validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - Invalid file type. Server MIME: %s, WordPress MIME: %s, Filename: %s',
+				$file['type'],
+				$file_type['type'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Only PNG, JPG, and SVG files are allowed.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file extension matches MIME type (Requirement 6.3).
+		$allowed_extensions = array( 'png', 'jpg', 'jpeg', 'svg' );
+		if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_extensions, true ) ) {
+			// Log extension validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - Invalid extension. Extension: %s, Filename: %s',
+				$file_type['ext'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Invalid file extension.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file size (max 2MB) (Requirement 1.3, 6.3).
+		$max_size = 2 * 1024 * 1024; // 2MB in bytes
+		if ( $file['size'] > $max_size ) {
+			// Log file size validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - File too large. Size: %d bytes (%.2f MB), Max: %d bytes (2 MB), Filename: %s',
+				$file['size'],
+				$file['size'] / 1024 / 1024,
+				$max_size,
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File size must be less than 2MB.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file is not empty (Requirement 6.3).
+		if ( $file['size'] === 0 ) {
+			// Log empty file failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - File is empty. Filename: %s',
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File is empty.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Sanitize SVG content if SVG file (Requirement 6.4).
+		if ( $file['type'] === 'image/svg+xml' ) {
+			$svg_content = file_get_contents( $file['tmp_name'] );
+			$svg_content = $this->sanitize_svg( $svg_content );
+			
+			if ( $svg_content === false ) {
+				// Log SVG sanitization failure (Requirement 6.1).
+				error_log( sprintf(
+					'MASE: Login logo upload failed - SVG sanitization failed. Filename: %s',
+					$file['name']
+				) );
+				
+				wp_send_json_error( array(
+					'message' => __( 'Invalid SVG file. Please upload a valid SVG.', 'modern-admin-styler' ),
+				), 400 );
+			}
+			
+			// Write sanitized SVG back to temp file.
+			file_put_contents( $file['tmp_name'], $svg_content );
+		}
+
+		// Upload file using WordPress media handler (Requirement 1.1).
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$upload_overrides = array(
+			'test_form' => false,
+			'mimes'     => array(
+				'png'  => 'image/png',
+				'jpg'  => 'image/jpeg',
+				'jpeg' => 'image/jpeg',
+				'svg'  => 'image/svg+xml',
+			),
+		);
+
+		$uploaded_file = wp_handle_upload( $file, $upload_overrides );
+
+		if ( isset( $uploaded_file['error'] ) ) {
+			// Log wp_handle_upload failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login logo upload failed - wp_handle_upload error: %s, Filename: %s',
+				$uploaded_file['error'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $uploaded_file['error'],
+			), 500 );
+		}
+
+		// Store logo URL in login_customization settings (Requirement 1.1).
+		$settings = $this->settings->get_option();
+		
+		// Initialize login_customization section if it doesn't exist.
+		if ( ! isset( $settings['login_customization'] ) ) {
+			$settings['login_customization'] = array();
+		}
+		
+		$settings['login_customization']['logo_url'] = $uploaded_file['url'];
+		$this->settings->update_option( $settings );
+
+		// Invalidate login CSS cache (Requirement 1.1, 8.3).
+		// Use dedicated login CSS cache invalidation method.
+		$cache = new MASE_Cache();
+		$cache->invalidate_login_css_cache();
+
+		// Log successful upload (Requirement 6.1).
+		error_log( sprintf(
+			'MASE: Login logo uploaded successfully. URL: %s, Size: %d bytes, Type: %s',
+			$uploaded_file['url'],
+			$file['size'],
+			$file['type']
+		) );
+
+		// Return success response with logo URL (Requirement 1.1).
+		wp_send_json_success( array(
+			'message'  => __( 'Login logo uploaded successfully.', 'modern-admin-styler' ),
+			'logo_url' => $uploaded_file['url'],
+		) );
+	}
+
+	/**
+	 * Handle AJAX login background image upload request.
+	 * 
+	 * Processes file uploads for custom login page background images. Validates
+	 * file type and size before storing. SVG files are not allowed for backgrounds
+	 * to reduce security risk. Larger file size limit (5MB) compared to logos.
+	 * 
+	 * Security: Nonce verification, capability check, file validation.
+	 * Validation: File type (PNG, JPG only - no SVG), size (max 5MB).
+	 * 
+	 * Requirements 2.1, 2.2, 6.1, 6.2, 6.3:
+	 * - Verify nonce and user capabilities (CSRF protection)
+	 * - Validate file type (PNG, JPG only)
+	 * - Validate file size (max 5MB for backgrounds)
+	 * - Upload and store URL in settings
+	 * - Invalidate login CSS cache
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @global array $_FILES Contains uploaded file data.
+	 * 
+	 * @return void Sends JSON response and terminates execution.
+	 * 
+	 * @throws WP_Error On file upload failure (handled internally).
+	 * 
+	 * Security Notes:
+	 * - Requires 'manage_options' capability
+	 * - Validates nonce via check_ajax_referer()
+	 * - SVG files NOT allowed for backgrounds (security measure)
+	 * - Logs all upload attempts for security auditing
+	 * - Maximum file size: 5MB (larger than logo limit)
+	 * - Allowed types: PNG, JPG, JPEG only
+	 */
+	public function handle_ajax_upload_login_background() {
+		// Security: Verify nonce for CSRF protection (Requirement 6.1).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 6.2).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to upload files.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Validation: Check if file was uploaded (Requirement 2.1).
+		if ( empty( $_FILES['background_file'] ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'No file was uploaded.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		$file = $_FILES['background_file'];
+
+		// Security: Check for upload errors (Requirement 6.1).
+		if ( $file['error'] !== UPLOAD_ERR_OK ) {
+			// Use centralized error message helper (Requirement 6.1).
+			$error_message = $this->get_upload_error_message( $file['error'] );
+			
+			// Log upload error for debugging (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - Error code: %d, Message: %s',
+				$file['error'],
+				$error_message
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $error_message,
+			), 400 );
+		}
+
+		// Security: Validate file type using WordPress function (Requirement 2.2, 6.3).
+		// Note: Only PNG and JPG allowed for backgrounds - no SVG for security.
+		$allowed_types = array( 'image/png', 'image/jpeg', 'image/jpg' );
+		$file_type = wp_check_filetype( $file['name'], array(
+			'png'  => 'image/png',
+			'jpg'  => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+		) );
+		
+		// Double-check MIME type from both server and WordPress (Requirement 6.3).
+		if ( ! in_array( $file['type'], $allowed_types, true ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
+			// Log file type validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - Invalid file type. Server MIME: %s, WordPress MIME: %s, Filename: %s',
+				$file['type'],
+				$file_type['type'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Only PNG and JPG files are allowed for background images.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file extension matches MIME type (Requirement 6.3).
+		$allowed_extensions = array( 'png', 'jpg', 'jpeg' );
+		if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_extensions, true ) ) {
+			// Log extension validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - Invalid extension. Extension: %s, Filename: %s',
+				$file_type['ext'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Invalid file extension.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file size (max 5MB for backgrounds) (Requirement 2.2, 6.3).
+		$max_size = 5 * 1024 * 1024; // 5MB in bytes
+		if ( $file['size'] > $max_size ) {
+			// Log file size validation failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - File too large. Size: %d bytes (%.2f MB), Max: %d bytes (5 MB), Filename: %s',
+				$file['size'],
+				$file['size'] / 1024 / 1024,
+				$max_size,
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File size must be less than 5MB.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file is not empty (Requirement 6.3).
+		if ( $file['size'] === 0 ) {
+			// Log empty file failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - File is empty. Filename: %s',
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File is empty.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Upload file using WordPress media handler (Requirement 2.1).
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$upload_overrides = array(
+			'test_form' => false,
+			'mimes'     => array(
+				'png'  => 'image/png',
+				'jpg'  => 'image/jpeg',
+				'jpeg' => 'image/jpeg',
+			),
+		);
+
+		$uploaded_file = wp_handle_upload( $file, $upload_overrides );
+
+		if ( isset( $uploaded_file['error'] ) ) {
+			// Log wp_handle_upload failure (Requirement 6.1).
+			error_log( sprintf(
+				'MASE: Login background upload failed - wp_handle_upload error: %s, Filename: %s',
+				$uploaded_file['error'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $uploaded_file['error'],
+			), 500 );
+		}
+
+		// Store background image URL in login_customization settings (Requirement 2.1).
+		$settings = $this->settings->get_option();
+		
+		// Initialize login_customization section if it doesn't exist.
+		if ( ! isset( $settings['login_customization'] ) ) {
+			$settings['login_customization'] = array();
+		}
+		
+		$settings['login_customization']['background_image'] = $uploaded_file['url'];
+		$this->settings->update_option( $settings );
+
+		// Invalidate login CSS cache (Requirement 2.1, 8.3).
+		// Use dedicated login CSS cache invalidation method.
+		$cache = new MASE_Cache();
+		$cache->invalidate_login_css_cache();
+
+		// Log successful upload (Requirement 6.1).
+		error_log( sprintf(
+			'MASE: Login background uploaded successfully. URL: %s, Size: %d bytes, Type: %s',
+			$uploaded_file['url'],
+			$file['size'],
+			$file['type']
+		) );
+
+		// Return success response with background image URL (Requirement 2.1).
+		wp_send_json_success( array(
+			'message'         => __( 'Login background image uploaded successfully.', 'modern-admin-styler' ),
+			'background_url'  => $uploaded_file['url'],
+		) );
+	}
+
+	/**
+	 * Handle AJAX dark mode toggle request.
+	 * 
+	 * Requirements 2.1, 2.2, 4.1, 11.1:
+	 * - Verify nonce and user capabilities (CSRF protection)
+	 * - Validate mode input ('light' or 'dark')
+	 * - Save preference to WordPress user meta
+	 * - Update settings array with current mode
+	 * - Invalidate CSS cache after mode change
+	 * 
+	 * @since 1.3.0
+	 */
+	public function handle_ajax_toggle_dark_mode() {
+		try {
+			// Security: Verify nonce for CSRF protection (Requirement 2.2, 11.1).
+			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+				error_log( 'MASE: Dark mode toggle - Invalid nonce' );
+				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
+			}
+
+			// Security: Check user capability (Requirement 2.2, 11.1).
+			if ( ! current_user_can( 'manage_options' ) ) {
+				error_log( 'MASE: Dark mode toggle - Unauthorized access attempt by user ' . get_current_user_id() );
+				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'mase' ) ), 403 );
+			}
+
+			// Input validation: Get and sanitize mode (Requirement 2.1).
+			$mode = isset( $_POST['mode'] ) ? sanitize_text_field( $_POST['mode'] ) : '';
+
+			// Task 19: Enhanced input validation with detailed logging (Requirement 11.6)
+			if ( empty( $mode ) ) {
+				error_log( 'MASE: Dark mode toggle - Empty mode parameter' );
+				wp_send_json_error( array( 
+					'message' => __( 'Mode parameter is required', 'mase' ) 
+				), 400 );
+			}
+
+			// Validate mode value against whitelist (Requirement 2.1).
+			if ( ! in_array( $mode, array( 'light', 'dark' ), true ) ) {
+				error_log( 'MASE: Dark mode toggle - Invalid mode value: ' . $mode );
+				wp_send_json_error( array( 
+					'message' => __( 'Invalid mode. Must be "light" or "dark".', 'mase' ) 
+				), 400 );
+			}
+
+			// Task 19: Validate user ID (Requirement 11.3)
+			$user_id = get_current_user_id();
+			if ( ! $user_id || $user_id < 1 ) {
+				error_log( 'MASE: Dark mode toggle - Invalid user ID: ' . $user_id );
+				wp_send_json_error( array(
+					'message' => __( 'Invalid user session. Please refresh the page.', 'mase' ),
+				), 401 );
+			}
+
+			// Save preference to WordPress user meta (Requirement 4.1).
+			$meta_result = update_user_meta( $user_id, 'mase_dark_mode_preference', $mode );
+
+			// Task 19: Enhanced error handling for user meta (Requirement 11.4)
+			if ( false === $meta_result ) {
+				error_log( sprintf(
+					'MASE: Failed to update user meta for dark mode preference (user_id: %d, mode: %s)',
+					$user_id,
+					$mode
+				) );
+				// Note: update_user_meta returns false if value is unchanged, which is not an error
+				// Only log, don't fail the request
+			}
+
+			// Update settings array with current mode (Requirement 2.1).
+			$settings = $this->settings->get_option();
+			
+			// Task 19: Validate settings retrieval (Requirement 11.3)
+			if ( ! is_array( $settings ) ) {
+				error_log( 'MASE: Dark mode toggle - Failed to retrieve settings, using defaults' );
+				$settings = array();
+			}
+			
+			// Initialize dark_light_toggle section if it doesn't exist.
+			if ( ! isset( $settings['dark_light_toggle'] ) ) {
+				$settings['dark_light_toggle'] = array();
+			}
+			
+			$settings['dark_light_toggle']['current_mode'] = $mode;
+			
+			// Task 19: Wrap settings update in try-catch (Requirement 11.5)
+			try {
+				$settings_result = $this->settings->update_option( $settings );
+			} catch ( Exception $settings_error ) {
+				error_log( 'MASE: Dark mode toggle - Settings update exception: ' . $settings_error->getMessage() );
+				wp_send_json_error( array(
+					'message' => __( 'Failed to save dark mode preference to settings', 'mase' ),
+				), 500 );
+			}
+
+			// Check if settings update failed.
+			if ( false === $settings_result ) {
+				error_log( sprintf(
+					'MASE: Failed to update settings for dark mode (mode: %s)',
+					$mode
+				) );
+				wp_send_json_error( array(
+					'message' => __( 'Failed to save dark mode preference to settings', 'mase' ),
+				), 500 );
+			}
+
+			// Task 19: Wrap cache invalidation in try-catch (Requirement 11.5)
+			try {
+				// Invalidate only the active mode cache (Requirement 12.5).
+				// This leaves the other mode's cache intact for faster switching.
+				$cache = new MASE_Cache();
+				$cache->invalidate_mode_cache( $mode );
+			} catch ( Exception $cache_error ) {
+				// Task 19: Cache invalidation failure shouldn't block the response (Requirement 11.7)
+				error_log( 'MASE: Dark mode toggle - Cache invalidation failed: ' . $cache_error->getMessage() );
+				// Continue anyway - cache will be regenerated on next page load
+			}
+
+			// Task 19: Log successful toggle for debugging (Requirement 11.6)
+			error_log( sprintf(
+				'MASE: Dark mode toggled successfully (user_id: %d, mode: %s)',
+				$user_id,
+				$mode
+			) );
+
+			// Return success response (Requirement 2.1).
+			wp_send_json_success( array(
+				'message' => sprintf(
+					/* translators: %s: mode name (Light or Dark) */
+					__( '%s mode activated successfully', 'mase' ),
+					ucfirst( $mode )
+				),
+				'mode' => $mode,
+			) );
+
+		} catch ( Exception $e ) {
+			// Task 19: Enhanced error handling with detailed logging (Requirements 11.1, 11.6, 11.7)
+			error_log( sprintf(
+				'MASE Error (toggle_dark_mode): %s | File: %s | Line: %d | Trace: %s',
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine(),
+				$e->getTraceAsString()
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'An error occurred while toggling dark mode. Please try again.', 'mase' ),
+			), 500 );
+		}
+	}
+
+	/**
+	 * Inject custom CSS into login page.
+	 * 
+	 * Hooks into login_enqueue_scripts to inject custom login page styles.
+	 * Uses caching for performance - generates CSS only on cache miss.
+	 * Implements graceful fallbacks for error conditions.
+	 * 
+	 * This method is called automatically by WordPress on the login page via the
+	 * login_enqueue_scripts action hook. It retrieves login customization settings,
+	 * generates CSS (or retrieves from cache), and outputs it inline in the page head.
+	 * 
+	 * Requirements 8.1, 8.2, 8.3:
+	 * - Hook into login_enqueue_scripts action
+	 * - Generate CSS from settings using CSS Generator
+	 * - Cache generated CSS for 1 hour
+	 * - Output CSS in <style> tag with id 'mase-login-css'
+	 * - Fall back gracefully on errors (Requirement 8.2)
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @return void Outputs CSS directly to page head.
+	 * 
+	 * Performance Notes:
+	 * - CSS is cached for 1 hour (3600 seconds)
+	 * - Cache key: 'login_css'
+	 * - Cache invalidated on settings save
+	 * - Generation time target: < 50ms
+	 * 
+	 * Error Handling:
+	 * - Falls back to defaults if settings retrieval fails
+	 * - Continues without caching if cache write fails
+	 * - Logs all errors for debugging
+	 * - Never blocks login page rendering
+	 */
+	public function inject_login_css() {
+		try {
+			// Get settings from settings system (Requirement 8.1).
+			$settings = $this->settings->get_option();
+			
+			// Graceful fallback: Use defaults if settings retrieval fails (Requirement 8.2).
+			if ( ! is_array( $settings ) ) {
+				error_log( 'MASE: Login CSS injection - Failed to retrieve settings, using defaults' );
+				$settings = $this->settings->get_defaults();
+			}
+			
+			// Check if login customization is enabled (Requirement 8.1).
+			// Skip if no login customization settings exist.
+			if ( empty( $settings['login_customization'] ) ) {
+				return;
+			}
+			
+			// Try to get cached CSS with key 'login_css' (Requirement 8.3).
+			$cache_key = 'login_css';
+			$css = false;
+			
+			// Graceful fallback: Continue without cache if cache retrieval fails (Requirement 8.2).
+			try {
+				$css = $this->cache->get( $cache_key );
+			} catch ( Exception $cache_error ) {
+				error_log( sprintf(
+					'MASE: Login CSS injection - Cache retrieval failed: %s. Generating CSS without cache.',
+					$cache_error->getMessage()
+				) );
+			}
+			
+			// If cache miss, generate CSS (Requirement 8.2).
+			if ( false === $css ) {
+				// Generate CSS using CSS Generator (Requirement 8.2).
+				// CSS Generator has its own error handling and returns empty string on failure.
+				$css = $this->generator->generate_login_styles( $settings );
+				
+				// Graceful fallback: Skip caching on cache write failures (Requirement 8.2).
+				try {
+					// Cache generated CSS for 1 hour (3600 seconds) (Requirement 8.3).
+					$this->cache->set( $cache_key, $css, 3600 );
+				} catch ( Exception $cache_error ) {
+					error_log( sprintf(
+						'MASE: Login CSS injection - Cache write failed: %s. CSS will not be cached.',
+						$cache_error->getMessage()
+					) );
+					// Continue anyway - CSS is still valid, just not cached.
+				}
+			}
+			
+			// Output CSS in <style> tag with id 'mase-login-css' (Requirement 8.1).
+			// Only output if we have valid CSS.
+			if ( ! empty( $css ) && is_string( $css ) ) {
+				echo '<style id="mase-login-css" type="text/css">' . "\n";
+				echo $css . "\n";
+				echo '</style>' . "\n";
+			} else {
+				// Log if CSS generation resulted in empty output.
+				error_log( 'MASE: Login CSS injection - No CSS generated or CSS is invalid' );
+			}
+			
+		} catch ( Exception $e ) {
+			// Graceful fallback: Log error but don't break login page (Requirement 8.2).
+			error_log( sprintf(
+				'MASE: Login CSS injection failed: %s. Login page will use default WordPress styles.',
+				$e->getMessage()
+			) );
+			// Don't output anything - let WordPress default styles handle the login page.
+		}
+	}
+
+	/**
+	 * Filter login logo URL.
+	 * 
+	 * Filters the login logo link URL to use custom URL if configured.
+	 * Falls back to default WordPress.org URL if no custom URL is set.
+	 * 
+	 * This method hooks into the 'login_headerurl' filter to customize where
+	 * the login page logo links to. By default, WordPress links to wordpress.org.
+	 * This allows administrators to link to their own site or any custom URL.
+	 * 
+	 * Requirement 1.6: Apply custom logo link URL.
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @param string $url Default login logo URL (wordpress.org).
+	 * @return string Custom logo URL if configured, otherwise default URL.
+	 * 
+	 * @see filter_login_logo_title() Related method that updates the title attribute.
+	 */
+	public function filter_login_logo_url( $url ) {
+		// Get custom logo link URL from settings (Requirement 1.6).
+		$settings = $this->settings->get_option();
+		$custom_url = isset( $settings['login_customization']['logo_link_url'] ) 
+			? $settings['login_customization']['logo_link_url'] 
+			: '';
+		
+		// Return custom URL if set, otherwise return default WordPress.org URL (Requirement 1.6).
+		return ! empty( $custom_url ) ? esc_url( $custom_url ) : $url;
+	}
+
+	/**
+	 * Filter login logo title attribute.
+	 * 
+	 * Filters the login logo title attribute to use site name if custom URL is configured.
+	 * Falls back to default "Powered by WordPress" if no custom URL is set.
+	 * 
+	 * This method hooks into the 'login_headertext' filter to customize the title
+	 * attribute (tooltip) of the login page logo. When a custom logo link URL is set,
+	 * it makes sense to show the site name instead of "Powered by WordPress".
+	 * 
+	 * Requirement 1.6: Update logo title when custom URL is set.
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @param string $title Default login logo title ("Powered by WordPress").
+	 * @return string Site name if custom URL configured, otherwise default title.
+	 * 
+	 * @see filter_login_logo_url() Related method that updates the href attribute.
+	 */
+	public function filter_login_logo_title( $title ) {
+		// Get custom logo link URL from settings (Requirement 1.6).
+		$settings = $this->settings->get_option();
+		$custom_url = isset( $settings['login_customization']['logo_link_url'] ) 
+			? $settings['login_customization']['logo_link_url'] 
+			: '';
+		
+		// If custom logo link URL is set, return site name (Requirement 1.6).
+		// Otherwise return default "Powered by WordPress".
+		if ( ! empty( $custom_url ) ) {
+			return get_bloginfo( 'name' );
+		}
+		
+		return $title;
+	}
+
+	/**
+	 * Inject custom footer content into login page.
+	 * 
+	 * Outputs custom footer text and optionally hides WordPress branding.
+	 * All output is properly sanitized for security.
+	 * 
+	 * This method hooks into the 'login_footer' action to add custom branding
+	 * elements to the login page footer. It can display custom HTML/text and
+	 * optionally hide the default WordPress "Back to..." and "Lost your password?"
+	 * links via CSS.
+	 * 
+	 * Requirements 4.1, 4.2, 4.3:
+	 * - Output custom footer text if configured
+	 * - Sanitize footer text with wp_kses_post()
+	 * - Hide WordPress branding if enabled
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @return void Outputs HTML directly to page footer.
+	 * 
+	 * Security Notes:
+	 * - Footer text sanitized with wp_kses_post()
+	 * - Allows safe HTML tags (p, a, strong, em, etc.)
+	 * - Strips potentially dangerous tags and attributes
+	 * - CSS injection uses inline styles (no user input)
+	 */
+	public function inject_login_footer() {
+		// Get footer text from settings (Requirement 4.1).
+		$settings = $this->settings->get_option();
+		$footer_text = isset( $settings['login_customization']['footer_text'] ) 
+			? $settings['login_customization']['footer_text'] 
+			: '';
+		
+		// If footer text exists, output in div with class 'mase-login-footer' (Requirement 4.1).
+		// Sanitize output with wp_kses_post() (Requirement 4.3).
+		if ( ! empty( $footer_text ) ) {
+			echo '<div class="mase-login-footer">' . wp_kses_post( $footer_text ) . '</div>' . "\n";
+		}
+		
+		// If hide_wp_branding enabled, output CSS to hide #backtoblog and #nav (Requirement 4.2).
+		$hide_branding = isset( $settings['login_customization']['hide_wp_branding'] ) 
+			? $settings['login_customization']['hide_wp_branding'] 
+			: false;
+		
+		if ( ! empty( $hide_branding ) ) {
+			echo '<style>#backtoblog, #nav { display: none !important; }</style>' . "\n";
+		}
+	}
+
+	/**
+	 * Get user-friendly error message for PHP upload error codes.
+	 * 
+	 * Maps PHP upload error constants to translated, user-friendly messages.
+	 * Requirement 6.1: Provide clear error messages for file upload failures.
+	 * 
+	 * @param int $error_code PHP upload error code (UPLOAD_ERR_* constants).
+	 * @return string Translated error message.
+	 * @since 1.3.0
+	 */
+	private function get_upload_error_message( $error_code ) {
+		// Map PHP upload error codes to user-friendly messages (Requirement 6.1).
+		$error_messages = array(
+			UPLOAD_ERR_INI_SIZE   => __( 'File exceeds the maximum upload size configured on the server (upload_max_filesize).', 'modern-admin-styler' ),
+			UPLOAD_ERR_FORM_SIZE  => __( 'File exceeds the maximum file size allowed by the form (MAX_FILE_SIZE).', 'modern-admin-styler' ),
+			UPLOAD_ERR_PARTIAL    => __( 'File was only partially uploaded. Please try again.', 'modern-admin-styler' ),
+			UPLOAD_ERR_NO_FILE    => __( 'No file was uploaded. Please select a file and try again.', 'modern-admin-styler' ),
+			UPLOAD_ERR_NO_TMP_DIR => __( 'Missing temporary folder on server. Please contact your administrator.', 'modern-admin-styler' ),
+			UPLOAD_ERR_CANT_WRITE => __( 'Failed to write file to disk. Please check server permissions.', 'modern-admin-styler' ),
+			UPLOAD_ERR_EXTENSION  => __( 'File upload was stopped by a PHP extension. Please contact your administrator.', 'modern-admin-styler' ),
+		);
+		
+		// Return specific error message if code exists, otherwise return generic message.
+		return isset( $error_messages[ $error_code ] ) 
+			? $error_messages[ $error_code ] 
+			: __( 'Unknown upload error occurred. Please try again.', 'modern-admin-styler' );
+	}
+
+	/**
 	 * Sanitize SVG content to remove malicious code.
 	 * 
-	 * Requirement 22.2: Comprehensive SVG sanitization.
-	 * Removes dangerous tags, attributes, and protocols that could execute scripts.
+	 * Requirements 6.4, 6.5: Comprehensive SVG sanitization using DOMDocument.
+	 * Loads SVG as XML, removes dangerous elements and attributes, returns sanitized XML.
 	 *
 	 * @param string $svg_content SVG file content.
 	 * @return string|false Sanitized SVG content or false on failure.
-	 * @since 1.2.0
+	 * @since 1.3.0
 	 */
 	private function sanitize_svg( $svg_content ) {
-		// Security: Basic SVG validation (Requirement 22.2).
+		// Security: Basic SVG validation.
 		if ( empty( $svg_content ) || strpos( $svg_content, '<svg' ) === false ) {
+			error_log( 'MASE: SVG sanitization failed - empty content or missing SVG tag' );
 			return false;
 		}
 
 		// Security: Check file size limit (prevent DoS).
 		if ( strlen( $svg_content ) > 1024 * 1024 ) { // 1MB text limit
+			error_log( 'MASE: SVG sanitization failed - file size exceeds 1MB limit' );
 			return false;
 		}
 
-		// Security: Remove XML declarations and DOCTYPE (can contain entities).
-		$svg_content = preg_replace( '/<\?xml[^>]*\?>/i', '', $svg_content );
-		$svg_content = preg_replace( '/<!DOCTYPE[^>]*>/i', '', $svg_content );
-		$svg_content = preg_replace( '/<!ENTITY[^>]*>/i', '', $svg_content );
+		// Load SVG content as XML using DOMDocument (Requirement 6.4).
+		$dom = new DOMDocument();
+		$dom->preserveWhiteSpace = false;
+		$dom->formatOutput = false;
+		
+		// Suppress warnings for malformed XML and load with security flags.
+		libxml_use_internal_errors( true );
+		$loaded = $dom->loadXML( $svg_content, LIBXML_NOENT | LIBXML_NONET | LIBXML_NOCDATA );
+		libxml_clear_errors();
+		
+		if ( ! $loaded ) {
+			error_log( 'MASE: SVG sanitization failed - invalid XML structure' );
+			return false;
+		}
 
-		// Security: Remove potentially dangerous elements (Requirement 22.2).
+		// Remove all <script> elements (Requirement 6.4).
+		$scripts = $dom->getElementsByTagName( 'script' );
+		while ( $scripts->length > 0 ) {
+			$script = $scripts->item( 0 );
+			if ( $script->parentNode ) {
+				$script->parentNode->removeChild( $script );
+			}
+		}
+
+		// Remove other potentially dangerous elements.
 		$dangerous_tags = array(
-			'script',
 			'embed',
 			'object',
 			'iframe',
@@ -1244,83 +2382,944 @@ class MASE_Admin {
 			'set',
 		);
 
-		foreach ( $dangerous_tags as $tag ) {
-			// Remove opening and closing tags.
-			$svg_content = preg_replace( '/<' . $tag . '[^>]*>.*?<\/' . $tag . '>/is', '', $svg_content );
-			// Remove self-closing tags.
-			$svg_content = preg_replace( '/<' . $tag . '[^>]*\/>/is', '', $svg_content );
+		foreach ( $dangerous_tags as $tag_name ) {
+			$elements = $dom->getElementsByTagName( $tag_name );
+			while ( $elements->length > 0 ) {
+				$element = $elements->item( 0 );
+				if ( $element->parentNode ) {
+					$element->parentNode->removeChild( $element );
+				}
+			}
 		}
 
-		// Security: Remove dangerous event handler attributes (Requirement 22.2).
-		$dangerous_attrs = array(
-			'onload',
-			'onerror',
-			'onclick',
-			'onmouseover',
-			'onmouseout',
-			'onmousemove',
-			'onmouseenter',
-			'onmouseleave',
-			'onmousedown',
-			'onmouseup',
-			'onfocus',
-			'onblur',
-			'onchange',
-			'onsubmit',
-			'onkeydown',
-			'onkeyup',
-			'onkeypress',
-			'ondblclick',
-			'oncontextmenu',
-			'oninput',
-			'onselect',
-			'onscroll',
-			'onwheel',
-			'oncopy',
-			'oncut',
-			'onpaste',
-			'onabort',
-			'oncanplay',
-			'oncanplaythrough',
-			'ondrag',
-			'ondragend',
-			'ondragenter',
-			'ondragleave',
-			'ondragover',
-			'ondragstart',
-			'ondrop',
-		);
-
-		foreach ( $dangerous_attrs as $attr ) {
-			// Remove with double quotes.
-			$svg_content = preg_replace( '/' . $attr . '="[^"]*"/i', '', $svg_content );
-			// Remove with single quotes.
-			$svg_content = preg_replace( '/' . $attr . "='[^']*'/i", '', $svg_content );
-			// Remove without quotes.
-			$svg_content = preg_replace( '/' . $attr . '=[^\s>]*/i', '', $svg_content );
+		// Remove event handler attributes (onclick, onload, etc.) (Requirement 6.4).
+		$xpath = new DOMXPath( $dom );
+		
+		// Find all attributes that start with "on" (event handlers).
+		$nodes = $xpath->query( '//@*[starts-with(name(), "on")]' );
+		foreach ( $nodes as $node ) {
+			$node->ownerElement->removeAttribute( $node->nodeName );
 		}
 
-		// Security: Remove dangerous protocols (Requirement 22.2).
-		$dangerous_protocols = array(
-			'javascript:',
-			'data:text/html',
-			'vbscript:',
-			'file:',
-			'about:',
-		);
-
-		foreach ( $dangerous_protocols as $protocol ) {
-			$svg_content = preg_replace( '/' . preg_quote( $protocol, '/' ) . '/i', '', $svg_content );
+		// Remove processing instructions and external entity references (Requirement 6.4).
+		$processing_instructions = $xpath->query( '//processing-instruction()' );
+		foreach ( $processing_instructions as $pi ) {
+			if ( $pi->parentNode ) {
+				$pi->parentNode->removeChild( $pi );
+			}
 		}
 
-		// Security: Remove CDATA sections (can hide malicious code).
-		$svg_content = preg_replace( '/<!\[CDATA\[.*?\]\]>/is', '', $svg_content );
+		// Remove dangerous href/xlink:href attributes with javascript: or data: protocols.
+		$dangerous_protocols = array( 'javascript:', 'data:', 'vbscript:', 'file:', 'about:' );
+		$href_nodes = $xpath->query( '//@href | //@xlink:href' );
+		
+		foreach ( $href_nodes as $href_node ) {
+			$href_value = $href_node->nodeValue;
+			foreach ( $dangerous_protocols as $protocol ) {
+				if ( stripos( $href_value, $protocol ) === 0 ) {
+					$href_node->ownerElement->removeAttribute( $href_node->nodeName );
+					break;
+				}
+			}
+		}
 
-		// Security: Validate result still contains SVG tag.
-		if ( strpos( $svg_content, '<svg' ) === false ) {
+		// Return sanitized XML string (Requirement 6.4).
+		$sanitized = $dom->saveXML();
+		
+		// Validate result still contains SVG tag.
+		if ( empty( $sanitized ) || strpos( $sanitized, '<svg' ) === false ) {
+			error_log( 'MASE: SVG sanitization failed - result missing SVG tag' );
 			return false;
 		}
 
-		return $svg_content;
+		return $sanitized;
+	}
+
+	/**
+	 * Handle AJAX background image upload request.
+	 * 
+	 * Processes file uploads for custom background images across admin areas.
+	 * Validates file type, size, and MIME type before storing. Creates WordPress
+	 * attachment and generates metadata. Optimizes images larger than 1920px width.
+	 * 
+	 * Security Requirements (Task 3):
+	 * - Verify nonce for CSRF protection (Requirement 12.1)
+	 * - Check user capability (manage_options) (Requirement 12.1)
+	 * - Validate file type (JPG, PNG, WebP, SVG) (Requirement 1.1, 12.2)
+	 * - Validate file size (max 5MB) (Requirement 1.1, 12.2)
+	 * - Verify MIME type matches extension to prevent spoofing (Requirement 12.2)
+	 * - Sanitize SVG content to remove malicious code (Requirement 12.2)
+	 * 
+	 * Functional Requirements (Task 3):
+	 * - Handle upload using wp_handle_upload() (Requirement 8.1)
+	 * - Create WordPress attachment with wp_insert_attachment() (Requirement 8.2)
+	 * - Generate attachment metadata with wp_generate_attachment_metadata() (Requirement 8.3)
+	 * - Optimize images wider than 1920px (Requirement 1.2)
+	 * - Return attachment ID, URL, and thumbnail URL in JSON response (Requirement 8.3)
+	 * 
+	 * @since 1.4.0
+	 * @access public
+	 * 
+	 * @global array $_FILES Contains uploaded file data.
+	 * 
+	 * @return void Sends JSON response and terminates execution.
+	 * 
+	 * @throws WP_Error On file upload failure (handled internally).
+	 * 
+	 * Security Notes:
+	 * - Requires 'manage_options' capability
+	 * - Validates nonce via check_ajax_referer()
+	 * - Sanitizes SVG files using sanitize_svg()
+	 * - Logs all upload attempts for security auditing
+	 * - Maximum file size: 5MB
+	 * - Allowed types: JPG, PNG, WebP, SVG
+	 */
+	public function handle_ajax_upload_background_image() {
+		// Security: Verify nonce for CSRF protection (Requirement 12.1).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 12.1).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to upload files.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Validation: Check if file was uploaded (Requirement 1.1).
+		if ( empty( $_FILES['file'] ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'No file was uploaded.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		$file = $_FILES['file'];
+
+		// Security: Check for upload errors (Requirement 12.2).
+		if ( $file['error'] !== UPLOAD_ERR_OK ) {
+			// Use centralized error message helper.
+			$error_message = $this->get_upload_error_message( $file['error'] );
+			
+			// Log upload error for debugging.
+			error_log( sprintf(
+				'MASE: Background image upload failed - Error code: %d, Message: %s',
+				$file['error'],
+				$error_message
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $error_message,
+			), 400 );
+		}
+
+		// Security: Validate file type using WordPress function (Requirement 1.1, 12.2).
+		$allowed_types = array( 'image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml' );
+		$file_type = wp_check_filetype( $file['name'], array(
+			'png'  => 'image/png',
+			'jpg'  => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'webp' => 'image/webp',
+			'svg'  => 'image/svg+xml',
+		) );
+		
+		// Double-check MIME type from both server and WordPress (Requirement 12.2).
+		if ( ! in_array( $file['type'], $allowed_types, true ) || ! in_array( $file_type['type'], $allowed_types, true ) ) {
+			// Log file type validation failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - Invalid file type. Server MIME: %s, WordPress MIME: %s, Filename: %s',
+				$file['type'],
+				$file_type['type'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Only JPG, PNG, WebP, and SVG files are allowed.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file extension matches MIME type (Requirement 12.2).
+		$allowed_extensions = array( 'png', 'jpg', 'jpeg', 'webp', 'svg' );
+		if ( ! in_array( strtolower( $file_type['ext'] ), $allowed_extensions, true ) ) {
+			// Log extension validation failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - Invalid extension. Extension: %s, Filename: %s',
+				$file_type['ext'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Invalid file extension.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file size (max 5MB) (Requirement 1.1, 12.2).
+		$max_size = 5 * 1024 * 1024; // 5MB in bytes
+		if ( $file['size'] > $max_size ) {
+			// Log file size validation failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - File too large. Size: %d bytes (%.2f MB), Max: %d bytes (5 MB), Filename: %s',
+				$file['size'],
+				$file['size'] / 1024 / 1024,
+				$max_size,
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File size must be less than 5MB.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Security: Validate file is not empty (Requirement 12.2).
+		if ( $file['size'] === 0 ) {
+			// Log empty file failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - File is empty. Filename: %s',
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'File is empty.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Sanitize SVG content if SVG file (Requirement 12.2).
+		if ( $file['type'] === 'image/svg+xml' ) {
+			$svg_content = file_get_contents( $file['tmp_name'] );
+			$svg_content = $this->sanitize_svg( $svg_content );
+			
+			if ( $svg_content === false ) {
+				// Log SVG sanitization failure.
+				error_log( sprintf(
+					'MASE: Background image upload failed - SVG sanitization failed. Filename: %s',
+					$file['name']
+				) );
+				
+				wp_send_json_error( array(
+					'message' => __( 'Invalid SVG file. Please upload a valid SVG.', 'modern-admin-styler' ),
+				), 400 );
+			}
+			
+			// Write sanitized SVG back to temp file.
+			file_put_contents( $file['tmp_name'], $svg_content );
+		}
+
+		// Upload file using WordPress media handler (Requirement 8.1).
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+
+		$upload_overrides = array(
+			'test_form' => false,
+			'mimes'     => array(
+				'png'  => 'image/png',
+				'jpg'  => 'image/jpeg',
+				'jpeg' => 'image/jpeg',
+				'webp' => 'image/webp',
+				'svg'  => 'image/svg+xml',
+			),
+		);
+
+		$uploaded_file = wp_handle_upload( $file, $upload_overrides );
+
+		if ( isset( $uploaded_file['error'] ) ) {
+			// Log wp_handle_upload failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - wp_handle_upload error: %s, Filename: %s',
+				$uploaded_file['error'],
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => $uploaded_file['error'],
+			), 500 );
+		}
+
+		// Create WordPress attachment (Requirement 8.2).
+		$attachment_data = array(
+			'post_mime_type' => $uploaded_file['type'],
+			'post_title'     => sanitize_file_name( pathinfo( $file['name'], PATHINFO_FILENAME ) ),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+		);
+
+		$attachment_id = wp_insert_attachment( $attachment_data, $uploaded_file['file'] );
+
+		if ( is_wp_error( $attachment_id ) ) {
+			// Log attachment creation failure.
+			error_log( sprintf(
+				'MASE: Background image upload failed - wp_insert_attachment error: %s, Filename: %s',
+				$attachment_id->get_error_message(),
+				$file['name']
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Failed to create attachment.', 'modern-admin-styler' ),
+			), 500 );
+		}
+
+		// Generate attachment metadata (Requirement 8.3).
+		$attachment_metadata = wp_generate_attachment_metadata( $attachment_id, $uploaded_file['file'] );
+		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
+		// Optimize image if needed (Requirement 1.2).
+		// Only optimize non-SVG images.
+		if ( $file['type'] !== 'image/svg+xml' ) {
+			$this->optimize_background_image( $attachment_id );
+		}
+
+		// Get attachment URL and thumbnail (Requirement 8.3).
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+		$thumbnail_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
+
+		// Log successful upload.
+		error_log( sprintf(
+			'MASE: Background image uploaded successfully. ID: %d, URL: %s, Size: %d bytes, Type: %s',
+			$attachment_id,
+			$attachment_url,
+			$file['size'],
+			$file['type']
+		) );
+
+		// Return success response with attachment data (Requirement 8.3).
+		wp_send_json_success( array(
+			'message'       => __( 'Background image uploaded successfully.', 'modern-admin-styler' ),
+			'attachment_id' => $attachment_id,
+			'url'           => $attachment_url,
+			'thumbnail'     => $thumbnail_url,
+		) );
+	}
+
+	/**
+	 * Optimize background image by resizing if width exceeds 1920px.
+	 * 
+	 * Maintains aspect ratio during resize and regenerates attachment metadata.
+	 * Only processes raster images (JPG, PNG, WebP), skips SVG files.
+	 * 
+	 * Requirement 1.2: Automatically resize images wider than 1920px.
+	 * Requirement 7.1: Optimize images for performance.
+	 * 
+	 * @since 1.4.0
+	 * @access private
+	 * 
+	 * @param int $attachment_id WordPress attachment ID.
+	 * @return bool True on success, false on failure.
+	 */
+	private function optimize_background_image( $attachment_id ) {
+		// Get attachment file path.
+		$file_path = get_attached_file( $attachment_id );
+		
+		if ( ! $file_path || ! file_exists( $file_path ) ) {
+			error_log( sprintf(
+				'MASE: Background image optimization failed - File not found. Attachment ID: %d',
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Get image dimensions.
+		$image_size = getimagesize( $file_path );
+		
+		if ( ! $image_size ) {
+			error_log( sprintf(
+				'MASE: Background image optimization failed - Could not get image size. Attachment ID: %d',
+				$attachment_id
+			) );
+			return false;
+		}
+
+		$width = $image_size[0];
+		$height = $image_size[1];
+
+		// Only resize if width exceeds 1920px (Requirement 1.2).
+		if ( $width <= 1920 ) {
+			// No optimization needed.
+			return true;
+		}
+
+		// Get image editor.
+		$editor = wp_get_image_editor( $file_path );
+		
+		if ( is_wp_error( $editor ) ) {
+			error_log( sprintf(
+				'MASE: Background image optimization failed - Could not get image editor: %s. Attachment ID: %d',
+				$editor->get_error_message(),
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Resize to 1920px width, maintaining aspect ratio (Requirement 1.2).
+		$resize_result = $editor->resize( 1920, null, false );
+		
+		if ( is_wp_error( $resize_result ) ) {
+			error_log( sprintf(
+				'MASE: Background image optimization failed - Resize error: %s. Attachment ID: %d',
+				$resize_result->get_error_message(),
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Save resized image.
+		$save_result = $editor->save( $file_path );
+		
+		if ( is_wp_error( $save_result ) ) {
+			error_log( sprintf(
+				'MASE: Background image optimization failed - Save error: %s. Attachment ID: %d',
+				$save_result->get_error_message(),
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Regenerate attachment metadata (Requirement 1.2).
+		$metadata = wp_generate_attachment_metadata( $attachment_id, $file_path );
+		wp_update_attachment_metadata( $attachment_id, $metadata );
+
+		// Log successful optimization.
+		error_log( sprintf(
+			'MASE: Background image optimized successfully. Attachment ID: %d, Original: %dx%d, Optimized: 1920x%d',
+			$attachment_id,
+			$width,
+			$height,
+			round( 1920 * $height / $width )
+		) );
+
+		return true;
+	}
+
+	/**
+	 * Handle AJAX media library selection for background images.
+	 * 
+	 * Processes selection of existing images from WordPress media library for use
+	 * as background images. Validates attachment exists and is an image type before
+	 * returning attachment data.
+	 * 
+	 * Security Requirements (8.1, 8.2, 12.1, 12.3):
+	 * - Verify nonce for CSRF protection
+	 * - Check user capability (manage_options)
+	 * - Validate attachment ID exists
+	 * - Validate attachment is an image type
+	 * 
+	 * Functional Requirements (8.1, 8.2, 8.3):
+	 * - Accept attachment_id parameter
+	 * - Retrieve attachment URL using wp_get_attachment_url()
+	 * - Retrieve thumbnail URL using wp_get_attachment_image_url()
+	 * - Return JSON success response with attachment data
+	 * 
+	 * @since 1.4.0
+	 * @access public
+	 * 
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 * 
+	 * @return void Sends JSON response and exits.
+	 * 
+	 * Security Notes:
+	 * - Requires 'manage_options' capability
+	 * - Validates nonce via check_ajax_referer()
+	 * - Validates attachment exists in database
+	 * - Validates attachment is image MIME type
+	 * - Logs all selection attempts for auditing
+	 */
+	public function handle_ajax_select_background_image() {
+		// Security: Verify nonce for CSRF protection (Requirement 12.3).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 12.3).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to select images.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Input validation: Get and sanitize attachment ID (Requirement 8.1).
+		$attachment_id = isset( $_POST['attachment_id'] ) ? absint( $_POST['attachment_id'] ) : 0;
+
+		// Validate attachment ID is provided (Requirement 8.1).
+		if ( $attachment_id === 0 ) {
+			error_log( 'MASE: Background image selection failed - No attachment ID provided' );
+			
+			wp_send_json_error( array(
+				'message' => __( 'No attachment ID provided.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Validate attachment exists (Requirement 8.2).
+		$attachment_post = get_post( $attachment_id );
+		
+		if ( ! $attachment_post || $attachment_post->post_type !== 'attachment' ) {
+			error_log( sprintf(
+				'MASE: Background image selection failed - Attachment not found. ID: %d',
+				$attachment_id
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Attachment not found.', 'modern-admin-styler' ),
+			), 404 );
+		}
+
+		// Validate attachment is an image (Requirement 8.2).
+		$mime_type = get_post_mime_type( $attachment_id );
+		$allowed_mime_types = array( 'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml' );
+		
+		if ( ! in_array( $mime_type, $allowed_mime_types, true ) ) {
+			error_log( sprintf(
+				'MASE: Background image selection failed - Invalid MIME type. ID: %d, MIME: %s',
+				$attachment_id,
+				$mime_type
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Selected attachment is not an image.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Retrieve attachment URL (Requirement 8.3).
+		$attachment_url = wp_get_attachment_url( $attachment_id );
+		
+		if ( ! $attachment_url ) {
+			error_log( sprintf(
+				'MASE: Background image selection failed - Could not get attachment URL. ID: %d',
+				$attachment_id
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Could not retrieve attachment URL.', 'modern-admin-styler' ),
+			), 500 );
+		}
+
+		// Retrieve thumbnail URL (Requirement 8.3).
+		$thumbnail_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
+		
+		// Thumbnail is optional - use full URL as fallback if thumbnail doesn't exist.
+		if ( ! $thumbnail_url ) {
+			$thumbnail_url = $attachment_url;
+		}
+
+		// Log successful selection.
+		error_log( sprintf(
+			'MASE: Background image selected successfully. ID: %d, URL: %s, MIME: %s',
+			$attachment_id,
+			$attachment_url,
+			$mime_type
+		) );
+
+		// Return success response with attachment data (Requirement 8.3).
+		wp_send_json_success( array(
+			'message'       => __( 'Background image selected successfully.', 'modern-admin-styler' ),
+			'attachment_id' => $attachment_id,
+			'url'           => $attachment_url,
+			'thumbnail'     => $thumbnail_url,
+		) );
+	}
+
+	/**
+	 * Handle AJAX background image removal.
+	 * 
+	 * Processes removal of background images from admin areas. Clears background
+	 * settings for the specified area without deleting the attachment from the
+	 * media library, allowing the image to be reused elsewhere.
+	 * 
+	 * Security Requirements (8.5, 12.1, 12.3):
+	 * - Verify nonce for CSRF protection
+	 * - Check user capability (manage_options)
+	 * - Validate area parameter
+	 * 
+	 * Functional Requirements (8.5):
+	 * - Accept area parameter (dashboard, admin_menu, post_lists, post_editor, widgets, login)
+	 * - Clear background settings for specified area
+	 * - Do NOT delete attachment from media library (preserve for reuse)
+	 * - Invalidate CSS cache after removal
+	 * - Return JSON success response
+	 * 
+	 * @since 1.4.0
+	 * @access public
+	 * 
+	 * @return void Sends JSON response and exits.
+	 * 
+	 * Security Notes:
+	 * - Requires 'manage_options' capability
+	 * - Validates nonce via check_ajax_referer()
+	 * - Validates area parameter against allowed values
+	 * - Logs all removal attempts for auditing
+	 * - Does not delete media library attachments (security best practice)
+	 */
+	public function handle_ajax_remove_background_image() {
+		// Security: Verify nonce for CSRF protection (Requirement 12.3).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		
+		// Security: Check user capability (Requirement 12.3).
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to remove background images.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Input validation: Get and sanitize area parameter (Requirement 8.5).
+		$area = isset( $_POST['area'] ) ? sanitize_text_field( $_POST['area'] ) : '';
+
+		// Validate area parameter is provided (Requirement 8.5).
+		if ( empty( $area ) ) {
+			error_log( 'MASE: Background image removal failed - No area specified' );
+			
+			wp_send_json_error( array(
+				'message' => __( 'No area specified.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Validate area against allowed values (Requirement 8.5).
+		$allowed_areas = array( 'dashboard', 'admin_menu', 'post_lists', 'post_editor', 'widgets', 'login' );
+		
+		if ( ! in_array( $area, $allowed_areas, true ) ) {
+			error_log( sprintf(
+				'MASE: Background image removal failed - Invalid area: %s',
+				$area
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Invalid area specified.', 'modern-admin-styler' ),
+			), 400 );
+		}
+
+		// Get current settings.
+		$settings = $this->settings->get_option();
+
+		// Initialize custom_backgrounds section if it doesn't exist.
+		if ( ! isset( $settings['custom_backgrounds'] ) ) {
+			$settings['custom_backgrounds'] = array();
+		}
+
+		// Initialize area settings if they don't exist.
+		if ( ! isset( $settings['custom_backgrounds'][ $area ] ) ) {
+			$settings['custom_backgrounds'][ $area ] = array();
+		}
+
+		// Store attachment ID for logging before clearing (optional).
+		$removed_attachment_id = isset( $settings['custom_backgrounds'][ $area ]['image_id'] ) 
+			? $settings['custom_backgrounds'][ $area ]['image_id'] 
+			: 0;
+
+		// Clear background settings for specified area (Requirement 8.5).
+		// Reset to default empty state without deleting the attachment.
+		$settings['custom_backgrounds'][ $area ] = array(
+			'enabled'     => false,
+			'type'        => 'none',
+			'image_url'   => '',
+			'image_id'    => 0,
+			'position'    => 'center center',
+			'size'        => 'cover',
+			'repeat'      => 'no-repeat',
+			'attachment'  => 'scroll',
+			'opacity'     => 100,
+			'blend_mode'  => 'normal',
+		);
+
+		// Save updated settings.
+		$result = $this->settings->update_option( $settings );
+
+		if ( ! $result ) {
+			error_log( sprintf(
+				'MASE: Background image removal failed - Could not save settings. Area: %s',
+				$area
+			) );
+			
+			wp_send_json_error( array(
+				'message' => __( 'Failed to remove background image.', 'modern-admin-styler' ),
+			), 500 );
+		}
+
+		// Invalidate CSS cache after removal (Requirement 8.5).
+		// Background changes affect both light and dark modes.
+		$cache = new MASE_Cache();
+		$cache->invalidate_both_mode_caches();
+		
+		// Also invalidate legacy cache key for backward compatibility.
+		$this->cache->invalidate( 'generated_css' );
+
+		// Log successful removal.
+		error_log( sprintf(
+			'MASE: Background image removed successfully. Area: %s, Attachment ID: %d (preserved in media library)',
+			$area,
+			$removed_attachment_id
+		) );
+
+		// Return success response (Requirement 8.5).
+		wp_send_json_success( array(
+			'message' => __( 'Background image removed successfully.', 'modern-admin-styler' ),
+			'area'    => $area,
+		) );
+	}
+
+	/**
+	 * AJAX Handler: Get Button Defaults
+	 * 
+	 * Returns default values for a specified button type or all button types.
+	 * Used by the reset functionality to restore button settings to defaults.
+	 * 
+	 * Security Requirements:
+	 * - Verify nonce for CSRF protection (Requirement 22.3)
+	 * - Check user capability (manage_options)
+	 * - Validate button_type parameter
+	 * 
+	 * Functional Requirements (Requirement 12.1):
+	 * - Accept optional button_type parameter
+	 * - Return defaults for specified type or all types
+	 * - Return JSON success response with defaults
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @return void Sends JSON response and exits.
+	 */
+	public function ajax_get_button_defaults() {
+		try {
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
+			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Security: Check user capability (Requirement 22.3).
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Input validation: Get and sanitize button_type parameter (optional).
+			$button_type = isset( $_POST['button_type'] ) ? sanitize_text_field( $_POST['button_type'] ) : '';
+
+			// Get all button defaults from settings.
+			$all_defaults = $this->settings->get_button_defaults();
+
+			// If button_type specified, validate and return only that type.
+			if ( ! empty( $button_type ) ) {
+				// Validate button type against allowed values.
+				$allowed_types = array( 'primary', 'secondary', 'danger', 'success', 'ghost', 'tabs' );
+				
+				if ( ! in_array( $button_type, $allowed_types, true ) ) {
+					wp_send_json_error( array(
+						'message' => __( 'Invalid button type', 'modern-admin-styler' ),
+					), 400 );
+				}
+
+				// Check if defaults exist for this type.
+				if ( ! isset( $all_defaults[ $button_type ] ) ) {
+					wp_send_json_error( array(
+						'message' => __( 'Button type defaults not found', 'modern-admin-styler' ),
+					), 404 );
+				}
+
+				// Return defaults for specified button type (Requirement 12.1).
+				wp_send_json_success( array(
+					'message'      => __( 'Button defaults retrieved successfully', 'modern-admin-styler' ),
+					'button_type'  => $button_type,
+					'defaults'     => $all_defaults[ $button_type ],
+				) );
+			} else {
+				// Return all button defaults (Requirement 12.1).
+				wp_send_json_success( array(
+					'message'  => __( 'All button defaults retrieved successfully', 'modern-admin-styler' ),
+					'defaults' => $all_defaults,
+				) );
+			}
+
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (get_button_defaults): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'An error occurred while retrieving button defaults. Please try again.', 'modern-admin-styler' ),
+			), 500 );
+		}
+	}
+
+	/**
+	 * AJAX Handler: Reset Button Type
+	 * 
+	 * Resets a specific button type to its default values and clears the button CSS cache.
+	 * 
+	 * Security Requirements:
+	 * - Verify nonce for CSRF protection (Requirement 22.3)
+	 * - Check user capability (manage_options)
+	 * - Validate button_type parameter
+	 * 
+	 * Functional Requirements (Requirement 12.1):
+	 * - Accept button_type parameter (required)
+	 * - Reset specified button type to defaults
+	 * - Clear button CSS cache
+	 * - Return JSON success response
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @return void Sends JSON response and exits.
+	 */
+	public function ajax_reset_button_type() {
+		try {
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
+			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Security: Check user capability (Requirement 22.3).
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Input validation: Get and sanitize button_type parameter (required).
+			$button_type = isset( $_POST['button_type'] ) ? sanitize_text_field( $_POST['button_type'] ) : '';
+
+			// Validate button_type is not empty.
+			if ( empty( $button_type ) ) {
+				wp_send_json_error( array(
+					'message' => __( 'Button type is required', 'modern-admin-styler' ),
+				), 400 );
+			}
+
+			// Validate button type against allowed values.
+			$allowed_types = array( 'primary', 'secondary', 'danger', 'success', 'ghost', 'tabs' );
+			
+			if ( ! in_array( $button_type, $allowed_types, true ) ) {
+				wp_send_json_error( array(
+					'message' => __( 'Invalid button type', 'modern-admin-styler' ),
+				), 400 );
+			}
+
+			// Get current settings.
+			$settings = $this->settings->get_option();
+
+			// Get button defaults.
+			$button_defaults = $this->settings->get_button_defaults();
+
+			// Check if defaults exist for this type.
+			if ( ! isset( $button_defaults[ $button_type ] ) ) {
+				wp_send_json_error( array(
+					'message' => __( 'Button type defaults not found', 'modern-admin-styler' ),
+				), 404 );
+			}
+
+			// Initialize universal_buttons section if it doesn't exist.
+			if ( ! isset( $settings['universal_buttons'] ) ) {
+				$settings['universal_buttons'] = array();
+			}
+
+			// Reset specified button type to defaults (Requirement 12.1).
+			$settings['universal_buttons'][ $button_type ] = $button_defaults[ $button_type ];
+
+			// Save updated settings.
+			$result = $this->settings->update_option( $settings );
+
+			if ( ! $result ) {
+				wp_send_json_error( array(
+					'message' => __( 'Failed to reset button type', 'modern-admin-styler' ),
+				), 500 );
+			}
+
+			// Clear button CSS cache (Requirement 12.1, 7.6).
+			// Invalidate both mode caches as button changes affect both light and dark modes.
+			$cache = new MASE_Cache();
+			$cache->invalidate_both_mode_caches();
+			
+			// Clear button-specific CSS cache (Requirement 7.6).
+			$cache->clear_button_css_cache();
+			
+			// Also invalidate legacy cache key for backward compatibility.
+			$this->cache->invalidate( 'generated_css' );
+
+			// Log successful reset.
+			error_log( sprintf(
+				'MASE: Button type "%s" reset to defaults successfully',
+				$button_type
+			) );
+
+			// Return success response (Requirement 12.1).
+			wp_send_json_success( array(
+				'message'     => sprintf(
+					/* translators: %s: button type name */
+					__( '%s button reset to defaults successfully', 'modern-admin-styler' ),
+					ucfirst( $button_type )
+				),
+				'button_type' => $button_type,
+				'defaults'    => $button_defaults[ $button_type ],
+			) );
+
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (reset_button_type): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'An error occurred while resetting button type. Please try again.', 'modern-admin-styler' ),
+			), 500 );
+		}
+	}
+
+	/**
+	 * AJAX Handler: Reset All Buttons
+	 * 
+	 * Resets all button types to their default values and clears all button CSS cache.
+	 * 
+	 * Security Requirements:
+	 * - Verify nonce for CSRF protection (Requirement 22.3)
+	 * - Check user capability (manage_options)
+	 * 
+	 * Functional Requirements (Requirement 12.2):
+	 * - Reset all button types to defaults
+	 * - Clear all button CSS cache
+	 * - Return JSON success response
+	 * 
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @return void Sends JSON response and exits.
+	 */
+	public function ajax_reset_all_buttons() {
+		try {
+			// Security: Verify nonce for CSRF protection (Requirement 22.3).
+			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Security: Check user capability (Requirement 22.3).
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Unauthorized access', 'modern-admin-styler' ) ), 403 );
+			}
+
+			// Get current settings.
+			$settings = $this->settings->get_option();
+
+			// Get all button defaults.
+			$button_defaults = $this->settings->get_button_defaults();
+
+			// Reset all button types to defaults (Requirement 12.2).
+			$settings['universal_buttons'] = $button_defaults;
+
+			// Save updated settings.
+			$result = $this->settings->update_option( $settings );
+
+			if ( ! $result ) {
+				wp_send_json_error( array(
+					'message' => __( 'Failed to reset all buttons', 'modern-admin-styler' ),
+				), 500 );
+			}
+
+			// Clear all button CSS cache (Requirement 12.2, 7.6).
+			// Invalidate both mode caches as button changes affect both light and dark modes.
+			$cache = new MASE_Cache();
+			$cache->invalidate_both_mode_caches();
+			
+			// Clear button-specific CSS cache (Requirement 7.6).
+			$cache->clear_button_css_cache();
+			
+			// Also invalidate legacy cache key for backward compatibility.
+			$this->cache->invalidate( 'generated_css' );
+
+			// Log successful reset.
+			error_log( 'MASE: All buttons reset to defaults successfully' );
+
+			// Return success response (Requirement 12.2).
+			wp_send_json_success( array(
+				'message'  => __( 'All buttons reset to defaults successfully', 'modern-admin-styler' ),
+				'defaults' => $button_defaults,
+			) );
+
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (reset_all_buttons): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'An error occurred while resetting all buttons. Please try again.', 'modern-admin-styler' ),
+			), 500 );
+		}
 	}
 }

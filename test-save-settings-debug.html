@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MASE Settings Save Debug Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        .info-box {
+            background: #e7f5fe;
+            border-left: 4px solid #0073aa;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log-output {
+            background: #1d2327;
+            color: #50fa7b;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        .log-error {
+            color: #ff5555;
+        }
+        .log-success {
+            color: #50fa7b;
+        }
+        .log-info {
+            color: #8be9fd;
+        }
+        .size-info {
+            display: inline-block;
+            background: #ffb900;
+            color: #1d2327;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 MASE Settings Save Debug Test</h1>
+        
+        <div class="info-box">
+            <strong>Purpose:</strong> Test the new debugging features for settings save functionality.
+            <br><br>
+            <strong>What to check:</strong>
+            <ul>
+                <li>Browser console shows JSON size and validation</li>
+                <li>WordPress debug.log shows detailed POST data and validation steps</li>
+                <li>Error messages are clear and actionable</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 1: Small Settings (Should Pass)</h2>
+            <p>Tests saving minimal settings to verify basic functionality.</p>
+            <button onclick="testSmallSettings()">Run Test</button>
+            <div id="test1-log" class="log-output"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 2: Large Settings (Size Check)</h2>
+            <p>Tests saving large settings to verify size validation.</p>
+            <button onclick="testLargeSettings()">Run Test</button>
+            <div id="test2-log" class="log-output"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test 3: Invalid JSON (Should Fail)</h2>
+            <p>Tests error handling for malformed data.</p>
+            <button onclick="testInvalidJSON()">Run Test</button>
+            <div id="test3-log" class="log-output"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Instructions</h2>
+            <ol>
+                <li>Open browser DevTools Console (F12)</li>
+                <li>Enable WordPress debug logging in wp-config.php:
+                    <pre style="background:#f0f0f1;padding:10px;margin:10px 0;">define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', false);</pre>
+                </li>
+                <li>Run each test and observe:
+                    <ul>
+                        <li>Console output (JSON size, validation)</li>
+                        <li>This page output (AJAX responses)</li>
+                        <li>wp-content/debug.log (server-side logging)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Get MASE config from WordPress
+        const maseConfig = window.maseAdmin || {
+            ajaxUrl: '/wp-admin/admin-ajax.php',
+            nonce: 'test-nonce'
+        };
+
+        function log(elementId, message, type = 'info') {
+            const logDiv = document.getElementById(elementId);
+            const entry = document.createElement('div');
+            entry.className = 'log-entry log-' + type;
+            entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function testSmallSettings() {
+            const logId = 'test1-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, 'Starting small settings test...', 'info');
+
+            const settings = {
+                master: { enable: true },
+                admin_bar: {
+                    bg_color: '#1F2937',
+                    text_color: '#F9FAFB',
+                    height: 32
+                },
+                admin_menu: {
+                    bg_color: '#1F2937',
+                    text_color: '#F9FAFB',
+                    width_value: 160
+                }
+            };
+
+            const settingsJson = JSON.stringify(settings);
+            const sizeKB = (settingsJson.length / 1024).toFixed(2);
+            
+            log(logId, 'Settings size: ' + sizeKB + ' KB', 'info');
+            console.log('Test 1 - Settings:', settings);
+            console.log('Test 1 - JSON size:', sizeKB, 'KB');
+
+            jQuery.ajax({
+                url: maseConfig.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mase_save_settings',
+                    nonce: maseConfig.nonce,
+                    settings: settingsJson
+                },
+                success: function(response) {
+                    console.log('Test 1 - Response:', response);
+                    if (response.success) {
+                        log(logId, '✓ SUCCESS: ' + response.data.message, 'success');
+                    } else {
+                        log(logId, '✗ FAILED: ' + response.data.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Test 1 - Error:', xhr, status, error);
+                    log(logId, '✗ AJAX ERROR: ' + error + ' (Status: ' + xhr.status + ')', 'error');
+                    if (xhr.responseJSON) {
+                        log(logId, 'Server message: ' + xhr.responseJSON.data.message, 'error');
+                    }
+                }
+            });
+        }
+
+        function testLargeSettings() {
+            const logId = 'test2-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, 'Starting large settings test...', 'info');
+
+            // Create large custom CSS to test size limits
+            let largeCSS = '/* Large CSS for testing */\n';
+            for (let i = 0; i < 10000; i++) {
+                largeCSS += '.test-class-' + i + ' { color: #000; }\n';
+            }
+
+            const settings = {
+                master: { enable: true },
+                admin_bar: { bg_color: '#1F2937' },
+                advanced: { custom_css: largeCSS }
+            };
+
+            const settingsJson = JSON.stringify(settings);
+            const sizeKB = (settingsJson.length / 1024).toFixed(2);
+            
+            log(logId, 'Settings size: ' + sizeKB + ' KB', 'info');
+            console.log('Test 2 - JSON size:', sizeKB, 'KB');
+
+            if (settingsJson.length > 1000000) {
+                log(logId, '✗ Size validation triggered (> 1MB)', 'error');
+                log(logId, 'This is expected behavior - size limit working!', 'info');
+                return;
+            }
+
+            jQuery.ajax({
+                url: maseConfig.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mase_save_settings',
+                    nonce: maseConfig.nonce,
+                    settings: settingsJson
+                },
+                success: function(response) {
+                    console.log('Test 2 - Response:', response);
+                    if (response.success) {
+                        log(logId, '✓ SUCCESS: Large settings saved', 'success');
+                    } else {
+                        log(logId, '✗ FAILED: ' + response.data.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Test 2 - Error:', xhr, status, error);
+                    log(logId, '✗ AJAX ERROR: ' + error, 'error');
+                }
+            });
+        }
+
+        function testInvalidJSON() {
+            const logId = 'test3-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, 'Starting invalid JSON test...', 'info');
+
+            // Send malformed JSON
+            jQuery.ajax({
+                url: maseConfig.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mase_save_settings',
+                    nonce: maseConfig.nonce,
+                    settings: '{invalid json'
+                },
+                success: function(response) {
+                    console.log('Test 3 - Response:', response);
+                    if (!response.success) {
+                        log(logId, '✓ Error handled correctly: ' + response.data.message, 'success');
+                    } else {
+                        log(logId, '✗ Should have failed but succeeded', 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Test 3 - Error:', xhr, status, error);
+                    log(logId, '✓ Error caught: ' + error + ' (Status: ' + xhr.status + ')', 'success');
+                    if (xhr.responseJSON && xhr.responseJSON.data) {
+                        log(logId, 'Server message: ' + xhr.responseJSON.data.message, 'info');
+                    }
+                }
+            });
+        }
+
+        // Auto-run first test on load
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                console.log('%c=== MASE Settings Save Debug Test ===', 'color: #2271b1; font-size: 16px; font-weight: bold;');
+                console.log('Open this page in WordPress admin to run tests');
+                console.log('Check wp-content/debug.log for server-side logs');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

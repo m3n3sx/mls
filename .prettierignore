@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+*.min.js
+*.min.css
+
+# WordPress
+wp-admin/
+wp-includes/
+wp-content/plugins/
+wp-content/themes/
+
+# Test outputs
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

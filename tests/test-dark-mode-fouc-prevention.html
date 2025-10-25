@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Dark Mode FOUC Prevention Test</title>
+    <style>
+        /* Base styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f1;
+            color: #1d2327;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Dark mode styles */
+        body.mase-dark-mode {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        body.mase-dark-mode .test-container {
+            background: #2d2d2d;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #1d2327;
+        }
+
+        body.mase-dark-mode h1 {
+            color: #e0e0e0;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+
+        body.mase-dark-mode .test-section {
+            background: #3a3a3a;
+        }
+
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        body.mase-dark-mode .status.success {
+            background: #1e4620;
+            color: #7dff85;
+            border: 1px solid #2d6930;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        body.mase-dark-mode .status.error {
+            background: #4a1f23;
+            color: #ff7d85;
+            border: 1px solid #6d2d31;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        body.mase-dark-mode .status.info {
+            background: #1f3a42;
+            color: #7dd8ff;
+            border: 1px solid #2d5460;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        button.primary {
+            background: #2271b1;
+            color: white;
+        }
+
+        button.primary:hover {
+            background: #135e96;
+        }
+
+        body.mase-dark-mode button.primary {
+            background: #4a9eff;
+            color: #1a1a1a;
+        }
+
+        body.mase-dark-mode button.primary:hover {
+            background: #6bb0ff;
+        }
+
+        button.secondary {
+            background: #f0f0f1;
+            color: #2c3338;
+        }
+
+        button.secondary:hover {
+            background: #dcdcde;
+        }
+
+        body.mase-dark-mode button.secondary {
+            background: #3a3a3a;
+            color: #e0e0e0;
+        }
+
+        body.mase-dark-mode button.secondary:hover {
+            background: #4a4a4a;
+        }
+
+        code {
+            background: #f0f0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        body.mase-dark-mode code {
+            background: #3a3a3a;
+            color: #e0e0e0;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric {
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #2271b1;
+        }
+
+        body.mase-dark-mode .metric {
+            background: #2d2d2d;
+            border-left-color: #4a9eff;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #646970;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.mase-dark-mode .metric-label {
+            color: #b0b0b0;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌓 MASE Dark Mode FOUC Prevention Test</h1>
+        
+        <div class="test-section">
+            <h2>Test Overview</h2>
+            <p>This test verifies that the FOUC (Flash of Unstyled Content) prevention inline script works correctly.</p>
+            <p><strong>Requirements:</strong></p>
+            <ul>
+                <li>Check localStorage synchronously before page render (Requirement 12.1)</li>
+                <li>Apply <code>.mase-dark-mode</code> class immediately if dark mode active (Requirement 12.2)</li>
+                <li>Execute before main mase-admin.js loads (Requirement 12.3)</li>
+                <li>Execute in &lt; 50ms (Requirement 12.4)</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h2>Current Status</h2>
+            <div id="currentStatus" class="status info">
+                Checking dark mode status...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Performance Metrics</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-label">Script Execution Time</div>
+                    <div class="metric-value" id="executionTime">-</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">FOUC Detected</div>
+                    <div class="metric-value" id="foucDetected">-</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Class Applied</div>
+                    <div class="metric-value" id="classApplied">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Controls</h2>
+            <button class="primary" onclick="setDarkMode()">Set Dark Mode</button>
+            <button class="primary" onclick="setLightMode()">Set Light Mode</button>
+            <button class="secondary" onclick="clearStorage()">Clear Storage</button>
+            <button class="secondary" onclick="reloadPage()">Reload Page</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Results</h2>
+            <div id="testResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Storage Information</h2>
+            <div id="storageInfo"></div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the FOUC prevention inline script
+        // This would normally be injected by WordPress before the main script
+        (function() {
+            var startTime = performance.now();
+            
+            try {
+                var savedMode = localStorage.getItem("mase_dark_mode");
+                var userMeta = ""; // Would be populated by PHP
+                var mode = savedMode || userMeta || "light";
+                
+                if (mode === "dark") {
+                    document.body.classList.add("mase-dark-mode");
+                }
+                
+                var endTime = performance.now();
+                var executionTime = endTime - startTime;
+                
+                // Store execution time for display
+                window.maseExecutionTime = executionTime;
+                
+            } catch (e) {
+                console.warn("MASE: Could not check dark mode preference", e);
+            }
+        })();
+
+        // Test functions
+        function updateStatus() {
+            var isDarkMode = document.body.classList.contains('mase-dark-mode');
+            var statusEl = document.getElementById('currentStatus');
+            var savedMode = localStorage.getItem('mase_dark_mode');
+            
+            if (isDarkMode) {
+                statusEl.className = 'status success';
+                statusEl.textContent = '✓ Dark mode is currently active';
+            } else {
+                statusEl.className = 'status info';
+                statusEl.textContent = '☀️ Light mode is currently active';
+            }
+
+            // Update metrics
+            document.getElementById('executionTime').textContent = 
+                window.maseExecutionTime ? window.maseExecutionTime.toFixed(2) + 'ms' : 'N/A';
+            
+            document.getElementById('foucDetected').textContent = 
+                window.maseExecutionTime && window.maseExecutionTime < 50 ? 'No' : 'Possible';
+            
+            document.getElementById('classApplied').textContent = isDarkMode ? 'Yes' : 'No';
+
+            // Update storage info
+            updateStorageInfo();
+        }
+
+        function updateStorageInfo() {
+            var storageInfo = document.getElementById('storageInfo');
+            var savedMode = localStorage.getItem('mase_dark_mode');
+            
+            storageInfo.innerHTML = `
+                <p><strong>localStorage:</strong> <code>${savedMode || 'not set'}</code></p>
+                <p><strong>Body class:</strong> <code>${document.body.className || 'none'}</code></p>
+                <p><strong>Execution time:</strong> <code>${window.maseExecutionTime ? window.maseExecutionTime.toFixed(2) + 'ms' : 'N/A'}</code></p>
+            `;
+        }
+
+        function setDarkMode() {
+            localStorage.setItem('mase_dark_mode', 'dark');
+            document.body.classList.add('mase-dark-mode');
+            updateStatus();
+            addTestResult('success', 'Dark mode set. Reload page to test FOUC prevention.');
+        }
+
+        function setLightMode() {
+            localStorage.setItem('mase_dark_mode', 'light');
+            document.body.classList.remove('mase-dark-mode');
+            updateStatus();
+            addTestResult('success', 'Light mode set. Reload page to test FOUC prevention.');
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('mase_dark_mode');
+            document.body.classList.remove('mase-dark-mode');
+            updateStatus();
+            addTestResult('info', 'Storage cleared. Page will default to light mode on reload.');
+        }
+
+        function reloadPage() {
+            window.location.reload();
+        }
+
+        function addTestResult(type, message) {
+            var resultsEl = document.getElementById('testResults');
+            var resultDiv = document.createElement('div');
+            resultDiv.className = 'status ' + type;
+            resultDiv.textContent = message;
+            resultsEl.insertBefore(resultDiv, resultsEl.firstChild);
+        }
+
+        function runAutomatedTests() {
+            var results = [];
+            
+            // Test 1: Check if script executed in < 50ms
+            if (window.maseExecutionTime !== undefined) {
+                if (window.maseExecutionTime < 50) {
+                    results.push({
+                        type: 'success',
+                        message: `✓ Test 1 PASSED: Script executed in ${window.maseExecutionTime.toFixed(2)}ms (< 50ms requirement)`
+                    });
+                } else {
+                    results.push({
+                        type: 'error',
+                        message: `✗ Test 1 FAILED: Script executed in ${window.maseExecutionTime.toFixed(2)}ms (> 50ms requirement)`
+                    });
+                }
+            }
+
+            // Test 2: Check if dark mode class applied when localStorage has 'dark'
+            var savedMode = localStorage.getItem('mase_dark_mode');
+            var hasDarkClass = document.body.classList.contains('mase-dark-mode');
+            
+            if (savedMode === 'dark' && hasDarkClass) {
+                results.push({
+                    type: 'success',
+                    message: '✓ Test 2 PASSED: Dark mode class applied when localStorage = "dark"'
+                });
+            } else if (savedMode !== 'dark' && !hasDarkClass) {
+                results.push({
+                    type: 'success',
+                    message: '✓ Test 2 PASSED: Dark mode class not applied when localStorage ≠ "dark"'
+                });
+            } else {
+                results.push({
+                    type: 'error',
+                    message: `✗ Test 2 FAILED: Class state (${hasDarkClass}) doesn't match localStorage (${savedMode})`
+                });
+            }
+
+            // Test 3: Check localStorage availability
+            try {
+                localStorage.setItem('mase_test', 'test');
+                localStorage.removeItem('mase_test');
+                results.push({
+                    type: 'success',
+                    message: '✓ Test 3 PASSED: localStorage is available'
+                });
+            } catch (e) {
+                results.push({
+                    type: 'error',
+                    message: '✗ Test 3 FAILED: localStorage is not available'
+                });
+            }
+
+            // Display results
+            results.forEach(function(result) {
+                addTestResult(result.type, result.message);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            runAutomatedTests();
+        });
+    </script>
+</body>
+</html>

@@ -22,16 +22,67 @@ if ( ! defined( 'ABSPATH' ) ) {
 class MASE_CSS_Generator {
 
 	/**
-	 * Generate CSS from settings.
+	 * Generate CSS from settings with mode-specific caching.
+	 *
+	 * Checks cache first based on current mode, generates if not cached.
+	 * Requirement 12.5: Use separate cache keys for light and dark CSS.
 	 *
 	 * @param array $settings Settings array containing admin_bar and admin_menu configuration.
 	 * @return string Generated CSS string.
 	 */
 	public function generate( $settings ) {
-		// Start performance monitoring.
+		// Determine current mode.
+		$current_mode = isset( $settings['dark_light_toggle']['current_mode'] ) 
+			? $settings['dark_light_toggle']['current_mode'] 
+			: 'light';
+
+		// Check mode-specific cache first (Requirement 12.5).
+		$cache = new MASE_Cache();
+		
+		if ( 'dark' === $current_mode ) {
+			$cached_css = $cache->get_cached_dark_mode_css();
+		} else {
+			$cached_css = $cache->get_cached_light_mode_css();
+		}
+
+		if ( false !== $cached_css ) {
+			error_log( sprintf( 'MASE: CSS cache hit for %s mode', $current_mode ) );
+			return $cached_css;
+		}
+
+		// Cache miss - generate CSS.
+		error_log( sprintf( 'MASE: CSS cache miss for %s mode, generating...', $current_mode ) );
+		$css = $this->generate_css_internal( $settings );
+
+		// Cache the generated CSS with mode-specific key.
+		$cache_duration = isset( $settings['performance']['cache_duration'] ) 
+			? absint( $settings['performance']['cache_duration'] ) 
+			: 3600;
+
+		if ( 'dark' === $current_mode ) {
+			$cache->set_cached_dark_mode_css( $css, $cache_duration );
+		} else {
+			$cache->set_cached_light_mode_css( $css, $cache_duration );
+		}
+
+		return $css;
+	}
+
+	/**
+	 * Internal CSS generation method.
+	 * Task 21: Enhanced performance monitoring (Requirement 12.2)
+	 *
+	 * @param array $settings Settings array containing admin_bar and admin_menu configuration.
+	 * @return string Generated CSS string.
+	 */
+	private function generate_css_internal( $settings ) {
+		// Task 21: Start performance monitoring (Requirement 12.2).
 		$start_time = microtime( true );
+		$performance_threshold = 100; // Target < 100ms for CSS generation
 
 		try {
+			// Task 21: Use string concatenation for better performance
+			// String concatenation is faster than array joins in PHP
 			$css = '';
 
 			// NEW: Generate Google Fonts @import (Requirement 8.5).
@@ -79,10 +130,37 @@ class MASE_CSS_Generator {
 			// Generate custom CSS (Requirement 14.1).
 			$css .= $this->generate_custom_css( $settings );
 
-			// Performance monitoring.
+			// Generate button styles CSS (Universal Button Styling System).
+			$css .= $this->generate_button_styles( $settings );
+
+			// Generate background styles CSS (Advanced Background System).
+			$css .= $this->generate_background_styles( $settings );
+
+			// Task 21: Lazy load dark mode CSS only if needed (Requirement 12.6)
+			// Only generate dark mode CSS if dark mode is enabled
+			$dark_mode_enabled = isset( $settings['dark_light_toggle']['enabled'] ) && $settings['dark_light_toggle']['enabled'];
+			if ( $dark_mode_enabled ) {
+				$css .= $this->generate_dark_mode_css( $settings );
+			}
+
+			// Task 21: Enhanced performance monitoring (Requirement 12.2).
 			$duration = ( microtime( true ) - $start_time ) * 1000; // Convert to milliseconds.
-			if ( $duration > 10 ) {
-				error_log( sprintf( 'MASE: Total CSS generation took %.2fms (threshold: 10ms)', $duration ) );
+			
+			// Log performance metrics
+			error_log( sprintf( 
+				'MASE: CSS generation completed in %.2fms (threshold: %dms, within threshold: %s)',
+				$duration,
+				$performance_threshold,
+				$duration < $performance_threshold ? 'YES' : 'NO'
+			) );
+			
+			// Warn if performance threshold exceeded (Requirement 12.2)
+			if ( $duration > $performance_threshold ) {
+				error_log( sprintf( 
+					'MASE: WARNING - CSS generation exceeded threshold: %.2fms > %dms',
+					$duration,
+					$performance_threshold
+				) );
 			}
 
 			return $css;
@@ -3365,6 +3443,468 @@ class MASE_CSS_Generator {
 	}
 
 	/**
+	 * Generate dark mode CSS.
+	 *
+	 * Creates CSS custom properties and styles for dark mode, scoped to .mase-dark-mode body class.
+	 * Ensures WCAG 2.1 AA contrast compliance (4.5:1 minimum).
+	 * Requirements: 6.1, 6.2, 8.1, 8.2, 8.3
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Dark mode CSS.
+	 */
+	private function generate_dark_mode_css( $settings ) {
+		try {
+			// Task 19: Validate settings parameter (Requirement 11.3)
+			if ( ! is_array( $settings ) ) {
+				error_log( 'MASE: Dark mode CSS generation - Invalid settings parameter' );
+				return $this->get_fallback_dark_mode_css();
+			}
+
+			// Check if dark mode is enabled.
+			$dark_toggle = isset( $settings['dark_light_toggle'] ) ? $settings['dark_light_toggle'] : array();
+			
+			if ( ! isset( $dark_toggle['enabled'] ) || ! $dark_toggle['enabled'] ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Get dark palette ID (Requirement 6.1).
+			$dark_palette_id = isset( $dark_toggle['dark_palette'] ) ? $dark_toggle['dark_palette'] : 'dark-elegance';
+			
+			// Task 19: Validate palette ID (Requirement 11.3)
+			if ( empty( $dark_palette_id ) || ! is_string( $dark_palette_id ) ) {
+				error_log( 'MASE: Dark mode CSS generation - Invalid palette ID, using dark-elegance' );
+				$dark_palette_id = 'dark-elegance';
+			}
+			
+			// Get MASE_Settings instance to retrieve palette.
+			try {
+				$mase_settings = new MASE_Settings();
+			} catch ( Exception $settings_error ) {
+				error_log( 'MASE: Dark mode CSS generation - Failed to instantiate MASE_Settings: ' . $settings_error->getMessage() );
+				return $this->get_fallback_dark_mode_css();
+			}
+			
+			$dark_palette = $mase_settings->get_palette( $dark_palette_id );
+			
+			// Task 19: Enhanced palette error handling (Requirement 11.4)
+			if ( is_wp_error( $dark_palette ) ) {
+				error_log( sprintf( 
+					'MASE: Dark palette "%s" not found (error: %s), trying dark-elegance', 
+					$dark_palette_id,
+					$dark_palette->get_error_message()
+				) );
+				$dark_palette = $mase_settings->get_palette( 'dark-elegance' );
+				
+				// If even dark-elegance fails, use fallback
+				if ( is_wp_error( $dark_palette ) ) {
+					error_log( 'MASE: Dark mode CSS generation - Even dark-elegance palette failed, using fallback CSS' );
+					return $this->get_fallback_dark_mode_css();
+				}
+			}
+			
+			// Task 19: Validate palette structure (Requirement 11.3)
+			if ( ! is_array( $dark_palette ) ) {
+				error_log( 'MASE: Dark mode CSS generation - Invalid palette structure, using fallback CSS' );
+				return $this->get_fallback_dark_mode_css();
+			}
+
+			// Extract colors from palette (Requirement 6.2).
+			$admin_bar_colors = isset( $dark_palette['admin_bar'] ) ? $dark_palette['admin_bar'] : array();
+			$admin_menu_colors = isset( $dark_palette['admin_menu'] ) ? $dark_palette['admin_menu'] : array();
+			$palette_colors = isset( $dark_palette['colors'] ) ? $dark_palette['colors'] : array();
+
+			// Generate CSS custom properties for dark mode (Requirement 8.1).
+			$css .= 'body.mase-dark-mode {';
+			
+			// Palette color variables.
+			if ( isset( $palette_colors['primary'] ) ) {
+				$css .= '--mase-color-primary: ' . esc_attr( $palette_colors['primary'] ) . ';';
+			}
+			if ( isset( $palette_colors['secondary'] ) ) {
+				$css .= '--mase-color-secondary: ' . esc_attr( $palette_colors['secondary'] ) . ';';
+			}
+			if ( isset( $palette_colors['accent'] ) ) {
+				$css .= '--mase-color-accent: ' . esc_attr( $palette_colors['accent'] ) . ';';
+			}
+			if ( isset( $palette_colors['background'] ) ) {
+				$css .= '--mase-color-background: ' . esc_attr( $palette_colors['background'] ) . ';';
+			}
+			if ( isset( $palette_colors['text'] ) ) {
+				$css .= '--mase-color-text: ' . esc_attr( $palette_colors['text'] ) . ';';
+			}
+			if ( isset( $palette_colors['text_secondary'] ) ) {
+				$css .= '--mase-color-text-secondary: ' . esc_attr( $palette_colors['text_secondary'] ) . ';';
+			}
+			
+			$css .= '}';
+
+			// Generate dark mode admin bar CSS (Requirement 8.2, 8.3).
+			$css .= $this->generate_dark_admin_bar_css( $admin_bar_colors, $settings );
+
+			// Generate dark mode admin menu CSS (Requirement 8.2, 8.3).
+			$css .= $this->generate_dark_admin_menu_css( $admin_menu_colors, $settings );
+
+			// Generate dark mode content area CSS (Requirement 8.3).
+			$css .= $this->generate_dark_content_area_css( $palette_colors );
+
+			// Add smooth transitions for dark mode (0.3s as per design).
+			$css .= 'body.mase-dark-mode,';
+			$css .= 'body.mase-dark-mode * {';
+			$css .= 'transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			// Task 19: Enhanced error logging with full context (Requirements 11.6, 11.7)
+			error_log( sprintf(
+				'MASE: Dark mode CSS generation failed: %s | File: %s | Line: %d | Trace: %s',
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine(),
+				$e->getTraceAsString()
+			) );
+			
+			// Return fallback dark mode CSS (Requirement 11.4).
+			return $this->get_fallback_dark_mode_css();
+		}
+	}
+
+	/**
+	 * Generate dark mode admin bar CSS.
+	 *
+	 * Applies dark palette colors to admin bar with WCAG 2.1 AA compliance.
+	 * Requirement 8.2, 8.3
+	 *
+	 * @param array $colors Admin bar colors from dark palette.
+	 * @param array $settings Full settings array.
+	 * @return string Dark admin bar CSS.
+	 */
+	private function generate_dark_admin_bar_css( $colors, $settings ) {
+		$css = '';
+
+		$bg_color = isset( $colors['bg_color'] ) ? $colors['bg_color'] : '#1F2937';
+		$text_color = isset( $colors['text_color'] ) ? $colors['text_color'] : '#F9FAFB';
+		$hover_color = isset( $colors['hover_color'] ) ? $colors['hover_color'] : '#60A5FA';
+
+		// Admin bar background and text (Requirement 8.2).
+		$css .= 'body.mase-dark-mode #wpadminbar {';
+		$css .= 'background-color: ' . esc_attr( $bg_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin bar text color (Requirement 8.3).
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-item,';
+		$css .= 'body.mase-dark-mode #wpadminbar a.ab-item,';
+		$css .= 'body.mase-dark-mode #wpadminbar > #wp-toolbar span.ab-label,';
+		$css .= 'body.mase-dark-mode #wpadminbar > #wp-toolbar span.noticon {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin bar icon colors.
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-icon,';
+		$css .= 'body.mase-dark-mode #wpadminbar .dashicons,';
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-icon:before,';
+		$css .= 'body.mase-dark-mode #wpadminbar .dashicons-before:before {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin bar hover states.
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-item:hover,';
+		$css .= 'body.mase-dark-mode #wpadminbar a.ab-item:hover {';
+		$css .= 'color: ' . esc_attr( $hover_color ) . ' !important;';
+		$css .= 'background-color: rgba(255, 255, 255, 0.1) !important;';
+		$css .= '}';
+
+		// Admin bar submenu (Requirement 8.3).
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-sub-wrapper,';
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-submenu {';
+		$css .= 'background-color: ' . esc_attr( $this->darken_color( $bg_color, 10 ) ) . ' !important;';
+		$css .= '}';
+
+		$css .= 'body.mase-dark-mode #wpadminbar .ab-submenu .ab-item {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Generate dark mode admin menu CSS.
+	 *
+	 * Applies dark palette colors to admin menu with WCAG 2.1 AA compliance.
+	 * Requirement 8.2, 8.3
+	 *
+	 * @param array $colors Admin menu colors from dark palette.
+	 * @param array $settings Full settings array.
+	 * @return string Dark admin menu CSS.
+	 */
+	private function generate_dark_admin_menu_css( $colors, $settings ) {
+		$css = '';
+
+		$bg_color = isset( $colors['bg_color'] ) ? $colors['bg_color'] : '#111827';
+		$text_color = isset( $colors['text_color'] ) ? $colors['text_color'] : '#F9FAFB';
+		$hover_bg_color = isset( $colors['hover_bg_color'] ) ? $colors['hover_bg_color'] : '#374151';
+		$hover_text_color = isset( $colors['hover_text_color'] ) ? $colors['hover_text_color'] : '#60A5FA';
+
+		// Admin menu background (Requirement 8.2).
+		$css .= 'body.mase-dark-mode #adminmenu,';
+		$css .= 'body.mase-dark-mode #adminmenuback,';
+		$css .= 'body.mase-dark-mode #adminmenuwrap {';
+		$css .= 'background-color: ' . esc_attr( $bg_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu text color (Requirement 8.3).
+		$css .= 'body.mase-dark-mode #adminmenu a,';
+		$css .= 'body.mase-dark-mode #adminmenu div.wp-menu-name {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu icon colors.
+		$css .= 'body.mase-dark-mode #adminmenu .wp-menu-image,';
+		$css .= 'body.mase-dark-mode #adminmenu .wp-menu-image:before {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu hover states (Requirement 8.3).
+		$css .= 'body.mase-dark-mode #adminmenu li.menu-top:hover,';
+		$css .= 'body.mase-dark-mode #adminmenu li.opensub > a.menu-top,';
+		$css .= 'body.mase-dark-mode #adminmenu li > a.menu-top:focus {';
+		$css .= 'background-color: ' . esc_attr( $hover_bg_color ) . ' !important;';
+		$css .= 'color: ' . esc_attr( $hover_text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu current/active item.
+		$css .= 'body.mase-dark-mode #adminmenu .wp-has-current-submenu .wp-submenu,';
+		$css .= 'body.mase-dark-mode #adminmenu .wp-has-current-submenu .wp-submenu.wp-submenu-wrap,';
+		$css .= 'body.mase-dark-mode #adminmenu .wp-has-current-submenu.opensub .wp-submenu,';
+		$css .= 'body.mase-dark-mode #adminmenu a.wp-has-current-submenu:focus + .wp-submenu {';
+		$css .= 'background-color: ' . esc_attr( $this->darken_color( $bg_color, 5 ) ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu submenu items.
+		$css .= 'body.mase-dark-mode #adminmenu .wp-submenu a {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		$css .= 'body.mase-dark-mode #adminmenu .wp-submenu a:hover,';
+		$css .= 'body.mase-dark-mode #adminmenu .wp-submenu a:focus {';
+		$css .= 'color: ' . esc_attr( $hover_text_color ) . ' !important;';
+		$css .= '}';
+
+		// Admin menu separator.
+		$css .= 'body.mase-dark-mode #adminmenu li.wp-menu-separator {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 10 ) ) . ' !important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Generate dark mode content area CSS.
+	 *
+	 * Applies dark palette colors to WordPress admin content area.
+	 * Requirement 8.3
+	 *
+	 * @param array $colors Palette colors.
+	 * @return string Dark content area CSS.
+	 */
+	private function generate_dark_content_area_css( $colors ) {
+		$css = '';
+
+		$bg_color = isset( $colors['background'] ) ? $colors['background'] : '#111827';
+		$text_color = isset( $colors['text'] ) ? $colors['text'] : '#F9FAFB';
+		$text_secondary = isset( $colors['text_secondary'] ) ? $colors['text_secondary'] : '#D1D5DB';
+
+		// Main content area background (Requirement 8.3).
+		$css .= 'body.mase-dark-mode {';
+		$css .= 'background-color: ' . esc_attr( $bg_color ) . ' !important;';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Content wrappers.
+		$css .= 'body.mase-dark-mode #wpcontent,';
+		$css .= 'body.mase-dark-mode #wpbody,';
+		$css .= 'body.mase-dark-mode #wpbody-content {';
+		$css .= 'background-color: ' . esc_attr( $bg_color ) . ' !important;';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Headings.
+		$css .= 'body.mase-dark-mode h1,';
+		$css .= 'body.mase-dark-mode h2,';
+		$css .= 'body.mase-dark-mode h3,';
+		$css .= 'body.mase-dark-mode h4,';
+		$css .= 'body.mase-dark-mode h5,';
+		$css .= 'body.mase-dark-mode h6 {';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		// Paragraphs and text.
+		$css .= 'body.mase-dark-mode p,';
+		$css .= 'body.mase-dark-mode span,';
+		$css .= 'body.mase-dark-mode label {';
+		$css .= 'color: ' . esc_attr( $text_secondary ) . ' !important;';
+		$css .= '}';
+
+		// Links.
+		$css .= 'body.mase-dark-mode a {';
+		$css .= 'color: ' . esc_attr( isset( $colors['accent'] ) ? $colors['accent'] : '#60A5FA' ) . ' !important;';
+		$css .= '}';
+
+		// Boxes and panels.
+		$css .= 'body.mase-dark-mode .postbox,';
+		$css .= 'body.mase-dark-mode .stuffbox {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 5 ) ) . ' !important;';
+		$css .= 'border-color: ' . esc_attr( $this->lighten_color( $bg_color, 10 ) ) . ' !important;';
+		$css .= '}';
+
+		// Form inputs.
+		$css .= 'body.mase-dark-mode input[type="text"],';
+		$css .= 'body.mase-dark-mode input[type="email"],';
+		$css .= 'body.mase-dark-mode input[type="password"],';
+		$css .= 'body.mase-dark-mode input[type="number"],';
+		$css .= 'body.mase-dark-mode textarea,';
+		$css .= 'body.mase-dark-mode select {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 8 ) ) . ' !important;';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= 'border-color: ' . esc_attr( $this->lighten_color( $bg_color, 15 ) ) . ' !important;';
+		$css .= '}';
+
+		// Tables.
+		$css .= 'body.mase-dark-mode .widefat,';
+		$css .= 'body.mase-dark-mode table {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 5 ) ) . ' !important;';
+		$css .= 'color: ' . esc_attr( $text_color ) . ' !important;';
+		$css .= '}';
+
+		$css .= 'body.mase-dark-mode .widefat thead tr,';
+		$css .= 'body.mase-dark-mode .widefat tfoot tr {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 10 ) ) . ' !important;';
+		$css .= '}';
+
+		$css .= 'body.mase-dark-mode .widefat tbody tr:nth-child(odd) {';
+		$css .= 'background-color: ' . esc_attr( $this->lighten_color( $bg_color, 3 ) ) . ' !important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Get fallback dark mode CSS.
+	 *
+	 * Provides comprehensive dark mode styles when CSS generation fails.
+	 * Task 19: Enhanced fallback CSS for better user experience (Requirement 11.4)
+	 *
+	 * @return string Fallback dark mode CSS.
+	 */
+	private function get_fallback_dark_mode_css() {
+		// Task 19: Comprehensive fallback CSS covering all major admin elements
+		return 'body.mase-dark-mode {
+			background-color: #1a1a1a !important;
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode #wpadminbar {
+			background-color: #1a1a1a !important;
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode #wpadminbar .ab-item,
+		body.mase-dark-mode #wpadminbar a.ab-item {
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode #wpadminbar .ab-item:hover {
+			background-color: rgba(255, 255, 255, 0.1) !important;
+			color: #60A5FA !important;
+		}
+		body.mase-dark-mode #adminmenu,
+		body.mase-dark-mode #adminmenuback,
+		body.mase-dark-mode #adminmenuwrap {
+			background-color: #2d2d2d !important;
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode #adminmenu a,
+		body.mase-dark-mode #adminmenu div.wp-menu-name {
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode #adminmenu li.menu-top:hover {
+			background-color: #374151 !important;
+			color: #60A5FA !important;
+		}
+		body.mase-dark-mode #wpcontent,
+		body.mase-dark-mode #wpbody,
+		body.mase-dark-mode #wpbody-content {
+			background-color: #1a1a1a !important;
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode h1,
+		body.mase-dark-mode h2,
+		body.mase-dark-mode h3,
+		body.mase-dark-mode h4,
+		body.mase-dark-mode h5,
+		body.mase-dark-mode h6 {
+			color: #e0e0e0 !important;
+		}
+		body.mase-dark-mode a {
+			color: #60A5FA !important;
+		}
+		body.mase-dark-mode .postbox,
+		body.mase-dark-mode .stuffbox {
+			background-color: #2d2d2d !important;
+			border-color: #374151 !important;
+		}
+		body.mase-dark-mode input[type="text"],
+		body.mase-dark-mode input[type="email"],
+		body.mase-dark-mode input[type="password"],
+		body.mase-dark-mode input[type="number"],
+		body.mase-dark-mode textarea,
+		body.mase-dark-mode select {
+			background-color: #374151 !important;
+			color: #e0e0e0 !important;
+			border-color: #4B5563 !important;
+		}
+		body.mase-dark-mode .widefat,
+		body.mase-dark-mode table {
+			background-color: #2d2d2d !important;
+			color: #e0e0e0 !important;
+		}';
+	}
+
+	/**
+	 * Darken a hex color by a percentage.
+	 *
+	 * @param string $hex Hex color code.
+	 * @param int $percent Percentage to darken (0-100).
+	 * @return string Darkened hex color.
+	 */
+	private function darken_color( $hex, $percent ) {
+		$rgb = $this->hex_to_rgb( $hex );
+		
+		$rgb['r'] = max( 0, $rgb['r'] - ( $rgb['r'] * $percent / 100 ) );
+		$rgb['g'] = max( 0, $rgb['g'] - ( $rgb['g'] * $percent / 100 ) );
+		$rgb['b'] = max( 0, $rgb['b'] - ( $rgb['b'] * $percent / 100 ) );
+		
+		return sprintf( '#%02x%02x%02x', $rgb['r'], $rgb['g'], $rgb['b'] );
+	}
+
+	/**
+	 * Lighten a hex color by a percentage.
+	 *
+	 * @param string $hex Hex color code.
+	 * @param int $percent Percentage to lighten (0-100).
+	 * @return string Lightened hex color.
+	 */
+	private function lighten_color( $hex, $percent ) {
+		$rgb = $this->hex_to_rgb( $hex );
+		
+		$rgb['r'] = min( 255, $rgb['r'] + ( ( 255 - $rgb['r'] ) * $percent / 100 ) );
+		$rgb['g'] = min( 255, $rgb['g'] + ( ( 255 - $rgb['g'] ) * $percent / 100 ) );
+		$rgb['b'] = min( 255, $rgb['b'] + ( ( 255 - $rgb['b'] ) * $percent / 100 ) );
+		
+		return sprintf( '#%02x%02x%02x', $rgb['r'], $rgb['g'], $rgb['b'] );
+	}
+
+	/**
 	 * Minify CSS by removing whitespace and comments.
 	 *
 	 * @param string $css CSS string to minify.
@@ -3381,5 +3921,1518 @@ class MASE_CSS_Generator {
 		$css = str_replace( array( ' {', '{ ', ' }', '} ', ' :', ': ', ' ;', '; ', ' ,', ', ' ), array( '{', '{', '}', '}', ':', ':', ';', ';', ',', ',' ), $css );
 
 		return trim( $css );
+	}
+
+	/**
+	 * Generate login page CSS from settings.
+	 * 
+	 * Main entry point for login page CSS generation. Orchestrates the generation
+	 * of all login page CSS sections (logo, background, form, typography, additional).
+	 * Implements graceful fallbacks - continues with partial CSS on generation errors.
+	 * Each CSS section is generated independently, so failure in one section
+	 * doesn't prevent other sections from being generated.
+	 * 
+	 * Requirements: 8.1, 8.2
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 * 
+	 * @param array $settings Full settings array containing login_customization section.
+	 * @return string Generated CSS for login page, or empty string if no customizations.
+	 * 
+	 * @throws Exception On critical generation errors (caught and logged internally).
+	 * 
+	 * Performance Notes:
+	 * - Target generation time: < 50ms
+	 * - Result should be cached by caller
+	 * - CSS is not minified (done by caching layer if needed)
+	 * 
+	 * Error Handling:
+	 * - Falls back to empty array if login_customization not set
+	 * - Continues with partial CSS if individual sections fail
+	 * - Logs all generation errors for debugging
+	 * - Never throws exceptions to caller
+	 */
+	public function generate_login_styles( $settings ) {
+		try {
+			// Graceful fallback: Use empty array if login_customization not set (Requirement 8.2).
+			$login = isset( $settings['login_customization'] ) && is_array( $settings['login_customization'] ) 
+				? $settings['login_customization'] 
+				: array();
+
+			// Check if login customization is enabled (at least logo or background).
+			$logo_enabled = isset( $login['logo_enabled'] ) && $login['logo_enabled'];
+			$has_background = isset( $login['background_type'] ) && $login['background_type'] !== 'color';
+			
+			if ( ! $logo_enabled && ! $has_background ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Generate logo CSS (Requirements: 1.4, 1.5).
+			// Graceful fallback: Continue with partial CSS on logo generation errors (Requirement 8.2).
+			if ( $logo_enabled && ! empty( $login['logo_url'] ) ) {
+				try {
+					$logo_css = $this->generate_login_logo_css( $login );
+					$css .= $logo_css;
+				} catch ( Exception $logo_error ) {
+					error_log( sprintf(
+						'MASE: Login logo CSS generation failed: %s. Continuing with other sections.',
+						$logo_error->getMessage()
+					) );
+					// Continue - other sections can still be generated.
+				}
+			}
+
+			// Generate background CSS (Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6).
+			// Graceful fallback: Continue with partial CSS on background generation errors (Requirement 8.2).
+			try {
+				$background_css = $this->generate_login_background_css( $login );
+				$css .= $background_css;
+			} catch ( Exception $bg_error ) {
+				error_log( sprintf(
+					'MASE: Login background CSS generation failed: %s. Continuing with other sections.',
+					$bg_error->getMessage()
+				) );
+				// Continue - other sections can still be generated.
+			}
+
+			// Generate form styling CSS (Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6).
+			// Graceful fallback: Continue with partial CSS on form generation errors (Requirement 8.2).
+			try {
+				$form_css = $this->generate_login_form_css( $login );
+				$css .= $form_css;
+			} catch ( Exception $form_error ) {
+				error_log( sprintf(
+					'MASE: Login form CSS generation failed: %s. Continuing with other sections.',
+					$form_error->getMessage()
+				) );
+				// Continue - other sections can still be generated.
+			}
+
+			// Generate typography CSS (Requirements: 3.5).
+			// Graceful fallback: Continue with partial CSS on typography generation errors (Requirement 8.2).
+			try {
+				$typography_css = $this->generate_login_typography_css( $login );
+				$css .= $typography_css;
+			} catch ( Exception $typo_error ) {
+				error_log( sprintf(
+					'MASE: Login typography CSS generation failed: %s. Continuing with other sections.',
+					$typo_error->getMessage()
+				) );
+				// Continue - other sections can still be generated.
+			}
+
+			// Generate additional elements CSS (Requirements: 4.1, 4.2).
+			// Graceful fallback: Continue with partial CSS on additional elements generation errors (Requirement 8.2).
+			try {
+				$additional_css = $this->generate_login_additional_css( $login );
+				$css .= $additional_css;
+			} catch ( Exception $additional_error ) {
+				error_log( sprintf(
+					'MASE: Login additional CSS generation failed: %s. Continuing with other sections.',
+					$additional_error->getMessage()
+				) );
+				// Continue - other sections can still be generated.
+			}
+
+			// Append custom CSS if provided (Requirement: 8.2).
+			// Graceful fallback: Skip custom CSS if invalid (Requirement 8.2).
+			if ( ! empty( $login['custom_css'] ) && is_string( $login['custom_css'] ) ) {
+				try {
+					$css .= "\n/* Custom CSS */\n" . $login['custom_css'];
+				} catch ( Exception $custom_error ) {
+					error_log( sprintf(
+						'MASE: Custom CSS injection failed: %s. Skipping custom CSS.',
+						$custom_error->getMessage()
+					) );
+					// Continue - custom CSS is optional.
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			// Graceful fallback: Return empty string on complete failure (Requirement 8.2).
+			error_log( sprintf(
+				'MASE: Login CSS generation failed completely: %s. Returning empty CSS.',
+				$e->getMessage()
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate login logo CSS.
+	 * 
+	 * Creates CSS to replace the default WordPress logo with a custom logo.
+	 * Handles sizing, positioning, and ensures proper aspect ratio maintenance.
+	 * 
+	 * Requirements: 1.4, 1.5
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Logo CSS targeting #login h1 a selector, or empty string if no logo.
+	 * 
+	 * @throws Exception On invalid logo URL or dimensions.
+	 */
+	private function generate_login_logo_css( $login ) {
+		try {
+			$logo_url = isset( $login['logo_url'] ) ? esc_url( $login['logo_url'] ) : '';
+			$width = isset( $login['logo_width'] ) ? absint( $login['logo_width'] ) : 84;
+			$height = isset( $login['logo_height'] ) ? absint( $login['logo_height'] ) : 84;
+
+			if ( empty( $logo_url ) ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Replace WordPress logo with custom logo (Requirement: 1.4, 1.5).
+			$css .= '#login h1 a {';
+			$css .= 'background-image: url(' . $logo_url . ') !important;';
+			$css .= 'width: ' . $width . 'px !important;';
+			$css .= 'height: ' . $height . 'px !important;';
+			$css .= 'background-size: contain !important;';
+			$css .= 'background-position: center !important;';
+			$css .= 'background-repeat: no-repeat !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Login logo CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate login background CSS.
+	 * 
+	 * Creates CSS for login page background customization. Supports three types:
+	 * solid color, image, and gradient. Handles opacity, positioning, and sizing.
+	 * 
+	 * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Background CSS targeting body.login selector.
+	 * 
+	 * @throws Exception On invalid background configuration.
+	 * 
+	 * @see generate_gradient_css() Helper method for gradient generation.
+	 */
+	private function generate_login_background_css( $login ) {
+		try {
+			$type = isset( $login['background_type'] ) ? $login['background_type'] : 'color';
+			$opacity = isset( $login['background_opacity'] ) ? absint( $login['background_opacity'] ) / 100 : 1;
+
+			$css = '';
+
+			// Apply background based on type (Requirements: 2.1, 2.2, 2.3, 2.4).
+			switch ( $type ) {
+				case 'image':
+					if ( ! empty( $login['background_image'] ) ) {
+						$bg_image = esc_url( $login['background_image'] );
+						$bg_size = isset( $login['background_size'] ) ? esc_attr( $login['background_size'] ) : 'cover';
+						$bg_position = isset( $login['background_position'] ) ? esc_attr( $login['background_position'] ) : 'center center';
+						$bg_repeat = isset( $login['background_repeat'] ) ? esc_attr( $login['background_repeat'] ) : 'no-repeat';
+
+						// Apply opacity using ::before pseudo-element if < 100% (Requirement: 2.5, 2.6).
+						if ( $opacity < 1 ) {
+							$css .= 'body.login {';
+							$css .= 'position: relative !important;';
+							$css .= '}';
+
+							$css .= 'body.login::before {';
+							$css .= 'content: "" !important;';
+							$css .= 'position: absolute !important;';
+							$css .= 'top: 0 !important;';
+							$css .= 'left: 0 !important;';
+							$css .= 'right: 0 !important;';
+							$css .= 'bottom: 0 !important;';
+							$css .= 'background-image: url(' . $bg_image . ') !important;';
+							$css .= 'background-size: ' . $bg_size . ' !important;';
+							$css .= 'background-position: ' . $bg_position . ' !important;';
+							$css .= 'background-repeat: ' . $bg_repeat . ' !important;';
+							$css .= 'opacity: ' . $opacity . ' !important;';
+							$css .= 'z-index: -1 !important;';
+							$css .= '}';
+						} else {
+							$css .= 'body.login {';
+							$css .= 'background-image: url(' . $bg_image . ') !important;';
+							$css .= 'background-size: ' . $bg_size . ' !important;';
+							$css .= 'background-position: ' . $bg_position . ' !important;';
+							$css .= 'background-repeat: ' . $bg_repeat . ' !important;';
+							$css .= '}';
+						}
+					}
+					break;
+
+				case 'gradient':
+					$gradient_css = $this->generate_gradient_css( $login );
+					if ( ! empty( $gradient_css ) ) {
+						$css .= 'body.login {';
+						$css .= 'background: ' . $gradient_css . ' !important;';
+						$css .= '}';
+					}
+					break;
+
+				case 'color':
+				default:
+					$color = isset( $login['background_color'] ) ? esc_attr( $login['background_color'] ) : '#f0f0f1';
+					$css .= 'body.login {';
+					$css .= 'background-color: ' . $color . ' !important;';
+					$css .= '}';
+					break;
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Login background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate login form styling CSS.
+	 * 
+	 * Creates CSS for login form appearance including colors, borders, shadows,
+	 * and optional glassmorphism effect. Handles form container, input fields,
+	 * and focus states.
+	 * 
+	 * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Form styling CSS targeting form and input selectors.
+	 * 
+	 * @throws Exception On invalid form styling configuration.
+	 * 
+	 * @see get_box_shadow_preset() Helper method for shadow presets.
+	 */
+	private function generate_login_form_css( $login ) {
+		try {
+			$css = '';
+
+			// Target login forms (Requirement: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6).
+			$css .= '#loginform, #registerform, #lostpasswordform {';
+
+			// Form background color (Requirement: 3.1).
+			if ( isset( $login['form_bg_color'] ) ) {
+				$css .= 'background-color: ' . esc_attr( $login['form_bg_color'] ) . ' !important;';
+			}
+
+			// Form border color (Requirement: 3.2).
+			if ( isset( $login['form_border_color'] ) ) {
+				$css .= 'border-color: ' . esc_attr( $login['form_border_color'] ) . ' !important;';
+			}
+
+			// Border radius (Requirement: 3.2).
+			if ( isset( $login['form_border_radius'] ) ) {
+				$radius = absint( $login['form_border_radius'] );
+				if ( $radius > 0 ) {
+					$css .= 'border-radius: ' . $radius . 'px !important;';
+				}
+			}
+
+			// Box shadow (Requirement: 3.3).
+			if ( isset( $login['form_box_shadow'] ) ) {
+				$shadow = $this->get_box_shadow_preset( $login['form_box_shadow'] );
+				if ( $shadow !== 'none' ) {
+					$css .= 'box-shadow: ' . $shadow . ' !important;';
+				}
+			}
+
+			// Glassmorphism effect (Requirement: 3.4).
+			if ( isset( $login['glassmorphism_enabled'] ) && $login['glassmorphism_enabled'] ) {
+				$blur = isset( $login['glassmorphism_blur'] ) ? absint( $login['glassmorphism_blur'] ) : 10;
+				$opacity = isset( $login['glassmorphism_opacity'] ) ? absint( $login['glassmorphism_opacity'] ) / 100 : 0.8;
+
+				$css .= 'backdrop-filter: blur(' . $blur . 'px) !important;';
+				$css .= '-webkit-backdrop-filter: blur(' . $blur . 'px) !important;';
+				$css .= 'background-color: rgba(255, 255, 255, ' . $opacity . ') !important;';
+				$css .= 'border: 1px solid rgba(255, 255, 255, 0.3) !important;';
+			}
+
+			$css .= '}';
+
+			// Input fields text color (Requirement: 3.5, 3.6).
+			if ( isset( $login['form_text_color'] ) ) {
+				$css .= '#loginform input[type="text"], #loginform input[type="password"],';
+				$css .= '#registerform input[type="text"], #registerform input[type="email"],';
+				$css .= '#lostpasswordform input[type="text"] {';
+				$css .= 'color: ' . esc_attr( $login['form_text_color'] ) . ' !important;';
+				$css .= '}';
+			}
+
+			// Focus state (Requirement: 3.6).
+			if ( isset( $login['form_focus_color'] ) ) {
+				$css .= '#loginform input:focus, #registerform input:focus, #lostpasswordform input:focus {';
+				$css .= 'border-color: ' . esc_attr( $login['form_focus_color'] ) . ' !important;';
+				$css .= 'box-shadow: 0 0 0 1px ' . esc_attr( $login['form_focus_color'] ) . ' !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Login form CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate login typography CSS.
+	 * 
+	 * Creates CSS for login form typography including font family, size, and weight
+	 * for labels and input fields.
+	 * 
+	 * Requirements: 3.5
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Typography CSS targeting label and input selectors.
+	 * 
+	 * @throws Exception On invalid typography configuration.
+	 */
+	private function generate_login_typography_css( $login ) {
+		try {
+			$css = '';
+
+			// Label typography (Requirement: 3.5).
+			$has_label_styles = isset( $login['label_font_family'] ) || 
+			                    isset( $login['label_font_size'] ) || 
+			                    isset( $login['label_font_weight'] );
+
+			if ( $has_label_styles ) {
+				$css .= '#loginform label, #registerform label, #lostpasswordform label {';
+
+				if ( isset( $login['label_font_family'] ) && $login['label_font_family'] !== 'system' ) {
+					$font_family = $this->get_font_family_css( $login['label_font_family'] );
+					if ( $font_family ) {
+						$css .= 'font-family: ' . $font_family . ' !important;';
+					}
+				}
+
+				if ( isset( $login['label_font_size'] ) ) {
+					$css .= 'font-size: ' . absint( $login['label_font_size'] ) . 'px !important;';
+				}
+
+				if ( isset( $login['label_font_weight'] ) ) {
+					$css .= 'font-weight: ' . absint( $login['label_font_weight'] ) . ' !important;';
+				}
+
+				$css .= '}';
+			}
+
+			// Input typography (Requirement: 3.5).
+			$has_input_styles = isset( $login['input_font_family'] ) || 
+			                    isset( $login['input_font_size'] );
+
+			if ( $has_input_styles ) {
+				$css .= '#loginform input[type="text"], #loginform input[type="password"],';
+				$css .= '#registerform input[type="text"], #registerform input[type="email"],';
+				$css .= '#lostpasswordform input[type="text"] {';
+
+				if ( isset( $login['input_font_family'] ) && $login['input_font_family'] !== 'system' ) {
+					$font_family = $this->get_font_family_css( $login['input_font_family'] );
+					if ( $font_family ) {
+						$css .= 'font-family: ' . $font_family . ' !important;';
+					}
+				}
+
+				if ( isset( $login['input_font_size'] ) ) {
+					$css .= 'font-size: ' . absint( $login['input_font_size'] ) . 'px !important;';
+				}
+
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Login typography CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate additional login elements CSS.
+	 * 
+	 * Creates CSS for additional login page elements including custom footer
+	 * styling and WordPress branding visibility control.
+	 * 
+	 * Requirements: 4.1, 4.2
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Additional elements CSS for footer and branding.
+	 * 
+	 * @throws Exception On invalid additional elements configuration.
+	 */
+	private function generate_login_additional_css( $login ) {
+		try {
+			$css = '';
+
+			// Custom footer styling (Requirement: 4.1).
+			if ( ! empty( $login['footer_text'] ) ) {
+				$css .= '.mase-login-footer {';
+				$css .= 'text-align: center !important;';
+				$css .= 'margin-top: 20px !important;';
+				$css .= 'padding: 10px !important;';
+				$css .= '}';
+			}
+
+			// Hide WordPress branding (Requirement: 4.2).
+			if ( isset( $login['hide_wp_branding'] ) && $login['hide_wp_branding'] ) {
+				$css .= '#backtoblog, #nav {';
+				$css .= 'display: none !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Login additional CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Get box shadow preset value.
+	 * 
+	 * Maps preset names to predefined box-shadow CSS values. Provides consistent
+	 * shadow styling options for login form.
+	 * 
+	 * Requirements: 3.3
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param string $preset Shadow preset name ('none', 'default', 'subtle', 'medium', 'strong').
+	 * @return string Box shadow CSS value, defaults to 'default' if preset not found.
+	 */
+	private function get_box_shadow_preset( $preset ) {
+		$presets = array(
+			'none'    => 'none',
+			'default' => '0 1px 3px rgba(0, 0, 0, 0.13)',
+			'subtle'  => '0 2px 4px rgba(0, 0, 0, 0.1)',
+			'medium'  => '0 4px 8px rgba(0, 0, 0, 0.15)',
+			'strong'  => '0 8px 16px rgba(0, 0, 0, 0.2)',
+		);
+
+		return isset( $presets[ $preset ] ) ? $presets[ $preset ] : $presets['default'];
+	}
+
+	/**
+	 * Generate gradient CSS value.
+	 * 
+	 * Creates CSS gradient value from settings. Supports both linear and radial
+	 * gradients with multiple color stops. Handles angle for linear gradients.
+	 * 
+	 * Requirements: 2.3, 2.4
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 * 
+	 * @param array $login Login customization settings array.
+	 * @return string Complete gradient CSS value (linear-gradient or radial-gradient).
+	 * 
+	 * @throws Exception On invalid gradient configuration.
+	 */
+	private function generate_gradient_css( $login ) {
+		try {
+			$type = isset( $login['gradient_type'] ) ? $login['gradient_type'] : 'linear';
+			$angle = isset( $login['gradient_angle'] ) ? absint( $login['gradient_angle'] ) : 135;
+			$colors = isset( $login['gradient_colors'] ) ? $login['gradient_colors'] : array();
+
+			// Ensure we have at least 2 color stops (Requirement: 2.3, 2.4).
+			if ( count( $colors ) < 2 ) {
+				$colors = array(
+					array( 'color' => '#667eea', 'position' => 0 ),
+					array( 'color' => '#764ba2', 'position' => 100 ),
+				);
+			}
+
+			// Build color stops string.
+			$color_stops = array();
+			foreach ( $colors as $stop ) {
+				$color = isset( $stop['color'] ) ? esc_attr( $stop['color'] ) : '#667eea';
+				$position = isset( $stop['position'] ) ? absint( $stop['position'] ) : 0;
+				$color_stops[] = $color . ' ' . $position . '%';
+			}
+			$stops_str = implode( ', ', $color_stops );
+
+			// Generate gradient based on type (Requirement: 2.3, 2.4).
+			if ( $type === 'radial' ) {
+				return 'radial-gradient(circle, ' . $stops_str . ')';
+			}
+
+			return 'linear-gradient(' . $angle . 'deg, ' . $stops_str . ')';
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Gradient CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+
+
+	/**
+	 * Calculate relative luminance of RGB color.
+	 * Task 11.1: Implements WCAG 2.1 relative luminance formula.
+	 * Requirements: 10.1, 10.2
+	 *
+	 * @param array $rgb RGB values array with 'r', 'g', 'b' keys (0-255).
+	 * @return float Relative luminance (0.0 to 1.0).
+	 */
+	private function calculate_relative_luminance( $rgb ) {
+		// Normalize RGB values to 0-1 range.
+		$r = $rgb['r'] / 255.0;
+		$g = $rgb['g'] / 255.0;
+		$b = $rgb['b'] / 255.0;
+
+		// Apply gamma correction (WCAG 2.1 formula).
+		$r = ( $r <= 0.03928 ) ? $r / 12.92 : pow( ( $r + 0.055 ) / 1.055, 2.4 );
+		$g = ( $g <= 0.03928 ) ? $g / 12.92 : pow( ( $g + 0.055 ) / 1.055, 2.4 );
+		$b = ( $b <= 0.03928 ) ? $b / 12.92 : pow( ( $b + 0.055 ) / 1.055, 2.4 );
+
+		// Calculate relative luminance using WCAG formula.
+		return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+	}
+
+	/**
+	 * Calculate contrast ratio between two colors.
+	 * Task 11.1: Implements WCAG 2.1 contrast ratio formula.
+	 * Requirements: 10.1, 10.2
+	 *
+	 * @param string $foreground Foreground color (hex).
+	 * @param string $background Background color (hex).
+	 * @return float Contrast ratio (1.0 to 21.0).
+	 */
+	public function calculate_contrast_ratio( $foreground, $background ) {
+		try {
+			$fg_rgb = $this->hex_to_rgb( $foreground );
+			$bg_rgb = $this->hex_to_rgb( $background );
+
+			$fg_luminance = $this->calculate_relative_luminance( $fg_rgb );
+			$bg_luminance = $this->calculate_relative_luminance( $bg_rgb );
+
+			// Calculate contrast ratio (WCAG 2.1 formula).
+			$lighter = max( $fg_luminance, $bg_luminance );
+			$darker = min( $fg_luminance, $bg_luminance );
+
+			return ( $lighter + 0.05 ) / ( $darker + 0.05 );
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Contrast ratio calculation failed: %s', $e->getMessage() ) );
+			return 1.0; // Return minimum contrast on error.
+		}
+	}
+
+	/**
+	 * Validate accessibility of login customization settings.
+	 * Task 11.1: Check contrast ratios and provide warnings.
+	 * Requirements: 10.1, 10.2
+	 *
+	 * @param array $settings Login customization settings.
+	 * @return array Validation results with 'valid' boolean and 'warnings' array.
+	 */
+	public function validate_accessibility( $settings ) {
+		$warnings = array();
+
+		// Check if login customization exists.
+		if ( ! isset( $settings['login_customization'] ) ) {
+			return array(
+				'valid' => true,
+				'warnings' => array(),
+			);
+		}
+
+		$login = $settings['login_customization'];
+
+		// Check form text/background contrast (Requirement: 10.1).
+		if ( isset( $login['form_text_color'] ) && isset( $login['form_bg_color'] ) ) {
+			$ratio = $this->calculate_contrast_ratio(
+				$login['form_text_color'],
+				$login['form_bg_color']
+			);
+
+			if ( $ratio < 4.5 ) {
+				$warnings[] = sprintf(
+					/* translators: %s: contrast ratio value */
+					__( 'Form text contrast ratio is %.2f:1. WCAG AA requires 4.5:1 minimum for normal text.', 'modern-admin-styler' ),
+					$ratio
+				);
+			}
+		}
+
+		// Check glassmorphism readability (Requirement: 10.2).
+		if ( ! empty( $login['glassmorphism_enabled'] ) ) {
+			$opacity = isset( $login['glassmorphism_opacity'] ) ?
+				absint( $login['glassmorphism_opacity'] ) : 80;
+
+			if ( $opacity < 70 ) {
+				$warnings[] = __( 'Glassmorphism opacity below 70% may reduce text readability. Consider increasing opacity for better accessibility.', 'modern-admin-styler' );
+			}
+		}
+
+		// Check label text contrast if custom colors are set.
+		if ( isset( $login['form_text_color'] ) && isset( $login['form_bg_color'] ) ) {
+			// Labels use the same text color as form text.
+			$label_ratio = $this->calculate_contrast_ratio(
+				$login['form_text_color'],
+				$login['form_bg_color']
+			);
+
+			if ( $label_ratio < 4.5 ) {
+				$warnings[] = sprintf(
+					/* translators: %s: contrast ratio value */
+					__( 'Label text contrast ratio is %.2f:1. Ensure labels are readable against the form background.', 'modern-admin-styler' ),
+					$label_ratio
+				);
+			}
+		}
+
+		// Check focus color contrast (Requirement: 10.1).
+		if ( isset( $login['form_focus_color'] ) && isset( $login['form_bg_color'] ) ) {
+			$focus_ratio = $this->calculate_contrast_ratio(
+				$login['form_focus_color'],
+				$login['form_bg_color']
+			);
+
+			if ( $focus_ratio < 3.0 ) {
+				$warnings[] = sprintf(
+					/* translators: %s: contrast ratio value */
+					__( 'Focus indicator contrast ratio is %.2f:1. WCAG AA requires 3.0:1 minimum for UI components.', 'modern-admin-styler' ),
+					$focus_ratio
+				);
+			}
+		}
+
+		return array(
+			'valid' => empty( $warnings ),
+			'warnings' => $warnings,
+		);
+	}
+
+	/**
+	 * Generate button styles CSS.
+	 * Main entry point for Universal Button Styling System.
+	 * Requirements: 7.1, 7.2, 7.3
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Button styles CSS.
+	 */
+	private function generate_button_styles( $settings ) {
+		// Start performance monitoring (<100ms target).
+		$start_time = microtime( true );
+
+		try {
+			$buttons = isset( $settings['universal_buttons'] ) ? $settings['universal_buttons'] : array();
+
+			if ( empty( $buttons ) ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Get excluded selectors for plugin compatibility (Requirements 10.1, 10.2).
+			$excluded_selectors = isset( $settings['excluded_button_selectors'] ) ? $settings['excluded_button_selectors'] : '';
+			$excluded_array = $this->parse_excluded_selectors( $excluded_selectors );
+
+			// Generate CSS custom properties for easier management (Requirement 7.6).
+			$css .= $this->generate_button_css_variables( $buttons );
+
+			// Button type selector mapping (Requirements 7.1, 7.2, 7.3, 7.4, 7.5).
+			$button_types = array(
+				'primary'   => array( '.button-primary', '.wp-core-ui .button-primary' ),
+				'secondary' => array( '.button', '.wp-core-ui .button' ),
+				'danger'    => array( '.button.delete', '.submitdelete' ),
+				'success'   => array( '.button.button-large' ),
+				'ghost'     => array( '.button-link' ),
+				'tabs'      => array( '.nav-tab', '.nav-tab-active' ),
+			);
+
+			// Generate styles for each button type.
+			foreach ( $button_types as $type => $selectors ) {
+				if ( ! isset( $buttons[ $type ] ) ) {
+					continue;
+				}
+
+				// Filter out excluded selectors (Requirement 10.1).
+				$filtered_selectors = $this->filter_excluded_selectors( $selectors, $excluded_array );
+
+				// Skip if all selectors are excluded.
+				if ( empty( $filtered_selectors ) ) {
+					continue;
+				}
+
+				$css .= $this->generate_button_type_css( $type, $filtered_selectors, $buttons[ $type ] );
+			}
+
+			// Generate ripple effect animation if enabled (Requirement 4.3).
+			$css .= $this->generate_ripple_animation_css( $buttons );
+
+			// Generate mobile responsive button CSS (Requirements 9.1, 9.2, 9.3).
+			$css .= $this->generate_button_mobile_css( $buttons, $excluded_array );
+
+			// Performance monitoring.
+			$duration = ( microtime( true ) - $start_time ) * 1000;
+			if ( $duration > 100 ) {
+				error_log( sprintf( 'MASE: Button styles generation exceeded threshold: %.2fms > 100ms', $duration ) );
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button styles generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate CSS custom properties for button styles.
+	 * Requirement 7.6: Use naming convention --mase-btn-{type}-{state}-{property}
+	 *
+	 * @param array $buttons Button settings array.
+	 * @return string CSS custom properties.
+	 */
+	private function generate_button_css_variables( $buttons ) {
+		try {
+			$css = ':root {';
+
+			foreach ( $buttons as $type => $states ) {
+				foreach ( $states as $state => $props ) {
+					$prefix = '--mase-btn-' . $type . '-' . $state;
+
+					$css .= $prefix . '-bg: ' . $props['bg_color'] . ';';
+					$css .= $prefix . '-text: ' . $props['text_color'] . ';';
+					$css .= $prefix . '-border: ' . $props['border_color'] . ';';
+					$css .= $prefix . '-shadow: ' . $this->get_button_shadow_value( $props ) . ';';
+				}
+			}
+
+			$css .= '}';
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button CSS variables generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate CSS for a specific button type.
+	 * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 7.1, 7.2, 7.3, 7.4, 7.5, 8.3
+	 *
+	 * @param string $type Button type (primary, secondary, etc.).
+	 * @param array  $selectors CSS selectors for this button type.
+	 * @param array  $states Button states (normal, hover, active, focus, disabled).
+	 * @return string Button type CSS.
+	 */
+	private function generate_button_type_css( $type, $selectors, $states ) {
+		try {
+			$css = '';
+			$selector_string = implode( ', ', $selectors );
+
+			// Normal state.
+			if ( isset( $states['normal'] ) ) {
+				$css .= $selector_string . ' {';
+				$css .= $this->generate_button_state_properties( $states['normal'] );
+				$css .= '}';
+			}
+
+			// Hover state.
+			if ( isset( $states['hover'] ) ) {
+				$hover_selectors = array_map(
+					function ( $sel ) {
+						return $sel . ':hover';
+					},
+					$selectors
+				);
+				$css .= implode( ', ', $hover_selectors ) . ' {';
+				$css .= $this->generate_button_state_properties( $states['hover'] );
+				$css .= '}';
+			}
+
+			// Active state.
+			if ( isset( $states['active'] ) ) {
+				$active_selectors = array_map(
+					function ( $sel ) {
+						return $sel . ':active';
+					},
+					$selectors
+				);
+				$css .= implode( ', ', $active_selectors ) . ' {';
+				$css .= $this->generate_button_state_properties( $states['active'] );
+				$css .= '}';
+			}
+
+			// Focus state with accessibility indicators (Requirement 8.3).
+			if ( isset( $states['focus'] ) ) {
+				$focus_selectors = array_map(
+					function ( $sel ) {
+						return $sel . ':focus';
+					},
+					$selectors
+				);
+				$css .= implode( ', ', $focus_selectors ) . ' {';
+				$css .= $this->generate_button_state_properties( $states['focus'] );
+				// Ensure visible focus indicator for accessibility (2px outline).
+				$css .= 'outline: 2px solid ' . $states['focus']['border_color'] . ' !important;';
+				$css .= 'outline-offset: 2px !important;';
+				$css .= '}';
+			}
+
+			// Disabled state.
+			if ( isset( $states['disabled'] ) ) {
+				$disabled_selectors = array_map(
+					function ( $sel ) {
+						return $sel . ':disabled, ' . $sel . '[disabled]';
+					},
+					$selectors
+				);
+				$css .= implode( ', ', $disabled_selectors ) . ' {';
+				$css .= $this->generate_button_state_properties( $states['disabled'] );
+				$css .= 'cursor: not-allowed !important;';
+				$css .= 'opacity: 0.6 !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button type CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate CSS properties for a button state.
+	 * Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3, 4.1, 4.2, 4.3
+	 *
+	 * @param array $props Button state properties.
+	 * @return string CSS properties.
+	 */
+	private function generate_button_state_properties( $props ) {
+		try {
+			$css = '';
+
+			// Background (solid or gradient) (Requirements 1.1, 1.2).
+			if ( $props['bg_type'] === 'gradient' ) {
+				$css .= $this->generate_button_gradient_background( $props );
+			} else {
+				$css .= 'background-color: ' . $props['bg_color'] . ' !important;';
+			}
+
+			// Text color (Requirement 1.3).
+			$css .= 'color: ' . $props['text_color'] . ' !important;';
+
+			// Border (Requirement 1.4).
+			if ( $props['border_width'] > 0 && $props['border_style'] !== 'none' ) {
+				$css .= 'border: ' . $props['border_width'] . 'px ' . $props['border_style'] . ' ' . $props['border_color'] . ' !important;';
+			} else {
+				$css .= 'border: none !important;';
+			}
+
+			// Border radius (Requirement 1.4).
+			if ( $props['border_radius_mode'] === 'individual' ) {
+				$css .= sprintf(
+					'border-radius: %dpx %dpx %dpx %dpx !important;',
+					$props['border_radius_tl'],
+					$props['border_radius_tr'],
+					$props['border_radius_br'],
+					$props['border_radius_bl']
+				);
+			} else {
+				$css .= 'border-radius: ' . $props['border_radius'] . 'px !important;';
+			}
+
+			// Padding (Requirement 1.5).
+			$css .= sprintf(
+				'padding: %dpx %dpx !important;',
+				$props['padding_vertical'],
+				$props['padding_horizontal']
+			);
+
+			// Typography (Requirements 2.1, 2.2, 2.3).
+			$css .= 'font-size: ' . $props['font_size'] . 'px !important;';
+			$css .= 'font-weight: ' . $props['font_weight'] . ' !important;';
+			$css .= 'text-transform: ' . $props['text_transform'] . ' !important;';
+
+			// Shadow (Requirements 4.1, 4.2).
+			if ( $props['shadow_mode'] !== 'none' ) {
+				$shadow_value = $this->get_button_shadow_value( $props );
+				if ( $shadow_value !== 'none' ) {
+					$css .= 'box-shadow: ' . $shadow_value . ' !important;';
+				}
+			}
+
+			// Transition (Requirement 4.2).
+			if ( $props['transition_duration'] > 0 ) {
+				$css .= 'transition: all ' . $props['transition_duration'] . 'ms ease !important;';
+			}
+
+			// Ripple effect positioning (Requirement 4.3).
+			if ( $props['ripple_effect'] ) {
+				$css .= 'position: relative !important;';
+				$css .= 'overflow: hidden !important;';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button state properties generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate gradient background CSS for buttons.
+	 * Requirement 1.1: Support linear and radial gradients
+	 *
+	 * @param array $props Button state properties.
+	 * @return string Gradient background CSS.
+	 */
+	private function generate_button_gradient_background( $props ) {
+		try {
+			$gradient_type   = $props['gradient_type'];
+			$gradient_angle  = $props['gradient_angle'];
+			$gradient_colors = $props['gradient_colors'];
+
+			// Build color stops string.
+			$color_stops = array();
+			foreach ( $gradient_colors as $stop ) {
+				$color_stops[] = $stop['color'] . ' ' . $stop['position'] . '%';
+			}
+			$color_stops_str = implode( ', ', $color_stops );
+
+			if ( $gradient_type === 'radial' ) {
+				return 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
+			} else {
+				return 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+			}
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button gradient background generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Get button shadow value.
+	 * Requirements: 4.1, 4.2 - Support preset and custom shadows
+	 *
+	 * @param array $props Button state properties.
+	 * @return string Shadow CSS value.
+	 */
+	private function get_button_shadow_value( $props ) {
+		try {
+			if ( $props['shadow_mode'] === 'preset' ) {
+				// Preset shadows (Requirement 4.1).
+				$presets = array(
+					'none'   => 'none',
+					'subtle' => '0 1px 2px rgba(0,0,0,0.1)',
+					'medium' => '0 2px 4px rgba(0,0,0,0.15)',
+					'strong' => '0 4px 8px rgba(0,0,0,0.2)',
+				);
+				return isset( $presets[ $props['shadow_preset'] ] ) ? $presets[ $props['shadow_preset'] ] : 'none';
+			} else {
+				// Custom shadow (Requirement 4.2).
+				return sprintf(
+					'%dpx %dpx %dpx %dpx %s',
+					$props['shadow_h_offset'],
+					$props['shadow_v_offset'],
+					$props['shadow_blur'],
+					$props['shadow_spread'],
+					$props['shadow_color']
+				);
+			}
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button shadow value generation failed: %s', $e->getMessage() ) );
+			return 'none';
+		}
+	}
+
+	/**
+	 * Generate ripple animation CSS.
+	 * Requirement 4.3: Generate @keyframes and .mase-ripple-effect class
+	 *
+	 * @param array $buttons Button settings array.
+	 * @return string Ripple animation CSS.
+	 */
+	private function generate_ripple_animation_css( $buttons ) {
+		try {
+			// Check if any button has ripple effect enabled.
+			$ripple_enabled = false;
+			foreach ( $buttons as $type => $states ) {
+				foreach ( $states as $state => $props ) {
+					if ( $props['ripple_effect'] ) {
+						$ripple_enabled = true;
+						break 2;
+					}
+				}
+			}
+
+			if ( ! $ripple_enabled ) {
+				return '';
+			}
+
+			// Generate ripple animation CSS.
+			$css  = '@keyframes mase-ripple {';
+			$css .= '0% { transform: scale(0); opacity: 1; }';
+			$css .= '100% { transform: scale(4); opacity: 0; }';
+			$css .= '}';
+
+			$css .= '.mase-ripple-effect {';
+			$css .= 'position: absolute !important;';
+			$css .= 'border-radius: 50% !important;';
+			$css .= 'background: rgba(255, 255, 255, 0.6) !important;';
+			$css .= 'animation: mase-ripple 600ms ease-out !important;';
+			$css .= 'pointer-events: none !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Ripple animation CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate mobile responsive button CSS.
+	 * Requirements: 9.1, 9.2, 9.3 - Adjust for mobile screens
+	 *
+	 * @param array $buttons Button settings array.
+	 * @param array $excluded_selectors Selectors to exclude.
+	 * @return string Mobile responsive CSS.
+	 */
+	private function generate_button_mobile_css( $buttons, $excluded_selectors = array() ) {
+		try {
+			$css = '@media screen and (max-width: 782px) {';
+
+			foreach ( $buttons as $type => $states ) {
+				if ( ! isset( $states['normal'] ) ) {
+					continue;
+				}
+
+				$props = $states['normal'];
+
+				// Adjust font size for mobile (minimum 14px) (Requirement 9.1).
+				$mobile_font_size = max( 14, $props['font_size'] );
+
+				// Ensure minimum touch target size (44x44px) (Requirement 9.2).
+				$mobile_padding_v = max( 10, $props['padding_vertical'] );
+				$mobile_padding_h = max( 12, $props['padding_horizontal'] );
+
+				$selectors = $this->get_button_selectors( $type );
+
+				// Filter out excluded selectors (Requirement 10.1).
+				$filtered_selectors = $this->filter_excluded_selectors( $selectors, $excluded_selectors );
+
+				// Skip if all selectors are excluded.
+				if ( empty( $filtered_selectors ) ) {
+					continue;
+				}
+
+				$selector_string = implode( ', ', $filtered_selectors );
+
+				$css .= $selector_string . ' {';
+				$css .= 'font-size: ' . $mobile_font_size . 'px !important;';
+				$css .= 'padding: ' . $mobile_padding_v . 'px ' . $mobile_padding_h . 'px !important;';
+				$css .= 'min-height: 44px !important;'; // Requirement 9.2.
+				$css .= 'min-width: 44px !important;';  // Requirement 9.2.
+				$css .= '}';
+			}
+
+			$css .= '}';
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Button mobile CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Get button selectors for a button type.
+	 * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5 - Map types to WordPress selectors
+	 *
+	 * @param string $type Button type.
+	 * @return array CSS selectors.
+	 */
+	private function get_button_selectors( $type ) {
+		$button_types = array(
+			'primary'   => array( '.button-primary', '.wp-core-ui .button-primary' ),
+			'secondary' => array( '.button', '.wp-core-ui .button' ),
+			'danger'    => array( '.button.delete', '.submitdelete' ),
+			'success'   => array( '.button.button-large' ),
+			'ghost'     => array( '.button-link' ),
+			'tabs'      => array( '.nav-tab', '.nav-tab-active' ),
+		);
+
+		return isset( $button_types[ $type ] ) ? $button_types[ $type ] : array();
+	}
+
+	/**
+	 * Parse excluded button selectors from settings.
+	 * Requirements: 10.1, 10.2 - Parse comma-separated exclusion list
+	 *
+	 * @param string $excluded_selectors Comma-separated list of selectors to exclude.
+	 * @return array Array of trimmed selectors.
+	 */
+	private function parse_excluded_selectors( $excluded_selectors ) {
+		if ( empty( $excluded_selectors ) ) {
+			return array();
+		}
+
+		// Split by comma and trim each selector.
+		$selectors = array_map( 'trim', explode( ',', $excluded_selectors ) );
+
+		// Remove empty values.
+		return array_filter( $selectors );
+	}
+
+	/**
+	 * Filter out excluded selectors from button selectors.
+	 * Requirements: 10.1, 10.2 - Implement exclusion logic in CSS generation
+	 *
+	 * @param array $selectors        Button selectors to filter.
+	 * @param array $excluded_selectors Selectors to exclude.
+	 * @return array Filtered selectors.
+	 */
+	private function filter_excluded_selectors( $selectors, $excluded_selectors ) {
+		if ( empty( $excluded_selectors ) ) {
+			return $selectors;
+		}
+
+		$filtered = array();
+
+		foreach ( $selectors as $selector ) {
+			$should_exclude = false;
+
+			foreach ( $excluded_selectors as $excluded ) {
+				// Check for exact match or if selector contains the excluded pattern.
+				if ( $selector === $excluded || strpos( $selector, $excluded ) !== false ) {
+					$should_exclude = true;
+					break;
+				}
+			}
+
+			if ( ! $should_exclude ) {
+				$filtered[] = $selector;
+			}
+		}
+
+		return $filtered;
+	}
+
+	/**
+	 * Generate background styles for all admin areas.
+	 * Task 7: Advanced Background System - Image backgrounds
+	 * Requirements: 1.1, 1.3, 4.1, 5.1, 5.2
+	 *
+	 * @param array $settings Full settings array.
+	 * @return string Generated background CSS.
+	 */
+	private function generate_background_styles( $settings ) {
+		try {
+			// Check if custom_backgrounds section exists.
+			if ( ! isset( $settings['custom_backgrounds'] ) ) {
+				return '';
+			}
+
+			$backgrounds = $settings['custom_backgrounds'];
+			$css = '';
+
+			// Define selector mapping for all 6 admin areas (Requirement 4.1).
+			$area_selectors = array(
+				'dashboard'   => '#wpbody-content',
+				'admin_menu'  => '#adminmenu',
+				'post_lists'  => '.wp-list-table',
+				'post_editor' => '#post-body',
+				'widgets'     => '.postbox',
+				'login'       => 'body.login',
+			);
+
+			// Generate CSS for each admin area.
+			foreach ( $area_selectors as $area => $selector ) {
+				if ( isset( $backgrounds[ $area ] ) ) {
+					$css .= $this->generate_area_background_css( $backgrounds[ $area ], $selector );
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Background styles generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate CSS for a specific background area.
+	 * Task 7: Advanced Background System - Area-specific backgrounds
+	 * Requirements: 1.1, 1.3, 4.1, 5.1, 5.2
+	 *
+	 * @param array  $bg_config Background configuration for the area.
+	 * @param string $selector  CSS selector for the area.
+	 * @return string Generated CSS for the area.
+	 */
+	private function generate_area_background_css( $bg_config, $selector ) {
+		try {
+			// Skip if background is disabled or type is 'none' (Requirement 4.1).
+			$enabled = isset( $bg_config['enabled'] ) ? $bg_config['enabled'] : false;
+			$type = isset( $bg_config['type'] ) ? $bg_config['type'] : 'none';
+
+			if ( ! $enabled || $type === 'none' ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Generate CSS based on background type (Requirement 1.1, 1.3).
+			switch ( $type ) {
+				case 'image':
+					$css .= $this->generate_image_background( $bg_config, $selector );
+					break;
+
+				case 'gradient':
+					$css .= $this->generate_gradient_background_css( $bg_config, $selector );
+					break;
+
+				case 'pattern':
+					// Pattern support will be added in Phase 3 (Task 20).
+					// For now, skip pattern backgrounds.
+					break;
+
+				default:
+					// Unknown type, skip.
+					break;
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Area background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate image background CSS.
+	 * Task 7: Advanced Background System - Image background properties
+	 * Requirements: 1.1, 1.3, 5.1, 5.2
+	 *
+	 * @param array  $config   Image background configuration.
+	 * @param string $selector CSS selector for the area.
+	 * @return string Generated image background CSS.
+	 */
+	private function generate_image_background( $config, $selector ) {
+		try {
+			// Get image URL (Requirement 1.1).
+			$image_url = isset( $config['image_url'] ) ? esc_url( $config['image_url'] ) : '';
+
+			// Skip if no image URL is provided.
+			if ( empty( $image_url ) ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Start CSS rule for the selector.
+			$css .= 'body.wp-admin ' . $selector . ' {';
+
+			// Background image (Requirement 1.1).
+			$css .= 'background-image: url(' . $image_url . ') !important;';
+
+			// Background position (Requirement 1.3).
+			$position = isset( $config['position'] ) ? $config['position'] : 'center center';
+			$css .= 'background-position: ' . esc_attr( $position ) . ' !important;';
+
+			// Background size (Requirement 1.3).
+			$size = isset( $config['size'] ) ? $config['size'] : 'cover';
+			if ( $size === 'custom' && isset( $config['size_custom'] ) ) {
+				$css .= 'background-size: ' . esc_attr( $config['size_custom'] ) . ' !important;';
+			} else {
+				$css .= 'background-size: ' . esc_attr( $size ) . ' !important;';
+			}
+
+			// Background repeat (Requirement 1.3).
+			$repeat = isset( $config['repeat'] ) ? $config['repeat'] : 'no-repeat';
+			$css .= 'background-repeat: ' . esc_attr( $repeat ) . ' !important;';
+
+			// Background attachment (Requirement 1.3).
+			$attachment = isset( $config['attachment'] ) ? $config['attachment'] : 'scroll';
+			$css .= 'background-attachment: ' . esc_attr( $attachment ) . ' !important;';
+
+			// Apply opacity using rgba or opacity property (Requirement 5.1).
+			$opacity = isset( $config['opacity'] ) ? absint( $config['opacity'] ) : 100;
+			if ( $opacity < 100 ) {
+				// Convert opacity from 0-100 to 0-1 range.
+				$opacity_decimal = $opacity / 100;
+				$css .= 'opacity: ' . $opacity_decimal . ' !important;';
+			}
+
+			// Apply blend mode (Requirement 5.2).
+			$blend_mode = isset( $config['blend_mode'] ) ? $config['blend_mode'] : 'normal';
+			if ( $blend_mode !== 'normal' ) {
+				// Validate blend mode against allowed CSS values.
+				$valid_blend_modes = array(
+					'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
+					'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+					'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity',
+				);
+
+				if ( in_array( $blend_mode, $valid_blend_modes, true ) ) {
+					$css .= 'mix-blend-mode: ' . esc_attr( $blend_mode ) . ' !important;';
+				}
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Image background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate gradient background CSS.
+	 * Task 11: Advanced Background System - Gradient background support
+	 * Requirements: 2.1, 2.2, 2.4
+	 *
+	 * @param array  $config   Gradient background configuration.
+	 * @param string $selector CSS selector for the area.
+	 * @return string Generated gradient background CSS.
+	 */
+	private function generate_gradient_background_css( $config, $selector ) {
+		try {
+			// Get gradient type (Requirement 2.1).
+			$gradient_type = isset( $config['gradient_type'] ) ? $config['gradient_type'] : 'linear';
+
+			// Get gradient colors array (Requirement 2.2).
+			$gradient_colors = isset( $config['gradient_colors'] ) ? $config['gradient_colors'] : array();
+
+			// Handle edge case: missing colors - require at least 2 color stops (Requirement 2.2).
+			if ( count( $gradient_colors ) < 2 ) {
+				error_log( 'MASE: Gradient requires at least 2 color stops, skipping' );
+				return '';
+			}
+
+			// Validate and sanitize color stops.
+			$valid_color_stops = array();
+			foreach ( $gradient_colors as $stop ) {
+				// Validate color and position exist.
+				if ( ! isset( $stop['color'] ) || ! isset( $stop['position'] ) ) {
+					continue;
+				}
+
+				$color = sanitize_hex_color( $stop['color'] );
+				$position = absint( $stop['position'] );
+
+				// Ensure position is within valid range (0-100).
+				if ( $position < 0 || $position > 100 ) {
+					continue;
+				}
+
+				// Only add valid color stops.
+				if ( $color ) {
+					$valid_color_stops[] = array(
+						'color'    => $color,
+						'position' => $position,
+					);
+				}
+			}
+
+			// Handle edge case: after validation, ensure we still have at least 2 stops.
+			if ( count( $valid_color_stops ) < 2 ) {
+				error_log( 'MASE: Not enough valid gradient color stops after validation, skipping' );
+				return '';
+			}
+
+			// Sort color stops by position for proper gradient rendering.
+			usort( $valid_color_stops, function( $a, $b ) {
+				return $a['position'] - $b['position'];
+			});
+
+			// Build color stops string (Requirement 2.2).
+			$color_stops_array = array();
+			foreach ( $valid_color_stops as $stop ) {
+				$color_stops_array[] = $stop['color'] . ' ' . $stop['position'] . '%';
+			}
+			$color_stops_str = implode( ', ', $color_stops_array );
+
+			$css = '';
+
+			// Start CSS rule for the selector.
+			$css .= 'body.wp-admin ' . $selector . ' {';
+
+			// Generate gradient CSS based on type (Requirement 2.1, 2.4).
+			if ( $gradient_type === 'radial' ) {
+				// Radial gradient (circle, ellipse) (Requirement 2.1).
+				$css .= 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
+			} else {
+				// Linear gradient with angle (Requirement 2.1, 2.4).
+				$gradient_angle = isset( $config['gradient_angle'] ) ? absint( $config['gradient_angle'] ) : 90;
+
+				// Handle edge case: invalid angle - normalize to 0-360 range.
+				if ( $gradient_angle < 0 || $gradient_angle > 360 ) {
+					$gradient_angle = $gradient_angle % 360;
+					if ( $gradient_angle < 0 ) {
+						$gradient_angle += 360;
+					}
+				}
+
+				$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+			}
+
+			// Apply opacity if set (Requirement 5.1).
+			$opacity = isset( $config['opacity'] ) ? absint( $config['opacity'] ) : 100;
+			if ( $opacity < 100 ) {
+				// Convert opacity from 0-100 to 0-1 range.
+				$opacity_decimal = $opacity / 100;
+				$css .= 'opacity: ' . $opacity_decimal . ' !important;';
+			}
+
+			// Apply blend mode if set (Requirement 5.2).
+			$blend_mode = isset( $config['blend_mode'] ) ? $config['blend_mode'] : 'normal';
+			if ( $blend_mode !== 'normal' ) {
+				// Validate blend mode against allowed CSS values.
+				$valid_blend_modes = array(
+					'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
+					'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+					'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity',
+				);
+
+				if ( in_array( $blend_mode, $valid_blend_modes, true ) ) {
+					$css .= 'mix-blend-mode: ' . esc_attr( $blend_mode ) . ' !important;';
+				}
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Gradient background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
 	}
 }

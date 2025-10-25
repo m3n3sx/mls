@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Live Preview Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1d2327;
+            margin-top: 0;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1d2327;
+        }
+        
+        .control-group select,
+        .control-group input[type="text"],
+        .control-group input[type="range"] {
+            padding: 6px 8px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .control-group input[type="range"] {
+            padding: 0;
+        }
+        
+        .range-value {
+            font-size: 12px;
+            color: #646970;
+        }
+        
+        .preview-area {
+            margin-top: 20px;
+            padding: 40px;
+            border: 2px dashed #8c8f94;
+            border-radius: 4px;
+            min-height: 200px;
+            background: #f6f7f7;
+            position: relative;
+        }
+        
+        .preview-area h3 {
+            margin: 0 0 10px 0;
+            color: #1d2327;
+        }
+        
+        .preview-area p {
+            margin: 0;
+            color: #646970;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .status.success {
+            background: #d7f0d7;
+            color: #1e4620;
+            border: 1px solid #00a32a;
+        }
+        
+        .status.error {
+            background: #f7d7d7;
+            color: #8a2424;
+            border: 1px solid #d63638;
+        }
+        
+        .status.info {
+            background: #e5f5fa;
+            color: #1d2327;
+            border: 1px solid #72aee6;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background: #2271b1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #135e96;
+        }
+        
+        button:disabled {
+            background: #dcdcde;
+            cursor: not-allowed;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+        }
+        
+        .test-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #ddd;
+            background: #f6f7f7;
+        }
+        
+        .test-item.pass {
+            border-left-color: #00a32a;
+            background: #d7f0d7;
+        }
+        
+        .test-item.fail {
+            border-left-color: #d63638;
+            background: #f7d7d7;
+        }
+        
+        /* Simulate admin area */
+        #wpbody-content {
+            padding: 20px;
+            background: white;
+            border-radius: 4px;
+            min-height: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎨 Background Live Preview Test</h1>
+        <p>Testing the live preview functionality for the Advanced Background System (Task 10)</p>
+        
+        <div class="test-section">
+            <h2>Test 1: Method Existence</h2>
+            <button onclick="testMethodExistence()">Run Test</button>
+            <div id="test1-results" class="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 2: Get Area Selector</h2>
+            <button onclick="testGetAreaSelector()">Run Test</button>
+            <div id="test2-results" class="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 3: Get Background Config</h2>
+            <div class="mase-background-config" data-area="dashboard" style="display: none;">
+                <input type="checkbox" class="mase-background-enabled" checked>
+                <select class="mase-background-type">
+                    <option value="image" selected>Image</option>
+                </select>
+                <input type="text" class="mase-background-url" value="https://example.com/bg.jpg">
+                <input type="text" class="mase-background-position" value="center center">
+                <select class="mase-background-size">
+                    <option value="cover" selected>Cover</option>
+                </select>
+                <select class="mase-background-repeat">
+                    <option value="no-repeat" selected>No Repeat</option>
+                </select>
+                <select class="mase-background-attachment">
+                    <option value="scroll" selected>Scroll</option>
+                </select>
+                <input type="range" class="mase-background-opacity" value="80" min="0" max="100">
+                <select class="mase-background-blend-mode">
+                    <option value="normal" selected>Normal</option>
+                </select>
+            </div>
+            <button onclick="testGetBackgroundConfig()">Run Test</button>
+            <div id="test3-results" class="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 4: Live Preview Update</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Background Type</label>
+                    <select id="bg-type" class="mase-background-type">
+                        <option value="none">None</option>
+                        <option value="image" selected>Image</option>
+                        <option value="gradient">Gradient</option>
+                        <option value="pattern">Pattern</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Image URL</label>
+                    <input type="text" id="bg-url" class="mase-background-url" 
+                           value="https://picsum.photos/1920/1080" 
+                           placeholder="Enter image URL">
+                </div>
+                
+                <div class="control-group">
+                    <label>Position</label>
+                    <select id="bg-position" class="mase-background-position">
+                        <option value="center center" selected>Center</option>
+                        <option value="top left">Top Left</option>
+                        <option value="top center">Top Center</option>
+                        <option value="top right">Top Right</option>
+                        <option value="bottom center">Bottom Center</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Size</label>
+                    <select id="bg-size" class="mase-background-size">
+                        <option value="cover" selected>Cover</option>
+                        <option value="contain">Contain</option>
+                        <option value="auto">Auto</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Opacity: <span class="mase-range-value">100%</span></label>
+                    <input type="range" id="bg-opacity" class="mase-background-opacity" 
+                           value="100" min="0" max="100">
+                </div>
+                
+                <div class="control-group">
+                    <label>Blend Mode</label>
+                    <select id="bg-blend" class="mase-background-blend-mode">
+                        <option value="normal" selected>Normal</option>
+                        <option value="multiply">Multiply</option>
+                        <option value="screen">Screen</option>
+                        <option value="overlay">Overlay</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mase-background-config" data-area="dashboard" style="display: none;">
+                <input type="checkbox" class="mase-background-enabled" checked>
+                <select class="mase-background-type">
+                    <option value="image" selected>Image</option>
+                </select>
+                <input type="text" class="mase-background-url" value="https://picsum.photos/1920/1080">
+                <input type="text" class="mase-background-position" value="center center">
+                <select class="mase-background-size">
+                    <option value="cover" selected>Cover</option>
+                </select>
+                <select class="mase-background-repeat">
+                    <option value="no-repeat" selected>No Repeat</option>
+                </select>
+                <select class="mase-background-attachment">
+                    <option value="scroll" selected>Scroll</option>
+                </select>
+                <input type="range" class="mase-background-opacity" value="100" min="0" max="100">
+                <select class="mase-background-blend-mode">
+                    <option value="normal" selected>Normal</option>
+                </select>
+            </div>
+            
+            <button onclick="testUpdateBackground()">Apply Background</button>
+            <div id="test4-results" class="test-results"></div>
+            
+            <div class="preview-area" id="wpbody-content">
+                <h3>Preview Area (Dashboard)</h3>
+                <p>This simulates the #wpbody-content element. Background changes should appear here.</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test 5: Debounced Updates</h2>
+            <p>Change the opacity slider rapidly. Updates should be debounced to 300ms.</p>
+            <div class="control-group">
+                <label>Opacity: <span id="debounce-value">100%</span></label>
+                <input type="range" id="debounce-slider" value="100" min="0" max="100">
+            </div>
+            <div id="test5-results" class="test-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test Summary</h2>
+            <div id="summary" class="status info">
+                Click "Run All Tests" to execute all tests.
+            </div>
+            <button onclick="runAllTests()">Run All Tests</button>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../assets/js/mase-admin.js"></script>
+    <script>
+        // Initialize MASE state
+        if (typeof MASE !== 'undefined') {
+            MASE.state.livePreviewEnabled = true;
+            console.log('MASE initialized:', MASE);
+        }
+        
+        function testMethodExistence() {
+            const results = document.getElementById('test1-results');
+            results.innerHTML = '';
+            
+            const tests = [
+                { name: 'MASE.livePreview exists', check: () => typeof MASE !== 'undefined' && MASE.livePreview },
+                { name: 'updateBackground method exists', check: () => typeof MASE.livePreview.updateBackground === 'function' },
+                { name: 'getBackgroundConfig method exists', check: () => typeof MASE.livePreview.getBackgroundConfig === 'function' },
+                { name: 'getAreaSelector method exists', check: () => typeof MASE.livePreview.getAreaSelector === 'function' }
+            ];
+            
+            tests.forEach(test => {
+                const pass = test.check();
+                results.innerHTML += `<div class="test-item ${pass ? 'pass' : 'fail'}">
+                    ${pass ? '✓' : '✗'} ${test.name}
+                </div>`;
+            });
+        }
+        
+        function testGetAreaSelector() {
+            const results = document.getElementById('test2-results');
+            results.innerHTML = '';
+            
+            const areas = [
+                { area: 'dashboard', expected: '#wpbody-content' },
+                { area: 'admin_menu', expected: '#adminmenu' },
+                { area: 'post_lists', expected: '.wp-list-table' },
+                { area: 'post_editor', expected: '#post-body' },
+                { area: 'widgets', expected: '.postbox' },
+                { area: 'login', expected: 'body.login' },
+                { area: 'invalid', expected: '' }
+            ];
+            
+            areas.forEach(test => {
+                const selector = MASE.livePreview.getAreaSelector(test.area);
+                const pass = selector === test.expected;
+                results.innerHTML += `<div class="test-item ${pass ? 'pass' : 'fail'}">
+                    ${pass ? '✓' : '✗'} ${test.area}: "${selector}" ${pass ? '===' : '!=='} "${test.expected}"
+                </div>`;
+            });
+        }
+        
+        function testGetBackgroundConfig() {
+            const results = document.getElementById('test3-results');
+            results.innerHTML = '';
+            
+            const config = MASE.livePreview.getBackgroundConfig('dashboard');
+            
+            const tests = [
+                { name: 'Config object returned', check: () => config !== null && typeof config === 'object' },
+                { name: 'Type is "image"', check: () => config.type === 'image' },
+                { name: 'Image URL is set', check: () => config.image_url === 'https://example.com/bg.jpg' },
+                { name: 'Position is "center center"', check: () => config.position === 'center center' },
+                { name: 'Size is "cover"', check: () => config.size === 'cover' },
+                { name: 'Opacity is 80', check: () => config.opacity === 80 },
+                { name: 'Blend mode is "normal"', check: () => config.blend_mode === 'normal' }
+            ];
+            
+            tests.forEach(test => {
+                const pass = test.check();
+                results.innerHTML += `<div class="test-item ${pass ? 'pass' : 'fail'}">
+                    ${pass ? '✓' : '✗'} ${test.name}
+                </div>`;
+            });
+        }
+        
+        function testUpdateBackground() {
+            const results = document.getElementById('test4-results');
+            results.innerHTML = '';
+            
+            try {
+                // Sync visible controls with hidden config
+                syncControls();
+                
+                // Call updateBackground
+                MASE.livePreview.updateBackground('dashboard');
+                
+                // Check if background was applied
+                const $preview = $('#wpbody-content');
+                const bgImage = $preview.css('background-image');
+                const bgPosition = $preview.css('background-position');
+                const bgSize = $preview.css('background-size');
+                
+                results.innerHTML = `<div class="test-item pass">
+                    ✓ updateBackground executed successfully
+                </div>`;
+                results.innerHTML += `<div class="test-item info">
+                    Background Image: ${bgImage}
+                </div>`;
+                results.innerHTML += `<div class="test-item info">
+                    Background Position: ${bgPosition}
+                </div>`;
+                results.innerHTML += `<div class="test-item info">
+                    Background Size: ${bgSize}
+                </div>`;
+                
+            } catch (error) {
+                results.innerHTML = `<div class="test-item fail">
+                    ✗ Error: ${error.message}
+                </div>`;
+                console.error('Test error:', error);
+            }
+        }
+        
+        function syncControls() {
+            // Sync visible controls with hidden config
+            $('.mase-background-config[data-area="dashboard"] .mase-background-type').val($('#bg-type').val());
+            $('.mase-background-config[data-area="dashboard"] .mase-background-url').val($('#bg-url').val());
+            $('.mase-background-config[data-area="dashboard"] .mase-background-position').val($('#bg-position').val());
+            $('.mase-background-config[data-area="dashboard"] .mase-background-size').val($('#bg-size').val());
+            $('.mase-background-config[data-area="dashboard"] .mase-background-opacity').val($('#bg-opacity').val());
+            $('.mase-background-config[data-area="dashboard"] .mase-background-blend-mode').val($('#bg-blend').val());
+        }
+        
+        function runAllTests() {
+            testMethodExistence();
+            testGetAreaSelector();
+            testGetBackgroundConfig();
+            testUpdateBackground();
+            
+            document.getElementById('summary').innerHTML = '<strong>All tests completed!</strong> Check results above.';
+            document.getElementById('summary').className = 'status success';
+        }
+        
+        // Setup live controls
+        $('#bg-type, #bg-url, #bg-position, #bg-size, #bg-blend').on('change', function() {
+            syncControls();
+            MASE.livePreview.updateBackground('dashboard');
+        });
+        
+        $('#bg-opacity').on('input', function() {
+            const value = $(this).val();
+            $(this).siblings('.mase-range-value').text(value + '%');
+            syncControls();
+            MASE.livePreview.updateBackground('dashboard');
+        });
+        
+        // Debounce test
+        let updateCount = 0;
+        let lastUpdate = Date.now();
+        $('#debounce-slider').on('input', function() {
+            const value = $(this).val();
+            $('#debounce-value').text(value + '%');
+            
+            const now = Date.now();
+            const timeSinceLastUpdate = now - lastUpdate;
+            updateCount++;
+            
+            $('#test5-results').html(`<div class="test-item info">
+                Updates: ${updateCount} | Time since last: ${timeSinceLastUpdate}ms
+            </div>`);
+            
+            lastUpdate = now;
+        });
+        
+        // Auto-run tests on load
+        setTimeout(() => {
+            console.log('Running initial tests...');
+            testMethodExistence();
+            testGetAreaSelector();
+        }, 500);
+    </script>
+</body>
+</html>

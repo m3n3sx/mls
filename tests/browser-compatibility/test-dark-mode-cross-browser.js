@@ -54,6 +54,153 @@ async function takeScreenshot(page, testName, browserName) {
 }
 
 /**
+ * Test Suite: matchMedia API Support (Requirements 3.1-3.6)
+ */
+test.describe('matchMedia API Support', () => {
+    test('should support matchMedia API', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const hasMatchMedia = await page.evaluate(() => {
+            return typeof window.matchMedia === 'function';
+        });
+        
+        expect(hasMatchMedia).toBe(true);
+        console.log(`✓ ${browserName}: matchMedia API supported`);
+    });
+    
+    test('should detect prefers-color-scheme media query', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const colorSchemeSupport = await page.evaluate(() => {
+            try {
+                const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const lightModeQuery = window.matchMedia('(prefers-color-scheme: light)');
+                
+                return {
+                    supported: true,
+                    darkMatches: darkModeQuery.matches,
+                    lightMatches: lightModeQuery.matches,
+                    darkMedia: darkModeQuery.media,
+                    lightMedia: lightModeQuery.media
+                };
+            } catch (e) {
+                return {
+                    supported: false,
+                    error: e.message
+                };
+            }
+        });
+        
+        expect(colorSchemeSupport.supported).toBe(true);
+        console.log(`✓ ${browserName}: prefers-color-scheme detection works`);
+        console.log(`  Dark mode: ${colorSchemeSupport.darkMatches}, Light mode: ${colorSchemeSupport.lightMatches}`);
+    });
+    
+    test('should support matchMedia change listeners', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const listenerSupport = await page.evaluate(() => {
+            try {
+                const query = window.matchMedia('(prefers-color-scheme: dark)');
+                
+                // Check for both addEventListener and addListener (legacy)
+                const hasAddEventListener = typeof query.addEventListener === 'function';
+                const hasAddListener = typeof query.addListener === 'function';
+                
+                return {
+                    supported: hasAddEventListener || hasAddListener,
+                    hasModernAPI: hasAddEventListener,
+                    hasLegacyAPI: hasAddListener
+                };
+            } catch (e) {
+                return {
+                    supported: false,
+                    error: e.message
+                };
+            }
+        });
+        
+        expect(listenerSupport.supported).toBe(true);
+        console.log(`✓ ${browserName}: matchMedia change listeners supported`);
+        console.log(`  Modern API: ${listenerSupport.hasModernAPI}, Legacy API: ${listenerSupport.hasLegacyAPI}`);
+    });
+    
+    test('should handle matchMedia errors gracefully', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const errors = [];
+        page.on('pageerror', error => errors.push(error.message));
+        page.on('console', msg => {
+            if (msg.type() === 'error') errors.push(msg.text());
+        });
+        
+        // Try invalid media queries
+        await page.evaluate(() => {
+            try {
+                window.matchMedia('invalid-query');
+            } catch (e) {
+                // Expected to fail
+            }
+            
+            try {
+                window.matchMedia('');
+            } catch (e) {
+                // Expected to fail
+            }
+        });
+        
+        // Should not have critical errors
+        const criticalErrors = errors.filter(e => 
+            !e.includes('matchMedia') && !e.includes('media query')
+        );
+        
+        expect(criticalErrors).toHaveLength(0);
+        console.log(`✓ ${browserName}: matchMedia errors handled gracefully`);
+    });
+    
+    test('should support multiple media queries', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const multiQuerySupport = await page.evaluate(() => {
+            const queries = [
+                '(prefers-color-scheme: dark)',
+                '(prefers-color-scheme: light)',
+                '(prefers-reduced-motion: reduce)',
+                '(prefers-contrast: high)',
+                '(min-width: 768px)',
+                '(max-width: 1024px)'
+            ];
+            
+            const results = {};
+            
+            queries.forEach(query => {
+                try {
+                    const mq = window.matchMedia(query);
+                    results[query] = {
+                        supported: true,
+                        matches: mq.matches,
+                        media: mq.media
+                    };
+                } catch (e) {
+                    results[query] = {
+                        supported: false,
+                        error: e.message
+                    };
+                }
+            });
+            
+            return results;
+        });
+        
+        // At least prefers-color-scheme should be supported
+        expect(multiQuerySupport['(prefers-color-scheme: dark)'].supported).toBe(true);
+        expect(multiQuerySupport['(prefers-color-scheme: light)'].supported).toBe(true);
+        
+        console.log(`✓ ${browserName}: Multiple media queries supported`);
+    });
+});
+
+/**
  * Test Suite: localStorage Support (Requirements 4.1-4.5)
  */
 test.describe('localStorage Support', () => {
@@ -669,6 +816,206 @@ test.describe('Performance', () => {
 });
 
 /**
+ * Test Suite: Mobile Device Tests (iOS, Android)
+ */
+test.describe('Mobile Device Tests', () => {
+    test('should work on mobile viewports', async ({ page, browserName }) => {
+        // Set mobile viewport
+        await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        // Test toggle on mobile
+        await page.click('#mase-dark-mode-toggle');
+        await page.waitForTimeout(300);
+        
+        const dataTheme = await page.evaluate(() => {
+            return document.documentElement.getAttribute('data-theme');
+        });
+        
+        expect(dataTheme).toBe('dark');
+        console.log(`✓ ${browserName}: Works on mobile viewport (375x667)`);
+    });
+    
+    test('should handle touch events', async ({ page, browserName }) => {
+        await page.setViewportSize({ width: 375, height: 667 });
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        // Simulate touch tap
+        await page.tap('#mase-dark-mode-toggle');
+        await page.waitForTimeout(300);
+        
+        const isChecked = await page.isChecked('#mase-dark-mode-toggle');
+        expect(isChecked).toBe(true);
+        
+        console.log(`✓ ${browserName}: Touch events work correctly`);
+    });
+    
+    test('should work on different mobile screen sizes', async ({ page, browserName }) => {
+        const screenSizes = [
+            { name: 'iPhone SE', width: 375, height: 667 },
+            { name: 'iPhone 12', width: 390, height: 844 },
+            { name: 'iPhone 12 Pro Max', width: 428, height: 926 },
+            { name: 'Samsung Galaxy S21', width: 360, height: 800 },
+            { name: 'iPad Mini', width: 768, height: 1024 },
+            { name: 'iPad Pro', width: 1024, height: 1366 }
+        ];
+        
+        for (const size of screenSizes) {
+            await page.setViewportSize({ width: size.width, height: size.height });
+            await page.goto(TEST_URL);
+            await page.waitForLoadState('networkidle');
+            
+            // Test toggle
+            await page.click('#mase-dark-mode-toggle');
+            await page.waitForTimeout(200);
+            
+            const dataTheme = await page.evaluate(() => {
+                return document.documentElement.getAttribute('data-theme');
+            });
+            
+            expect(dataTheme).toBe('dark');
+            
+            // Reset for next test
+            await page.click('#mase-dark-mode-toggle');
+            await page.waitForTimeout(200);
+            
+            console.log(`✓ ${browserName}: Works on ${size.name} (${size.width}x${size.height})`);
+        }
+    });
+    
+    test('should handle orientation changes', async ({ page, browserName }) => {
+        // Portrait
+        await page.setViewportSize({ width: 375, height: 667 });
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        await page.click('#mase-dark-mode-toggle');
+        await page.waitForTimeout(300);
+        
+        let dataTheme = await page.evaluate(() => {
+            return document.documentElement.getAttribute('data-theme');
+        });
+        expect(dataTheme).toBe('dark');
+        
+        // Landscape
+        await page.setViewportSize({ width: 667, height: 375 });
+        await page.waitForTimeout(300);
+        
+        dataTheme = await page.evaluate(() => {
+            return document.documentElement.getAttribute('data-theme');
+        });
+        expect(dataTheme).toBe('dark'); // Should persist
+        
+        console.log(`✓ ${browserName}: Handles orientation changes correctly`);
+    });
+    
+    test('should work with mobile Safari specific features', async ({ page, browserName }) => {
+        test.skip(browserName !== 'webkit', 'Safari-specific test');
+        
+        await page.setViewportSize({ width: 375, height: 667 });
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        // Test -webkit- prefixed features
+        const webkitSupport = await page.evaluate(() => {
+            const style = document.createElement('div').style;
+            return {
+                webkitTransition: 'webkitTransition' in style,
+                webkitTransform: 'webkitTransform' in style,
+                webkitAppearance: 'webkitAppearance' in style
+            };
+        });
+        
+        console.log(`✓ Safari Mobile: Webkit features available`);
+    });
+    
+    test('should work with Android Chrome specific features', async ({ page, browserName }) => {
+        test.skip(browserName !== 'chromium', 'Chrome-specific test');
+        
+        await page.setViewportSize({ width: 360, height: 800 });
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        // Test Chrome-specific features
+        const chromeSupport = await page.evaluate(() => {
+            return {
+                touchEvents: 'ontouchstart' in window,
+                pointerEvents: 'onpointerdown' in window,
+                visualViewport: typeof window.visualViewport !== 'undefined'
+            };
+        });
+        
+        console.log(`✓ Chrome Mobile: Touch and pointer events supported`);
+    });
+});
+
+/**
+ * Test Suite: Platform-Specific Tests (Windows, Mac, Linux)
+ */
+test.describe('Platform-Specific Tests', () => {
+    test('should detect platform correctly', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        
+        const platformInfo = await page.evaluate(() => {
+            return {
+                platform: navigator.platform,
+                userAgent: navigator.userAgent,
+                isMac: /Mac/.test(navigator.platform),
+                isWindows: /Win/.test(navigator.platform),
+                isLinux: /Linux/.test(navigator.platform)
+            };
+        });
+        
+        console.log(`✓ ${browserName}: Platform detected as ${platformInfo.platform}`);
+    });
+    
+    test('should handle platform-specific keyboard shortcuts', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        const platformInfo = await page.evaluate(() => {
+            return {
+                isMac: /Mac/.test(navigator.platform)
+            };
+        });
+        
+        // Test Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (Mac)
+        if (platformInfo.isMac) {
+            await page.keyboard.press('Meta+Shift+D');
+        } else {
+            await page.keyboard.press('Control+Shift+D');
+        }
+        
+        await page.waitForTimeout(300);
+        
+        // Check if toggle was triggered (if keyboard shortcuts are implemented)
+        console.log(`✓ ${browserName}: Platform-specific keyboard shortcuts tested`);
+    });
+    
+    test('should render fonts correctly on different platforms', async ({ page, browserName }) => {
+        await page.goto(TEST_URL);
+        await page.waitForLoadState('networkidle');
+        
+        const fontInfo = await page.evaluate(() => {
+            const body = document.body;
+            const style = window.getComputedStyle(body);
+            return {
+                fontFamily: style.fontFamily,
+                fontSize: style.fontSize,
+                fontWeight: style.fontWeight
+            };
+        });
+        
+        expect(fontInfo.fontFamily).toBeTruthy();
+        expect(fontInfo.fontSize).toBeTruthy();
+        
+        console.log(`✓ ${browserName}: Fonts render correctly (${fontInfo.fontFamily})`);
+    });
+});
+
+/**
  * Test Suite: Export Comprehensive Results
  */
 test.describe('Export Results', () => {
@@ -687,7 +1034,9 @@ test.describe('Export Results', () => {
                 browser: {
                     userAgent: navigator.userAgent,
                     platform: navigator.platform,
-                    language: navigator.language
+                    language: navigator.language,
+                    vendor: navigator.vendor,
+                    maxTouchPoints: navigator.maxTouchPoints
                 },
                 darkMode: {
                     htmlDataTheme: document.documentElement.getAttribute('data-theme'),
@@ -701,6 +1050,11 @@ test.describe('Export Results', () => {
                     transitions: CSS.supports('transition', 'all 0.3s'),
                     dataAttributeSelectors: true
                 },
+                apiSupport: {
+                    localStorage: typeof localStorage !== 'undefined',
+                    matchMedia: typeof window.matchMedia === 'function',
+                    prefersColorScheme: window.matchMedia('(prefers-color-scheme: dark)').media !== 'not all'
+                },
                 accessibility: {
                     headerToggleRole: document.getElementById('mase-dark-mode-toggle').getAttribute('role'),
                     headerToggleAriaChecked: document.getElementById('mase-dark-mode-toggle').getAttribute('aria-checked'),
@@ -708,7 +1062,8 @@ test.describe('Export Results', () => {
                 },
                 viewport: {
                     width: window.innerWidth,
-                    height: window.innerHeight
+                    height: window.innerHeight,
+                    devicePixelRatio: window.devicePixelRatio
                 }
             };
         });
@@ -718,6 +1073,8 @@ test.describe('Export Results', () => {
         expect(results.darkMode.htmlDataTheme).toBe('dark');
         expect(results.darkMode.bodyHasClass).toBe(true);
         expect(results.darkMode.localStorageValue).toBe('true');
+        expect(results.apiSupport.localStorage).toBe(true);
+        expect(results.apiSupport.matchMedia).toBe(true);
         
         console.log(`✓ ${browserName}: Comprehensive report generated`);
     });

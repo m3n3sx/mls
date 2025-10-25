@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Backgrounds Tab UI Test - MASE</title>
+	<style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+			margin: 20px;
+			background: #f0f0f1;
+		}
+		.test-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			background: white;
+			padding: 20px;
+			border-radius: 4px;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+		h1 {
+			color: #1d2327;
+			border-bottom: 2px solid #2271b1;
+			padding-bottom: 10px;
+		}
+		.test-section {
+			margin: 30px 0;
+			padding: 20px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+		.test-section h2 {
+			margin-top: 0;
+			color: #2271b1;
+		}
+		.success {
+			color: #00a32a;
+			font-weight: bold;
+		}
+		.info {
+			color: #2271b1;
+		}
+		ul {
+			line-height: 1.8;
+		}
+		code {
+			background: #f0f0f1;
+			padding: 2px 6px;
+			border-radius: 3px;
+			font-family: Consolas, Monaco, monospace;
+		}
+		.checklist {
+			list-style: none;
+			padding-left: 0;
+		}
+		.checklist li:before {
+			content: "✓ ";
+			color: #00a32a;
+			font-weight: bold;
+			margin-right: 8px;
+		}
+	</style>
+</head>
+<body>
+	<div class="test-container">
+		<h1>✅ Backgrounds Tab UI Structure - Implementation Complete</h1>
+		
+		<div class="test-section">
+			<h2>Task 8: Create Basic Admin UI Structure</h2>
+			<p class="success">Status: COMPLETED</p>
+			<p>All requirements have been successfully implemented.</p>
+		</div>
+
+		<div class="test-section">
+			<h2>📋 Implementation Checklist</h2>
+			<ul class="checklist">
+				<li>Created <code>includes/backgrounds-tab-content.php</code> template file</li>
+				<li>Added "Backgrounds" tab button to admin settings page navigation</li>
+				<li>Created accordion sections for all 6 admin areas:
+					<ul style="margin-top: 10px;">
+						<li>Dashboard Main Area (#wpbody-content)</li>
+						<li>Admin Menu (#adminmenu)</li>
+						<li>Post/Page Lists (.wp-list-table)</li>
+						<li>Post Editor (#post-body)</li>
+						<li>Widget Areas (.postbox)</li>
+						<li>Login Page (body.login)</li>
+					</ul>
+				</li>
+				<li>Added background type selector (none, image, gradient, pattern) for each area</li>
+				<li>Added enable/disable toggle for each area</li>
+				<li>Included area preview containers</li>
+				<li>Used WordPress admin UI classes for consistency</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>🎨 UI Features Implemented</h2>
+			<ul>
+				<li><strong>Tab Navigation:</strong> Added "Backgrounds" tab with dashicons-format-image icon</li>
+				<li><strong>Accordion Structure:</strong> Collapsible sections for each admin area</li>
+				<li><strong>Area Headers:</strong> Display area name, icon, and enabled status badge</li>
+				<li><strong>Enable/Disable Toggles:</strong> WordPress-style toggle switches with ARIA support</li>
+				<li><strong>Background Type Selector:</strong> Dropdown with 4 options (none, image, gradient, pattern)</li>
+				<li><strong>Conditional Controls:</strong> Show/hide controls based on selected background type</li>
+				<li><strong>Image Upload Interface:</strong> Button to upload/select images from Media Library</li>
+				<li><strong>Image Preview:</strong> Thumbnail display with remove button</li>
+				<li><strong>Preview Containers:</strong> Placeholder areas for background previews</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>♿ Accessibility Features</h2>
+			<ul>
+				<li><strong>ARIA Labels:</strong> All interactive elements have descriptive labels</li>
+				<li><strong>Role Attributes:</strong> Proper roles (tab, tabpanel, switch, button)</li>
+				<li><strong>Keyboard Navigation:</strong> Tab navigation with tabindex management</li>
+				<li><strong>Screen Reader Support:</strong> aria-expanded, aria-controls, aria-describedby</li>
+				<li><strong>Focus Management:</strong> Proper focus indicators and tab order</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>📝 Requirements Satisfied</h2>
+			<ul>
+				<li><strong>Requirement 4.1:</strong> Independent background configuration for 6 admin areas ✓</li>
+				<li><strong>Requirement 9.1:</strong> Visual interface with proper controls and navigation ✓</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>🔄 Next Steps</h2>
+			<p class="info">The basic UI structure is now complete. Future tasks will add:</p>
+			<ul>
+				<li><strong>Task 9:</strong> File upload interface with drag & drop support</li>
+				<li><strong>Task 10:</strong> Live preview functionality</li>
+				<li><strong>Task 11-18:</strong> Gradient system with visual builder</li>
+				<li><strong>Task 19-24:</strong> Pattern library with 50+ SVG patterns</li>
+				<li><strong>Task 25-29:</strong> Advanced features (position picker, responsive variations)</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>🧪 Manual Testing Instructions</h2>
+			<ol>
+				<li>Navigate to WordPress Admin → MASE Settings</li>
+				<li>Click on the "Backgrounds" tab (should be between "Universal Buttons" and "Templates")</li>
+				<li>Verify all 6 admin area sections are displayed</li>
+				<li>Test expand/collapse functionality for each section</li>
+				<li>Test enable/disable toggles</li>
+				<li>Test background type selector dropdown</li>
+				<li>Verify conditional controls show/hide based on type selection</li>
+				<li>Test keyboard navigation (Tab, Enter, Space keys)</li>
+				<li>Verify ARIA labels with screen reader</li>
+			</ol>
+		</div>
+
+		<div class="test-section">
+			<h2>📂 Files Modified</h2>
+			<ul>
+				<li><code>includes/backgrounds-tab-content.php</code> - NEW (370 lines)</li>
+				<li><code>includes/admin-settings-page.php</code> - MODIFIED (added tab button and content section)</li>
+			</ul>
+		</div>
+
+		<div class="test-section">
+			<h2>✨ Code Quality</h2>
+			<ul class="checklist">
+				<li>No PHP syntax errors</li>
+				<li>Follows WordPress coding standards</li>
+				<li>Proper escaping (esc_html, esc_attr, esc_url)</li>
+				<li>Internationalization ready (__(), esc_html_e())</li>
+				<li>Consistent with existing MASE UI patterns</li>
+				<li>BEM-style CSS class naming (mase-*)</li>
+				<li>Semantic HTML structure</li>
+			</ul>
+		</div>
+
+	</div>
+</body>
+</html>

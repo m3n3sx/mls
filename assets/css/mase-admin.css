@@ -4893,6 +4893,345 @@ select.mase-select {
 }
 
 /* ============================================================================
+   BACKGROUND UPLOAD INTERFACE
+   ============================================================================
+   
+   Drag & drop upload zone with file validation and progress indicators.
+   Supports click-to-upload and keyboard accessibility.
+   
+   Requirements: 1.1, 9.2
+   ============================================================================ */
+
+/**
+ * Background Upload Zone
+ * 
+ * Drag & drop area for uploading background images.
+ * Provides visual feedback for drag states and upload progress.
+ */
+.mase-background-upload-zone {
+  /* Layout */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  
+  /* Spacing */
+  padding: var(--mase-space-xl);
+  margin-bottom: var(--mase-space-md);
+  
+  /* Visual */
+  background-color: var(--mase-surface);
+  border: 2px dashed #d1d5db;
+  border-radius: var(--mase-radius-lg);
+  
+  /* Interaction */
+  cursor: pointer;
+  transition: all var(--mase-transition-base);
+}
+
+.mase-background-upload-zone:hover {
+  border-color: var(--mase-primary);
+  background-color: #f9fafb;
+}
+
+.mase-background-upload-zone:focus {
+  outline: 2px solid var(--mase-primary);
+  outline-offset: 2px;
+  border-color: var(--mase-primary);
+}
+
+/* Drag over state */
+.mase-background-upload-zone.mase-drag-over {
+  border-color: var(--mase-primary);
+  background-color: #eff6ff;
+  border-style: solid;
+}
+
+/* Uploading state */
+.mase-background-upload-zone.mase-uploading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/**
+ * Upload Zone Content
+ */
+.mase-upload-zone-content {
+  text-align: center;
+}
+
+.mase-upload-zone-content .dashicons {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #9ca3af;
+  margin-bottom: var(--mase-space-sm);
+}
+
+.mase-upload-zone-text {
+  margin: var(--mase-space-sm) 0;
+  font-size: var(--mase-font-size-base);
+  color: var(--mase-text);
+}
+
+.mase-upload-zone-text strong {
+  font-weight: var(--mase-font-weight-semibold);
+  color: var(--mase-text);
+}
+
+.mase-upload-zone-hint {
+  margin: 0;
+  font-size: var(--mase-font-size-sm);
+  color: var(--mase-text-muted);
+}
+
+/**
+ * Upload Progress Indicator
+ */
+.mase-upload-progress {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.mase-upload-progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: var(--mase-radius-full);
+  overflow: hidden;
+  margin-bottom: var(--mase-space-sm);
+}
+
+.mase-upload-progress-fill {
+  height: 100%;
+  background-color: var(--mase-primary);
+  transition: width 0.3s ease;
+}
+
+.mase-upload-progress-text {
+  font-size: var(--mase-font-size-sm);
+  color: var(--mase-text-muted);
+  margin: 0;
+}
+
+.mase-upload-progress-percent {
+  font-weight: var(--mase-font-weight-semibold);
+  color: var(--mase-text);
+}
+
+/**
+ * Upload Error Display
+ */
+.mase-upload-error {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-sm);
+  padding: var(--mase-space-sm) var(--mase-space-base);
+  margin-bottom: var(--mase-space-md);
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--mase-radius-base);
+  color: #991b1b;
+}
+
+.mase-upload-error .dashicons {
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.mase-upload-error-message {
+  font-size: var(--mase-font-size-sm);
+  line-height: 1.5;
+}
+
+/**
+ * Background Image Preview
+ */
+.mase-background-image-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mase-space-md);
+  padding: var(--mase-space-base);
+  background-color: var(--mase-surface);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--mase-radius-lg);
+  margin-bottom: var(--mase-space-md);
+}
+
+.mase-preview-thumbnail {
+  width: 100%;
+  max-width: 300px;
+  height: 150px;
+  border-radius: var(--mase-radius-base);
+  overflow: hidden;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mase-preview-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mase-preview-actions {
+  display: flex;
+  gap: var(--mase-space-sm);
+  flex-wrap: wrap;
+}
+
+.mase-preview-actions .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mase-preview-actions .dashicons {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+/**
+ * Background Area Accordion
+ */
+.mase-backgrounds-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mase-space-md);
+}
+
+.mase-background-area-section {
+  background-color: var(--mase-surface);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--mase-radius-lg);
+  overflow: hidden;
+}
+
+.mase-background-area-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--mase-space-base);
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: background-color var(--mase-transition-base);
+}
+
+.mase-background-area-header:hover {
+  background-color: #f3f4f6;
+}
+
+.mase-background-area-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-sm);
+}
+
+.mase-background-area-title .dashicons {
+  color: var(--mase-primary);
+}
+
+.mase-background-area-title h3 {
+  margin: 0;
+  font-size: var(--mase-font-size-base);
+  font-weight: var(--mase-font-weight-semibold);
+  color: var(--mase-text);
+}
+
+.mase-background-area-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--mase-space-base);
+}
+
+.mase-background-area-toggle {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--mase-text-muted);
+  transition: color var(--mase-transition-base);
+}
+
+.mase-background-area-toggle:hover {
+  color: var(--mase-text);
+}
+
+.mase-background-area-toggle[aria-expanded="true"] .dashicons {
+  transform: rotate(180deg);
+}
+
+.mase-background-area-content {
+  padding: var(--mase-space-lg);
+}
+
+.mase-background-config {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mase-space-lg);
+}
+
+.mase-background-type-controls {
+  padding-top: var(--mase-space-md);
+}
+
+/**
+ * Background Preview Box
+ */
+.mase-background-preview-box {
+  min-height: 150px;
+  padding: var(--mase-space-base);
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--mase-radius-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mase-background-preview-box .description {
+  margin: 0;
+  color: var(--mase-text-muted);
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .mase-background-upload-zone {
+    min-height: 150px;
+    padding: var(--mase-space-base);
+  }
+  
+  .mase-upload-zone-content .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .mase-preview-thumbnail {
+    max-width: 100%;
+  }
+  
+  .mase-background-area-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--mase-space-sm);
+  }
+  
+  .mase-background-area-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ============================================================================
    SECTION 6: RESPONSIVE DESIGN
    ============================================================================
    
@@ -8658,6 +8997,37 @@ select {
   max-width: 100%;                              /* Prevent overflow */
 }
 
+/**
+ * Inline Labels and Unit Labels
+ * 
+ * For compact form layouts like FAB position controls.
+ * Used in dark mode settings for bottom/right position inputs.
+ * 
+ * Requirements: Task 15 - Dark Mode Settings UI
+ */
+.mase-inline-label {
+  display: inline-block;
+  min-width: 60px;
+  margin-right: 8px;
+  font-weight: 500;
+  color: var(--mase-text-primary, #1f2937);
+}
+
+.mase-unit-label {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--mase-text-secondary, #6b7280);
+  font-size: 13px;
+}
+
+.mase-setting-row .mase-setting-row {
+  margin-bottom: 12px;
+}
+
+.mase-setting-row .mase-setting-row:last-child {
+  margin-bottom: 0;
+}
+
 /* 11.6 Responsive Styles
    ========================================================================== */
 
@@ -10141,6 +10511,23 @@ html[data-theme="dark"] textarea::placeholder {
 }
 
 /**
+ * Inline Labels and Unit Labels in Dark Mode
+ * 
+ * Style inline labels for dark mode settings UI.
+ * 
+ * Requirements: Task 15 - Dark Mode Settings UI
+ */
+html[data-theme="dark"] .mase-inline-label,
+body.mase-dark-mode .mase-inline-label {
+  color: var(--mase-text);                      /* Light text in dark mode */
+}
+
+html[data-theme="dark"] .mase-unit-label,
+body.mase-dark-mode .mase-unit-label {
+  color: var(--mase-text-secondary);            /* Secondary text in dark mode */
+}
+
+/**
  * Tables in Dark Mode
  * 
  * Style tables with dark colors for readability.
@@ -10478,3 +10865,1712 @@ button:focus-visible {
 /* ============================================================================
    END MODERN ARCHITECTURE - LOADING & ERROR STATES
    ============================================================================ */
+
+/* ============================================================================
+   SECTION 10: DARK MODE FAB COMPONENT
+   ============================================================================
+   
+   Floating Action Button (FAB) for toggling between light and dark modes.
+   Positioned in the bottom-right corner with smooth animations and transitions.
+   
+   Features:
+   - Fixed positioning in bottom-right corner
+   - Sun/moon icon toggle with rotation animation
+   - Hover effects and tooltip
+   - Smooth color transitions (0.3s)
+   - Responsive positioning for mobile devices
+   - Reduced motion support for accessibility
+   - WCAG 2.1 AA compliant focus indicators
+   
+   Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 9.1, 9.2, 9.3
+   ============================================================================ */
+
+/**
+ * FAB Container
+ * 
+ * Fixed position button in bottom-right corner. Uses high z-index to stay
+ * above all other admin elements. Circular shape with shadow for depth.
+ * 
+ * Structure:
+ * <button class="mase-dark-mode-fab" aria-label="Toggle dark mode" aria-pressed="false">
+ *   <span class="dashicons dashicons-sun" aria-hidden="true"></span>
+ *   <span class="sr-only">Current mode: Light</span>
+ * </button>
+ * 
+ * Requirements: 1.1, 1.5, 1.6
+ */
+.mase-dark-mode-fab {
+  /* Positioning - Fixed in bottom-right corner */
+  position: fixed;
+  bottom: 20px;                                 /* 20px from bottom */
+  right: 20px;                                  /* 20px from right */
+  z-index: var(--mase-z-fixed);                 /* Layer 300 - above most elements */
+  
+  /* Layout - Circular button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;                                  /* Standard FAB size */
+  height: 56px;                                 /* Standard FAB size */
+  
+  /* Visual - Elevated circular button */
+  background-color: var(--mase-primary);        /* WordPress blue */
+  border-radius: var(--mase-radius-full);       /* Fully rounded (circle) */
+  box-shadow: var(--mase-shadow-lg);            /* Elevated shadow */
+  border: none;
+  cursor: pointer;
+  
+  /* Transitions - Smooth animations */
+  transition: all 0.3s ease-in-out;             /* All properties transition smoothly */
+  
+  /* PERF: GPU acceleration for smooth animations */
+  will-change: transform, box-shadow;
+  
+  /* A11Y: Remove default button outline (custom focus style below) */
+  outline: none;
+}
+
+/**
+ * FAB Hover State
+ * 
+ * Lift button slightly and intensify shadow on hover for interactive feedback.
+ * 
+ * Requirements: 1.3, 9.1
+ */
+.mase-dark-mode-fab:hover {
+  background-color: var(--mase-primary-hover);  /* Darker blue */
+  transform: translateY(-2px);                  /* Lift 2px upward */
+  box-shadow: var(--mase-shadow-xl);            /* Larger shadow */
+}
+
+/**
+ * FAB Active State
+ * 
+ * Press down effect when button is clicked.
+ * 
+ * Requirements: 9.1
+ */
+.mase-dark-mode-fab:active {
+  transform: translateY(0);                     /* Return to original position */
+  box-shadow: var(--mase-shadow-md);            /* Smaller shadow */
+}
+
+/**
+ * FAB Focus State
+ * 
+ * Clear focus indicator for keyboard navigation. Uses outline with offset
+ * for better visibility against all backgrounds.
+ * 
+ * Requirements: 1.7, 1.8
+ * A11Y: WCAG 2.1 AA compliant focus indicator
+ */
+.mase-dark-mode-fab:focus {
+  outline: 3px solid var(--mase-primary-light); /* 3px outline */
+  outline-offset: 3px;                          /* 3px offset from button */
+}
+
+/**
+ * FAB Disabled State
+ * 
+ * Visual indication when FAB is disabled during transitions.
+ * 
+ * Requirements: 9.3
+ */
+.mase-dark-mode-fab:disabled,
+.mase-dark-mode-fab.mase-transitioning {
+  opacity: 0.6;                                 /* Reduced opacity */
+  cursor: not-allowed;                          /* Not-allowed cursor */
+  pointer-events: none;                         /* Prevent interaction */
+}
+
+/**
+ * FAB Icon
+ * 
+ * WordPress Dashicons for sun/moon. Sized appropriately for FAB.
+ * Color set to white for contrast against blue background.
+ * 
+ * Requirements: 1.2
+ */
+.mase-dark-mode-fab .dashicons {
+  font-size: 24px;                              /* Icon size */
+  width: 24px;                                  /* Icon width */
+  height: 24px;                                 /* Icon height */
+  color: #ffffff;                               /* White icon */
+  transition: transform 0.3s ease-in-out;       /* Smooth rotation */
+}
+
+/**
+ * FAB Icon Rotation Animation
+ * 
+ * 360-degree rotation when mode changes. Applied via JavaScript by adding
+ * .mase-icon-rotating class to the FAB.
+ * 
+ * Requirements: 1.4, 9.2
+ */
+.mase-dark-mode-fab.mase-icon-rotating .dashicons {
+  transform: rotate(360deg);                    /* Full rotation */
+}
+
+/**
+ * FAB Tooltip
+ * 
+ * Tooltip that appears on hover to indicate action. Positioned above FAB
+ * with arrow pointing down. Fades in smoothly.
+ * 
+ * Structure:
+ * <span class="mase-fab-tooltip">Switch to Dark Mode</span>
+ * 
+ * Requirements: 1.3
+ */
+.mase-fab-tooltip {
+  /* Positioning - Above FAB */
+  position: absolute;
+  bottom: calc(100% + 12px);                    /* 12px above FAB */
+  right: 0;
+  
+  /* Layout */
+  padding: var(--mase-space-sm) var(--mase-space-md); /* 8px 16px */
+  white-space: nowrap;                          /* Prevent text wrapping */
+  
+  /* Visual */
+  background-color: var(--mase-gray-900);       /* Dark background */
+  color: #ffffff;                               /* White text */
+  font-size: var(--mase-font-size-sm);          /* 13px */
+  border-radius: var(--mase-radius-base);       /* 4px rounded corners */
+  box-shadow: var(--mase-shadow-md);            /* Subtle shadow */
+  
+  /* Animation */
+  opacity: 0;                                   /* Hidden by default */
+  visibility: hidden;                           /* Hidden by default */
+  transform: translateY(4px);                   /* Slightly below final position */
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s; /* Smooth fade-in */
+  
+  /* Pointer events */
+  pointer-events: none;                         /* Don't block mouse events */
+  
+  /* Z-index */
+  z-index: calc(var(--mase-z-fixed) + 1);       /* Above FAB */
+}
+
+/**
+ * Tooltip Arrow
+ * 
+ * Small triangle pointing down from tooltip to FAB.
+ * Created using CSS borders technique.
+ * 
+ * Requirements: 1.3
+ */
+.mase-fab-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;                                    /* Below tooltip */
+  right: 20px;                                  /* Aligned with FAB center */
+  
+  /* Triangle using borders */
+  border: 6px solid transparent;
+  border-top-color: var(--mase-gray-900);       /* Dark arrow */
+  
+  /* Positioning adjustment */
+  margin-left: -6px;
+}
+
+/**
+ * Show Tooltip on FAB Hover
+ * 
+ * Fade in tooltip when hovering over FAB.
+ * 
+ * Requirements: 1.3
+ */
+.mase-dark-mode-fab:hover .mase-fab-tooltip,
+.mase-fab-tooltip.mase-fab-tooltip-visible {
+  opacity: 1;                                   /* Fully visible */
+  visibility: visible;                          /* Visible */
+  transform: translateY(0);                     /* Final position */
+}
+
+/**
+ * Screen Reader Only Text
+ * 
+ * Hidden text for screen readers to announce current mode.
+ * Visually hidden but accessible to assistive technology.
+ * 
+ * Requirements: 1.8
+ * A11Y: Screen reader support
+ */
+.mase-dark-mode-fab .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/**
+ * Responsive Positioning - Mobile Devices
+ * 
+ * Adjust FAB position on smaller screens to avoid overlapping with
+ * mobile UI elements and ensure touch target accessibility.
+ * 
+ * Requirements: 1.5
+ * A11Y: Minimum 44x44px touch target maintained
+ */
+@media screen and (max-width: 768px) {
+  .mase-dark-mode-fab {
+    bottom: 16px;                               /* Closer to bottom on mobile */
+    right: 16px;                                /* Closer to right on mobile */
+    width: 48px;                                /* Slightly smaller on mobile */
+    height: 48px;                               /* Slightly smaller on mobile */
+  }
+  
+  .mase-dark-mode-fab .dashicons {
+    font-size: 20px;                            /* Smaller icon on mobile */
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Hide tooltip on mobile (touch devices) */
+  .mase-fab-tooltip {
+    display: none;                              /* Tooltips don't work well on touch */
+  }
+}
+
+/**
+ * Responsive Positioning - Small Mobile Devices
+ * 
+ * Further adjustments for very small screens.
+ * 
+ * Requirements: 1.5
+ */
+@media screen and (max-width: 480px) {
+  .mase-dark-mode-fab {
+    bottom: 12px;                               /* Even closer on small screens */
+    right: 12px;                                /* Even closer on small screens */
+  }
+}
+
+/**
+ * Reduced Motion Support
+ * 
+ * Disable all animations and transitions for users who prefer reduced motion.
+ * Mode toggle still works but without visual animations.
+ * 
+ * Requirements: 9.6, 9.7
+ * A11Y: Respects prefers-reduced-motion user preference
+ */
+@media (prefers-reduced-motion: reduce) {
+  .mase-dark-mode-fab,
+  .mase-dark-mode-fab .dashicons,
+  .mase-fab-tooltip {
+    transition-duration: 0s !important;         /* Instant transitions */
+    animation-duration: 0s !important;          /* No animations */
+  }
+  
+  .mase-dark-mode-fab:hover {
+    transform: none;                            /* No lift effect */
+  }
+  
+  .mase-dark-mode-fab.mase-icon-rotating .dashicons {
+    transform: none;                            /* No rotation */
+  }
+}
+
+/**
+ * Dark Mode Styles for FAB
+ * 
+ * Adjust FAB appearance when dark mode is active. Uses lighter colors
+ * for better contrast against dark backgrounds.
+ * 
+ * Requirements: 9.1, 9.2
+ */
+body.mase-dark-mode .mase-dark-mode-fab {
+  background-color: var(--mase-primary);        /* Lighter blue in dark mode */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); /* Stronger shadow in dark mode */
+}
+
+body.mase-dark-mode .mase-dark-mode-fab:hover {
+  background-color: var(--mase-primary-hover);  /* Even lighter on hover */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); /* Stronger shadow on hover */
+}
+
+body.mase-dark-mode .mase-dark-mode-fab:focus {
+  outline-color: var(--mase-primary-light);     /* Adjusted focus color for dark mode */
+}
+
+/**
+ * RTL Support for FAB
+ * 
+ * Mirror FAB position for right-to-left languages.
+ * 
+ * Requirements: 1.5
+ */
+[dir="rtl"] .mase-dark-mode-fab {
+  right: auto;                                  /* Remove right positioning */
+  left: 20px;                                   /* Position on left side */
+}
+
+[dir="rtl"] .mase-fab-tooltip {
+  right: auto;                                  /* Remove right positioning */
+  left: 0;                                      /* Align with FAB on left */
+}
+
+[dir="rtl"] .mase-fab-tooltip::after {
+  right: auto;                                  /* Remove right positioning */
+  left: 20px;                                   /* Align arrow with FAB center */
+}
+
+@media screen and (max-width: 768px) {
+  [dir="rtl"] .mase-dark-mode-fab {
+    left: 16px;                                 /* Adjust for mobile */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  [dir="rtl"] .mase-dark-mode-fab {
+    left: 12px;                                 /* Adjust for small mobile */
+  }
+}
+
+/**
+ * High Contrast Mode Support
+ * 
+ * Ensure FAB remains visible and accessible in high contrast mode.
+ * 
+ * A11Y: High contrast mode compatibility
+ */
+@media (prefers-contrast: high) {
+  .mase-dark-mode-fab {
+    border: 2px solid currentColor;             /* Add border in high contrast */
+  }
+  
+  .mase-dark-mode-fab:focus {
+    outline-width: 4px;                         /* Thicker focus outline */
+  }
+}
+
+/**
+ * Print Styles
+ * 
+ * Hide FAB when printing (not relevant for printed pages).
+ */
+@media print {
+  .mase-dark-mode-fab {
+    display: none;                              /* Hide in print */
+  }
+}
+
+/**
+ * ARIA Live Region for Screen Reader Announcements
+ * 
+ * Visually hidden region for announcing mode changes to screen readers.
+ * Uses the sr-only pattern to hide content visually while keeping it
+ * accessible to assistive technologies.
+ * 
+ * Task 13: Add ARIA live region for announcements
+ * Requirements: 5.4, 5.7
+ * A11Y: Screen reader announcements for mode changes
+ */
+#mase-sr-announcements {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/**
+ * Screen Reader Only Text (sr-only)
+ * 
+ * Utility class for hiding content visually while keeping it accessible
+ * to screen readers. Used for FAB current mode text.
+ * 
+ * Task 13: Add sr-only text for current mode
+ * Requirements: 5.7
+ * A11Y: Provides context to screen reader users
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/**
+ * Focusable Screen Reader Only Text
+ * 
+ * When focused (e.g., via keyboard navigation), make the element visible.
+ * This is useful for skip links and other navigation aids.
+ * 
+ * A11Y: Keyboard navigation support
+ */
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================================================
+   SECTION 10: REDUCED MOTION SUPPORT
+   ============================================================================
+   
+   Respects user's preference for reduced motion by disabling or minimizing
+   animations and transitions. This is critical for users with vestibular
+   disorders or motion sensitivity.
+   
+   Requirements: 9.6, 9.7
+   A11Y: WCAG 2.1 Success Criterion 2.3.3 (Animation from Interactions)
+   ============================================================================ */
+
+/**
+ * Reduced Motion Media Query
+ * 
+ * When the user has enabled "Reduce Motion" in their operating system
+ * accessibility settings, this media query disables all animations and
+ * transitions for a more comfortable experience.
+ * 
+ * Task 14: Implement reduced motion support
+ * Requirements: 9.6, 9.7
+ * A11Y: Respects prefers-reduced-motion user preference
+ * 
+ * Affected elements:
+ * - Dark mode FAB icon rotation
+ * - Color transitions during mode toggle
+ * - All other animations and transitions
+ * 
+ * Behavior:
+ * - Sets transition-duration to 0s (instant changes)
+ * - Sets animation-duration to 0s (no animations)
+ * - Keeps functionality intact (mode switching still works)
+ * - Provides immediate visual feedback without motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  /**
+   * Disable all transitions and animations globally
+   * 
+   * This ensures that all animated elements respect the user's
+   * reduced motion preference, not just dark mode elements.
+   */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /**
+   * Dark Mode FAB - Disable icon rotation
+   * 
+   * The FAB icon normally rotates 360 degrees when toggling modes.
+   * With reduced motion, the icon changes instantly without rotation.
+   */
+  .mase-dark-mode-fab .dashicons {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /**
+   * Dark Mode Body Transitions - Instant color changes
+   * 
+   * Color transitions during mode toggle are disabled for instant
+   * visual feedback without the smooth color fade effect.
+   */
+  body.mase-dark-mode,
+  body.mase-dark-mode *,
+  body.mase-transitioning,
+  body.mase-transitioning * {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+  }
+  
+  /**
+   * FAB Hover Effects - Instant state changes
+   * 
+   * Hover effects on the FAB button change instantly without
+   * smooth transitions.
+   */
+  .mase-dark-mode-fab:hover,
+  .mase-dark-mode-fab:focus {
+    transition: none !important;
+  }
+  
+  /**
+   * Tooltip Animations - Instant appearance
+   * 
+   * Tooltips appear instantly without fade-in animations.
+   */
+  .mase-dark-mode-fab .mase-tooltip {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/**
+ * Reduced Motion - Maintain Functionality
+ * 
+ * Important: Even with reduced motion, all functionality remains intact:
+ * - Dark mode toggle still works
+ * - FAB is still clickable
+ * - Keyboard shortcuts still function
+ * - Mode changes are applied instantly
+ * - Visual feedback is immediate
+ * 
+ * The only difference is the absence of smooth transitions and animations.
+ * This provides a better experience for users who are sensitive to motion.
+ */
+
+
+/* ============================================================================
+   TASK 21: PERFORMANCE OPTIMIZATIONS FOR DARK MODE FAB
+   ============================================================================
+   
+   GPU-accelerated animations using CSS transforms for better performance.
+   Requirements: 12.4 (Use CSS transforms for animations)
+   
+   Performance Benefits:
+   - transform and opacity trigger GPU acceleration
+   - will-change hints browser to optimize for animations
+   - Hardware acceleration reduces CPU load
+   - Smoother 60fps animations
+   
+   ============================================================================ */
+
+/* FAB Base Styles with GPU Acceleration */
+.mase-dark-mode-fab {
+    /* Task 21: Enable GPU acceleration (Requirement 12.4) */
+    will-change: transform, opacity;
+    transform: translateZ(0); /* Force GPU layer */
+    backface-visibility: hidden; /* Prevent flickering */
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* FAB Icon Rotation Animation - GPU Accelerated */
+.mase-dark-mode-fab .dashicons {
+    /* Task 21: Use transform for rotation (Requirement 12.4) */
+    will-change: transform;
+    transform: translateZ(0) rotate(0deg);
+    transition: transform 0.3s ease-in-out;
+    backface-visibility: hidden;
+}
+
+/* Icon rotation on mode change */
+.mase-dark-mode-fab.mase-fab-rotating .dashicons {
+    transform: translateZ(0) rotate(360deg);
+}
+
+/* Hover effect - GPU accelerated scale */
+.mase-dark-mode-fab:hover {
+    transform: translateZ(0) scale(1.05);
+    transition: transform 0.2s ease-out;
+}
+
+/* Active/pressed state */
+.mase-dark-mode-fab:active {
+    transform: translateZ(0) scale(0.95);
+    transition: transform 0.1s ease-out;
+}
+
+/* Tooltip animation - GPU accelerated */
+.mase-fab-tooltip {
+    will-change: transform, opacity;
+    transform: translateZ(0) translateX(-50%) translateY(10px);
+    opacity: 0;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    pointer-events: none;
+}
+
+.mase-fab-tooltip-visible {
+    transform: translateZ(0) translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Reduced motion support - disable GPU-accelerated animations */
+@media (prefers-reduced-motion: reduce) {
+    .mase-dark-mode-fab,
+    .mase-dark-mode-fab .dashicons,
+    .mase-fab-tooltip {
+        will-change: auto;
+        transform: none !important;
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+    }
+    
+    /* Keep instant mode switching functional */
+    .mase-dark-mode-fab:hover,
+    .mase-dark-mode-fab:active {
+        transform: none !important;
+    }
+}
+
+/* Transitioning state - smooth color changes */
+body.mase-transitioning {
+    /* Task 21: Optimize transition performance */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+body.mase-transitioning * {
+    /* Limit transitions to color properties only for better performance */
+    transition-property: background-color, color, border-color, fill, stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+}
+
+/* Disable transitions for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body.mase-transitioning,
+    body.mase-transitioning * {
+        transition-duration: 0s !important;
+    }
+}
+
+/* ============================================================================
+   Task 11.2: Accessibility Warning Styles
+   Requirements: 10.1, 10.2
+   ============================================================================ */
+
+/* Accessibility warning container */
+.mase-a11y-warning {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+/* Warning state - insufficient contrast */
+.mase-a11y-warning.warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+}
+
+/* Success state - good contrast */
+.mase-a11y-warning.success {
+    background-color: #d4edda;
+    border: 1px solid #28a745;
+    color: #155724;
+}
+
+/* Icon styling */
+.mase-a11y-warning .dashicons {
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+}
+
+.mase-a11y-warning.warning .dashicons {
+    color: #ffc107;
+}
+
+.mase-a11y-warning.success .dashicons {
+    color: #28a745;
+}
+
+/* Dark mode support for accessibility warnings */
+body.mase-dark-mode .mase-a11y-warning.warning {
+    background-color: rgba(255, 193, 7, 0.15);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+}
+
+body.mase-dark-mode .mase-a11y-warning.success {
+    background-color: rgba(40, 167, 69, 0.15);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+}
+
+/* Accessibility warning animation */
+.mase-a11y-warning {
+    animation: mase-a11y-fade-in 0.3s ease-out;
+}
+
+@keyframes mase-a11y-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .mase-a11y-warning {
+        animation: none;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 782px) {
+    .mase-a11y-warning {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* ============================================================================
+   Task 11.3: Keyboard Navigation Focus Indicators
+   Requirements: 10.3
+   ============================================================================ */
+
+/* Enhanced focus indicator for keyboard navigation */
+.mase-keyboard-focus,
+input.mase-keyboard-focus,
+select.mase-keyboard-focus,
+textarea.mase-keyboard-focus,
+button.mase-keyboard-focus {
+    outline: 2px solid #2271b1 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2) !important;
+}
+
+/* Dark mode focus indicator */
+body.mase-dark-mode .mase-keyboard-focus,
+body.mase-dark-mode input.mase-keyboard-focus,
+body.mase-dark-mode select.mase-keyboard-focus,
+body.mase-dark-mode textarea.mase-keyboard-focus,
+body.mase-dark-mode button.mase-keyboard-focus {
+    outline-color: #4a9eff !important;
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.3) !important;
+}
+
+/* Ensure focus indicators are visible on all interactive elements */
+.mase-upload-btn:focus,
+.mase-remove-upload:focus,
+.mase-color-picker:focus,
+input[type="range"]:focus,
+.mase-tab-button:focus {
+    outline: 2px solid #2271b1;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .mase-keyboard-focus,
+    input.mase-keyboard-focus,
+    select.mase-keyboard-focus,
+    textarea.mase-keyboard-focus,
+    button.mase-keyboard-focus {
+        outline-width: 3px !important;
+        outline-offset: 3px !important;
+    }
+}
+
+/* Skip to content link for keyboard users */
+.mase-skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #2271b1;
+    color: #fff;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 100000;
+    border-radius: 0 0 4px 0;
+}
+
+.mase-skip-link:focus {
+    top: 0;
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+}
+
+/* ============================================ */
+/* Universal Buttons Tab Styles */
+/* ============================================ */
+
+/* Button Type Tabs (Subtask 5.2) */
+.mase-button-type-tabs {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 24px;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 0;
+}
+
+.mase-button-type-tab {
+	padding: 12px 24px;
+	background: transparent;
+	border: none;
+	border-bottom: 3px solid transparent;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	color: #555;
+	transition: all 0.2s ease;
+	position: relative;
+	bottom: -2px;
+}
+
+.mase-button-type-tab:hover {
+	color: #0073aa;
+	background: rgba(0, 115, 170, 0.05);
+}
+
+.mase-button-type-tab.active {
+	color: #0073aa;
+	border-bottom-color: #0073aa;
+	font-weight: 600;
+}
+
+/* Button State Tabs (Subtask 5.3) */
+.mase-button-state-tabs {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 24px;
+	background: #f5f5f5;
+	padding: 8px;
+	border-radius: 8px;
+}
+
+.mase-button-state-tab {
+	flex: 1;
+	padding: 10px 16px;
+	background: transparent;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	color: #555;
+	transition: all 0.2s ease;
+}
+
+.mase-button-state-tab:hover {
+	background: rgba(0, 115, 170, 0.1);
+	color: #0073aa;
+}
+
+.mase-button-state-tab.active {
+	background: #fff;
+	color: #0073aa;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	font-weight: 600;
+}
+
+/* Button Controls Layout */
+.mase-button-controls-wrapper {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 24px;
+	margin-bottom: 24px;
+}
+
+.mase-button-controls-left,
+.mase-button-controls-right {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* Contrast Indicator (Subtask 5.5) */
+.mase-contrast-indicator {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+	background: #f5f5f5;
+	border-radius: 6px;
+	font-size: 14px;
+}
+
+.mase-contrast-value {
+	font-weight: 600;
+	font-size: 16px;
+	color: #333;
+}
+
+.mase-contrast-status {
+	padding: 4px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.mase-contrast-status.pass {
+	background: #d4edda;
+	color: #155724;
+}
+
+.mase-contrast-status.fail {
+	background: #f8d7da;
+	color: #721c24;
+}
+
+/* Live Preview Area (Subtask 5.10) */
+.mase-button-preview-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 16px;
+	padding: 24px;
+	background: #f9f9f9;
+	border-radius: 8px;
+	border: 1px solid #ddd;
+}
+
+.mase-button-preview-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+
+.mase-button-preview-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: #666;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.mase-button-preview {
+	padding: 8px 16px;
+	border: 1px solid #0073aa;
+	background: #0073aa;
+	color: #fff;
+	border-radius: 3px;
+	font-size: 13px;
+	font-weight: 400;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	min-width: 120px;
+	text-align: center;
+}
+
+.mase-button-preview-hover {
+	/* Hover state will be applied via JavaScript */
+}
+
+.mase-button-preview-active {
+	/* Active state will be applied via JavaScript */
+}
+
+.mase-button-preview-focus {
+	/* Focus state will be applied via JavaScript */
+}
+
+.mase-button-preview:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Reset Buttons (Subtask 5.11) */
+.mase-button-reset-actions {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	padding: 24px;
+	background: #f5f5f5;
+	border-radius: 8px;
+	border: 1px solid #ddd;
+}
+
+.mase-reset-button-type,
+.mase-reset-all-buttons {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.mase-reset-button-type .dashicons,
+.mase-reset-all-buttons .dashicons {
+	font-size: 16px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1200px) {
+	.mase-button-controls-wrapper {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 782px) {
+	.mase-button-type-tabs {
+		flex-wrap: wrap;
+	}
+	
+	.mase-button-type-tab {
+		flex: 1 1 auto;
+		min-width: 100px;
+		padding: 10px 16px;
+		font-size: 13px;
+	}
+	
+	.mase-button-state-tabs {
+		flex-direction: column;
+	}
+	
+	.mase-button-state-tab {
+		width: 100%;
+	}
+	
+	.mase-button-preview-container {
+		grid-template-columns: 1fr;
+	}
+	
+	.mase-button-reset-actions {
+		flex-direction: column;
+	}
+	
+	.mase-reset-button-type,
+	.mase-reset-all-buttons {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+/* Dark Mode Support */
+body.mase-dark-mode .mase-button-type-tabs {
+	border-bottom-color: #444;
+}
+
+body.mase-dark-mode .mase-button-type-tab {
+	color: #ccc;
+}
+
+body.mase-dark-mode .mase-button-type-tab:hover {
+	color: #4a9eff;
+	background: rgba(74, 158, 255, 0.1);
+}
+
+body.mase-dark-mode .mase-button-type-tab.active {
+	color: #4a9eff;
+	border-bottom-color: #4a9eff;
+}
+
+body.mase-dark-mode .mase-button-state-tabs {
+	background: #2a2a2a;
+}
+
+body.mase-dark-mode .mase-button-state-tab {
+	color: #ccc;
+}
+
+body.mase-dark-mode .mase-button-state-tab:hover {
+	background: rgba(74, 158, 255, 0.15);
+	color: #4a9eff;
+}
+
+body.mase-dark-mode .mase-button-state-tab.active {
+	background: #333;
+	color: #4a9eff;
+}
+
+body.mase-dark-mode .mase-contrast-indicator {
+	background: #2a2a2a;
+}
+
+body.mase-dark-mode .mase-contrast-value {
+	color: #fff;
+}
+
+body.mase-dark-mode .mase-button-preview-container {
+	background: #2a2a2a;
+	border-color: #444;
+}
+
+body.mase-dark-mode .mase-button-preview-label {
+	color: #999;
+}
+
+body.mase-dark-mode .mase-button-reset-actions {
+	background: #2a2a2a;
+	border-color: #444;
+}
+
+
+/* ============================================================================
+   SECTION 10: BACKGROUND SYSTEM STYLES
+   ============================================================================ */
+
+/* 10.1 Backgrounds Tab Wrapper */
+.mase-backgrounds-wrapper {
+	padding: var(--mase-spacing-md, 16px);
+}
+
+/* 10.2 Background Area Sections */
+.mase-background-area-section {
+	background: var(--mase-surface-primary, #ffffff);
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-md, 8px);
+	margin-bottom: var(--mase-spacing-md, 16px);
+	overflow: hidden;
+}
+
+.mase-background-area-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-surface-secondary, #f9f9f9);
+	border-bottom: 1px solid var(--mase-border-color, #ddd);
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.mase-background-area-header:hover {
+	background: var(--mase-surface-hover, #f0f0f0);
+}
+
+.mase-background-area-title {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-sm, 8px);
+	flex: 1;
+}
+
+.mase-background-area-title .dashicons {
+	color: var(--mase-primary-color, #2271b1);
+	font-size: 20px;
+}
+
+.mase-background-area-title h3 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--mase-text-primary, #1d2327);
+}
+
+.mase-background-area-controls {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-md, 16px);
+}
+
+.mase-background-area-toggle {
+	background: none;
+	border: none;
+	padding: 4px;
+	cursor: pointer;
+	color: var(--mase-text-secondary, #646970);
+	transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.mase-background-area-toggle:hover {
+	color: var(--mase-primary-color, #2271b1);
+}
+
+.mase-background-area-toggle[aria-expanded="true"] .dashicons {
+	transform: rotate(180deg);
+}
+
+.mase-background-area-content {
+	padding: var(--mase-spacing-lg, 24px);
+	border-top: 1px solid var(--mase-border-color, #ddd);
+}
+
+/* 10.3 Background Configuration */
+.mase-background-config {
+	max-width: 800px;
+}
+
+.mase-background-type-controls {
+	margin-top: var(--mase-spacing-md, 16px);
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-surface-tertiary, #f5f5f5);
+	border-radius: var(--mase-radius-md, 8px);
+}
+
+/* 10.4 Gradient Builder Styles */
+
+/* Gradient Type Selector */
+.mase-gradient-type {
+	width: 100%;
+	max-width: 300px;
+}
+
+/* Gradient Angle Control */
+.mase-gradient-angle-control {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-lg, 24px);
+}
+
+.mase-gradient-angle-dial-container {
+	position: relative;
+	width: 80px;
+	height: 80px;
+	flex-shrink: 0;
+}
+
+.mase-gradient-angle-dial {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border: 3px solid var(--mase-border-color, #ddd);
+	position: relative;
+	cursor: grab;
+	transition: transform 0.1s ease, box-shadow 0.2s ease;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mase-gradient-angle-dial:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mase-gradient-angle-dial:active {
+	cursor: grabbing;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mase-dial-pointer {
+	position: absolute;
+	top: 8px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 4px;
+	height: 20px;
+	background: #ffffff;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.mase-gradient-angle-input-container {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-xs, 4px);
+}
+
+.mase-gradient-angle-input {
+	width: 80px;
+	padding: 8px 12px;
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-sm, 4px);
+	font-size: 14px;
+	text-align: center;
+}
+
+.mase-gradient-angle-input:focus {
+	border-color: var(--mase-primary-color, #2271b1);
+	outline: none;
+	box-shadow: 0 0 0 1px var(--mase-primary-color, #2271b1);
+}
+
+.mase-input-suffix {
+	font-size: 14px;
+	color: var(--mase-text-secondary, #646970);
+	font-weight: 500;
+}
+
+/* Color Stops Container */
+.mase-gradient-color-stops {
+	display: flex;
+	flex-direction: column;
+	gap: var(--mase-spacing-sm, 8px);
+	margin-bottom: var(--mase-spacing-md, 16px);
+}
+
+.mase-color-stop {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-sm, 8px);
+	padding: var(--mase-spacing-sm, 8px);
+	background: var(--mase-surface-primary, #ffffff);
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-sm, 4px);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mase-color-stop:hover {
+	border-color: var(--mase-primary-color, #2271b1);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.mase-color-stop-color {
+	flex-shrink: 0;
+}
+
+.mase-color-stop-color .mase-color-picker {
+	width: 60px;
+	height: 36px;
+	padding: 2px;
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-sm, 4px);
+	cursor: pointer;
+}
+
+.mase-color-stop-position {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-xs, 4px);
+	flex: 1;
+}
+
+.mase-color-stop-position .mase-stop-position {
+	width: 80px;
+	padding: 8px 12px;
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-sm, 4px);
+	font-size: 14px;
+	text-align: center;
+}
+
+.mase-color-stop-position .mase-stop-position:focus {
+	border-color: var(--mase-primary-color, #2271b1);
+	outline: none;
+	box-shadow: 0 0 0 1px var(--mase-primary-color, #2271b1);
+}
+
+.mase-remove-color-stop {
+	flex-shrink: 0;
+	padding: 4px 8px;
+	color: var(--mase-error-color, #d63638);
+	transition: color 0.2s ease;
+}
+
+.mase-remove-color-stop:hover:not(:disabled) {
+	color: #b32d2e;
+}
+
+.mase-remove-color-stop:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.mase-remove-color-stop .dashicons {
+	font-size: 18px;
+}
+
+/* Add Color Stop Button */
+.mase-add-color-stop {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--mase-spacing-xs, 4px);
+	margin-top: var(--mase-spacing-xs, 4px);
+}
+
+.mase-add-color-stop:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.mase-add-color-stop .dashicons {
+	font-size: 16px;
+}
+
+/* Gradient Preview */
+.mase-gradient-preview {
+	width: 100%;
+	height: 120px;
+	border-radius: var(--mase-radius-md, 8px);
+	border: 2px solid var(--mase-border-color, #ddd);
+	background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: background 0.3s ease;
+}
+
+/* Gradient Preset Selector */
+.mase-gradient-preset-filter {
+	margin-bottom: var(--mase-spacing-md, 16px);
+}
+
+.mase-gradient-category-filter {
+	width: 100%;
+	max-width: 300px;
+	padding: var(--mase-spacing-sm, 8px) var(--mase-spacing-md, 12px);
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-sm, 4px);
+	background: var(--mase-surface-primary, #fff);
+	font-size: 14px;
+	transition: border-color 0.2s ease;
+}
+
+.mase-gradient-category-filter:focus {
+	border-color: var(--mase-primary-color, #2271b1);
+	outline: none;
+	box-shadow: 0 0 0 1px var(--mase-primary-color, #2271b1);
+}
+
+.mase-gradient-preset-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: var(--mase-spacing-md, 12px);
+	margin-top: var(--mase-spacing-md, 12px);
+	max-height: 400px;
+	overflow-y: auto;
+	padding: var(--mase-spacing-sm, 8px);
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-md, 8px);
+	background: var(--mase-surface-secondary, #fafafa);
+}
+
+.mase-gradient-preset-item {
+	position: relative;
+	height: 80px;
+	border-radius: var(--mase-radius-sm, 6px);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: 2px solid transparent;
+	overflow: hidden;
+}
+
+.mase-gradient-preset-item:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	border-color: var(--mase-primary-color, #2271b1);
+}
+
+.mase-gradient-preset-item:focus {
+	outline: 2px solid var(--mase-primary-color, #2271b1);
+	outline-offset: 2px;
+}
+
+.mase-gradient-preset-item.selected {
+	border-color: var(--mase-primary-color, #2271b1);
+	box-shadow: 0 0 0 3px rgba(34, 113, 177, 0.2);
+}
+
+.mase-gradient-preset-preview {
+	width: 100%;
+	height: 100%;
+	border-radius: var(--mase-radius-sm, 4px);
+}
+
+.mase-gradient-preset-name {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: var(--mase-spacing-xs, 4px) var(--mase-spacing-sm, 8px);
+	background: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	font-size: 11px;
+	font-weight: 500;
+	text-align: center;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	pointer-events: none;
+}
+
+.mase-gradient-preset-item:hover .mase-gradient-preset-name {
+	opacity: 1;
+}
+
+.mase-gradient-preset-item[data-category] {
+	display: block;
+}
+
+.mase-gradient-preset-item[data-category].hidden {
+	display: none;
+}
+
+/* 10.5 Upload Zone Styles */
+.mase-background-upload-zone {
+	border: 2px dashed var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-md, 8px);
+	padding: var(--mase-spacing-xl, 32px);
+	text-align: center;
+	background: var(--mase-surface-tertiary, #f5f5f5);
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.mase-background-upload-zone:hover,
+.mase-background-upload-zone.mase-drag-over {
+	border-color: var(--mase-primary-color, #2271b1);
+	background: var(--mase-surface-hover, #f0f0f0);
+}
+
+.mase-upload-zone-content .dashicons {
+	font-size: 48px;
+	color: var(--mase-text-secondary, #646970);
+	margin-bottom: var(--mase-spacing-sm, 8px);
+}
+
+.mase-upload-zone-text {
+	margin: var(--mase-spacing-sm, 8px) 0;
+	color: var(--mase-text-primary, #1d2327);
+}
+
+.mase-upload-zone-hint {
+	margin: 0;
+	font-size: 13px;
+	color: var(--mase-text-secondary, #646970);
+}
+
+/* Upload Progress */
+.mase-upload-progress {
+	padding: var(--mase-spacing-md, 16px);
+}
+
+.mase-upload-progress-bar {
+	width: 100%;
+	height: 8px;
+	background: var(--mase-surface-tertiary, #f5f5f5);
+	border-radius: var(--mase-radius-full, 9999px);
+	overflow: hidden;
+	margin-bottom: var(--mase-spacing-sm, 8px);
+}
+
+.mase-upload-progress-fill {
+	height: 100%;
+	background: var(--mase-primary-color, #2271b1);
+	transition: width 0.3s ease;
+}
+
+.mase-upload-progress-text {
+	font-size: 14px;
+	color: var(--mase-text-secondary, #646970);
+}
+
+/* Upload Error */
+.mase-upload-error {
+	padding: var(--mase-spacing-sm, 8px) var(--mase-spacing-md, 16px);
+	background: #fcf0f1;
+	border: 1px solid #d63638;
+	border-radius: var(--mase-radius-sm, 4px);
+	color: #d63638;
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-sm, 8px);
+	margin-top: var(--mase-spacing-sm, 8px);
+}
+
+/* Image Preview */
+.mase-background-image-preview {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-md, 16px);
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-surface-primary, #ffffff);
+	border: 1px solid var(--mase-border-color, #ddd);
+	border-radius: var(--mase-radius-md, 8px);
+}
+
+.mase-preview-thumbnail {
+	width: 120px;
+	height: 120px;
+	border-radius: var(--mase-radius-sm, 4px);
+	overflow: hidden;
+	flex-shrink: 0;
+	background: var(--mase-surface-tertiary, #f5f5f5);
+}
+
+.mase-preview-thumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.mase-preview-actions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--mase-spacing-sm, 8px);
+}
+
+/* 10.6 Preview Container */
+.mase-background-preview-box {
+	width: 100%;
+	height: 120px;
+	border-radius: var(--mase-radius-md, 8px);
+	border: 2px solid var(--mase-border-color, #ddd);
+	background: var(--mase-surface-tertiary, #f5f5f5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--mase-spacing-md, 16px);
+}
+
+.mase-background-preview-box .description {
+	margin: 0;
+	text-align: center;
+	color: var(--mase-text-secondary, #646970);
+}
+
+/* 10.7 Responsive Styles */
+@media screen and (max-width: 782px) {
+	.mase-background-area-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--mase-spacing-sm, 8px);
+	}
+	
+	.mase-background-area-controls {
+		width: 100%;
+		justify-content: space-between;
+	}
+	
+	.mase-gradient-angle-control {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.mase-color-stop {
+		flex-wrap: wrap;
+	}
+	
+	.mase-color-stop-position {
+		flex: 1 1 100%;
+	}
+}
+
+/* 10.8 RTL Support */
+[dir="rtl"] .mase-background-area-title {
+	flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-background-area-controls {
+	flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-gradient-angle-control {
+	flex-direction: row-reverse;
+}
+
+[dir="rtl"] .mase-color-stop {
+	flex-direction: row-reverse;
+}
+
+/* 10.9 Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+	.mase-background-area-section {
+		border-width: 2px;
+	}
+	
+	.mase-gradient-angle-dial {
+		border-width: 4px;
+	}
+	
+	.mase-color-stop {
+		border-width: 2px;
+	}
+}
+
+/* 10.10 Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+	.mase-background-area-toggle,
+	.mase-gradient-angle-dial,
+	.mase-color-stop,
+	.mase-gradient-preview,
+	.mase-upload-progress-fill {
+		transition: none;
+	}
+}

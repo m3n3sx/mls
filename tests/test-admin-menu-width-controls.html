@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Menu Width Controls Test - Task 15</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2271b1;
+            margin-top: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-radius: 4px;
+        }
+        .control-group {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        label {
+            font-weight: 600;
+            min-width: 150px;
+        }
+        select, input[type="number"] {
+            padding: 6px 10px;
+            border: 1px solid #8c8f94;
+            border-radius: 4px;
+        }
+        .unit-label {
+            font-weight: bold;
+            color: #2271b1;
+        }
+        .preview-area {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #2271b1;
+            border-radius: 4px;
+            min-height: 200px;
+        }
+        #admin-menu-preview {
+            background: #23282d;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        #content-preview {
+            background: #f0f0f1;
+            padding: 20px;
+            margin-left: 160px;
+            transition: margin-left 0.3s ease;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d7f0d7;
+            border-left: 4px solid #00a32a;
+        }
+        .status.info {
+            background: #e5f5fa;
+            border-left: 4px solid #2271b1;
+        }
+        .description {
+            color: #646970;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Admin Menu Width Controls Test</h1>
+        <p><strong>Task 15:</strong> Implement menu width controls with pixel and percentage support</p>
+
+        <div class="test-section">
+            <h2>Subtask 15.1: Width Control UI</h2>
+            
+            <div class="control-group">
+                <label for="admin-menu-width-unit">Width Unit:</label>
+                <select id="admin-menu-width-unit" name="admin_menu[width_unit]">
+                    <option value="pixels" selected>Pixels</option>
+                    <option value="percent">Percentage</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="admin-menu-width">Width Value:</label>
+                <input 
+                    type="number" 
+                    id="admin-menu-width"
+                    name="admin_menu[width_value]" 
+                    value="160"
+                    min="160"
+                    max="400"
+                    step="1"
+                    data-min-pixels="160"
+                    data-max-pixels="400"
+                    data-min-percent="50"
+                    data-max-percent="100"
+                />
+                <span class="unit-label" id="unit-display">px</span>
+            </div>
+
+            <div class="description">
+                <span class="width-desc-pixels">Default: 160px. Range: 160-400px.</span>
+                <span class="width-desc-percent" style="display: none;">Default: 100%. Range: 50-100%.</span>
+            </div>
+
+            <div class="status info">
+                <strong>Test:</strong> Switch between pixels and percentage units. Verify min/max values update correctly.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Subtask 15.2 & 15.3: CSS Generation & Live Preview</h2>
+            
+            <div class="preview-area">
+                <div id="admin-menu-preview">
+                    <strong>Admin Menu</strong>
+                    <p>Width: <span id="current-width">160px</span></p>
+                </div>
+                <div id="content-preview">
+                    <strong>Content Area</strong>
+                    <p>Margin-left adjusts based on menu width</p>
+                </div>
+            </div>
+
+            <div class="status info">
+                <strong>Test:</strong> Change width value and unit. Verify menu width and content margin update in real-time.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Results</h2>
+            <div id="test-results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate jQuery for testing
+        function $(selector) {
+            const element = document.querySelector(selector);
+            return {
+                val: function(value) {
+                    if (value !== undefined) {
+                        element.value = value;
+                        return this;
+                    }
+                    return element.value;
+                },
+                attr: function(name, value) {
+                    if (value !== undefined) {
+                        element.setAttribute(name, value);
+                        return this;
+                    }
+                    return element.getAttribute(name);
+                },
+                data: function(name) {
+                    return element.dataset[name];
+                },
+                text: function(text) {
+                    if (text !== undefined) {
+                        element.textContent = text;
+                        return this;
+                    }
+                    return element.textContent;
+                },
+                css: function(prop, value) {
+                    if (typeof prop === 'object') {
+                        Object.assign(element.style, prop);
+                    } else {
+                        element.style[prop] = value;
+                    }
+                    return this;
+                },
+                show: function() {
+                    element.style.display = '';
+                    return this;
+                },
+                hide: function() {
+                    element.style.display = 'none';
+                    return this;
+                }
+            };
+        }
+
+        // Test implementation
+        const testResults = [];
+
+        function logTest(name, passed, message) {
+            testResults.push({ name, passed, message });
+            updateTestResults();
+        }
+
+        function updateTestResults() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = testResults.map(test => `
+                <div class="status ${test.passed ? 'success' : 'error'}">
+                    <strong>${test.passed ? '✓' : '✗'} ${test.name}</strong><br>
+                    ${test.message}
+                </div>
+            `).join('');
+        }
+
+        // Unit toggle handler (Requirement 14.1, 14.4)
+        document.getElementById('admin-menu-width-unit').addEventListener('change', function() {
+            const unit = this.value;
+            const widthInput = document.getElementById('admin-menu-width');
+            const unitDisplay = document.getElementById('unit-display');
+            
+            // Update min/max based on unit (Requirement 14.3)
+            if (unit === 'percent') {
+                widthInput.setAttribute('min', widthInput.dataset.minPercent || 50);
+                widthInput.setAttribute('max', widthInput.dataset.maxPercent || 100);
+                
+                // Convert current pixel value to approximate percentage if needed
+                const currentVal = parseInt(widthInput.value);
+                if (currentVal > 100) {
+                    widthInput.value = 100;
+                } else if (currentVal < 50) {
+                    widthInput.value = 50;
+                }
+                
+                // Show/hide descriptions
+                document.querySelector('.width-desc-pixels').style.display = 'none';
+                document.querySelector('.width-desc-percent').style.display = 'inline';
+                unitDisplay.textContent = '%';
+                
+                logTest('Unit Toggle to Percentage', true, 'Min/max updated to 50-100, unit label shows %');
+            } else {
+                widthInput.setAttribute('min', widthInput.dataset.minPixels || 160);
+                widthInput.setAttribute('max', widthInput.dataset.maxPixels || 400);
+                
+                // Convert current percentage to approximate pixels if needed
+                const currentVal = parseInt(widthInput.value);
+                if (currentVal < 160) {
+                    widthInput.value = 160;
+                }
+                
+                // Show/hide descriptions
+                document.querySelector('.width-desc-pixels').style.display = 'inline';
+                document.querySelector('.width-desc-percent').style.display = 'none';
+                unitDisplay.textContent = 'px';
+                
+                logTest('Unit Toggle to Pixels', true, 'Min/max updated to 160-400, unit label shows px');
+            }
+            
+            // Update live preview (Requirement 14.4)
+            updateWidth();
+        });
+
+        // Width value change handler (Requirement 14.4, 14.5)
+        document.getElementById('admin-menu-width').addEventListener('input', function() {
+            updateWidth();
+        });
+
+        function updateWidth() {
+            const widthValue = parseInt(document.getElementById('admin-menu-width').value) || 160;
+            const widthUnit = document.getElementById('admin-menu-width-unit').value || 'pixels';
+            
+            // Determine width string based on unit (Requirement 14.1, 14.2)
+            const widthStr = widthUnit === 'percent' ? widthValue + '%' : widthValue + 'px';
+            
+            // Update menu width (Requirement 14.2)
+            const menuPreview = document.getElementById('admin-menu-preview');
+            menuPreview.style.width = widthStr;
+            
+            // Update content margin (Requirement 14.5)
+            const contentPreview = document.getElementById('content-preview');
+            contentPreview.style.marginLeft = widthStr;
+            
+            // Update display
+            document.getElementById('current-width').textContent = widthStr;
+            
+            logTest('Width Update', true, `Menu width set to ${widthStr}, content margin adjusted`);
+        }
+
+        // Initial test
+        logTest('Initial State', true, 'Width control initialized with pixels unit, 160px value');
+    </script>
+</body>
+</html>

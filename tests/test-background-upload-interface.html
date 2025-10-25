@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Upload Interface Test</title>
+    <link rel="stylesheet" href="../assets/css/mase-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/dashicons.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            padding: 20px;
+            background-color: #f0f0f1;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #1d2327;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .test-section:last-child {
+            border-bottom: none;
+        }
+        .test-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1d2327;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Background Upload Interface Test</h1>
+        <p>This page tests the drag & drop upload interface for the Advanced Background System.</p>
+
+        <!-- Test 1: Upload Zone (Empty State) -->
+        <div class="test-section">
+            <div class="test-label">Test 1: Upload Zone - Empty State</div>
+            <p class="description">Should show drag & drop zone with upload icon and instructions.</p>
+            
+            <div 
+                class="mase-background-upload-zone" 
+                data-area="dashboard"
+                role="button"
+                tabindex="0"
+                aria-label="Upload or select background image. Click to open media library or drag and drop an image file."
+            >
+                <div class="mase-upload-zone-content">
+                    <span class="dashicons dashicons-cloud-upload" aria-hidden="true"></span>
+                    <p class="mase-upload-zone-text">
+                        <strong>Drop image here or click to upload</strong>
+                    </p>
+                    <p class="mase-upload-zone-hint">
+                        Supported: JPG, PNG, WebP, SVG • Max size: 5MB
+                    </p>
+                </div>
+                
+                <input 
+                    type="file" 
+                    class="mase-background-file-input"
+                    accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                    data-area="dashboard"
+                    style="display: none;"
+                    aria-hidden="true"
+                />
+                
+                <div class="mase-upload-progress" style="display: none;">
+                    <div class="mase-upload-progress-bar">
+                        <div class="mase-upload-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <p class="mase-upload-progress-text">
+                        Uploading...
+                        <span class="mase-upload-progress-percent">0%</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Upload Zone - Drag Over State -->
+        <div class="test-section">
+            <div class="test-label">Test 2: Upload Zone - Drag Over State</div>
+            <p class="description">Should show blue border and background when dragging file over it.</p>
+            
+            <div 
+                class="mase-background-upload-zone mase-drag-over" 
+                data-area="admin_menu"
+                role="button"
+                tabindex="0"
+            >
+                <div class="mase-upload-zone-content">
+                    <span class="dashicons dashicons-cloud-upload" aria-hidden="true"></span>
+                    <p class="mase-upload-zone-text">
+                        <strong>Drop image here or click to upload</strong>
+                    </p>
+                    <p class="mase-upload-zone-hint">
+                        Supported: JPG, PNG, WebP, SVG • Max size: 5MB
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Upload Progress -->
+        <div class="test-section">
+            <div class="test-label">Test 3: Upload Progress Indicator</div>
+            <p class="description">Should show progress bar during upload.</p>
+            
+            <div 
+                class="mase-background-upload-zone mase-uploading" 
+                data-area="post_lists"
+            >
+                <div class="mase-upload-zone-content" style="display: none;">
+                    <span class="dashicons dashicons-cloud-upload"></span>
+                    <p class="mase-upload-zone-text">
+                        <strong>Drop image here or click to upload</strong>
+                    </p>
+                </div>
+                
+                <div class="mase-upload-progress" style="display: block;">
+                    <div class="mase-upload-progress-bar">
+                        <div class="mase-upload-progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <p class="mase-upload-progress-text">
+                        Uploading...
+                        <span class="mase-upload-progress-percent">65%</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: Validation Error -->
+        <div class="test-section">
+            <div class="test-label">Test 4: Validation Error Display</div>
+            <p class="description">Should show error message with warning icon.</p>
+            
+            <div 
+                class="mase-upload-error" 
+                data-area="post_editor"
+                style="display: flex;"
+                role="alert"
+                aria-live="assertive"
+            >
+                <span class="dashicons dashicons-warning" aria-hidden="true"></span>
+                <span class="mase-upload-error-message">File too large. Maximum size is 5MB.</span>
+            </div>
+        </div>
+
+        <!-- Test 5: Image Preview -->
+        <div class="test-section">
+            <div class="test-label">Test 5: Image Preview with Actions</div>
+            <p class="description">Should show uploaded image thumbnail with Change and Remove buttons.</p>
+            
+            <div 
+                class="mase-background-image-preview" 
+                data-area="widgets"
+                style="display: block;"
+            >
+                <div class="mase-preview-thumbnail">
+                    <img src="https://via.placeholder.com/300x150/667eea/ffffff?text=Background+Image" alt="Background preview" />
+                </div>
+                <div class="mase-preview-actions">
+                    <button 
+                        type="button" 
+                        class="button button-secondary mase-change-image-btn"
+                        data-area="widgets"
+                    >
+                        <span class="dashicons dashicons-edit" aria-hidden="true"></span>
+                        Change Image
+                    </button>
+                    <button 
+                        type="button" 
+                        class="button button-link-delete mase-remove-image-btn"
+                        data-area="widgets"
+                    >
+                        <span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 6: Accordion Section -->
+        <div class="test-section">
+            <div class="test-label">Test 6: Background Area Accordion</div>
+            <p class="description">Should show collapsible section with toggle.</p>
+            
+            <div class="mase-backgrounds-accordion">
+                <div class="mase-background-area-section" data-area="login">
+                    <div class="mase-background-area-header">
+                        <div class="mase-background-area-title">
+                            <span class="dashicons dashicons-lock" aria-hidden="true"></span>
+                            <h3>Login Page</h3>
+                            <span class="mase-badge mase-badge-success" role="status">Enabled</span>
+                        </div>
+                        <div class="mase-background-area-controls">
+                            <label class="mase-toggle-switch">
+                                <input 
+                                    type="checkbox" 
+                                    checked
+                                    class="mase-background-enable-toggle"
+                                    role="switch"
+                                    aria-checked="true"
+                                />
+                                <span class="mase-toggle-slider" aria-hidden="true"></span>
+                            </label>
+                            <button 
+                                type="button" 
+                                class="mase-background-area-toggle"
+                                aria-expanded="false"
+                            >
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mase-background-area-content" style="display: none;">
+                        <div class="mase-background-config" data-area="login">
+                            <p class="description">Customize the background of the WordPress login page (body.login).</p>
+                            
+                            <div class="mase-background-upload-zone" data-area="login">
+                                <div class="mase-upload-zone-content">
+                                    <span class="dashicons dashicons-cloud-upload"></span>
+                                    <p class="mase-upload-zone-text">
+                                        <strong>Drop image here or click to upload</strong>
+                                    </p>
+                                    <p class="mase-upload-zone-hint">
+                                        Supported: JPG, PNG, WebP, SVG • Max size: 5MB
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 7: Responsive Preview -->
+        <div class="test-section">
+            <div class="test-label">Test 7: Responsive Behavior</div>
+            <p class="description">Resize browser window to test mobile layout (< 768px).</p>
+            <p class="description">On mobile, accordion header should stack vertically and upload zone should be smaller.</p>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Simple test script to demonstrate interactions
+        jQuery(document).ready(function($) {
+            console.log('Background Upload Interface Test loaded');
+            
+            // Test accordion toggle
+            $('.mase-background-area-toggle').on('click', function() {
+                var $content = $(this).closest('.mase-background-area-section').find('.mase-background-area-content');
+                var isExpanded = $(this).attr('aria-expanded') === 'true';
+                
+                if (isExpanded) {
+                    $content.slideUp();
+                    $(this).attr('aria-expanded', 'false');
+                } else {
+                    $content.slideDown();
+                    $(this).attr('aria-expanded', 'true');
+                }
+            });
+            
+            // Test drag over effect
+            $('.mase-background-upload-zone').not('.mase-drag-over, .mase-uploading').on('dragover', function(e) {
+                e.preventDefault();
+                $(this).addClass('mase-drag-over');
+            }).on('dragleave', function() {
+                $(this).removeClass('mase-drag-over');
+            });
+            
+            // Test click to upload
+            $('.mase-background-upload-zone').on('click', function() {
+                alert('In production, this would open the file picker or WordPress media library.');
+            });
+            
+            // Test remove button
+            $('.mase-remove-image-btn').on('click', function() {
+                alert('In production, this would remove the image and show the upload zone.');
+            });
+            
+            // Test change button
+            $('.mase-change-image-btn').on('click', function() {
+                alert('In production, this would open the file picker to select a new image.');
+            });
+        });
+    </script>
+</body>
+</html>
