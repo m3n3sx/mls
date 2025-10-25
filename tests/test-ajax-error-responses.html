@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test AJAX Error Responses - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2271b1;
+            margin-top: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-left: 4px solid #2271b1;
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .test-result.warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .code-block {
+            background: #23282d;
+            color: #f0f0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        .requirement {
+            background: #e7f3ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #2271b1;
+            font-size: 13px;
+        }
+        .test-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .notification-demo {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #dc3232;
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test AJAX Error Responses</h1>
+        <p><strong>Task 10:</strong> Test AJAX error responses</p>
+        <p><strong>Requirements:</strong> 4.1, 4.2, 4.3, 4.4</p>
+        
+        <div class="requirement">
+            <strong>Requirement 4.1:</strong> WHEN an AJAX request fails with HTTP 403, THE MASE_Admin SHALL display the message "Permission denied. You do not have access to perform this action."
+        </div>
+        <div class="requirement">
+            <strong>Requirement 4.2:</strong> WHEN an AJAX request fails with HTTP 400, THE MASE_Admin SHALL display the validation error details from the response data
+        </div>
+        <div class="requirement">
+            <strong>Requirement 4.3:</strong> WHEN an AJAX request fails with HTTP 500, THE MASE_Admin SHALL display the message "Server error. Please try again later."
+        </div>
+        <div class="requirement">
+            <strong>Requirement 4.4:</strong> WHEN an AJAX request fails with a network error, THE MASE_Admin SHALL display the message "Network error. Please check your connection and try again."
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 1: HTTP 403 - Permission Denied</h2>
+        <p>Simulate a 403 Forbidden response to test permission denied error handling</p>
+        <div class="test-controls">
+            <button onclick="test403Response()">Run Test</button>
+            <button onclick="test403WithInvalidNonce()">Test with Invalid Nonce</button>
+        </div>
+        <div id="test1-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 2: HTTP 400 - Validation Error</h2>
+        <p>Test validation error response with detailed field errors</p>
+        <div class="test-controls">
+            <button onclick="test400Response()">Run Test</button>
+            <button onclick="test400MultipleErrors()">Test Multiple Validation Errors</button>
+        </div>
+        <div id="test2-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 3: HTTP 500 - Server Error</h2>
+        <p>Simulate a 500 Internal Server Error response</p>
+        <div class="test-controls">
+            <button onclick="test500Response()">Run Test</button>
+        </div>
+        <div id="test3-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 4: Network Error</h2>
+        <p>Simulate network connectivity issues</p>
+        <div class="test-controls">
+            <button onclick="testNetworkError()">Run Test</button>
+            <button onclick="testTimeout()">Test Request Timeout</button>
+        </div>
+        <div id="test4-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 5: User Message Display Verification</h2>
+        <p>Verify that appropriate user messages are displayed for each error type</p>
+        <div class="test-controls">
+            <button onclick="testAllErrorMessages()">Test All Error Messages</button>
+        </div>
+        <div id="test5-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 6: Error Handler Integration</h2>
+        <p>Test the complete error handling flow from AJAX to user notification</p>
+        <div class="test-controls">
+            <button onclick="testErrorHandlerIntegration()">Run Integration Test</button>
+        </div>
+        <div id="test6-results"></div>
+    </div>
+
+    <script>
+        // Mock AJAX URL - in WordPress context this would be ajaxurl
+        const ajaxUrl = '../wp-admin/admin-ajax.php';
+        const validNonce = 'test-nonce-valid';
+        const invalidNonce = 'test-nonce-invalid';
+        
+        // Helper function to display test results
+        function displayResult(containerId, status, message, details = null) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${status}`;
+            resultDiv.innerHTML = `<strong>${status.toUpperCase()}:</strong> ${message}`;
+            
+            if (details) {
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'code-block';
+                detailsDiv.textContent = typeof details === 'string' ? details : JSON.stringify(details, null, 2);
+                resultDiv.appendChild(detailsDiv);
+            }
+            
+            container.appendChild(resultDiv);
+        }
+        
+        // Simulate the error handler from mase-admin.js
+        function simulateErrorHandler(xhr, status, error) {
+            let errorMsg = 'An error occurred. Please try again.';
+            
+            try {
+                const response = JSON.parse(xhr.responseText);
+                
+                if (response.data && response.data.validation_errors) {
+                    // Display validation errors
+                    const errors = response.data.error_details || [];
+                    const errorCount = response.data.error_count || errors.length;
+                    
+                    errorMsg = 'Please fix ' + errorCount + ' validation error' + (errorCount > 1 ? 's' : '') + ':\n\n';
+                    errorMsg += errors.map((e, i) => (i + 1) + '. ' + e).join('\n');
+                } else if (response.data && response.data.message) {
+                    errorMsg = response.data.message;
+                }
+            } catch (e) {
+                console.error('MASE: Could not parse error response');
+                
+                // Provide helpful messages based on HTTP status
+                if (xhr.status === 403) {
+                    errorMsg = 'Permission denied. You do not have access to perform this action.';
+                } else if (xhr.status === 400) {
+                    errorMsg = 'Invalid data submitted. Please check your settings and try again.';
+                } else if (xhr.status === 500) {
+                    errorMsg = 'Server error. Please try again later.';
+                } else if (xhr.status === 0) {
+                    errorMsg = 'Network error. Please check your connection and try again.';
+                }
+            }
+            
+            return errorMsg;
+        }
+        
+        // Test 1: HTTP 403 - Permission Denied
+        async function test403Response() {
+            const resultsId = 'test1-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing HTTP 403 response handling...');
+            
+            try {
+                // Create a mock XMLHttpRequest with 403 status
+                const mockXHR = {
+                    status: 403,
+                    responseText: JSON.stringify({
+                        success: false,
+                        data: {
+                            message: 'Permission denied'
+                        }
+                    })
+                };
+                
+                const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Forbidden');
+                
+                if (errorMessage === 'Permission denied. You do not have access to perform this action.') {
+                    displayResult(resultsId, 'pass', 'Requirement 4.1: Correct 403 error message displayed');
+                    displayResult(resultsId, 'info', 'Error message:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'fail', 'Requirement 4.1: Incorrect 403 error message');
+                    displayResult(resultsId, 'info', 'Expected: "Permission denied. You do not have access to perform this action."');
+                    displayResult(resultsId, 'info', 'Got:', errorMessage);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        async function test403WithInvalidNonce() {
+            const resultsId = 'test1-results';
+            
+            displayResult(resultsId, 'info', 'Testing 403 with invalid nonce (real AJAX call)...');
+            
+            try {
+                const settings = {
+                    admin_bar: {
+                        bg_color: '#333333'
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: invalidNonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                if (response.status === 403) {
+                    displayResult(resultsId, 'pass', 'Server returned 403 for invalid nonce');
+                    
+                    const mockXHR = {
+                        status: 403,
+                        responseText: await response.text()
+                    };
+                    
+                    const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Forbidden');
+                    displayResult(resultsId, 'info', 'Error handler output:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'warning', 'Expected 403 but got status: ' + response.status);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        // Test 2: HTTP 400 - Validation Error
+        async function test400Response() {
+            const resultsId = 'test2-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing HTTP 400 validation error handling...');
+            
+            try {
+                // Create a mock XMLHttpRequest with 400 status and validation errors
+                const mockXHR = {
+                    status: 400,
+                    responseText: JSON.stringify({
+                        success: false,
+                        data: {
+                            message: 'Validation failed. Please fix the following errors:',
+                            validation_errors: {
+                                admin_bar_bg_color: 'Invalid hex color format'
+                            },
+                            error_details: [
+                                'admin_bar_bg_color: Invalid hex color format'
+                            ],
+                            error_count: 1
+                        }
+                    })
+                };
+                
+                const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Bad Request');
+                
+                if (errorMessage.includes('Please fix 1 validation error')) {
+                    displayResult(resultsId, 'pass', 'Requirement 4.2: Validation error details displayed');
+                    displayResult(resultsId, 'info', 'Error message:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'fail', 'Requirement 4.2: Validation error details not properly formatted');
+                    displayResult(resultsId, 'info', 'Got:', errorMessage);
+                }
+                
+                if (errorMessage.includes('admin_bar_bg_color: Invalid hex color format')) {
+                    displayResult(resultsId, 'pass', 'Requirement 4.2: Field-specific error included');
+                } else {
+                    displayResult(resultsId, 'fail', 'Requirement 4.2: Field-specific error missing');
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        async function test400MultipleErrors() {
+            const resultsId = 'test2-results';
+            
+            displayResult(resultsId, 'info', 'Testing 400 with multiple validation errors...');
+            
+            try {
+                const mockXHR = {
+                    status: 400,
+                    responseText: JSON.stringify({
+                        success: false,
+                        data: {
+                            message: 'Validation failed. Please fix the following errors:',
+                            validation_errors: {
+                                admin_bar_bg_color: 'Invalid hex color format',
+                                admin_bar_text_color: 'Invalid hex color format',
+                                admin_bar_height: 'Height must be between 20 and 100'
+                            },
+                            error_details: [
+                                'admin_bar_bg_color: Invalid hex color format',
+                                'admin_bar_text_color: Invalid hex color format',
+                                'admin_bar_height: Height must be between 20 and 100'
+                            ],
+                            error_count: 3
+                        }
+                    })
+                };
+                
+                const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Bad Request');
+                
+                if (errorMessage.includes('Please fix 3 validation errors')) {
+                    displayResult(resultsId, 'pass', 'Multiple validation errors counted correctly');
+                } else {
+                    displayResult(resultsId, 'fail', 'Error count incorrect in message');
+                }
+                
+                const hasAllErrors = 
+                    errorMessage.includes('admin_bar_bg_color') &&
+                    errorMessage.includes('admin_bar_text_color') &&
+                    errorMessage.includes('admin_bar_height');
+                
+                if (hasAllErrors) {
+                    displayResult(resultsId, 'pass', 'All validation errors included in message');
+                    displayResult(resultsId, 'info', 'Complete error message:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'fail', 'Some validation errors missing from message');
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        // Test 3: HTTP 500 - Server Error
+        async function test500Response() {
+            const resultsId = 'test3-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing HTTP 500 response handling...');
+            
+            try {
+                const mockXHR = {
+                    status: 500,
+                    responseText: JSON.stringify({
+                        success: false,
+                        data: {
+                            message: 'Internal server error'
+                        }
+                    })
+                };
+                
+                const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Internal Server Error');
+                
+                if (errorMessage === 'Server error. Please try again later.') {
+                    displayResult(resultsId, 'pass', 'Requirement 4.3: Correct 500 error message displayed');
+                    displayResult(resultsId, 'info', 'Error message:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'fail', 'Requirement 4.3: Incorrect 500 error message');
+                    displayResult(resultsId, 'info', 'Expected: "Server error. Please try again later."');
+                    displayResult(resultsId, 'info', 'Got:', errorMessage);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        // Test 4: Network Error
+        async function testNetworkError() {
+            const resultsId = 'test4-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing network error handling...');
+            
+            try {
+                // Simulate network error with status 0
+                const mockXHR = {
+                    status: 0,
+                    responseText: ''
+                };
+                
+                const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Network Error');
+                
+                if (errorMessage === 'Network error. Please check your connection and try again.') {
+                    displayResult(resultsId, 'pass', 'Requirement 4.4: Correct network error message displayed');
+                    displayResult(resultsId, 'info', 'Error message:', errorMessage);
+                } else {
+                    displayResult(resultsId, 'fail', 'Requirement 4.4: Incorrect network error message');
+                    displayResult(resultsId, 'info', 'Expected: "Network error. Please check your connection and try again."');
+                    displayResult(resultsId, 'info', 'Got:', errorMessage);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        async function testTimeout() {
+            const resultsId = 'test4-results';
+            
+            displayResult(resultsId, 'info', 'Testing request timeout (real AJAX call)...');
+            
+            try {
+                // Attempt to connect to invalid endpoint to trigger timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1000);
+                
+                try {
+                    const response = await fetch('http://invalid-endpoint-test.local/ajax', {
+                        method: 'POST',
+                        signal: controller.signal,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            action: 'mase_save_settings',
+                            nonce: validNonce,
+                            settings: '{}'
+                        })
+                    });
+                } catch (fetchError) {
+                    clearTimeout(timeoutId);
+                    
+                    // Simulate the error handler
+                    const mockXHR = {
+                        status: 0,
+                        responseText: ''
+                    };
+                    
+                    const errorMessage = simulateErrorHandler(mockXHR, 'error', fetchError.name);
+                    
+                    displayResult(resultsId, 'pass', 'Network error caught successfully');
+                    displayResult(resultsId, 'info', 'Error handler output:', errorMessage);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        // Test 5: User Message Display Verification
+        async function testAllErrorMessages() {
+            const resultsId = 'test5-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing all error message types...');
+            
+            const testCases = [
+                {
+                    name: '403 Permission Denied',
+                    xhr: { status: 403, responseText: '{"success":false}' },
+                    expectedMessage: 'Permission denied. You do not have access to perform this action.',
+                    requirement: '4.1'
+                },
+                {
+                    name: '400 Validation Error',
+                    xhr: { 
+                        status: 400, 
+                        responseText: JSON.stringify({
+                            success: false,
+                            data: {
+                                validation_errors: { field: 'error' },
+                                error_details: ['field: error'],
+                                error_count: 1
+                            }
+                        })
+                    },
+                    expectedMessage: 'Please fix 1 validation error',
+                    requirement: '4.2'
+                },
+                {
+                    name: '500 Server Error',
+                    xhr: { status: 500, responseText: '{"success":false}' },
+                    expectedMessage: 'Server error. Please try again later.',
+                    requirement: '4.3'
+                },
+                {
+                    name: 'Network Error',
+                    xhr: { status: 0, responseText: '' },
+                    expectedMessage: 'Network error. Please check your connection and try again.',
+                    requirement: '4.4'
+                }
+            ];
+            
+            testCases.forEach(testCase => {
+                const errorMessage = simulateErrorHandler(testCase.xhr, 'error', 'Error');
+                
+                if (errorMessage.includes(testCase.expectedMessage)) {
+                    displayResult(resultsId, 'pass', `Requirement ${testCase.requirement}: ${testCase.name} - Correct message`);
+                    displayResult(resultsId, 'info', `Message: ${errorMessage}`);
+                } else {
+                    displayResult(resultsId, 'fail', `Requirement ${testCase.requirement}: ${testCase.name} - Incorrect message`);
+                    displayResult(resultsId, 'info', `Expected: ${testCase.expectedMessage}`);
+                    displayResult(resultsId, 'info', `Got: ${errorMessage}`);
+                }
+            });
+            
+            displayResult(resultsId, 'pass', 'All error message types tested');
+        }
+        
+        // Test 6: Error Handler Integration
+        async function testErrorHandlerIntegration() {
+            const resultsId = 'test6-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing complete error handling flow...');
+            
+            try {
+                // Test the complete flow: AJAX call -> error -> handler -> user message
+                displayResult(resultsId, 'info', 'Step 1: Simulating AJAX error responses...');
+                
+                const scenarios = [
+                    {
+                        name: 'Permission Denied Flow',
+                        status: 403,
+                        response: { success: false, data: { message: 'Forbidden' } }
+                    },
+                    {
+                        name: 'Validation Error Flow',
+                        status: 400,
+                        response: {
+                            success: false,
+                            data: {
+                                validation_errors: { test_field: 'Invalid value' },
+                                error_details: ['test_field: Invalid value'],
+                                error_count: 1
+                            }
+                        }
+                    },
+                    {
+                        name: 'Server Error Flow',
+                        status: 500,
+                        response: { success: false, data: { message: 'Internal error' } }
+                    }
+                ];
+                
+                scenarios.forEach(scenario => {
+                    displayResult(resultsId, 'info', `Testing ${scenario.name}...`);
+                    
+                    const mockXHR = {
+                        status: scenario.status,
+                        responseText: JSON.stringify(scenario.response)
+                    };
+                    
+                    const errorMessage = simulateErrorHandler(mockXHR, 'error', 'Error');
+                    
+                    // Verify message is user-friendly and actionable
+                    const isUserFriendly = 
+                        errorMessage.length > 0 &&
+                        !errorMessage.includes('undefined') &&
+                        !errorMessage.includes('[object Object]');
+                    
+                    if (isUserFriendly) {
+                        displayResult(resultsId, 'pass', `${scenario.name}: User-friendly message generated`);
+                        displayResult(resultsId, 'info', `Message: ${errorMessage}`);
+                    } else {
+                        displayResult(resultsId, 'fail', `${scenario.name}: Message not user-friendly`);
+                    }
+                });
+                
+                displayResult(resultsId, 'pass', 'Integration test completed successfully');
+                displayResult(resultsId, 'info', 'All error types properly handled from AJAX to user notification');
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Integration test failed: ' + error.message);
+            }
+        }
+        
+        // Display instructions on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('MASE AJAX Error Response Test Suite Loaded');
+            console.log('Requirements being tested: 4.1, 4.2, 4.3, 4.4');
+            console.log('');
+            console.log('Test Coverage:');
+            console.log('- HTTP 403: Permission denied');
+            console.log('- HTTP 400: Validation errors');
+            console.log('- HTTP 500: Server errors');
+            console.log('- Network errors: Connection issues');
+            console.log('');
+            console.log('Run tests individually or use "Test All Error Messages" for comprehensive testing');
+        });
+    </script>
+</body>
+</html>

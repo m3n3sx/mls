@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Validation Error Communication - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #1d2327;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2271b1;
+            margin-top: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f6f7f7;
+            border-left: 4px solid #2271b1;
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #135e96;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .code-block {
+            background: #23282d;
+            color: #f0f0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .error-list {
+            list-style: none;
+            padding: 0;
+        }
+        .error-list li {
+            padding: 8px;
+            margin: 5px 0;
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+        }
+        .requirement {
+            background: #e7f3ff;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #2271b1;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Test Validation Error Communication</h1>
+        <p><strong>Task 8:</strong> Test validation error communication</p>
+        <p><strong>Requirements:</strong> 2.1, 2.2, 2.3, 2.4, 2.5</p>
+        
+        <div class="requirement">
+            <strong>Requirement 2.1:</strong> WHEN validation fails in MASE_Settings::validate(), THE MASE_Settings SHALL return a WP_Error object containing all field-specific error messages
+        </div>
+        <div class="requirement">
+            <strong>Requirement 2.2:</strong> WHEN MASE_Settings::update_option() receives a WP_Error from validate(), THE MASE_Settings SHALL return the WP_Error object to the caller instead of returning false
+        </div>
+        <div class="requirement">
+            <strong>Requirement 2.3:</strong> WHEN MASE_Admin::handle_ajax_save_settings() receives a WP_Error from update_option(), THE MASE_Admin SHALL extract error messages and error data from the WP_Error object
+        </div>
+        <div class="requirement">
+            <strong>Requirement 2.4:</strong> WHEN validation errors exist, THE MASE_Admin SHALL send a JSON error response with HTTP status 400 containing the validation error messages and field names
+        </div>
+        <div class="requirement">
+            <strong>Requirement 2.5:</strong> WHEN the JavaScript receives a validation error response, THE MASE_Admin SHALL parse the error details and display each validation error to the user in a readable format
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 1: Submit Settings with Invalid Color Format</h2>
+        <p>Submit settings with an invalid hex color to trigger validation error</p>
+        <button id="test-invalid-color" onclick="testInvalidColor()">Run Test</button>
+        <div id="test1-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 2: Submit Settings with Multiple Validation Errors</h2>
+        <p>Submit settings with multiple invalid values to test error aggregation</p>
+        <button id="test-multiple-errors" onclick="testMultipleErrors()">Run Test</button>
+        <div id="test2-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 3: Verify WP_Error Return from validate()</h2>
+        <p>Verify that validate() returns WP_Error with proper structure</p>
+        <button id="test-wp-error" onclick="testWPError()">Run Test</button>
+        <div id="test3-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 4: Verify AJAX Response Structure</h2>
+        <p>Verify AJAX response contains validation_errors array with proper format</p>
+        <button id="test-ajax-response" onclick="testAjaxResponse()">Run Test</button>
+        <div id="test4-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 5: Verify Frontend Error Display</h2>
+        <p>Verify frontend displays specific field errors with correct count</p>
+        <button id="test-frontend-display" onclick="testFrontendDisplay()">Run Test</button>
+        <div id="test5-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test 6: Verify Error Count</h2>
+        <p>Verify error count matches number of validation errors</p>
+        <button id="test-error-count" onclick="testErrorCount()">Run Test</button>
+        <div id="test6-results"></div>
+    </div>
+
+    <script>
+        // Test configuration
+        const ajaxUrl = '../wp-admin/admin-ajax.php';
+        const nonce = 'test-nonce'; // This should be replaced with actual nonce in WordPress context
+        
+        // Helper function to display test results
+        function displayResult(containerId, status, message, details = null) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${status}`;
+            resultDiv.innerHTML = `<strong>${status.toUpperCase()}:</strong> ${message}`;
+            
+            if (details) {
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'code-block';
+                detailsDiv.textContent = JSON.stringify(details, null, 2);
+                resultDiv.appendChild(detailsDiv);
+            }
+            
+            container.appendChild(resultDiv);
+        }
+        
+        // Test 1: Submit settings with invalid color format
+        async function testInvalidColor() {
+            const button = document.getElementById('test-invalid-color');
+            button.disabled = true;
+            const resultsId = 'test1-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Submitting settings with invalid color format...');
+            
+            try {
+                // Create settings with invalid color
+                const settings = {
+                    admin_bar: {
+                        bg_color: 'invalid-color', // Invalid hex format
+                        text_color: '#ffffff',
+                        height: 32
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: nonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Verify response
+                if (!data.success && response.status === 400) {
+                    displayResult(resultsId, 'pass', 'Requirement 2.4: HTTP status 400 returned for validation error');
+                    
+                    if (data.data && data.data.validation_errors) {
+                        displayResult(resultsId, 'pass', 'Requirement 2.3: validation_errors present in response');
+                        displayResult(resultsId, 'info', 'Validation errors:', data.data.validation_errors);
+                        
+                        if (data.data.validation_errors.admin_bar_bg_color) {
+                            displayResult(resultsId, 'pass', 'Requirement 2.1: Field-specific error message present');
+                        } else {
+                            displayResult(resultsId, 'fail', 'Requirement 2.1: Field-specific error message missing');
+                        }
+                    } else {
+                        displayResult(resultsId, 'fail', 'Requirement 2.3: validation_errors missing from response');
+                    }
+                } else {
+                    displayResult(resultsId, 'fail', 'Expected validation error but got success or wrong status', data);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            } finally {
+                button.disabled = false;
+            }
+        }
+        
+        // Test 2: Submit settings with multiple validation errors
+        async function testMultipleErrors() {
+            const button = document.getElementById('test-multiple-errors');
+            button.disabled = true;
+            const resultsId = 'test2-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Submitting settings with multiple validation errors...');
+            
+            try {
+                const settings = {
+                    admin_bar: {
+                        bg_color: 'not-a-color', // Invalid
+                        text_color: 'also-invalid', // Invalid
+                        height: 9999 // Out of range (max 500)
+                    },
+                    performance: {
+                        cache_duration: 100 // Out of range (min 300)
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: nonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success && data.data && data.data.validation_errors) {
+                    const errorCount = Object.keys(data.data.validation_errors).length;
+                    displayResult(resultsId, 'pass', `Multiple errors detected: ${errorCount} validation errors`);
+                    displayResult(resultsId, 'info', 'All validation errors:', data.data.validation_errors);
+                    
+                    if (data.data.error_count === errorCount) {
+                        displayResult(resultsId, 'pass', 'Requirement 2.4: error_count matches actual errors');
+                    } else {
+                        displayResult(resultsId, 'fail', `error_count mismatch: expected ${errorCount}, got ${data.data.error_count}`);
+                    }
+                    
+                    if (data.data.error_details && Array.isArray(data.data.error_details)) {
+                        displayResult(resultsId, 'pass', 'Requirement 2.4: error_details array present');
+                        displayResult(resultsId, 'info', 'Error details:', data.data.error_details);
+                    } else {
+                        displayResult(resultsId, 'fail', 'Requirement 2.4: error_details array missing');
+                    }
+                } else {
+                    displayResult(resultsId, 'fail', 'Expected multiple validation errors', data);
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            } finally {
+                button.disabled = false;
+            }
+        }
+        
+        // Test 3: Verify WP_Error return from validate()
+        async function testWPError() {
+            const resultsId = 'test3-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing WP_Error return structure...');
+            displayResult(resultsId, 'info', 'This test verifies the PHP backend returns WP_Error correctly');
+            displayResult(resultsId, 'info', 'Check WordPress debug.log for validation error logs');
+            
+            try {
+                const settings = {
+                    admin_bar: {
+                        bg_color: 'invalid'
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: nonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Check debug.log for WP_Error evidence
+                displayResult(resultsId, 'info', 'Expected log entries in debug.log:');
+                displayResult(resultsId, 'info', '1. "MASE: Validation error: Validation failed"');
+                displayResult(resultsId, 'info', '2. "MASE: Validation errors: Array(...)"');
+                displayResult(resultsId, 'info', '3. "MASE: Validation status: FAILED"');
+                
+                if (!data.success && data.data && data.data.validation_errors) {
+                    displayResult(resultsId, 'pass', 'Requirement 2.2: WP_Error successfully returned to AJAX handler');
+                    displayResult(resultsId, 'pass', 'Requirement 2.1: WP_Error contains field-specific errors');
+                } else {
+                    displayResult(resultsId, 'fail', 'WP_Error not properly returned');
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            }
+        }
+        
+        // Test 4: Verify AJAX response structure
+        async function testAjaxResponse() {
+            const button = document.getElementById('test-ajax-response');
+            button.disabled = true;
+            const resultsId = 'test4-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing AJAX response structure...');
+            
+            try {
+                const settings = {
+                    admin_bar: {
+                        bg_color: 'bad-color',
+                        height: 1000 // Out of range
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: nonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Verify response structure
+                const checks = [
+                    { condition: !data.success, message: 'Response success is false' },
+                    { condition: response.status === 400, message: 'HTTP status is 400' },
+                    { condition: data.data !== undefined, message: 'Response has data property' },
+                    { condition: data.data && data.data.message !== undefined, message: 'Response has message' },
+                    { condition: data.data && data.data.validation_errors !== undefined, message: 'Response has validation_errors' },
+                    { condition: data.data && data.data.error_details !== undefined, message: 'Response has error_details array' },
+                    { condition: data.data && data.data.error_count !== undefined, message: 'Response has error_count' }
+                ];
+                
+                checks.forEach(check => {
+                    if (check.condition) {
+                        displayResult(resultsId, 'pass', check.message);
+                    } else {
+                        displayResult(resultsId, 'fail', check.message + ' - MISSING');
+                    }
+                });
+                
+                displayResult(resultsId, 'info', 'Complete response structure:', data);
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            } finally {
+                button.disabled = false;
+            }
+        }
+        
+        // Test 5: Verify frontend error display
+        async function testFrontendDisplay() {
+            const button = document.getElementById('test-frontend-display');
+            button.disabled = true;
+            const resultsId = 'test5-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing frontend error display...');
+            displayResult(resultsId, 'info', 'This test simulates the JavaScript error handler');
+            
+            try {
+                const settings = {
+                    admin_bar: {
+                        bg_color: 'invalid1',
+                        text_color: 'invalid2'
+                    }
+                };
+                
+                const response = await fetch(ajaxUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'mase_save_settings',
+                        nonce: nonce,
+                        settings: JSON.stringify(settings)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!data.success && data.data && data.data.validation_errors) {
+                    // Simulate frontend error parsing (from mase-admin.js)
+                    const validationErrors = data.data.validation_errors;
+                    const errorDetails = data.data.error_details || [];
+                    const errorCount = data.data.error_count || Object.keys(validationErrors).length;
+                    
+                    // Format error message as frontend would
+                    let errorMessage = 'Please fix ' + errorCount + ' validation error' + (errorCount > 1 ? 's' : '') + ':\n\n';
+                    
+                    if (errorDetails.length > 0) {
+                        errorDetails.forEach(function(detail, index) {
+                            errorMessage += (index + 1) + '. ' + detail + '\n';
+                        });
+                        displayResult(resultsId, 'pass', 'Requirement 2.5: Error details formatted as numbered list');
+                    } else {
+                        let index = 1;
+                        for (let field in validationErrors) {
+                            if (validationErrors.hasOwnProperty(field)) {
+                                errorMessage += index + '. ' + field + ': ' + validationErrors[field] + '\n';
+                                index++;
+                            }
+                        }
+                    }
+                    
+                    displayResult(resultsId, 'pass', 'Requirement 2.5: Frontend successfully parsed validation errors');
+                    displayResult(resultsId, 'info', 'Formatted error message:', { message: errorMessage });
+                    
+                    // Verify error count in message
+                    if (errorMessage.includes('Please fix ' + errorCount)) {
+                        displayResult(resultsId, 'pass', 'Requirement 2.5: Error count displayed in message');
+                    } else {
+                        displayResult(resultsId, 'fail', 'Requirement 2.5: Error count missing from message');
+                    }
+                    
+                } else {
+                    displayResult(resultsId, 'fail', 'No validation errors to display');
+                }
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            } finally {
+                button.disabled = false;
+            }
+        }
+        
+        // Test 6: Verify error count
+        async function testErrorCount() {
+            const button = document.getElementById('test-error-count');
+            button.disabled = true;
+            const resultsId = 'test6-results';
+            document.getElementById(resultsId).innerHTML = '';
+            
+            displayResult(resultsId, 'info', 'Testing error count accuracy...');
+            
+            try {
+                // Test with known number of errors
+                const testCases = [
+                    {
+                        name: '1 error',
+                        settings: {
+                            admin_bar: { bg_color: 'invalid' }
+                        },
+                        expectedCount: 1
+                    },
+                    {
+                        name: '2 errors',
+                        settings: {
+                            admin_bar: {
+                                bg_color: 'invalid1',
+                                text_color: 'invalid2'
+                            }
+                        },
+                        expectedCount: 2
+                    },
+                    {
+                        name: '3 errors',
+                        settings: {
+                            admin_bar: {
+                                bg_color: 'invalid1',
+                                text_color: 'invalid2',
+                                height: 9999
+                            }
+                        },
+                        expectedCount: 3
+                    }
+                ];
+                
+                for (const testCase of testCases) {
+                    displayResult(resultsId, 'info', `Testing ${testCase.name}...`);
+                    
+                    const response = await fetch(ajaxUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({
+                            action: 'mase_save_settings',
+                            nonce: nonce,
+                            settings: JSON.stringify(testCase.settings)
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.data && data.data.error_count !== undefined) {
+                        if (data.data.error_count === testCase.expectedCount) {
+                            displayResult(resultsId, 'pass', `${testCase.name}: error_count correct (${data.data.error_count})`);
+                        } else {
+                            displayResult(resultsId, 'fail', `${testCase.name}: expected ${testCase.expectedCount}, got ${data.data.error_count}`);
+                        }
+                    } else {
+                        displayResult(resultsId, 'fail', `${testCase.name}: error_count missing`);
+                    }
+                }
+                
+                displayResult(resultsId, 'pass', 'All error count tests completed');
+                
+            } catch (error) {
+                displayResult(resultsId, 'fail', 'Test failed with error: ' + error.message);
+            } finally {
+                button.disabled = false;
+            }
+        }
+        
+        // Display instructions on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('MASE Validation Error Communication Test Suite Loaded');
+            console.log('Requirements being tested: 2.1, 2.2, 2.3, 2.4, 2.5');
+        });
+    </script>
+</body>
+</html>

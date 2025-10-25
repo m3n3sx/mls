@@ -29,15 +29,69 @@
 		currentArea: null,
 
 		/**
+		 * Cached DOM elements
+		 * Task 35: Minimize DOM queries using caching
+		 */
+		domCache: {},
+
+		/**
+		 * Debounced update function
+		 * Task 35: Debounce live preview updates (300ms)
+		 */
+		debouncedUpdatePreview: null,
+
+		/**
 		 * Initialize gradient builder
 		 */
 		init: function() {
+			// Initialize DOM cache
+			this.initDOMCache();
+
+			// Create debounced update function
+			if (MASE.assetLoader && typeof MASE.assetLoader.debounce === 'function') {
+				this.debouncedUpdatePreview = MASE.assetLoader.debounce(this.updatePreview.bind(this), 300);
+			} else {
+				// Fallback debounce implementation
+				this.debouncedUpdatePreview = this.createFallbackDebounce(this.updatePreview.bind(this), 300);
+			}
+
 			this.initTypeSelector();
 			this.initAngleControl();
 			this.initColorStops();
 			this.initColorPickers();
 			this.initPresets();
 			this.updateAllPreviews();
+		},
+
+		/**
+		 * Initialize DOM cache
+		 * Task 35: Minimize DOM queries using caching
+		 */
+		initDOMCache: function() {
+			this.domCache = {
+				$gradientTypes: $('.mase-gradient-type'),
+				$angleDials: $('.mase-gradient-angle-dial'),
+				$angleInputs: $('.mase-gradient-angle-input'),
+				$colorStopsContainers: $('.mase-gradient-color-stops'),
+				$addColorStopButtons: $('.mase-add-color-stop'),
+				$gradientPreviews: $('.mase-gradient-preview'),
+				$presetGrids: $('.mase-gradient-preset-grid'),
+				$categoryFilters: $('.mase-gradient-category-filter')
+			};
+		},
+
+		/**
+		 * Fallback debounce implementation
+		 * Used if assetLoader is not available
+		 */
+		createFallbackDebounce: function(func, wait) {
+			let timeout;
+			return function() {
+				const context = this;
+				const args = arguments;
+				clearTimeout(timeout);
+				timeout = setTimeout(() => func.apply(context, args), wait);
+			};
 		},
 
 		/**
@@ -153,6 +207,7 @@
 				
 				const area = $(this).data('area');
 				const $colorStop = $(this).closest('.mase-color-stop');
+				const index = $colorStop.data('index');
 				
 				// Remove the color stop
 				$colorStop.remove();
@@ -162,6 +217,9 @@
 				
 				// Update button states
 				self.updateColorStopButtons(area);
+				
+				// Trigger accessibility event
+				$(document).trigger('mase:colorStopRemoved', [{ area: area, index: index }]);
 				
 				// Update preview
 				self.updatePreview(area);
@@ -213,10 +271,16 @@
 			// Check maximum limit
 			if (stopCount >= 10) {
 				if (window.MASE && window.MASE.showNotice) {
-					MASE.showNotice('Maximum 10 color stops allowed', 'warning');
+					const message = (window.maseAdmin && window.maseAdmin.strings && window.maseAdmin.strings.gradientMaxColorStops) 
+						? window.maseAdmin.strings.gradientMaxColorStops 
+						: 'Maximum 10 color stops allowed';
+					MASE.showNotice(message, 'warning');
 				}
 				return;
 			}
+			
+			// Store index for accessibility event
+			const newIndex = stopCount;
 			
 			// Calculate position for new stop
 			const position = stopCount > 0 ? Math.round(100 / (stopCount + 1) * stopCount) : 50;
@@ -266,6 +330,9 @@
 			
 			// Update button states
 			this.updateColorStopButtons(area);
+			
+			// Trigger accessibility event
+			$(document).trigger('mase:colorStopAdded', [{ area: area, index: newIndex }]);
 			
 			// Update preview
 			this.updatePreview(area);
@@ -328,16 +395,16 @@
 
 		/**
 		 * Debounced preview update (for input events)
+		 * Task 35: Use centralized debounce function
 		 */
-		updatePreviewDebounced: (function() {
-			let timeout;
-			return function(area) {
-				clearTimeout(timeout);
-				timeout = setTimeout(() => {
-					this.updatePreview(area);
-				}, 300);
-			};
-		})(),
+		updatePreviewDebounced: function(area) {
+			if (this.debouncedUpdatePreview) {
+				this.debouncedUpdatePreview(area);
+			} else {
+				// Fallback to immediate update
+				this.updatePreview(area);
+			}
+		},
 
 		/**
 		 * Update all gradient previews on page load

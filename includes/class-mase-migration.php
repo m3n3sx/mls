@@ -46,11 +46,36 @@ class MASE_Migration {
 			
 			// Check if button system migration is needed (Task 9).
 			self::maybe_migrate_to_button_system();
+			
+			// Check if background system migration is needed (Task 42).
+			self::maybe_migrate_background_system();
 			return;
 		}
 		
 		// Execute migration.
 		self::migrate();
+	}
+
+	/**
+	 * Check if background system migration is needed and execute if required.
+	 *
+	 * Task 42: Implement settings migration.
+	 * Requirement 11.1: Initialize default structure for new installations.
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 * @static
+	 * 
+	 * @return void
+	 */
+	public static function maybe_migrate_background_system() {
+		// Ensure the background migration class is loaded.
+		if ( ! class_exists( 'MASE_Background_Migration' ) ) {
+			require_once MASE_PLUGIN_DIR . 'includes/class-mase-background-migration.php';
+		}
+		
+		// Execute background migration check.
+		MASE_Background_Migration::maybe_migrate();
 	}
 
 	/**

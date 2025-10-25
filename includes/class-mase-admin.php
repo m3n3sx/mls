@@ -114,8 +114,14 @@ class MASE_Admin {
 		// Background image removal AJAX handler (Advanced Background System - Task 6).
 		add_action( 'wp_ajax_mase_remove_background_image', array( $this, 'handle_ajax_remove_background_image' ) );
 		
+		// Pattern library data AJAX handler (Advanced Background System - Task 35).
+		add_action( 'wp_ajax_mase_get_pattern_library', array( $this, 'handle_ajax_get_pattern_library' ) );
+		
 		// Dark mode toggle AJAX handler (Requirements 2.1, 2.2, 4.1, 11.1).
 		add_action( 'wp_ajax_mase_toggle_dark_mode', array( $this, 'handle_ajax_toggle_dark_mode' ) );
+		
+		// Client-side error logging AJAX handler (Task 44 - Requirement 7.5).
+		add_action( 'wp_ajax_mase_log_client_error', array( $this, 'handle_ajax_log_client_error' ) );
 		
 		// Universal Button Styling System AJAX handlers (Requirements 12.1, 12.2).
 		add_action( 'wp_ajax_mase_get_button_defaults', array( $this, 'ajax_get_button_defaults' ) );
@@ -210,20 +216,105 @@ class MASE_Admin {
 			MASE_VERSION
 		);
 
+		// Enqueue asset loader module FIRST (Advanced Background System - Task 35).
+		// This must load before other modules to provide debounce/throttle utilities.
+		wp_enqueue_script(
+			'mase-asset-loader',
+			plugins_url( '../assets/js/modules/mase-asset-loader.js', __FILE__ ),
+			array( 'jquery' ),
+			MASE_VERSION,
+			true
+		);
+
 		// Enqueue mase-admin.js with jquery and wp-color-picker dependencies (Requirement 11.4).
 		wp_enqueue_script(
 			'mase-admin',
 			plugins_url( '../assets/js/mase-admin.js', __FILE__ ),
-			array( 'jquery', 'wp-color-picker' ),
+			array( 'jquery', 'wp-color-picker', 'mase-asset-loader' ),
 			MASE_VERSION,
 			true
 		);
 
 		// Enqueue gradient builder module (Advanced Background System - Task 14).
+		// Loaded on demand by asset loader when gradient tab is active.
 		wp_enqueue_script(
 			'mase-gradient-builder',
 			plugins_url( '../assets/js/modules/mase-gradient-builder.js', __FILE__ ),
-			array( 'jquery', 'wp-color-picker', 'mase-admin' ),
+			array( 'jquery', 'wp-color-picker', 'mase-admin', 'mase-asset-loader' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Enqueue pattern library module (Advanced Background System - Task 22).
+		wp_enqueue_style(
+			'mase-pattern-library',
+			plugins_url( '../assets/css/mase-pattern-library.css', __FILE__ ),
+			array(),
+			MASE_VERSION
+		);
+
+		wp_enqueue_script(
+			'mase-pattern-library',
+			plugins_url( '../assets/js/mase-pattern-library.js', __FILE__ ),
+			array( 'jquery', 'mase-admin', 'mase-asset-loader' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Localize pattern library data (Task 22 - Requirement 3.1).
+		// NOTE: Pattern library data is now loaded on demand via AJAX (Task 35).
+		// This localization is kept for backward compatibility and immediate availability.
+		$settings = new MASE_Settings();
+		$pattern_library = $settings->get_pattern_library();
+		wp_localize_script(
+			'mase-pattern-library',
+			'masePatternLibrary',
+			$pattern_library
+		);
+
+		// Enqueue position picker module (Advanced Background System - Task 25).
+		wp_enqueue_script(
+			'mase-position-picker',
+			plugins_url( '../assets/js/mase-position-picker.js', __FILE__ ),
+			array( 'jquery', 'mase-admin', 'mase-asset-loader' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Enqueue browser compatibility module (Advanced Background System - Task 43).
+		// This module detects browser features and provides graceful degradation.
+		// Must load early to apply fallbacks before other modules initialize.
+		wp_enqueue_script(
+			'mase-compatibility',
+			plugins_url( '../assets/js/modules/mase-compatibility.js', __FILE__ ),
+			array( 'jquery' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Enqueue error recovery module (Advanced Background System - Task 44).
+		// This module provides comprehensive error recovery mechanisms.
+		// Must load early to set up global error handlers.
+		wp_enqueue_script(
+			'mase-error-recovery',
+			plugins_url( '../assets/js/modules/mase-error-recovery.js', __FILE__ ),
+			array( 'jquery', 'mase-admin' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Enqueue accessibility module (Advanced Background System - Task 45).
+		// This module provides comprehensive accessibility features:
+		// - ARIA labels and attributes for all interactive elements
+		// - Keyboard navigation support
+		// - Focus indicators
+		// - Screen reader announcements for dynamic changes
+		// - WCAG 2.1 AA compliance
+		// Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
+		wp_enqueue_script(
+			'mase-background-accessibility',
+			plugins_url( '../assets/js/modules/mase-background-accessibility.js', __FILE__ ),
+			array( 'jquery', 'mase-admin', 'mase-gradient-builder', 'mase-pattern-library', 'mase-position-picker' ),
 			MASE_VERSION,
 			true
 		);
@@ -362,26 +453,27 @@ class MASE_Admin {
 			array(
 				'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 				'nonce'     => wp_create_nonce( 'mase_save_settings' ),
+				'debug'     => defined( 'WP_DEBUG' ) && WP_DEBUG,
 				'palettes'  => $this->get_palettes_data(),
 				'templates' => $this->get_templates_data(),
 				'gradientPresets' => $this->get_gradient_presets_data(),
 				'strings'   => array(
-					'saving'                => __( 'Saving...', 'mase' ),
-					'saved'                 => __( 'Settings saved successfully!', 'mase' ),
-					'saveFailed'            => __( 'Failed to save settings. Please try again.', 'mase' ),
-					'paletteApplied'        => __( 'Palette applied successfully!', 'mase' ),
-					'paletteApplyFailed'    => __( 'Failed to apply palette. Please try again.', 'mase' ),
-					'templateApplied'       => __( 'Template applied successfully!', 'mase' ),
-					'templateApplyFailed'   => __( 'Failed to apply template. Please try again.', 'mase' ),
-					'confirmDelete'         => __( 'Are you sure you want to delete this item?', 'mase' ),
-					'exportSuccess'         => __( 'Settings exported successfully!', 'mase' ),
-					'exportFailed'          => __( 'Failed to export settings. Please try again.', 'mase' ),
-					'importSuccess'         => __( 'Settings imported successfully!', 'mase' ),
-					'importFailed'          => __( 'Failed to import settings. Please try again.', 'mase' ),
-					'invalidFile'           => __( 'Invalid file format. Please select a valid JSON file.', 'mase' ),
-					'backupCreated'         => __( 'Backup created successfully!', 'mase' ),
-					'backupRestored'        => __( 'Backup restored successfully!', 'mase' ),
-					'networkError'          => __( 'Network error. Please check your connection and try again.', 'mase' ),
+					'saving'                => __( 'Saving...', 'modern-admin-styler' ),
+					'saved'                 => __( 'Settings saved successfully!', 'modern-admin-styler' ),
+					'saveFailed'            => __( 'Failed to save settings. Please try again.', 'modern-admin-styler' ),
+					'paletteApplied'        => __( 'Palette applied successfully!', 'modern-admin-styler' ),
+					'paletteApplyFailed'    => __( 'Failed to apply palette. Please try again.', 'modern-admin-styler' ),
+					'templateApplied'       => __( 'Template applied successfully!', 'modern-admin-styler' ),
+					'templateApplyFailed'   => __( 'Failed to apply template. Please try again.', 'modern-admin-styler' ),
+					'confirmDelete'         => __( 'Are you sure you want to delete this item?', 'modern-admin-styler' ),
+					'exportSuccess'         => __( 'Settings exported successfully!', 'modern-admin-styler' ),
+					'exportFailed'          => __( 'Failed to export settings. Please try again.', 'modern-admin-styler' ),
+					'importSuccess'         => __( 'Settings imported successfully!', 'modern-admin-styler' ),
+					'importFailed'          => __( 'Failed to import settings. Please try again.', 'modern-admin-styler' ),
+					'invalidFile'           => __( 'Invalid file format. Please select a valid JSON file.', 'modern-admin-styler' ),
+					'backupCreated'         => __( 'Backup created successfully!', 'modern-admin-styler' ),
+					'backupRestored'        => __( 'Backup restored successfully!', 'modern-admin-styler' ),
+					'networkError'          => __( 'Network error. Please check your connection and try again.', 'modern-admin-styler' ),
 					// Button styling strings (Task 10.1: Add translatable strings)
 					'buttonResetConfirm'    => __( 'Reset all settings for %s buttons to defaults?', 'modern-admin-styler' ),
 					'buttonResetAllConfirm' => __( 'Reset ALL button settings to defaults? This cannot be undone.', 'modern-admin-styler' ),
@@ -392,6 +484,53 @@ class MASE_Admin {
 					'buttonResetAllFailed'  => __( 'Failed to reset button settings', 'modern-admin-styler' ),
 					'buttonResettingAll'    => __( 'Resetting all button settings...', 'modern-admin-styler' ),
 					'permissionDenied'      => __( 'Permission denied. You do not have access to perform this action.', 'modern-admin-styler' ),
+					// Background system strings (Task 46: Localization)
+					'backgroundUploadSuccess'     => __( 'Background image uploaded successfully!', 'modern-admin-styler' ),
+					'backgroundUploadFailed'      => __( 'Failed to upload background image. Please try again.', 'modern-admin-styler' ),
+					'backgroundSelectSuccess'     => __( 'Background image selected successfully!', 'modern-admin-styler' ),
+					'backgroundSelectFailed'      => __( 'Failed to select background image. Please try again.', 'modern-admin-styler' ),
+					'backgroundRemoveSuccess'     => __( 'Background image removed successfully!', 'modern-admin-styler' ),
+					'backgroundRemoveFailed'      => __( 'Failed to remove background image. Please try again.', 'modern-admin-styler' ),
+					'backgroundInvalidFileType'   => __( 'Invalid file type. Please upload JPG, PNG, WebP, or SVG images only.', 'modern-admin-styler' ),
+					'backgroundFileTooLarge'      => __( 'File too large. Maximum size is 5MB.', 'modern-admin-styler' ),
+					'backgroundUploading'         => __( 'Uploading...', 'modern-admin-styler' ),
+					'backgroundProcessing'        => __( 'Processing image...', 'modern-admin-styler' ),
+					'gradientMaxColorStops'       => __( 'Maximum 10 color stops allowed', 'modern-admin-styler' ),
+					'gradientMinColorStops'       => __( 'Minimum 2 color stops required', 'modern-admin-styler' ),
+					'gradientPresetApplied'       => __( 'Gradient preset applied successfully!', 'modern-admin-styler' ),
+					'patternSelected'             => __( 'Pattern selected successfully!', 'modern-admin-styler' ),
+					'patternLoadFailed'           => __( 'Failed to load pattern library. Please refresh the page.', 'modern-admin-styler' ),
+					'positionUpdated'             => __( 'Background position updated', 'modern-admin-styler' ),
+					'previewUpdateFailed'         => __( 'Failed to update preview. Please try again.', 'modern-admin-styler' ),
+					'responsiveVariationSaved'    => __( 'Responsive variation saved successfully!', 'modern-admin-styler' ),
+					'selectBackgroundImage'       => __( 'Select Background Image', 'modern-admin-styler' ),
+					'useThisImage'                => __( 'Use This Image', 'modern-admin-styler' ),
+					'changeImage'                 => __( 'Change Image', 'modern-admin-styler' ),
+					'removeImage'                 => __( 'Remove Image', 'modern-admin-styler' ),
+					'dropImageHere'               => __( 'Drop image here or click to upload', 'modern-admin-styler' ),
+					'supportedFormats'            => __( 'Supported: JPG, PNG, WebP, SVG • Max size: 5MB', 'modern-admin-styler' ),
+					'colorStop'                   => __( 'Color Stop', 'modern-admin-styler' ),
+					'addColorStop'                => __( 'Add Color Stop', 'modern-admin-styler' ),
+					'removeColorStop'             => __( 'Remove Color Stop', 'modern-admin-styler' ),
+					'gradientAngle'               => __( 'Gradient Angle', 'modern-admin-styler' ),
+					'gradientType'                => __( 'Gradient Type', 'modern-admin-styler' ),
+					'linearGradient'              => __( 'Linear Gradient', 'modern-admin-styler' ),
+					'radialGradient'              => __( 'Radial Gradient', 'modern-admin-styler' ),
+					'backgroundOpacity'           => __( 'Background Opacity', 'modern-admin-styler' ),
+					'blendMode'                   => __( 'Blend Mode', 'modern-admin-styler' ),
+					'backgroundPosition'          => __( 'Background Position', 'modern-admin-styler' ),
+					'backgroundSize'              => __( 'Background Size', 'modern-admin-styler' ),
+					'backgroundRepeat'            => __( 'Background Repeat', 'modern-admin-styler' ),
+					'backgroundAttachment'        => __( 'Background Attachment', 'modern-admin-styler' ),
+					'customPosition'              => __( 'Custom Position', 'modern-admin-styler' ),
+					'customSize'                  => __( 'Custom Size', 'modern-admin-styler' ),
+					'enableResponsive'            => __( 'Enable Responsive Variations', 'modern-admin-styler' ),
+					'desktop'                     => __( 'Desktop', 'modern-admin-styler' ),
+					'tablet'                      => __( 'Tablet', 'modern-admin-styler' ),
+					'mobile'                      => __( 'Mobile', 'modern-admin-styler' ),
+					'inheritFromDesktop'          => __( 'Inherit from Desktop', 'modern-admin-styler' ),
+					'previewDevice'               => __( 'Preview Device', 'modern-admin-styler' ),
+					'currentBreakpoint'           => __( 'Current Breakpoint', 'modern-admin-styler' ),
 				),
 			)
 		);
@@ -515,6 +654,7 @@ class MASE_Admin {
 	 * Inject custom CSS into admin pages.
 	 *
 	 * Uses advanced caching with automatic generation on cache miss.
+	 * Task 44: Enhanced error recovery (Requirement 7.5)
 	 */
 	public function inject_custom_css() {
 		try {
@@ -547,17 +687,75 @@ class MASE_Admin {
 			}
 
 		} catch ( Exception $e ) {
-			// Log error and try to use cached CSS as fallback.
-			error_log( 'MASE CSS Generation Error: ' . $e->getMessage() );
+			// Task 44: Enhanced error recovery (Requirement 7.5).
+			// Log error with full context.
+			error_log( sprintf(
+				'MASE CSS Injection Error: %s, File: %s, Line: %d',
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine()
+			) );
 
-			// Try to get any cached CSS as fallback.
-			$fallback_css = $this->cache->get_cached_css();
-			if ( false !== $fallback_css && ! empty( $fallback_css ) ) {
+			// Task 44: Try multiple fallback strategies (Requirement 7.5).
+			$fallback_css = false;
+			
+			// Strategy 1: Try mode-specific cache.
+			$current_mode = isset( $settings['dark_light_toggle']['current_mode'] ) 
+				? $settings['dark_light_toggle']['current_mode'] 
+				: 'light';
+			
+			if ( 'dark' === $current_mode ) {
+				$fallback_css = $this->cache->get_cached_dark_mode_css();
+			} else {
+				$fallback_css = $this->cache->get_cached_light_mode_css();
+			}
+			
+			// Strategy 2: Try legacy cache.
+			if ( false === $fallback_css ) {
+				$fallback_css = $this->cache->get_cached_css();
+				error_log( 'MASE: Using legacy cache as fallback' );
+			}
+			
+			// Strategy 3: Try to generate minimal safe CSS.
+			if ( false === $fallback_css || empty( $fallback_css ) ) {
+				error_log( 'MASE: CRITICAL - No cache available, generating minimal safe CSS' );
+				$fallback_css = $this->generate_minimal_safe_css();
+			}
+
+			// Output fallback CSS.
+			if ( ! empty( $fallback_css ) ) {
 				echo '<style id="mase-custom-css" type="text/css">' . "\n";
+				echo '/* MASE: Using fallback CSS due to generation error */' . "\n";
 				echo $fallback_css . "\n";
 				echo '</style>' . "\n";
 			}
 		}
+	}
+
+	/**
+	 * Generate minimal safe CSS as last resort fallback.
+	 * Task 44: Provide fallback CSS (Requirement 7.5)
+	 * 
+	 * Returns basic WordPress admin styling to prevent complete styling failure.
+	 * 
+	 * @since 1.4.0
+	 * @return string Minimal safe CSS
+	 */
+	private function generate_minimal_safe_css() {
+		return '/* MASE: Minimal safe CSS fallback */
+body.wp-admin #wpadminbar {
+	background-color: #23282d !important;
+	height: 32px !important;
+}
+body.wp-admin #adminmenu {
+	background-color: #23282d !important;
+}
+body.wp-admin #adminmenu a {
+	color: #eee !important;
+}
+body.wp-admin #adminmenu .wp-submenu {
+	background-color: #32373c !important;
+}';
 	}
 
 	/**
@@ -622,10 +820,47 @@ class MASE_Admin {
 			}
 			
 			// Save settings.
+			// Task 6 - Requirement 5.3: Log sections being validated before calling validate().
+			error_log( 'MASE: Sections to validate: ' . implode( ', ', array_keys( $input ) ) );
 			error_log( 'MASE: Calling update_option...' );
 			$result = $this->settings->update_option( $input );
 
+			// Task 6 - Requirement 5.4: Log validation pass/fail status after validate() returns.
+			// CRITICAL: Check for WP_Error first, then boolean result (Task 4 - Requirements 2.3, 2.4, 4.2).
+			if ( is_wp_error( $result ) ) {
+				error_log( 'MASE: Validation status: FAILED' );
+				error_log( 'MASE: Validation failed - ' . $result->get_error_message() );
+				
+				// Extract validation errors from WP_Error data (Task 4).
+				$error_data = $result->get_error_data();
+				$error_messages = array();
+				
+				// Format error messages as array of "field: message" strings (Task 4).
+				// Task 6 - Requirement 5.5: Log all validation error messages when validation fails.
+				if ( is_array( $error_data ) ) {
+					error_log( 'MASE: Total validation errors: ' . count( $error_data ) );
+					foreach ( $error_data as $field => $message ) {
+						$error_messages[] = sprintf( '%s: %s', $field, $message );
+						error_log( 'MASE: Validation error - ' . $field . ': ' . $message );
+					}
+				} else {
+					error_log( 'MASE: No detailed validation error data available' );
+				}
+				
+				// Send JSON error response with validation_errors, error_details, and error_count (Task 4).
+				// Use HTTP status 400 for validation errors (Task 4 - Requirement 4.2).
+				wp_send_json_error( array(
+					'message' => __( 'Validation failed. Please fix the following errors:', 'mase' ),
+					'validation_errors' => $error_data,
+					'error_details' => $error_messages,
+					'error_count' => count( $error_messages )
+				), 400 );
+			}
+
+			// Task 6 - Requirement 5.4: Log validation pass/fail status after validate() returns.
 			if ( $result ) {
+				error_log( 'MASE: Validation status: PASSED' );
+				error_log( 'MASE: update_option() result: SUCCESS (true)' );
 				error_log( 'MASE: Settings saved successfully' );
 				
 				// Invalidate both mode caches on settings save (Requirement 12.6).
@@ -645,18 +880,38 @@ class MASE_Admin {
 				$cache->invalidate_login_css_cache();
 
 				// Warm cache for both modes (Requirement 12.7).
-				// Pre-generate CSS for faster subsequent loads.
+				// Task 33: Pre-generate CSS for faster subsequent loads, including backgrounds (Requirements 7.4, 7.5).
 				$warm_results = $cache->warm_mode_caches( $this->generator, $input );
-				error_log( sprintf( 
-					'MASE: Cache warming completed - Light: %s, Dark: %s',
-					$warm_results['light'] ? 'success' : 'failed',
-					$warm_results['dark'] ? 'success' : 'failed'
-				) );
+				
+				// Task 33: Enhanced logging with background information (Requirement 7.5).
+				$bg_info = isset( $warm_results['backgrounds'] ) ? $warm_results['backgrounds'] : array();
+				$bg_enabled = isset( $bg_info['enabled'] ) && $bg_info['enabled'];
+				$bg_count = isset( $bg_info['area_count'] ) ? $bg_info['area_count'] : 0;
+				
+				if ( $bg_enabled && $bg_count > 0 ) {
+					$bg_areas = isset( $bg_info['enabled_areas'] ) ? implode( ', ', $bg_info['enabled_areas'] ) : 'none';
+					error_log( sprintf( 
+						'MASE: Cache warming completed - Light: %s, Dark: %s, Backgrounds: %d areas (%s)',
+						$warm_results['light'] ? 'success' : 'failed',
+						$warm_results['dark'] ? 'success' : 'failed',
+						$bg_count,
+						$bg_areas
+					) );
+				} else {
+					error_log( sprintf( 
+						'MASE: Cache warming completed - Light: %s, Dark: %s',
+						$warm_results['light'] ? 'success' : 'failed',
+						$warm_results['dark'] ? 'success' : 'failed'
+					) );
+				}
 
 				wp_send_json_success( array(
 					'message' => __( 'Settings saved successfully', 'mase' ),
 				) );
 			} else {
+				// Task 6 - Requirement 5.4: Log update_option() result (true/false).
+				error_log( 'MASE: Validation status: PASSED (but save failed)' );
+				error_log( 'MASE: update_option() result: FAILED (false)' );
 				error_log( 'MASE: Failed to save settings (update_option returned false)' );
 				wp_send_json_error( array(
 					'message' => __( 'Failed to save settings', 'mase' ),
@@ -2410,16 +2665,31 @@ class MASE_Admin {
 		}
 
 		// Remove dangerous href/xlink:href attributes with javascript: or data: protocols.
-		$dangerous_protocols = array( 'javascript:', 'data:', 'vbscript:', 'file:', 'about:' );
+		// Exception: Allow data:image/* URLs for embedded images (Task 36 - Requirement 12.2).
+		$dangerous_protocols = array( 'javascript:', 'vbscript:', 'file:', 'about:' );
 		$href_nodes = $xpath->query( '//@href | //@xlink:href' );
 		
 		foreach ( $href_nodes as $href_node ) {
 			$href_value = $href_node->nodeValue;
+			
+			// Check for dangerous protocols.
 			foreach ( $dangerous_protocols as $protocol ) {
 				if ( stripos( $href_value, $protocol ) === 0 ) {
 					$href_node->ownerElement->removeAttribute( $href_node->nodeName );
+					error_log( sprintf( 'MASE: SVG sanitization - Removed dangerous protocol: %s', $protocol ) );
 					break;
 				}
+			}
+			
+			// Special handling for data: URLs - only allow data:image/* (Task 36).
+			if ( stripos( $href_value, 'data:' ) === 0 ) {
+				// Check if it's a data:image/* URL (allowed).
+				if ( stripos( $href_value, 'data:image/' ) !== 0 ) {
+					// Not an image data URL - remove it.
+					$href_node->ownerElement->removeAttribute( $href_node->nodeName );
+					error_log( 'MASE: SVG sanitization - Removed non-image data: URL' );
+				}
+				// If it is data:image/*, leave it (allowed).
 			}
 		}
 
@@ -2475,11 +2745,27 @@ class MASE_Admin {
 	 * - Allowed types: JPG, PNG, WebP, SVG
 	 */
 	public function handle_ajax_upload_background_image() {
-		// Security: Verify nonce for CSRF protection (Requirement 12.1).
-		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		// Security: Verify nonce for CSRF protection (Requirement 12.1, Task 38).
+		if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Invalid nonce in background image upload. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
+			wp_send_json_error( array(
+				'message' => __( 'Invalid security token. Please refresh the page and try again.', 'modern-admin-styler' ),
+			), 403 );
+		}
 		
-		// Security: Check user capability (Requirement 12.1).
+		// Security: Check user capability (Requirement 12.1, Task 38).
 		if ( ! current_user_can( 'manage_options' ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Unauthorized background image upload attempt. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
 			wp_send_json_error( array(
 				'message' => __( 'You do not have permission to upload files.', 'modern-admin-styler' ),
 			), 403 );
@@ -2666,8 +2952,19 @@ class MASE_Admin {
 			$this->optimize_background_image( $attachment_id );
 		}
 
-		// Get attachment URL and thumbnail (Requirement 8.3).
-		$attachment_url = wp_get_attachment_url( $attachment_id );
+		// Generate WebP version for better performance (Requirement 7.2).
+		// Only generate WebP for raster images (not SVG).
+		if ( $file['type'] !== 'image/svg+xml' ) {
+			$this->generate_webp_version( $attachment_id );
+		}
+
+		// Get optimized image URL with WebP support (Requirement 7.2).
+		$attachment_url = $this->get_optimized_image_url( $attachment_id );
+		
+		// Get original URL as fallback.
+		$original_url = wp_get_attachment_url( $attachment_id );
+		
+		// Get thumbnail URL.
 		$thumbnail_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
 
 		// Log successful upload.
@@ -2679,11 +2976,20 @@ class MASE_Admin {
 			$file['type']
 		) );
 
-		// Return success response with attachment data (Requirement 8.3).
+		// Task 40: Invalidate CSS cache after upload (Requirement 7.4, 7.5).
+		// Background changes affect both light and dark modes.
+		$cache = new MASE_Cache();
+		$cache->invalidate_both_mode_caches();
+		
+		// Also invalidate legacy cache key for backward compatibility.
+		$this->cache->invalidate( 'generated_css' );
+
+		// Return success response with attachment data (Requirement 8.3, 7.2).
 		wp_send_json_success( array(
 			'message'       => __( 'Background image uploaded successfully.', 'modern-admin-styler' ),
 			'attachment_id' => $attachment_id,
 			'url'           => $attachment_url,
+			'original_url'  => $original_url,
 			'thumbnail'     => $thumbnail_url,
 		) );
 	}
@@ -2788,6 +3094,169 @@ class MASE_Admin {
 	}
 
 	/**
+	 * Generate WebP version of an uploaded image.
+	 * 
+	 * Creates a WebP version of the uploaded image for browsers that support it,
+	 * providing better compression and smaller file sizes. Falls back gracefully
+	 * if WebP generation fails.
+	 * 
+	 * Requirement 7.2: Serve optimized image formats (WebP with JPG/PNG fallback).
+	 * 
+	 * @since 1.4.0
+	 * @access private
+	 * 
+	 * @param int $attachment_id WordPress attachment ID.
+	 * @return string|false WebP file URL on success, false on failure.
+	 */
+	private function generate_webp_version( $attachment_id ) {
+		// Get original file path.
+		$file_path = get_attached_file( $attachment_id );
+		
+		if ( ! $file_path || ! file_exists( $file_path ) ) {
+			error_log( sprintf(
+				'MASE: WebP generation failed - File not found. Attachment ID: %d',
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Check if file is already WebP.
+		$mime_type = get_post_mime_type( $attachment_id );
+		if ( $mime_type === 'image/webp' ) {
+			// Already WebP, return original URL.
+			return wp_get_attachment_url( $attachment_id );
+		}
+
+		// Skip SVG files (can't convert to WebP).
+		if ( $mime_type === 'image/svg+xml' ) {
+			return false;
+		}
+
+		// Get image editor.
+		$editor = wp_get_image_editor( $file_path );
+		
+		if ( is_wp_error( $editor ) ) {
+			error_log( sprintf(
+				'MASE: WebP generation failed - Could not get image editor: %s. Attachment ID: %d',
+				$editor->get_error_message(),
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Check if editor supports WebP.
+		if ( ! method_exists( $editor, 'supports_mime_type' ) || ! $editor->supports_mime_type( 'image/webp' ) ) {
+			error_log( sprintf(
+				'MASE: WebP generation skipped - Editor does not support WebP. Attachment ID: %d',
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Generate WebP filename.
+		$file_info = pathinfo( $file_path );
+		$webp_path = $file_info['dirname'] . '/' . $file_info['filename'] . '.webp';
+
+		// Set output format to WebP.
+		$editor->set_mime_type( 'image/webp' );
+
+		// Save WebP version.
+		$save_result = $editor->save( $webp_path );
+		
+		if ( is_wp_error( $save_result ) ) {
+			error_log( sprintf(
+				'MASE: WebP generation failed - Save error: %s. Attachment ID: %d',
+				$save_result->get_error_message(),
+				$attachment_id
+			) );
+			return false;
+		}
+
+		// Convert file path to URL.
+		$upload_dir = wp_upload_dir();
+		$webp_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $webp_path );
+
+		// Log successful WebP generation.
+		error_log( sprintf(
+			'MASE: WebP version generated successfully. Attachment ID: %d, WebP URL: %s',
+			$attachment_id,
+			$webp_url
+		) );
+
+		return $webp_url;
+	}
+
+	/**
+	 * Get optimized image URL with WebP support and fallback.
+	 * 
+	 * Returns the most appropriate image URL based on browser support. Detects
+	 * WebP support from HTTP_ACCEPT header and returns WebP version if available
+	 * and supported, otherwise returns original image URL.
+	 * 
+	 * Requirement 7.2: Serve optimized image formats (WebP with JPG/PNG fallback)
+	 *                  based on browser support detection.
+	 * 
+	 * @since 1.4.0
+	 * @access public
+	 * 
+	 * @param int $attachment_id WordPress attachment ID.
+	 * @return string Image URL (WebP if supported and available, original otherwise).
+	 */
+	public function get_optimized_image_url( $attachment_id ) {
+		// Validate attachment ID.
+		if ( ! $attachment_id || ! is_numeric( $attachment_id ) ) {
+			return '';
+		}
+
+		// Get original image URL.
+		$original_url = wp_get_attachment_url( $attachment_id );
+		
+		if ( ! $original_url ) {
+			return '';
+		}
+
+		// Check if browser supports WebP via HTTP_ACCEPT header (Requirement 7.2).
+		$supports_webp = isset( $_SERVER['HTTP_ACCEPT'] ) && 
+		                 strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false;
+
+		// If browser doesn't support WebP, return original.
+		if ( ! $supports_webp ) {
+			return $original_url;
+		}
+
+		// Check if attachment is already WebP.
+		$mime_type = get_post_mime_type( $attachment_id );
+		if ( $mime_type === 'image/webp' ) {
+			return $original_url;
+		}
+
+		// Skip SVG files (can't convert to WebP).
+		if ( $mime_type === 'image/svg+xml' ) {
+			return $original_url;
+		}
+
+		// Try to get existing WebP version.
+		$file_path = get_attached_file( $attachment_id );
+		if ( $file_path ) {
+			$file_info = pathinfo( $file_path );
+			$webp_path = $file_info['dirname'] . '/' . $file_info['filename'] . '.webp';
+			
+			// Check if WebP version already exists.
+			if ( file_exists( $webp_path ) ) {
+				$upload_dir = wp_upload_dir();
+				$webp_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $webp_path );
+				return $webp_url;
+			}
+		}
+
+		// Generate WebP version if it doesn't exist.
+		$webp_url = $this->generate_webp_version( $attachment_id );
+		
+		// Return WebP URL if generation succeeded, otherwise return original.
+		return $webp_url ? $webp_url : $original_url;
+	}
+
+	/**
 	 * Handle AJAX media library selection for background images.
 	 * 
 	 * Processes selection of existing images from WordPress media library for use
@@ -2821,11 +3290,27 @@ class MASE_Admin {
 	 * - Logs all selection attempts for auditing
 	 */
 	public function handle_ajax_select_background_image() {
-		// Security: Verify nonce for CSRF protection (Requirement 12.3).
-		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		// Security: Verify nonce for CSRF protection (Requirement 12.3, Task 38).
+		if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Invalid nonce in background image selection. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
+			wp_send_json_error( array(
+				'message' => __( 'Invalid security token. Please refresh the page and try again.', 'modern-admin-styler' ),
+			), 403 );
+		}
 		
-		// Security: Check user capability (Requirement 12.3).
+		// Security: Check user capability (Requirement 12.3, Task 38).
 		if ( ! current_user_can( 'manage_options' ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Unauthorized background image selection attempt. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
 			wp_send_json_error( array(
 				'message' => __( 'You do not have permission to select images.', 'modern-admin-styler' ),
 			), 403 );
@@ -2873,10 +3358,13 @@ class MASE_Admin {
 			), 400 );
 		}
 
-		// Retrieve attachment URL (Requirement 8.3).
-		$attachment_url = wp_get_attachment_url( $attachment_id );
+		// Get optimized image URL with WebP support (Requirement 7.2).
+		$attachment_url = $this->get_optimized_image_url( $attachment_id );
 		
-		if ( ! $attachment_url ) {
+		// Get original URL as fallback.
+		$original_url = wp_get_attachment_url( $attachment_id );
+		
+		if ( ! $original_url ) {
 			error_log( sprintf(
 				'MASE: Background image selection failed - Could not get attachment URL. ID: %d',
 				$attachment_id
@@ -2890,7 +3378,7 @@ class MASE_Admin {
 		// Retrieve thumbnail URL (Requirement 8.3).
 		$thumbnail_url = wp_get_attachment_image_url( $attachment_id, 'thumbnail' );
 		
-		// Thumbnail is optional - use full URL as fallback if thumbnail doesn't exist.
+		// Thumbnail is optional - use optimized URL as fallback if thumbnail doesn't exist.
 		if ( ! $thumbnail_url ) {
 			$thumbnail_url = $attachment_url;
 		}
@@ -2903,11 +3391,12 @@ class MASE_Admin {
 			$mime_type
 		) );
 
-		// Return success response with attachment data (Requirement 8.3).
+		// Return success response with attachment data (Requirement 8.3, 7.2).
 		wp_send_json_success( array(
 			'message'       => __( 'Background image selected successfully.', 'modern-admin-styler' ),
 			'attachment_id' => $attachment_id,
 			'url'           => $attachment_url,
+			'original_url'  => $original_url,
 			'thumbnail'     => $thumbnail_url,
 		) );
 	}
@@ -2944,11 +3433,27 @@ class MASE_Admin {
 	 * - Does not delete media library attachments (security best practice)
 	 */
 	public function handle_ajax_remove_background_image() {
-		// Security: Verify nonce for CSRF protection (Requirement 12.3).
-		check_ajax_referer( 'mase_save_settings', 'nonce' );
+		// Security: Verify nonce for CSRF protection (Requirement 12.3, Task 38).
+		if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Invalid nonce in background image removal. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
+			wp_send_json_error( array(
+				'message' => __( 'Invalid security token. Please refresh the page and try again.', 'modern-admin-styler' ),
+			), 403 );
+		}
 		
-		// Security: Check user capability (Requirement 12.3).
+		// Security: Check user capability (Requirement 12.3, Task 38).
 		if ( ! current_user_can( 'manage_options' ) ) {
+			// Log security violation (Task 38).
+			error_log( sprintf(
+				'MASE Security Violation: Unauthorized background image removal attempt. User ID: %d, IP: %s',
+				get_current_user_id(),
+				isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown'
+			) );
 			wp_send_json_error( array(
 				'message' => __( 'You do not have permission to remove background images.', 'modern-admin-styler' ),
 			), 403 );
@@ -3319,6 +3824,141 @@ class MASE_Admin {
 			error_log( 'MASE Error (reset_all_buttons): ' . $e->getMessage() );
 			wp_send_json_error( array(
 				'message' => __( 'An error occurred while resetting all buttons. Please try again.', 'modern-admin-styler' ),
+			), 500 );
+		}
+	}
+
+	/**
+	 * Handle AJAX request to get pattern library data
+	 * 
+	 * Advanced Background System - Task 35
+	 * Requirement 7.1: Load pattern library data on demand (not on page load)
+	 * 
+	 * Security:
+	 * - Nonce verification (CSRF protection)
+	 * - Capability check (manage_options)
+	 * 
+	 * @since 1.3.0
+	 */
+	public function handle_ajax_get_pattern_library() {
+		// Verify nonce (CSRF protection).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+
+		// Check user capability.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to access pattern library data.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		try {
+			// Get pattern library data from settings.
+			$settings = new MASE_Settings();
+			$pattern_library = $settings->get_pattern_library();
+
+			// Return pattern library data.
+			wp_send_json_success( $pattern_library );
+
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (get_pattern_library): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'Failed to load pattern library data. Please try again.', 'modern-admin-styler' ),
+			), 500 );
+		}
+	}
+
+	/**
+	 * Handle AJAX request to log client-side errors.
+	 * 
+	 * Task 44: Log errors for debugging (Requirement 7.5)
+	 * 
+	 * Logs JavaScript errors from the client to the server error log for debugging.
+	 * Only works when WP_DEBUG is enabled to prevent log spam in production.
+	 * 
+	 * Security:
+	 * - Nonce verification (CSRF protection)
+	 * - Capability check (manage_options)
+	 * - Only logs when WP_DEBUG is enabled
+	 * - Sanitizes all input data
+	 * 
+	 * @since 1.4.0
+	 */
+	public function handle_ajax_log_client_error() {
+		// Verify nonce (CSRF protection).
+		check_ajax_referer( 'mase_save_settings', 'nonce' );
+
+		// Check user capability.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array(
+				'message' => __( 'You do not have permission to log errors.', 'modern-admin-styler' ),
+			), 403 );
+		}
+
+		// Only log errors when WP_DEBUG is enabled.
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+			wp_send_json_success( array(
+				'message' => __( 'Error logging is disabled in production.', 'modern-admin-styler' ),
+			) );
+			return;
+		}
+
+		try {
+			// Get error log data from request.
+			$error_log_json = isset( $_POST['error_log'] ) ? sanitize_text_field( wp_unslash( $_POST['error_log'] ) ) : '';
+			
+			if ( empty( $error_log_json ) ) {
+				wp_send_json_error( array(
+					'message' => __( 'No error log data provided.', 'modern-admin-styler' ),
+				), 400 );
+				return;
+			}
+
+			// Decode JSON error log.
+			$error_log = json_decode( $error_log_json, true );
+			
+			if ( json_last_error() !== JSON_ERROR_NONE ) {
+				wp_send_json_error( array(
+					'message' => __( 'Invalid error log format.', 'modern-admin-styler' ),
+				), 400 );
+				return;
+			}
+
+			// Extract and sanitize error data.
+			$timestamp = isset( $error_log['timestamp'] ) ? sanitize_text_field( $error_log['timestamp'] ) : '';
+			$context = isset( $error_log['context'] ) ? sanitize_text_field( $error_log['context'] ) : 'unknown';
+			$error_message = isset( $error_log['error']['message'] ) ? sanitize_text_field( $error_log['error']['message'] ) : 'No message';
+			$error_code = isset( $error_log['error']['code'] ) ? sanitize_text_field( $error_log['error']['code'] ) : 'UNKNOWN';
+			$url = isset( $error_log['url'] ) ? esc_url_raw( $error_log['url'] ) : '';
+			$user_agent = isset( $error_log['userAgent'] ) ? sanitize_text_field( $error_log['userAgent'] ) : '';
+
+			// Log the client-side error.
+			error_log( sprintf(
+				'MASE Client Error [%s] - Context: %s, Code: %s, Message: %s, URL: %s, User Agent: %s, User ID: %d',
+				$timestamp,
+				$context,
+				$error_code,
+				$error_message,
+				$url,
+				$user_agent,
+				get_current_user_id()
+			) );
+
+			// Log metadata if present.
+			if ( isset( $error_log['metadata'] ) && is_array( $error_log['metadata'] ) && ! empty( $error_log['metadata'] ) ) {
+				error_log( sprintf(
+					'MASE Client Error Metadata: %s',
+					wp_json_encode( $error_log['metadata'] )
+				) );
+			}
+
+			wp_send_json_success( array(
+				'message' => __( 'Error logged successfully.', 'modern-admin-styler' ),
+			) );
+
+		} catch ( Exception $e ) {
+			error_log( 'MASE Error (log_client_error): ' . $e->getMessage() );
+			wp_send_json_error( array(
+				'message' => __( 'Failed to log error. Please check server logs.', 'modern-admin-styler' ),
 			), 500 );
 		}
 	}

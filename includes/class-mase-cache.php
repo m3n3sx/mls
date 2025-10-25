@@ -458,19 +458,42 @@ class MASE_Cache {
 	 * Warm cache by pre-generating CSS for both modes.
 	 *
 	 * Requirement 12.7: Add cache warming on settings save.
+	 * Task 33: Extended for background CSS warming (Requirements 7.4, 7.5).
 	 *
 	 * @param MASE_CSS_Generator $generator The CSS generator instance.
 	 * @param array              $settings  The settings array.
-	 * @return array Results of cache warming with 'light' and 'dark' keys.
+	 * @return array Results of cache warming with 'light', 'dark', and 'backgrounds' keys.
 	 * @since 1.3.0
 	 */
 	public function warm_mode_caches( $generator, $settings ) {
 		$results = array(
-			'light' => false,
-			'dark'  => false,
+			'light'       => false,
+			'dark'        => false,
+			'backgrounds' => array(),
 		);
 
 		try {
+			// Task 33: Check if backgrounds are enabled (Requirement 7.4).
+			$backgrounds_enabled = isset( $settings['custom_backgrounds'] ) && is_array( $settings['custom_backgrounds'] );
+			$enabled_areas = array();
+
+			if ( $backgrounds_enabled ) {
+				// Task 33: Identify enabled background areas (Requirement 7.4).
+				foreach ( $settings['custom_backgrounds'] as $area => $config ) {
+					if ( isset( $config['enabled'] ) && $config['enabled'] && 
+					     isset( $config['type'] ) && $config['type'] !== 'none' ) {
+						$enabled_areas[] = $area;
+					}
+				}
+
+				if ( ! empty( $enabled_areas ) ) {
+					error_log( sprintf( 
+						'MASE: Cache warming - Background areas enabled: %s',
+						implode( ', ', $enabled_areas )
+					) );
+				}
+			}
+
 			// Generate and cache light mode CSS.
 			$light_settings = $settings;
 			if ( ! isset( $light_settings['dark_light_toggle'] ) ) {
@@ -484,6 +507,14 @@ class MASE_Cache {
 					? absint( $settings['performance']['cache_duration'] ) 
 					: 3600;
 				$results['light'] = $this->set_cached_light_mode_css( $light_css, $cache_duration );
+
+				// Task 33: Log background CSS warming for light mode (Requirement 7.5).
+				if ( $backgrounds_enabled && ! empty( $enabled_areas ) ) {
+					error_log( sprintf( 
+						'MASE: Cache warming - Light mode CSS includes backgrounds for: %s',
+						implode( ', ', $enabled_areas )
+					) );
+				}
 			}
 
 			// Generate and cache dark mode CSS.
@@ -499,6 +530,32 @@ class MASE_Cache {
 					? absint( $settings['performance']['cache_duration'] ) 
 					: 3600;
 				$results['dark'] = $this->set_cached_dark_mode_css( $dark_css, $cache_duration );
+
+				// Task 33: Log background CSS warming for dark mode (Requirement 7.5).
+				if ( $backgrounds_enabled && ! empty( $enabled_areas ) ) {
+					error_log( sprintf( 
+						'MASE: Cache warming - Dark mode CSS includes backgrounds for: %s',
+						implode( ', ', $enabled_areas )
+					) );
+				}
+			}
+
+			// Task 33: Store background warming results (Requirement 7.5).
+			$results['backgrounds'] = array(
+				'enabled'       => $backgrounds_enabled,
+				'enabled_areas' => $enabled_areas,
+				'area_count'    => count( $enabled_areas ),
+			);
+
+			// Task 33: Log comprehensive cache warming results (Requirement 7.5).
+			if ( $backgrounds_enabled ) {
+				error_log( sprintf( 
+					'MASE: Cache warming completed - Light: %s, Dark: %s, Background areas: %d (%s)',
+					$results['light'] ? 'success' : 'failed',
+					$results['dark'] ? 'success' : 'failed',
+					count( $enabled_areas ),
+					! empty( $enabled_areas ) ? implode( ', ', $enabled_areas ) : 'none'
+				) );
 			}
 
 		} catch ( Exception $e ) {

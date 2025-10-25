@@ -1239,11 +1239,762 @@
         },
         
         /**
+         * Backgrounds Module
+         * Handles background image lazy loading, optimization, and upload
+         * Requirements: 7.1, 7.2, 7.5
+         * Task 30: Implement lazy loading for background images
+         * Task 34: Add loading states and error handling
+         */
+        backgrounds: {
+            /**
+             * IntersectionObserver instance for lazy loading
+             */
+            observer: null,
+            
+            /**
+             * Fallback flag for browsers without IntersectionObserver
+             */
+            useFallback: false,
+            
+            /**
+             * Active upload requests (for tracking and cancellation)
+             */
+            activeUploads: {},
+            
+            /**
+             * Initialize backgrounds module
+             * Requirement 7.1: Implement lazy loading
+             * Requirement 7.5: Initialize upload handlers
+             */
+            init: function() {
+                console.log('MASE: Initializing backgrounds module');
+                
+                // Check for IntersectionObserver support
+                if ('IntersectionObserver' in window) {
+                    this.initLazyLoading();
+                } else {
+                    console.warn('MASE: IntersectionObserver not supported, using fallback');
+                    this.useFallback = true;
+                    this.initFallback();
+                }
+                
+                // Initialize upload handlers
+                this.initUploadHandlers();
+                
+                console.log('MASE: Backgrounds module initialized');
+            },
+            
+            /**
+             * Initialize upload handlers
+             * Task 34: Add loading states and error handling
+             * Requirement 7.5: Handle upload errors gracefully
+             */
+            initUploadHandlers: function() {
+                var self = this;
+                
+                // Drag and drop upload zones
+                $(document).on('dragover', '.mase-background-upload-zone', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).addClass('mase-drag-over');
+                });
+                
+                $(document).on('dragleave', '.mase-background-upload-zone', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).removeClass('mase-drag-over');
+                });
+                
+                $(document).on('drop', '.mase-background-upload-zone', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(this).removeClass('mase-drag-over');
+                    
+                    var files = e.originalEvent.dataTransfer.files;
+                    if (files.length > 0) {
+                        var area = $(this).data('area');
+                        self.uploadFile(files[0], area, $(this));
+                    }
+                });
+                
+                // Click to upload
+                $(document).on('click', '.mase-background-upload-zone', function(e) {
+                    if (!$(e.target).is('button, a, input')) {
+                        var area = $(this).data('area');
+                        self.openMediaLibrary(area);
+                    }
+                });
+                
+                // File input change
+                $(document).on('change', '.mase-background-file-input', function() {
+                    var files = this.files;
+                    if (files.length > 0) {
+                        var area = $(this).closest('.mase-background-upload-zone').data('area');
+                        var $zone = $(this).closest('.mase-background-upload-zone');
+                        self.uploadFile(files[0], area, $zone);
+                    }
+                });
+                
+                // Remove background button
+                $(document).on('click', '.mase-background-remove-btn', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var area = $(this).data('area');
+                    self.removeBackground(area);
+                });
+                
+                // Retry upload button
+                $(document).on('click', '.mase-background-retry-btn', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var area = $(this).data('area');
+                    var $zone = $(this).closest('.mase-background-upload-zone');
+                    var lastFile = $zone.data('last-file');
+                    if (lastFile) {
+                        self.uploadFile(lastFile, area, $zone);
+                    }
+                });
+                
+                console.log('MASE: Upload handlers initialized');
+            },
+            
+            /**
+             * Upload background image file
+             * Task 34: Show spinner, progress bar, error messages, retry option
+             * Requirement 7.5: Handle network errors gracefully
+             * 
+             * @param {File} file - File object to upload
+             * @param {string} area - Background area identifier
+             * @param {jQuery} $zone - Upload zone element
+             */
+            uploadFile: function(file, area, $zone) {
+                var self = MASE;
+                
+                // Validate file
+                var validation = this.validateFile(file);
+                if (!validation.valid) {
+                    this.showUploadError($zone, validation.message, area, file);
+                    return;
+                }
+                
+                // Store file for retry
+                $zone.data('last-file', file);
+                
+                // Show loading state
+                this.showUploadLoading($zone, area);
+                
+                // Prepare form data
+                var formData = new FormData();
+                formData.append('action', 'mase_upload_background_image');
+                formData.append('nonce', self.config.nonce);
+                formData.append('area', area);
+                formData.append('file', file);
+                
+                // Create XMLHttpRequest for progress tracking
+                var xhr = new XMLHttpRequest();
+                
+                // Track active upload
+                this.activeUploads[area] = xhr;
+                
+                // Progress handler
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        var percentComplete = (e.loaded / e.total) * 100;
+                        self.backgrounds.updateUploadProgress($zone, percentComplete);
+                    }
+                });
+                
+                // Load handler (success)
+                xhr.addEventListener('load', function() {
+                    delete self.backgrounds.activeUploads[area];
+                    
+                    if (xhr.status === 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            
+                            if (response.success) {
+                                self.backgrounds.showUploadSuccess($zone, response.data, area);
+                                self.showNotice('success', 'Background image uploaded successfully');
+                                
+                                // Trigger accessibility event (Task 45)
+                                $(document).trigger('mase:backgroundImageUploaded', [response.data]);
+                            } else {
+                                var errorMsg = response.data && response.data.message ? 
+                                    response.data.message : 'Upload failed';
+                                self.backgrounds.showUploadError($zone, errorMsg, area, file);
+                            }
+                        } catch (e) {
+                            console.error('MASE: Failed to parse upload response:', e);
+                            self.backgrounds.showUploadError($zone, 'Invalid server response', area, file);
+                        }
+                    } else {
+                        var errorMsg = 'Server error (' + xhr.status + ')';
+                        if (xhr.status === 403) {
+                            errorMsg = 'Permission denied. You do not have access to upload files.';
+                        } else if (xhr.status === 413) {
+                            errorMsg = 'File too large. Maximum size is 5MB.';
+                        } else if (xhr.status === 500) {
+                            errorMsg = 'Server error. Please try again later.';
+                        }
+                        self.backgrounds.showUploadError($zone, errorMsg, area, file);
+                    }
+                });
+                
+                // Error handler (network error)
+                xhr.addEventListener('error', function() {
+                    delete self.backgrounds.activeUploads[area];
+                    console.error('MASE: Network error during upload');
+                    self.backgrounds.showUploadError($zone, 'Network error. Please check your connection and try again.', area, file);
+                });
+                
+                // Abort handler
+                xhr.addEventListener('abort', function() {
+                    delete self.backgrounds.activeUploads[area];
+                    console.log('MASE: Upload cancelled');
+                    self.backgrounds.showUploadError($zone, 'Upload cancelled', area, file);
+                });
+                
+                // Timeout handler
+                xhr.addEventListener('timeout', function() {
+                    delete self.backgrounds.activeUploads[area];
+                    console.error('MASE: Upload timeout');
+                    self.backgrounds.showUploadError($zone, 'Upload timeout. Please try again.', area, file);
+                });
+                
+                // Send request
+                xhr.open('POST', self.config.ajaxUrl);
+                xhr.timeout = 60000; // 60 second timeout
+                xhr.send(formData);
+            },
+            
+            /**
+             * Validate file before upload
+             * Task 34: Show error messages for failed uploads
+             * 
+             * @param {File} file - File to validate
+             * @return {Object} Validation result {valid: boolean, message: string}
+             */
+            validateFile: function(file) {
+                // Check file type
+                var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml'];
+                if (!allowedTypes.includes(file.type)) {
+                    return {
+                        valid: false,
+                        message: 'Invalid file type. Please upload JPG, PNG, WebP, or SVG images.'
+                    };
+                }
+                
+                // Check file size (5MB max)
+                var maxSize = 5 * 1024 * 1024; // 5MB in bytes
+                if (file.size > maxSize) {
+                    var sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                    return {
+                        valid: false,
+                        message: 'File too large (' + sizeMB + 'MB). Maximum size is 5MB.'
+                    };
+                }
+                
+                return { valid: true };
+            },
+            
+            /**
+             * Show upload loading state
+             * Task 34: Show spinner during file upload
+             * 
+             * @param {jQuery} $zone - Upload zone element
+             * @param {string} area - Background area identifier
+             */
+            showUploadLoading: function($zone, area) {
+                // Hide any existing error or success states
+                $zone.find('.mase-upload-error, .mase-upload-success').remove();
+                
+                // Add loading class
+                $zone.addClass('mase-uploading');
+                
+                // Create or update loading indicator
+                var $loading = $zone.find('.mase-upload-loading');
+                if ($loading.length === 0) {
+                    $loading = $('<div class="mase-upload-loading">' +
+                        '<div class="mase-upload-spinner"></div>' +
+                        '<div class="mase-upload-progress">' +
+                            '<div class="mase-upload-progress-bar" style="width: 0%"></div>' +
+                        '</div>' +
+                        '<div class="mase-upload-status">Uploading...</div>' +
+                        '</div>');
+                    $zone.append($loading);
+                } else {
+                    $loading.show();
+                    $loading.find('.mase-upload-progress-bar').css('width', '0%');
+                    $loading.find('.mase-upload-status').text('Uploading...');
+                }
+            },
+            
+            /**
+             * Update upload progress
+             * Task 34: Display progress bar for large uploads
+             * 
+             * @param {jQuery} $zone - Upload zone element
+             * @param {number} percent - Progress percentage (0-100)
+             */
+            updateUploadProgress: function($zone, percent) {
+                var $progressBar = $zone.find('.mase-upload-progress-bar');
+                var $status = $zone.find('.mase-upload-status');
+                
+                if ($progressBar.length > 0) {
+                    $progressBar.css('width', percent + '%');
+                }
+                
+                if ($status.length > 0) {
+                    $status.text('Uploading... ' + Math.round(percent) + '%');
+                }
+            },
+            
+            /**
+             * Show upload success state
+             * Task 34: Show success confirmation after upload
+             * 
+             * @param {jQuery} $zone - Upload zone element
+             * @param {Object} data - Upload response data
+             * @param {string} area - Background area identifier
+             */
+            showUploadSuccess: function($zone, data, area) {
+                // Remove loading state
+                $zone.removeClass('mase-uploading');
+                $zone.find('.mase-upload-loading').remove();
+                
+                // Create success indicator
+                var $success = $('<div class="mase-upload-success">' +
+                    '<div class="mase-upload-success-icon">✓</div>' +
+                    '<div class="mase-upload-success-message">Upload successful!</div>' +
+                    '</div>');
+                
+                $zone.append($success);
+                
+                // Update preview
+                this.updateBackgroundPreview($zone, data, area);
+                
+                // Remove success message after 3 seconds
+                setTimeout(function() {
+                    $success.fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                }, 3000);
+            },
+            
+            /**
+             * Show upload error state
+             * Task 34: Show error messages for failed uploads, provide retry option
+             * 
+             * @param {jQuery} $zone - Upload zone element
+             * @param {string} message - Error message
+             * @param {string} area - Background area identifier
+             * @param {File} file - File that failed to upload (for retry)
+             */
+            showUploadError: function($zone, message, area, file) {
+                // Remove loading state
+                $zone.removeClass('mase-uploading');
+                $zone.find('.mase-upload-loading').remove();
+                
+                // Create error indicator with retry button
+                var $error = $('<div class="mase-upload-error">' +
+                    '<div class="mase-upload-error-icon">✕</div>' +
+                    '<div class="mase-upload-error-message">' + this.escapeHtml(message) + '</div>' +
+                    '<button type="button" class="mase-background-retry-btn button button-secondary" data-area="' + area + '">' +
+                        'Retry Upload' +
+                    '</button>' +
+                    '</div>');
+                
+                $zone.append($error);
+                
+                // Show error notice
+                MASE.showNotice('error', message);
+            },
+            
+            /**
+             * Update background preview after successful upload
+             * 
+             * @param {jQuery} $zone - Upload zone element
+             * @param {Object} data - Upload response data
+             * @param {string} area - Background area identifier
+             */
+            updateBackgroundPreview: function($zone, data, area) {
+                // Find or create preview container
+                var $preview = $zone.find('.mase-background-preview');
+                if ($preview.length === 0) {
+                    $preview = $('<div class="mase-background-preview"></div>');
+                    $zone.append($preview);
+                }
+                
+                // Update preview image (XSS Prevention - Task 39)
+                // Create elements safely without using .html() with user input
+                var $img = $('<img>').attr({
+                    'src': data.thumbnail || data.url,
+                    'alt': 'Background preview'
+                });
+                var $removeBtn = $('<button>')
+                    .attr({
+                        'type': 'button',
+                        'class': 'mase-background-remove-btn',
+                        'data-area': area
+                    })
+                    .append($('<span>').addClass('dashicons dashicons-no-alt').attr('aria-hidden', 'true'))
+                    .append(' ').append(document.createTextNode('Remove'));
+                
+                $preview.empty().append($img).append($removeBtn);
+                
+                // Update hidden inputs
+                var $urlInput = $zone.find('.mase-background-url');
+                var $idInput = $zone.find('.mase-background-id');
+                
+                if ($urlInput.length > 0) {
+                    $urlInput.val(data.url);
+                }
+                if ($idInput.length > 0) {
+                    $idInput.val(data.attachment_id);
+                }
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.livePreview.enabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
+            },
+            
+            /**
+             * Remove background image
+             * 
+             * @param {string} area - Background area identifier
+             */
+            removeBackground: function(area) {
+                var self = MASE;
+                
+                if (!confirm('Remove this background image?')) {
+                    return;
+                }
+                
+                // Show loading
+                self.showNotice('info', 'Removing background...', false);
+                
+                $.ajax({
+                    url: self.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_remove_background_image',
+                        nonce: self.config.nonce,
+                        area: area
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Clear preview
+                            var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+                            $zone.find('.mase-background-preview').remove();
+                            $zone.find('.mase-background-url').val('');
+                            $zone.find('.mase-background-id').val('');
+                            
+                            self.showNotice('success', 'Background removed successfully');
+                            
+                            // Update live preview
+                            if (MASE.livePreview && MASE.livePreview.enabled) {
+                                MASE.livePreview.updateBackground(area);
+                            }
+                        } else {
+                            self.showNotice('error', response.data.message || 'Failed to remove background');
+                        }
+                    },
+                    error: function(xhr) {
+                        var message = 'Network error. Please try again.';
+                        if (xhr.status === 403) {
+                            message = 'Permission denied.';
+                        }
+                        self.showNotice('error', message);
+                    }
+                });
+            },
+            
+            /**
+             * Open WordPress media library
+             * 
+             * @param {string} area - Background area identifier
+             */
+            openMediaLibrary: function(area) {
+                var self = this;
+                
+                // Check if wp.media is available
+                if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                    console.error('MASE: WordPress media library not available');
+                    MASE.showNotice('error', 'Media library not available');
+                    return;
+                }
+                
+                // Create media frame
+                var frame = wp.media({
+                    title: 'Select Background Image',
+                    button: { text: 'Use Image' },
+                    multiple: false,
+                    library: { type: 'image' }
+                });
+                
+                // Handle selection
+                frame.on('select', function() {
+                    var attachment = frame.state().get('selection').first().toJSON();
+                    self.selectFromLibrary(area, attachment);
+                });
+                
+                // Open frame
+                frame.open();
+            },
+            
+            /**
+             * Handle media library selection
+             * 
+             * @param {string} area - Background area identifier
+             * @param {Object} attachment - Selected attachment object
+             */
+            selectFromLibrary: function(area, attachment) {
+                var self = MASE;
+                var $zone = $('.mase-background-upload-zone[data-area="' + area + '"]');
+                
+                // Show loading
+                this.showUploadLoading($zone, area);
+                
+                $.ajax({
+                    url: self.config.ajaxUrl,
+                    type: 'POST',
+                    data: {
+                        action: 'mase_select_background_image',
+                        nonce: self.config.nonce,
+                        area: area,
+                        attachment_id: attachment.id
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            self.backgrounds.showUploadSuccess($zone, response.data, area);
+                            self.showNotice('success', 'Background image selected successfully');
+                        } else {
+                            self.backgrounds.showUploadError($zone, response.data.message || 'Failed to select image', area, null);
+                        }
+                    },
+                    error: function(xhr) {
+                        var message = 'Network error. Please try again.';
+                        if (xhr.status === 403) {
+                            message = 'Permission denied.';
+                        }
+                        self.backgrounds.showUploadError($zone, message, area, null);
+                    }
+                });
+            },
+            
+            /**
+             * Escape HTML to prevent XSS
+             * 
+             * @param {string} text - Text to escape
+             * @return {string} Escaped text
+             */
+            escapeHtml: function(text) {
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+            },
+            
+            /**
+             * Initialize lazy loading with IntersectionObserver
+             * Requirement 7.1: Use IntersectionObserver API for viewport detection
+             */
+            initLazyLoading: function() {
+                var self = this;
+                
+                // Create IntersectionObserver instance
+                var options = {
+                    root: null, // viewport
+                    rootMargin: '50px', // Load 50px before entering viewport
+                    threshold: 0.01 // Trigger when 1% visible
+                };
+                
+                this.observer = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            self.loadBackgroundImage(entry.target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, options);
+                
+                // Observe all lazy background elements
+                this.observeBackgrounds();
+                
+                console.log('MASE: Lazy loading initialized with IntersectionObserver');
+            },
+            
+            /**
+             * Observe all background elements for lazy loading
+             * Requirement 7.1: Store image URL in data attribute initially
+             */
+            observeBackgrounds: function() {
+                var self = this;
+                
+                // Find all elements with data-bg-lazy attribute
+                var $lazyBackgrounds = $('[data-bg-lazy]');
+                
+                if ($lazyBackgrounds.length === 0) {
+                    console.log('MASE: No lazy background elements found');
+                    return;
+                }
+                
+                console.log('MASE: Found ' + $lazyBackgrounds.length + ' lazy background elements');
+                
+                $lazyBackgrounds.each(function() {
+                    self.observer.observe(this);
+                });
+            },
+            
+            /**
+             * Load background image when element enters viewport
+             * Requirement 7.1: Load image when element enters viewport
+             * Requirement 7.2: Apply loaded class after image loads
+             */
+            loadBackgroundImage: function(element) {
+                var $element = $(element);
+                var imageUrl = $element.attr('data-bg-lazy');
+                
+                if (!imageUrl) {
+                    console.warn('MASE: No image URL found for lazy background element');
+                    return;
+                }
+                
+                console.log('MASE: Loading background image:', imageUrl);
+                
+                // Create a new image to preload
+                var img = new Image();
+                
+                img.onload = function() {
+                    // Apply background image
+                    $element.css('background-image', 'url(' + imageUrl + ')');
+                    
+                    // Add loaded class
+                    $element.addClass('mase-bg-loaded');
+                    
+                    // Remove data attribute
+                    $element.removeAttr('data-bg-lazy');
+                    
+                    console.log('MASE: Background image loaded successfully:', imageUrl);
+                };
+                
+                img.onerror = function() {
+                    console.error('MASE: Failed to load background image:', imageUrl);
+                    
+                    // Add error class
+                    $element.addClass('mase-bg-error');
+                    
+                    // Remove data attribute
+                    $element.removeAttr('data-bg-lazy');
+                };
+                
+                // Start loading
+                img.src = imageUrl;
+            },
+            
+            /**
+             * Initialize fallback for browsers without IntersectionObserver
+             * Requirement 7.1: Provide fallback for browsers without IntersectionObserver
+             */
+            initFallback: function() {
+                var self = this;
+                
+                console.log('MASE: Initializing fallback lazy loading');
+                
+                // Load images on scroll with throttling
+                var scrollTimeout;
+                var $window = $(window);
+                
+                function checkVisibility() {
+                    var $lazyBackgrounds = $('[data-bg-lazy]');
+                    
+                    if ($lazyBackgrounds.length === 0) {
+                        // No more lazy backgrounds, unbind scroll event
+                        $window.off('scroll.mase-lazy-bg');
+                        $window.off('resize.mase-lazy-bg');
+                        return;
+                    }
+                    
+                    var windowHeight = $window.height();
+                    var scrollTop = $window.scrollTop();
+                    
+                    $lazyBackgrounds.each(function() {
+                        var $element = $(this);
+                        var elementTop = $element.offset().top;
+                        var elementHeight = $element.outerHeight();
+                        
+                        // Check if element is in viewport (with 50px margin)
+                        if (elementTop < scrollTop + windowHeight + 50 && 
+                            elementTop + elementHeight > scrollTop - 50) {
+                            self.loadBackgroundImage(this);
+                        }
+                    });
+                }
+                
+                // Throttled scroll handler
+                function onScroll() {
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(checkVisibility, 200);
+                }
+                
+                // Bind events
+                $window.on('scroll.mase-lazy-bg', onScroll);
+                $window.on('resize.mase-lazy-bg', onScroll);
+                
+                // Check visibility on init
+                checkVisibility();
+                
+                console.log('MASE: Fallback lazy loading initialized');
+            },
+            
+            /**
+             * Cleanup method
+             * Disconnect observer and unbind events
+             */
+            cleanup: function() {
+                if (this.observer) {
+                    this.observer.disconnect();
+                    this.observer = null;
+                }
+                
+                if (this.useFallback) {
+                    $(window).off('scroll.mase-lazy-bg');
+                    $(window).off('resize.mase-lazy-bg');
+                }
+                
+                console.log('MASE: Backgrounds module cleaned up');
+            }
+        },
+        
+        /**
          * Live Preview Module
          * Handles real-time preview of settings changes
          * Requirements: 9.1, 9.2, 9.3, 9.4, 9.5
          */
         livePreview: {
+            /**
+             * Current device preview mode
+             * Task 29: Responsive preview toggle
+             * Requirement 6.4
+             */
+            currentDevice: 'desktop',
+            
+            /**
+             * Device viewport dimensions
+             * Task 29: Responsive preview toggle
+             * Requirement 6.4
+             */
+            deviceDimensions: {
+                desktop: { width: '100%', minWidth: 1024 },
+                tablet: { width: '768px', minWidth: 768, maxWidth: 1023 },
+                mobile: { width: '375px', maxWidth: 767 }
+            },
+            
             /**
              * Toggle live preview on/off
              * Requirement 9.1: Enable/disable live preview
@@ -1260,6 +2011,258 @@
                     this.unbind();
                     this.remove();
                 }
+            },
+            
+            /**
+             * Initialize responsive preview controls
+             * Task 29: Add responsive preview toggle
+             * Requirement 6.4
+             */
+            initResponsivePreview: function() {
+                var self = MASE;
+                
+                // Bind device preview buttons
+                $(document).on('click', '.mase-device-preview-btn', function(e) {
+                    e.preventDefault();
+                    var device = $(this).data('device');
+                    if (device) {
+                        self.livePreview.switchDevice(device);
+                    }
+                });
+                
+                console.log('MASE: Responsive preview controls initialized');
+            },
+            
+            /**
+             * Switch preview device
+             * Task 29: Resize preview to match selected device
+             * Requirement 6.4
+             */
+            switchDevice: function(device) {
+                var self = MASE;
+                
+                if (!['desktop', 'tablet', 'mobile'].includes(device)) {
+                    console.warn('MASE: Invalid device type:', device);
+                    return;
+                }
+                
+                console.log('MASE: Switching preview device to:', device);
+                
+                // Update current device
+                this.currentDevice = device;
+                
+                // Update button states
+                $('.mase-device-preview-btn').removeClass('active');
+                $('.mase-device-preview-btn[data-device="' + device + '"]').addClass('active');
+                
+                // Update breakpoint indicator
+                this.updateBreakpointIndicator(device);
+                
+                // Resize preview area
+                this.resizePreview(device);
+                
+                // Apply responsive background settings
+                this.applyResponsiveBackgrounds(device);
+                
+                // Trigger custom event
+                $(document).trigger('mase:deviceChanged', [device]);
+            },
+            
+            /**
+             * Update breakpoint indicator
+             * Task 29: Show current breakpoint indicator
+             * Requirement 6.4
+             */
+            updateBreakpointIndicator: function(device) {
+                var $indicator = $('.mase-breakpoint-indicator');
+                
+                if ($indicator.length === 0) {
+                    return;
+                }
+                
+                // Update indicator text and class
+                $indicator
+                    .removeClass('device-desktop device-tablet device-mobile')
+                    .addClass('device-' + device);
+                
+                var labels = {
+                    desktop: 'Desktop (≥1024px)',
+                    tablet: 'Tablet (768-1023px)',
+                    mobile: 'Mobile (<768px)'
+                };
+                
+                $indicator.find('.mase-breakpoint-label').text(labels[device] || device);
+                
+                // Update aria-label for accessibility
+                $indicator.attr('aria-label', 'Current preview device: ' + labels[device]);
+            },
+            
+            /**
+             * Resize preview area to match device
+             * Task 29: Resize preview iframe to match selected device
+             * Requirement 6.4
+             */
+            resizePreview: function(device) {
+                var dimensions = this.deviceDimensions[device];
+                var $previewContainer = $('.mase-background-preview-container, .mase-live-preview-container');
+                
+                if ($previewContainer.length === 0) {
+                    console.warn('MASE: Preview container not found');
+                    return;
+                }
+                
+                // Apply device-specific width
+                $previewContainer.css({
+                    'width': dimensions.width,
+                    'max-width': dimensions.maxWidth ? dimensions.maxWidth + 'px' : 'none',
+                    'min-width': dimensions.minWidth ? dimensions.minWidth + 'px' : 'auto',
+                    'margin': device === 'desktop' ? '0' : '0 auto',
+                    'transition': 'all 0.3s ease'
+                });
+                
+                // Add device class for additional styling
+                $previewContainer
+                    .removeClass('preview-desktop preview-tablet preview-mobile')
+                    .addClass('preview-' + device);
+                
+                // If there's an iframe, resize it too
+                var $iframe = $previewContainer.find('iframe');
+                if ($iframe.length > 0) {
+                    $iframe.css({
+                        'width': '100%',
+                        'transition': 'all 0.3s ease'
+                    });
+                }
+                
+                console.log('MASE: Preview resized to', device, 'dimensions:', dimensions);
+            },
+            
+            /**
+             * Apply responsive background settings to preview
+             * Task 29: Apply responsive background settings to preview
+             * Requirement 6.4
+             */
+            applyResponsiveBackgrounds: function(device) {
+                var self = MASE;
+                
+                // Get all background areas
+                $('.mase-background-config').each(function() {
+                    var area = $(this).data('area');
+                    if (area) {
+                        // Check if responsive variations are enabled for this area
+                        var responsiveEnabled = $('input[name="custom_backgrounds[' + area + '][responsive_enabled]"]').is(':checked');
+                        
+                        if (responsiveEnabled) {
+                            // Apply device-specific background settings
+                            self.livePreview.updateBackgroundForDevice(area, device);
+                        } else {
+                            // Apply default background settings
+                            self.livePreview.updateBackground(area);
+                        }
+                    }
+                });
+                
+                console.log('MASE: Responsive backgrounds applied for device:', device);
+            },
+            
+            /**
+             * Update background for specific device
+             * Task 29: Apply responsive background settings
+             * Requirement 6.4
+             */
+            updateBackgroundForDevice: function(area, device) {
+                // Get device-specific background configuration
+                var bgType = $('select[name="custom_backgrounds[' + area + '][responsive][' + device + '][type]"]').val();
+                
+                if (!bgType || bgType === 'none') {
+                    // Remove background for this device
+                    this.removeBackgroundPreview(area);
+                    return;
+                }
+                
+                // Get device-specific settings
+                var config = this.getBackgroundConfigForDevice(area, device);
+                
+                // Apply background based on type
+                this.applyBackgroundPreview(area, bgType, config);
+            },
+            
+            /**
+             * Get background configuration for specific device
+             * Task 29: Helper to get device-specific settings
+             * Requirement 6.4
+             */
+            getBackgroundConfigForDevice: function(area, device) {
+                var prefix = 'custom_backgrounds[' + area + '][responsive][' + device + ']';
+                
+                return {
+                    type: $('select[name="' + prefix + '[type]"]').val(),
+                    image_url: $('input[name="' + prefix + '[image_url]"]').val(),
+                    position: $('input[name="' + prefix + '[position]"]').val(),
+                    size: $('select[name="' + prefix + '[size]"]').val(),
+                    repeat: $('select[name="' + prefix + '[repeat]"]').val(),
+                    attachment: $('select[name="' + prefix + '[attachment]"]').val(),
+                    opacity: $('input[name="' + prefix + '[opacity]"]').val(),
+                    blend_mode: $('select[name="' + prefix + '[blend_mode]"]').val()
+                };
+            },
+            
+            /**
+             * Apply background preview
+             * Task 29: Helper to apply background to preview
+             * Requirement 6.4
+             */
+            applyBackgroundPreview: function(area, type, config) {
+                var $preview = $('.mase-background-preview[data-area="' + area + '"]');
+                
+                if ($preview.length === 0) {
+                    return;
+                }
+                
+                // Build CSS based on background type
+                var css = {};
+                
+                if (type === 'image' && config.image_url) {
+                    css['background-image'] = 'url(' + config.image_url + ')';
+                    css['background-position'] = config.position || 'center center';
+                    css['background-size'] = config.size || 'cover';
+                    css['background-repeat'] = config.repeat || 'no-repeat';
+                    css['background-attachment'] = config.attachment || 'scroll';
+                }
+                
+                // Apply opacity
+                if (config.opacity) {
+                    css['opacity'] = config.opacity / 100;
+                }
+                
+                // Apply blend mode
+                if (config.blend_mode && config.blend_mode !== 'normal') {
+                    css['mix-blend-mode'] = config.blend_mode;
+                }
+                
+                // Apply CSS to preview
+                $preview.css(css);
+            },
+            
+            /**
+             * Remove background preview
+             * Task 29: Helper to remove background from preview
+             * Requirement 6.4
+             */
+            removeBackgroundPreview: function(area) {
+                var $preview = $('.mase-background-preview[data-area="' + area + '"]');
+                
+                if ($preview.length === 0) {
+                    return;
+                }
+                
+                // Clear background styles
+                $preview.css({
+                    'background-image': 'none',
+                    'background-color': 'transparent',
+                    'opacity': '1',
+                    'mix-blend-mode': 'normal'
+                });
             },
             
             /**
@@ -4798,10 +5801,13 @@
                                             // Update hidden input with logo URL
                                             $('#admin-menu-logo-url').val(response.data.logo_url);
                                             
-                                            // Update preview
+                                            // Update preview (XSS Prevention - Task 39)
                                             var $preview = $('#admin-menu-logo-preview');
-                                            $preview.html('<img src="' + response.data.logo_url + '" alt="Menu Logo">');
-                                            $preview.show();
+                                            var $img = $('<img>').attr({
+                                                'src': response.data.logo_url,
+                                                'alt': 'Menu Logo'
+                                            });
+                                            $preview.empty().append($img).show();
                                             
                                             // Show remove button
                                             $('#admin-menu-logo-remove-btn').show();
@@ -4863,8 +5869,8 @@
                     // Clear hidden input
                     $('#admin-menu-logo-url').val('');
                     
-                    // Hide preview
-                    $('#admin-menu-logo-preview').hide().html('');
+                    // Hide preview (XSS Prevention - Task 39)
+                    $('#admin-menu-logo-preview').hide().empty();
                     
                     // Hide remove button
                     $('#admin-menu-logo-remove-btn').hide();
@@ -5318,8 +6324,9 @@
                 var $button = $('#mase-create-backup');
                 var originalText = $button.html();
                 
-                // Show loading state
-                $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Creating...');
+                // Show loading state (XSS Prevention - Task 39)
+                var $spinner = $('<span>').addClass('dashicons dashicons-update dashicons-spin');
+                $button.prop('disabled', true).empty().append($spinner).append(' Creating...');
                 self.showNotice('info', 'Creating backup...', false);
                 
                 $.ajax({
@@ -5350,6 +6357,7 @@
                         self.showNotice('error', message);
                     },
                     complete: function() {
+                        // Restore original button content (XSS Prevention - Task 39)
                         $button.prop('disabled', false).html(originalText);
                     }
                 });
@@ -5370,8 +6378,9 @@
                 var $button = $('#mase-restore-backup');
                 var originalText = $button.html();
                 
-                // Show loading state
-                $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Restoring...');
+                // Show loading state (XSS Prevention - Task 39)
+                var $spinner = $('<span>').addClass('dashicons dashicons-update dashicons-spin');
+                $button.prop('disabled', true).empty().append($spinner).append(' Restoring...');
                 self.showNotice('info', 'Restoring backup...', false);
                 
                 $.ajax({
@@ -5393,6 +6402,7 @@
                             }, 1500);
                         } else {
                             self.showNotice('error', response.data.message || 'Failed to restore backup');
+                            // Restore original button content (XSS Prevention - Task 39)
                             $button.prop('disabled', false).html(originalText);
                         }
                     },
@@ -5404,6 +6414,7 @@
                             message = 'Server error. Please try again later.';
                         }
                         self.showNotice('error', message);
+                        // Restore original button content (XSS Prevention - Task 39)
                         $button.prop('disabled', false).html(originalText);
                     }
                 });
@@ -5637,8 +6648,9 @@
                         return;
                     }
                     
-                    // Show upload progress (Task 10.1)
-                    $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Uploading...');
+                    // Show upload progress (Task 10.1) (XSS Prevention - Task 39)
+                    var $spinner = $('<span>').addClass('dashicons dashicons-update dashicons-spin');
+                    $button.prop('disabled', true).empty().append($spinner).append(' Uploading...');
                     
                     // Prepare form data
                     var formData = new FormData();
@@ -5679,8 +6691,9 @@
                                 self.showNotice('error', response.data.message || 'Failed to upload logo');
                             }
                             
-                            // Restore button state
-                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Logo');
+                            // Restore button state (XSS Prevention - Task 39)
+                            var $uploadIcon = $('<span>').addClass('dashicons dashicons-upload');
+                            $button.prop('disabled', false).empty().append($uploadIcon).append(' Upload Logo');
                         },
                         error: function(xhr) {
                             // Show error message (Task 10.3)
@@ -5692,8 +6705,9 @@
                             }
                             self.showNotice('error', message);
                             
-                            // Restore button state
-                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Logo');
+                            // Restore button state (XSS Prevention - Task 39)
+                            var $uploadIcon = $('<span>').addClass('dashicons dashicons-upload');
+                            $button.prop('disabled', false).empty().append($uploadIcon).append(' Upload Logo');
                         }
                     });
                 });
@@ -5737,8 +6751,9 @@
                         return;
                     }
                     
-                    // Show upload progress (Task 10.1)
-                    $button.prop('disabled', true).html('<span class="dashicons dashicons-update dashicons-spin"></span> Uploading...');
+                    // Show upload progress (Task 10.1) (XSS Prevention - Task 39)
+                    var $spinner = $('<span>').addClass('dashicons dashicons-update dashicons-spin');
+                    $button.prop('disabled', true).empty().append($spinner).append(' Uploading...');
                     
                     // Prepare form data
                     var formData = new FormData();
@@ -5779,8 +6794,9 @@
                                 self.showNotice('error', response.data.message || 'Failed to upload background image');
                             }
                             
-                            // Restore button state
-                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Image');
+                            // Restore button state (XSS Prevention - Task 39)
+                            var $uploadIcon = $('<span>').addClass('dashicons dashicons-upload');
+                            $button.prop('disabled', false).empty().append($uploadIcon).append(' Upload Image');
                         },
                         error: function(xhr) {
                             // Show error message (Task 10.3)
@@ -5792,8 +6808,9 @@
                             }
                             self.showNotice('error', message);
                             
-                            // Restore button state
-                            $button.prop('disabled', false).html('<span class="dashicons dashicons-upload"></span> Upload Image');
+                            // Restore button state (XSS Prevention - Task 39)
+                            var $uploadIcon = $('<span>').addClass('dashicons dashicons-upload');
+                            $button.prop('disabled', false).empty().append($uploadIcon).append(' Upload Image');
                         }
                     });
                 });
@@ -5844,7 +6861,15 @@
                 // Set preview image
                 var maxWidth = previewId.indexOf('logo') !== -1 ? '200px' : '300px';
                 var maxHeight = previewId.indexOf('logo') !== -1 ? '100px' : '200px';
-                $preview.html('<img src="' + imageUrl + '" alt="Preview" style="max-width: ' + maxWidth + '; max-height: ' + maxHeight + ';" />');
+                // XSS Prevention - Task 39: Create image element safely
+                var $img = $('<img>').attr({
+                    'src': imageUrl,
+                    'alt': 'Preview'
+                }).css({
+                    'max-width': maxWidth,
+                    'max-height': maxHeight
+                });
+                $preview.empty().append($img);
                 
                 console.log('MASE: Preview displayed for', previewId);
             },
@@ -6711,6 +7736,22 @@
          * Initialize the admin interface
          */
         init: function() {
+            // Task 1: Log script version and initialization start (Requirement 1.1)
+            console.log('MASE: Script loaded, version check...');
+            
+            // Task 1: CRITICAL - Validate dependencies BEFORE any initialization (Requirements 1.2, 1.3)
+            if (typeof jQuery === 'undefined') {
+                console.error('MASE: jQuery not loaded');
+                alert('Failed to initialize MASE Admin: jQuery is not loaded. Please refresh the page.');
+                return;
+            }
+            
+            if (typeof maseAdmin === 'undefined') {
+                console.error('MASE: maseAdmin object missing - check wp_localize_script');
+                alert('Failed to initialize MASE Admin: Configuration data is missing. Please refresh the page.');
+                return;
+            }
+            
             // Initialize MASE Admin (v1.2.0)
             console.log('MASE: Initializing v1.2.0');
             
@@ -6774,7 +7815,18 @@
                     .attr('aria-checked', 'true');
                 
                 // Bind live preview events
-                this.livePreview.bind();
+                if (this.livePreview && typeof this.livePreview.bind === 'function') {
+                    this.livePreview.bind();
+                } else {
+                    console.warn('MASE: livePreview.bind not available, skipping');
+                }
+                
+                // Initialize responsive preview controls (Task 29 - Requirement 6.4)
+                if (this.livePreview && typeof this.livePreview.initResponsivePreview === 'function') {
+                    this.livePreview.initResponsivePreview();
+                } else {
+                    console.warn('MASE: livePreview.initResponsivePreview not available, skipping');
+                }
                 
                 // Initialize conditional fields (Requirement 15.6)
                 this.initConditionalFields();
@@ -6808,14 +7860,16 @@
                     console.log('MASE: Admin bar loaded, FOUC prevention complete');
                 });
                 
-                // Requirement 9.1: Log successful initialization
+                // Task 1: Log successful initialization (Requirement 1.4)
+                console.log('MASE: Admin initialized successfully');
                 console.log('MASE Admin initialization complete!');
                 console.log('MASE: Current state:', this.state);
                 
             } catch (error) {
-                // Requirement 9.5: Log initialization errors
+                // Task 1: Enhanced error handling with user-friendly alert (Requirement 1.5)
                 console.error('MASE: Initialization error:', error);
                 console.error('MASE: Error stack:', error.stack);
+                alert('Failed to initialize MASE Admin. Please refresh the page.\n\nError: ' + error.message);
                 this.showNotice('error', 'Failed to initialize MASE Admin. Please refresh the page.');
             }
         },
@@ -7313,14 +8367,22 @@
                     message += 'WCAG AA requires ' + minRatio + ':1 minimum. ';
                     message += 'Consider adjusting colors for better accessibility.';
                     
+                    // XSS Prevention - Task 39: Create elements safely
+                    var $icon = $('<span>').addClass('dashicons dashicons-warning').attr('aria-hidden', 'true');
                     $warning
-                        .html('<span class="dashicons dashicons-warning"></span> ' + message)
+                        .empty()
+                        .append($icon)
+                        .append(' ' + message)
                         .addClass('warning')
                         .removeClass('success')
                         .show();
                 } else {
+                    // XSS Prevention - Task 39: Create elements safely
+                    var $icon = $('<span>').addClass('dashicons dashicons-yes').attr('aria-hidden', 'true');
                     $warning
-                        .html('<span class="dashicons dashicons-yes"></span> Good contrast: ' + ratio.toFixed(2) + ':1')
+                        .empty()
+                        .append($icon)
+                        .append(' Good contrast: ' + ratio.toFixed(2) + ':1')
                         .addClass('success')
                         .removeClass('warning')
                         .show();
@@ -7408,8 +8470,12 @@
                 }
                 
                 if (opacity < 70) {
+                    // XSS Prevention - Task 39: Create elements safely
+                    var $icon = $('<span>').addClass('dashicons dashicons-warning').attr('aria-hidden', 'true');
                     $warning
-                        .html('<span class="dashicons dashicons-warning"></span> Opacity below 70% may reduce text readability. Consider increasing for better accessibility.')
+                        .empty()
+                        .append($icon)
+                        .append(' Opacity below 70% may reduce text readability. Consider increasing for better accessibility.')
                         .addClass('warning')
                         .removeClass('success')
                         .show();
@@ -7762,6 +8828,11 @@
                 this.tabNavigation.unbind();
                 this.unbindPaletteEvents();
                 this.unbindTemplateEvents();
+                
+                // Cleanup backgrounds module (Task 30)
+                if (this.backgrounds && typeof this.backgrounds.cleanup === 'function') {
+                    this.backgrounds.cleanup();
+                }
                 
                 // Unbind window events
                 $(window).off('beforeunload');
@@ -8124,28 +9195,11 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    // Enhanced AJAX error handling (Requirements 1.4, 1.5)
+                    // Enhanced AJAX error handling (Requirements 2.5, 4.1, 4.3, 4.4, 4.5)
                     
-                    // Parse xhr.responseJSON for server error messages (Requirement 1.4)
                     var errorMessage = 'Failed to save settings.';
                     
-                    if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-                        // Server provided a specific error message
-                        errorMessage = xhr.responseJSON.data.message;
-                    } else if (xhr.status === 403) {
-                        // Add specific error messages for status codes (Requirement 1.4)
-                        errorMessage = 'Permission denied. Please refresh and try again.';
-                    } else if (xhr.status === 500) {
-                        errorMessage = 'Server error. Please check error logs.';
-                    } else if (xhr.status === 0) {
-                        errorMessage = 'Network error. Please check your connection.';
-                    } else if (status === 'timeout') {
-                        errorMessage = 'Request timed out. Please try again.';
-                    } else if (status === 'parsererror') {
-                        errorMessage = 'Invalid response from server. Please try again.';
-                    }
-                    
-                    // Log detailed error information to console (Requirement 1.4)
+                    // Log detailed error information to console
                     console.error('MASE: Save Settings Error Details:', {
                         status: xhr.status,
                         statusText: xhr.statusText,
@@ -8155,7 +9209,70 @@
                         ajaxStatus: status
                     });
                     
-                    // Display user-friendly error notices (Requirement 1.5)
+                    // Try to parse validation errors from response (Requirement 2.5)
+                    try {
+                        var response = xhr.responseJSON;
+                        
+                        // Check for validation errors in response data (Requirement 4.3)
+                        if (response && response.data && response.data.validation_errors) {
+                            var validationErrors = response.data.validation_errors;
+                            var errorDetails = response.data.error_details || [];
+                            var errorCount = response.data.error_count || Object.keys(validationErrors).length;
+                            
+                            // Format validation errors as numbered list (Requirement 4.4)
+                            errorMessage = 'Please fix ' + errorCount + ' validation error' + (errorCount > 1 ? 's' : '') + ':\n\n';
+                            
+                            // Use error_details if available, otherwise format validation_errors
+                            if (errorDetails.length > 0) {
+                                errorDetails.forEach(function(detail, index) {
+                                    errorMessage += (index + 1) + '. ' + detail + '\n';
+                                });
+                            } else {
+                                var index = 1;
+                                for (var field in validationErrors) {
+                                    if (validationErrors.hasOwnProperty(field)) {
+                                        errorMessage += index + '. ' + field + ': ' + validationErrors[field] + '\n';
+                                        index++;
+                                    }
+                                }
+                            }
+                            
+                            console.log('MASE: Validation errors parsed:', validationErrors);
+                        } else if (response && response.data && response.data.message) {
+                            // Server provided a specific error message
+                            errorMessage = response.data.message;
+                        } else {
+                            // HTTP status-based error messages (Requirements 4.1, 4.5)
+                            if (xhr.status === 403) {
+                                errorMessage = 'Permission denied. You do not have access to perform this action.';
+                            } else if (xhr.status === 400) {
+                                errorMessage = 'Invalid data submitted. Please check your settings and try again.';
+                            } else if (xhr.status === 500) {
+                                errorMessage = 'Server error. Please try again later.';
+                            } else if (xhr.status === 0) {
+                                errorMessage = 'Network error. Please check your connection and try again.';
+                            } else if (status === 'timeout') {
+                                errorMessage = 'Request timed out. Please try again.';
+                            } else if (status === 'parsererror') {
+                                errorMessage = 'Invalid response from server. Please try again.';
+                            }
+                        }
+                    } catch (e) {
+                        console.error('MASE: Could not parse error response:', e);
+                        
+                        // Fallback to HTTP status-based messages (Requirements 4.1, 4.5)
+                        if (xhr.status === 403) {
+                            errorMessage = 'Permission denied. You do not have access to perform this action.';
+                        } else if (xhr.status === 400) {
+                            errorMessage = 'Invalid data submitted. Please check your settings and try again.';
+                        } else if (xhr.status === 500) {
+                            errorMessage = 'Server error. Please try again later.';
+                        } else if (xhr.status === 0) {
+                            errorMessage = 'Network error. Please check your connection and try again.';
+                        }
+                    }
+                    
+                    // Display user-friendly error notices (Requirement 4.4)
                     self.showNotice('error', errorMessage);
                     
                     // Show retry option for recoverable errors
@@ -9675,10 +10792,21 @@
             }
             
             // Handle pattern backgrounds
+            // Task 24: Integrate pattern library with live preview
             else if (config.type === 'pattern' && config.pattern_id) {
-                // Pattern CSS generation would go here
-                // For now, just set a placeholder
-                css['background-color'] = config.pattern_color || '#f0f0f0';
+                var patternCSS = this.generatePatternCSS(config);
+                if (patternCSS) {
+                    css['background-image'] = patternCSS;
+                    css['background-size'] = (config.pattern_scale || 100) + '%';
+                    css['background-repeat'] = 'repeat';
+                    css['background-position'] = 'center center';
+                    css['background-attachment'] = 'scroll';
+                    
+                    // Apply pattern-specific opacity
+                    if (config.pattern_opacity !== undefined && config.pattern_opacity < 100) {
+                        css['opacity'] = config.pattern_opacity / 100;
+                    }
+                }
             }
             
             // Apply opacity and blend mode
@@ -9693,6 +10821,46 @@
             return css;
         },
         
+        /**
+         * Generate CSS pattern data URI from configuration
+         * Task 24: Generate pattern SVG with custom color in JavaScript
+         * Requirements: 3.4, 10.1
+         * 
+         * @param {Object} config - Pattern configuration
+         * @return {string} CSS data URI string or null
+         */
+        generatePatternCSS: function(config) {
+            // Validate pattern ID
+            if (!config.pattern_id) {
+                return null;
+            }
+            
+            // Get pattern data from pattern library
+            var patternData = null;
+            if (window.MASE && window.MASE.patternLibrary) {
+                patternData = MASE.patternLibrary.getPatternData(config.pattern_id);
+            }
+            
+            if (!patternData || !patternData.svg) {
+                console.warn('MASE: Pattern not found:', config.pattern_id);
+                return null;
+            }
+            
+            // Replace color placeholder in SVG (Requirement 3.4)
+            var color = config.pattern_color || '#000000';
+            var customizedSvg = patternData.svg.replace(/{color}/g, color);
+            
+            // Create data URI from SVG (Requirement 3.4)
+            // Using btoa for base64 encoding
+            try {
+                var dataUri = 'data:image/svg+xml;base64,' + btoa(customizedSvg);
+                return 'url(' + dataUri + ')';
+            } catch (e) {
+                console.error('MASE: Failed to encode pattern SVG:', e);
+                return null;
+            }
+        },
+
         /**
          * Generate CSS gradient string from configuration
          * Task 18: Generate CSS gradient string in JavaScript
@@ -9779,6 +10947,7 @@
             this.initChangeButtons();
             this.initBackgroundTypeSelector();
             this.initAccordion();
+            this.initAdvancedProperties();
         },
         
         /**
@@ -9921,8 +11090,122 @@
                 var $controls = $('.mase-background-config[data-area="' + area + '"] .mase-background-type-controls');
                 $controls.hide();
                 $controls.filter('[data-type="' + type + '"]').show();
+                
+                // Show/hide advanced properties (hide for 'none' type)
+                var $advanced = $('.mase-background-config[data-area="' + area + '"] .mase-background-advanced-properties');
+                if (type === 'none') {
+                    $advanced.hide();
+                } else {
+                    $advanced.show();
+                }
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
             });
         },
+        
+        /**
+         * Initialize advanced property controls (Task 26)
+         * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5
+         */
+        initAdvancedProperties: function() {
+            var self = this;
+            
+            // Opacity slider (Requirement 5.1)
+            $('.mase-background-opacity-slider').on('input', function() {
+                var area = $(this).data('area');
+                var value = $(this).val();
+                
+                // Update display value
+                $(this).closest('.mase-slider-control').find('.mase-background-opacity-value').text(value);
+                
+                // Update aria-valuenow and aria-valuetext
+                $(this).attr('aria-valuenow', value);
+                $(this).attr('aria-valuetext', value + '%');
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    self.debouncedLivePreviewUpdate(area);
+                }
+            });
+            
+            // Blend mode selector (Requirement 5.2)
+            $('.mase-background-blend-mode').on('change', function() {
+                var area = $(this).data('area');
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
+            });
+            
+            // Background size selector (Requirement 5.4)
+            $('.mase-background-size').on('change', function() {
+                var area = $(this).data('area');
+                var value = $(this).val();
+                
+                // Show/hide custom size input
+                var $customInput = $(this).closest('.mase-setting-control').find('.mase-custom-size-input');
+                if (value === 'custom') {
+                    $customInput.slideDown(200);
+                } else {
+                    $customInput.slideUp(200);
+                }
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
+            });
+            
+            // Custom size input (Requirement 5.4)
+            $('.mase-background-size-custom').on('input', function() {
+                var area = $(this).data('area');
+                
+                // Trigger live preview update (debounced)
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    self.debouncedLivePreviewUpdate(area);
+                }
+            });
+            
+            // Background repeat selector (Requirement 5.4)
+            $('.mase-background-repeat').on('change', function() {
+                var area = $(this).data('area');
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
+            });
+            
+            // Background attachment selector (Requirement 5.4)
+            $('.mase-background-attachment').on('change', function() {
+                var area = $(this).data('area');
+                
+                // Trigger live preview update
+                if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                    MASE.livePreview.updateBackground(area);
+                }
+            });
+        },
+        
+        /**
+         * Debounced live preview update for continuous controls (sliders, text inputs)
+         * Prevents excessive updates while user is adjusting values
+         */
+        debouncedLivePreviewUpdate: (function() {
+            var timers = {};
+            return function(area) {
+                clearTimeout(timers[area]);
+                timers[area] = setTimeout(function() {
+                    if (MASE.livePreview && MASE.state.livePreviewEnabled) {
+                        MASE.livePreview.updateBackground(area);
+                    }
+                }, 300); // 300ms debounce
+            };
+        })(),
         
         /**
          * Handle file upload with validation
@@ -10040,6 +11323,9 @@
             $preview.hide();
             $uploadZone.show();
             
+            // Trigger accessibility event (Task 45)
+            $(document).trigger('mase:backgroundImageRemoved', [{ area: area }]);
+            
             // Trigger live preview update if enabled
             if (MASE.livePreview && MASE.state.livePreviewEnabled) {
                 MASE.livePreview.updateBackground(area);
@@ -10121,8 +11407,10 @@
         }
         
         // Bind admin menu preview events if live preview is enabled
-        if (MASE.state.livePreviewEnabled) {
+        if (MASE.state.livePreviewEnabled && typeof MASE.bindAdminMenuPreviewEvents === 'function') {
             MASE.bindAdminMenuPreviewEvents();
+        } else if (MASE.state.livePreviewEnabled) {
+            console.log('MASE: bindAdminMenuPreviewEvents not available, live preview already bound via livePreview.bind()');
         }
         
         // Also bind when live preview toggle changes
@@ -10143,3 +11431,193 @@
     
 })(jQuery);
 
+
+/**
+ * Responsive Variations Module (Task 27)
+ * Handles responsive breakpoint tab switching and controls
+ * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5
+ */
+MASE.responsiveVariations = {
+    /**
+     * Initialize responsive variations functionality
+     */
+    init: function() {
+        this.initResponsiveToggles();
+        this.initBreakpointTabs();
+        this.initBreakpointTypeSelectors();
+    },
+    
+    /**
+     * Initialize responsive enable/disable toggles
+     * Requirement 6.1: Add responsive toggle for each area
+     */
+    initResponsiveToggles: function() {
+        $('.mase-responsive-toggle').on('change', function() {
+            var $toggle = $(this);
+            var area = $toggle.data('area');
+            var isEnabled = $toggle.is(':checked');
+            var $responsiveSection = $('.mase-responsive-breakpoints[data-area="' + area + '"]');
+            
+            // Update ARIA attribute
+            $toggle.attr('aria-checked', isEnabled ? 'true' : 'false');
+            
+            // Show/hide responsive breakpoints section with animation
+            if (isEnabled) {
+                $responsiveSection.slideDown(300);
+            } else {
+                $responsiveSection.slideUp(300);
+            }
+            
+            // Mark form as dirty
+            if (typeof MASE.state !== 'undefined') {
+                MASE.state.isDirty = true;
+            }
+        });
+    },
+    
+    /**
+     * Initialize breakpoint tab switching
+     * Requirements 6.2, 6.4: Create breakpoint tabs and allow switching
+     */
+    initBreakpointTabs: function() {
+        $('.mase-breakpoint-tab').on('click', function() {
+            var $tab = $(this);
+            var breakpoint = $tab.data('breakpoint');
+            var area = $tab.data('area');
+            
+            // Update tab states
+            $tab.addClass('active')
+                .attr('aria-selected', 'true')
+                .siblings('.mase-breakpoint-tab')
+                .removeClass('active')
+                .attr('aria-selected', 'false');
+            
+            // Show corresponding panel
+            var $panel = $('#breakpoint-' + breakpoint + '-' + area);
+            $panel.addClass('active')
+                .show()
+                .siblings('.mase-breakpoint-panel')
+                .removeClass('active')
+                .hide();
+            
+            // Announce to screen readers
+            MASE.responsiveVariations.announceBreakpointChange(breakpoint);
+        });
+        
+        // Keyboard navigation for tabs
+        $('.mase-breakpoint-tab').on('keydown', function(e) {
+            var $tab = $(this);
+            var $tabs = $tab.parent().find('.mase-breakpoint-tab');
+            var currentIndex = $tabs.index($tab);
+            var nextIndex;
+            
+            // Arrow key navigation
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextIndex = (currentIndex + 1) % $tabs.length;
+                $tabs.eq(nextIndex).focus().click();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                nextIndex = (currentIndex - 1 + $tabs.length) % $tabs.length;
+                $tabs.eq(nextIndex).focus().click();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                $tabs.first().focus().click();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                $tabs.last().focus().click();
+            }
+        });
+    },
+    
+    /**
+     * Initialize breakpoint-specific background type selectors
+     * Requirement 6.3: Allow different background types per breakpoint
+     */
+    initBreakpointTypeSelectors: function() {
+        $('.mase-responsive-background-type').on('change', function() {
+            var $select = $(this);
+            var type = $select.val();
+            var area = $select.data('area');
+            var breakpoint = $select.data('breakpoint');
+            var $panel = $select.closest('.mase-breakpoint-panel');
+            var $customControls = $panel.find('.mase-responsive-custom-controls');
+            
+            // Show/hide custom controls based on type
+            if (type === 'inherit' || type === 'none') {
+                $customControls.slideUp(300);
+            } else {
+                $customControls.slideDown(300);
+            }
+            
+            // Mark form as dirty
+            if (typeof MASE.state !== 'undefined') {
+                MASE.state.isDirty = true;
+            }
+            
+            // Update live preview if enabled
+            if (typeof MASE.livePreview !== 'undefined' && MASE.livePreview.enabled) {
+                MASE.livePreview.updateBackground(area, breakpoint);
+            }
+        });
+    },
+    
+    /**
+     * Announce breakpoint change to screen readers
+     * Accessibility: WCAG 2.1 AA compliance
+     * 
+     * @param {string} breakpoint - The breakpoint name (desktop, tablet, mobile)
+     */
+    announceBreakpointChange: function(breakpoint) {
+        var message = '';
+        switch (breakpoint) {
+            case 'desktop':
+                message = 'Desktop breakpoint selected. Configure backgrounds for screens 1024 pixels and wider.';
+                break;
+            case 'tablet':
+                message = 'Tablet breakpoint selected. Configure backgrounds for screens 768 to 1023 pixels wide.';
+                break;
+            case 'mobile':
+                message = 'Mobile breakpoint selected. Configure backgrounds for screens less than 768 pixels wide.';
+                break;
+        }
+        
+        // Create or update live region for announcements
+        var $liveRegion = $('#mase-breakpoint-announcement');
+        if ($liveRegion.length === 0) {
+            $liveRegion = $('<div>', {
+                id: 'mase-breakpoint-announcement',
+                'class': 'screen-reader-text',
+                'aria-live': 'polite',
+                'aria-atomic': 'true'
+            }).appendTo('body');
+        }
+        
+        $liveRegion.text(message);
+    },
+    
+    /**
+     * Get current breakpoint configuration
+     * 
+     * @param {string} area - Area identifier
+     * @param {string} breakpoint - Breakpoint name
+     * @return {Object} Breakpoint configuration
+     */
+    getBreakpointConfig: function(area, breakpoint) {
+        var $panel = $('#breakpoint-' + breakpoint + '-' + area);
+        var type = $panel.find('.mase-responsive-background-type').val();
+        
+        return {
+            type: type,
+            area: area,
+            breakpoint: breakpoint
+        };
+    }
+};
+
+// Initialize responsive variations on document ready
+$(document).ready(function() {
+    if (typeof MASE !== 'undefined' && typeof MASE.responsiveVariations !== 'undefined') {
+        MASE.responsiveVariations.init();
+    }
+});

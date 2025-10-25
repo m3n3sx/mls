@@ -76,6 +76,7 @@ spl_autoload_register( 'mase_autoloader' );
  * These classes are loaded before WordPress hooks to ensure proper initialization.
  */
 require_once MASE_PLUGIN_DIR . 'includes/class-mase-migration.php';
+require_once MASE_PLUGIN_DIR . 'includes/class-mase-background-migration.php';
 require_once MASE_PLUGIN_DIR . 'includes/class-mase-mobile-optimizer.php';
 
 /**

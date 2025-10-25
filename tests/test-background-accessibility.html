@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background System Accessibility Test - MASE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f1;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #1e1e1e;
+            border-bottom: 2px solid #2271b1;
+            padding-bottom: 10px;
+        }
+        
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #2271b1;
+        }
+        
+        .test-item h3 {
+            margin-top: 0;
+            color: #2271b1;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .test-result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button {
+            background: #2271b1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #135e96;
+        }
+        
+        button:focus {
+            outline: 2px solid #2271b1;
+            outline-offset: 2px;
+        }
+        
+        .screen-reader-text {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Background System Accessibility Test</h1>
+    <p>Task 45: Add accessibility improvements - Requirements 9.1, 9.2, 9.3, 9.4, 9.5</p>
+    
+    <div class="test-section">
+        <h2>Test 1: ARIA Labels (WCAG 2.1 - 4.1.2 Name, Role, Value - Level A)</h2>
+        <div class="test-item">
+            <h3>Requirement 9.1: Interactive elements have ARIA labels</h3>
+            <button id="test-aria-labels">Run Test</button>
+            <div id="aria-labels-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Keyboard Navigation (WCAG 2.1 - 2.1.1 Keyboard - Level A)</h2>
+        <div class="test-item">
+            <h3>Requirement 9.2: All controls accessible via keyboard</h3>
+            <button id="test-keyboard-nav">Run Test</button>
+            <div id="keyboard-nav-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Focus Indicators (WCAG 2.1 - 2.4.7 Focus Visible - Level AA)</h2>
+        <div class="test-item">
+            <h3>Requirement 9.3: Visible focus indicators on all interactive elements</h3>
+            <button id="test-focus-indicators">Run Test</button>
+            <div id="focus-indicators-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Screen Reader Announcements (WCAG 2.1 - 4.1.3 Status Messages - Level AA)</h2>
+        <div class="test-item">
+            <h3>Requirement 9.4: Dynamic changes announced to screen readers</h3>
+            <button id="test-screen-reader">Run Test</button>
+            <div id="screen-reader-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 5: Role Attributes (WCAG 2.1 - 4.1.2 Name, Role, Value - Level A)</h2>
+        <div class="test-item">
+            <h3>Requirement 9.5: Proper role attributes for custom controls</h3>
+            <button id="test-role-attributes">Run Test</button>
+            <div id="role-attributes-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 6: Color Contrast (WCAG 2.1 - 1.4.3 Contrast Minimum - Level AA)</h2>
+        <div class="test-item">
+            <h3>Minimum 4.5:1 contrast ratio for normal text</h3>
+            <button id="test-color-contrast">Run Test</button>
+            <div id="color-contrast-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 7: Reduced Motion Support (WCAG 2.1 - 2.3.3 Animation from Interactions - Level AAA)</h2>
+        <div class="test-item">
+            <h3>Animations disabled when prefers-reduced-motion is active</h3>
+            <button id="test-reduced-motion">Run Test</button>
+            <div id="reduced-motion-result"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Manual Testing Instructions</h2>
+        <div class="test-item">
+            <h3>Screen Reader Testing</h3>
+            <p>Test with the following screen readers:</p>
+            <ul>
+                <li><strong>NVDA (Windows):</strong> Free, open-source screen reader</li>
+                <li><strong>JAWS (Windows):</strong> Commercial screen reader (most popular)</li>
+                <li><strong>VoiceOver (macOS/iOS):</strong> Built-in screen reader</li>
+            </ul>
+            <p>Verify:</p>
+            <ul>
+                <li>All interactive elements are announced with proper labels</li>
+                <li>Dynamic changes (uploads, removals, selections) are announced</li>
+                <li>Form controls announce their current state and value</li>
+                <li>Navigation landmarks are properly identified</li>
+            </ul>
+        </div>
+        
+        <div class="test-item">
+            <h3>Keyboard Navigation Testing</h3>
+            <p>Test keyboard navigation:</p>
+            <ul>
+                <li><strong>Tab:</strong> Move forward through interactive elements</li>
+                <li><strong>Shift+Tab:</strong> Move backward through interactive elements</li>
+                <li><strong>Enter/Space:</strong> Activate buttons and controls</li>
+                <li><strong>Arrow keys:</strong> Navigate within grids and tabs</li>
+                <li><strong>Home/End:</strong> Jump to first/last item in lists</li>
+            </ul>
+            <p>Verify:</p>
+            <ul>
+                <li>All interactive elements are reachable via keyboard</li>
+                <li>Focus order is logical and predictable</li>
+                <li>No keyboard traps (can always move focus away)</li>
+                <li>Focus indicators are clearly visible</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Test 1: ARIA Labels
+        document.getElementById('test-aria-labels').addEventListener('click', function() {
+            const results = [];
+            let passed = 0;
+            let failed = 0;
+            
+            // Check for ARIA labels on key elements
+            const elementsToCheck = [
+                { selector: '.mase-background-upload-zone', label: 'Upload zones' },
+                { selector: '.mase-position-grid-cell', label: 'Position picker cells' },
+                { selector: '.mase-pattern-item', label: 'Pattern items' },
+                { selector: '.mase-gradient-preset-item', label: 'Gradient presets' },
+                { selector: '.mase-background-type-selector', label: 'Background type selectors' }
+            ];
+            
+            elementsToCheck.forEach(item => {
+                const elements = document.querySelectorAll(item.selector);
+                if (elements.length > 0) {
+                    let hasLabel = true;
+                    elements.forEach(el => {
+                        if (!el.getAttribute('aria-label') && !el.getAttribute('aria-labelledby')) {
+                            hasLabel = false;
+                        }
+                    });
+                    
+                    if (hasLabel) {
+                        results.push(`✓ ${item.label}: All have ARIA labels`);
+                        passed++;
+                    } else {
+                        results.push(`✗ ${item.label}: Missing ARIA labels`);
+                        failed++;
+                    }
+                } else {
+                    results.push(`ℹ ${item.label}: Not found in current page`);
+                }
+            });
+            
+            const resultDiv = document.getElementById('aria-labels-result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${failed === 0 ? 'pass' : 'fail'}">
+                    <strong>Results:</strong> ${passed} passed, ${failed} failed
+                    <ul>${results.map(r => `<li>${r}</li>`).join('')}</ul>
+                </div>
+            `;
+        });
+        
+        // Test 2: Keyboard Navigation
+        document.getElementById('test-keyboard-nav').addEventListener('click', function() {
+            const results = [];
+            let passed = 0;
+            let failed = 0;
+            
+            // Check for tabindex on interactive elements
+            const interactiveElements = [
+                { selector: '.mase-background-upload-zone', label: 'Upload zones' },
+                { selector: '.mase-position-grid-cell', label: 'Position picker cells' },
+                { selector: '.mase-pattern-item', label: 'Pattern items' },
+                { selector: '.mase-gradient-preset-item', label: 'Gradient presets' }
+            ];
+            
+            interactiveElements.forEach(item => {
+                const elements = document.querySelectorAll(item.selector);
+                if (elements.length > 0) {
+                    let isAccessible = true;
+                    elements.forEach(el => {
+                        const tabindex = el.getAttribute('tabindex');
+                        if (tabindex === null || parseInt(tabindex) < 0) {
+                            isAccessible = false;
+                        }
+                    });
+                    
+                    if (isAccessible) {
+                        results.push(`✓ ${item.label}: Keyboard accessible`);
+                        passed++;
+                    } else {
+                        results.push(`✗ ${item.label}: Not keyboard accessible`);
+                        failed++;
+                    }
+                } else {
+                    results.push(`ℹ ${item.label}: Not found in current page`);
+                }
+            });
+            
+            const resultDiv = document.getElementById('keyboard-nav-result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${failed === 0 ? 'pass' : 'fail'}">
+                    <strong>Results:</strong> ${passed} passed, ${failed} failed
+                    <ul>${results.map(r => `<li>${r}</li>`).join('')}</ul>
+                    <p><em>Note: Manual testing required to verify full keyboard navigation functionality.</em></p>
+                </div>
+            `;
+        });
+        
+        // Test 3: Focus Indicators
+        document.getElementById('test-focus-indicators').addEventListener('click', function() {
+            const resultDiv = document.getElementById('focus-indicators-result');
+            resultDiv.innerHTML = `
+                <div class="test-result info">
+                    <strong>Manual Test Required</strong>
+                    <p>Use the Tab key to navigate through interactive elements and verify:</p>
+                    <ul>
+                        <li>Focus indicators are clearly visible (outline or box-shadow)</li>
+                        <li>Focus indicators have sufficient contrast (minimum 3:1)</li>
+                        <li>Focus indicators are not obscured by other elements</li>
+                        <li>Focus order is logical and predictable</li>
+                    </ul>
+                    <p><strong>CSS Classes to Check:</strong></p>
+                    <ul>
+                        <li><code>.mase-has-focus</code></li>
+                        <li><code>:focus</code> pseudo-class styles</li>
+                        <li><code>:focus-visible</code> pseudo-class styles</li>
+                    </ul>
+                </div>
+            `;
+        });
+        
+        // Test 4: Screen Reader Announcements
+        document.getElementById('test-screen-reader').addEventListener('click', function() {
+            const announcer = document.getElementById('mase-sr-announcer');
+            const results = [];
+            
+            if (announcer) {
+                results.push('✓ Screen reader announcement region exists');
+                results.push(`✓ Role: ${announcer.getAttribute('role')}`);
+                results.push(`✓ aria-live: ${announcer.getAttribute('aria-live')}`);
+                results.push(`✓ aria-atomic: ${announcer.getAttribute('aria-atomic')}`);
+            } else {
+                results.push('✗ Screen reader announcement region not found');
+            }
+            
+            const resultDiv = document.getElementById('screen-reader-result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${announcer ? 'pass' : 'fail'}">
+                    <strong>Results:</strong>
+                    <ul>${results.map(r => `<li>${r}</li>`).join('')}</ul>
+                    <p><em>Note: Manual testing with screen readers required to verify announcements.</em></p>
+                </div>
+            `;
+        });
+        
+        // Test 5: Role Attributes
+        document.getElementById('test-role-attributes').addEventListener('click', function() {
+            const results = [];
+            let passed = 0;
+            let failed = 0;
+            
+            const roleChecks = [
+                { selector: '.mase-background-upload-zone', expectedRole: 'button', label: 'Upload zones' },
+                { selector: '.mase-upload-error', expectedRole: 'alert', label: 'Error messages' },
+                { selector: '.mase-gradient-preview', expectedRole: 'img', label: 'Gradient previews' },
+                { selector: '.mase-breakpoint-tab', expectedRole: 'tab', label: 'Breakpoint tabs' },
+                { selector: '.mase-background-enable-toggle', expectedRole: 'switch', label: 'Enable toggles' }
+            ];
+            
+            roleChecks.forEach(item => {
+                const elements = document.querySelectorAll(item.selector);
+                if (elements.length > 0) {
+                    let hasCorrectRole = true;
+                    elements.forEach(el => {
+                        const role = el.getAttribute('role');
+                        if (role !== item.expectedRole) {
+                            hasCorrectRole = false;
+                        }
+                    });
+                    
+                    if (hasCorrectRole) {
+                        results.push(`✓ ${item.label}: Correct role="${item.expectedRole}"`);
+                        passed++;
+                    } else {
+                        results.push(`✗ ${item.label}: Missing or incorrect role`);
+                        failed++;
+                    }
+                } else {
+                    results.push(`ℹ ${item.label}: Not found in current page`);
+                }
+            });
+            
+            const resultDiv = document.getElementById('role-attributes-result');
+            resultDiv.innerHTML = `
+                <div class="test-result ${failed === 0 ? 'pass' : 'fail'}">
+                    <strong>Results:</strong> ${passed} passed, ${failed} failed
+                    <ul>${results.map(r => `<li>${r}</li>`).join('')}</ul>
+                </div>
+            `;
+        });
+        
+        // Test 6: Color Contrast
+        document.getElementById('test-color-contrast').addEventListener('click', function() {
+            const resultDiv = document.getElementById('color-contrast-result');
+            resultDiv.innerHTML = `
+                <div class="test-result info">
+                    <strong>Manual Test Required</strong>
+                    <p>Use a color contrast checker tool to verify:</p>
+                    <ul>
+                        <li><strong>Normal text:</strong> Minimum 4.5:1 contrast ratio</li>
+                        <li><strong>Large text (18pt+):</strong> Minimum 3:1 contrast ratio</li>
+                        <li><strong>UI components:</strong> Minimum 3:1 contrast ratio</li>
+                    </ul>
+                    <p><strong>Recommended Tools:</strong></p>
+                    <ul>
+                        <li><a href="https://webaim.org/resources/contrastchecker/" target="_blank">WebAIM Contrast Checker</a></li>
+                        <li><a href="https://www.tpgi.com/color-contrast-checker/" target="_blank">TPGi Color Contrast Analyzer</a></li>
+                        <li>Browser DevTools (Chrome, Firefox) - Accessibility panel</li>
+                    </ul>
+                </div>
+            `;
+        });
+        
+        // Test 7: Reduced Motion
+        document.getElementById('test-reduced-motion').addEventListener('click', function() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const results = [];
+            
+            results.push(`Current setting: ${prefersReducedMotion ? 'Reduced motion enabled' : 'Reduced motion disabled'}`);
+            
+            if (prefersReducedMotion) {
+                results.push('✓ System prefers reduced motion');
+                results.push('ℹ Verify that animations are disabled in the UI');
+            } else {
+                results.push('ℹ System does not prefer reduced motion');
+                results.push('ℹ Enable "Reduce motion" in system settings to test');
+            }
+            
+            const resultDiv = document.getElementById('reduced-motion-result');
+            resultDiv.innerHTML = `
+                <div class="test-result info">
+                    <strong>Results:</strong>
+                    <ul>${results.map(r => `<li>${r}</li>`).join('')}</ul>
+                    <p><strong>How to enable reduced motion:</strong></p>
+                    <ul>
+                        <li><strong>Windows:</strong> Settings → Ease of Access → Display → Show animations</li>
+                        <li><strong>macOS:</strong> System Preferences → Accessibility → Display → Reduce motion</li>
+                        <li><strong>Linux:</strong> Varies by desktop environment</li>
+                    </ul>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

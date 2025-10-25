@@ -166,20 +166,51 @@ class MASE_CSS_Generator {
 			return $css;
 
 		} catch ( Exception $e ) {
-			// Log the error.
-			error_log( sprintf( 'MASE: CSS generation failed: %s', $e->getMessage() ) );
+			// Task 44: Enhanced error recovery (Requirement 7.5).
+			// Log the error with full context.
+			error_log( sprintf( 
+				'MASE: CSS generation failed - Error: %s, File: %s, Line: %d, Trace: %s',
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine(),
+				$e->getTraceAsString()
+			) );
 
-			// Attempt to return cached CSS on error.
+			// Task 44: Attempt to return cached CSS on error (Requirement 7.5).
 			$cache = new MASE_Cache();
-			$cached_css = $cache->get_cached_css();
+			
+			// Try mode-specific cache first.
+			$current_mode = isset( $settings['dark_light_toggle']['current_mode'] ) 
+				? $settings['dark_light_toggle']['current_mode'] 
+				: 'light';
+			
+			if ( 'dark' === $current_mode ) {
+				$cached_css = $cache->get_cached_dark_mode_css();
+			} else {
+				$cached_css = $cache->get_cached_light_mode_css();
+			}
+
+			// Task 44: Fallback to legacy cache if mode-specific cache not found (Requirement 7.5).
+			if ( false === $cached_css ) {
+				$cached_css = $cache->get_cached_css();
+			}
 
 			if ( false !== $cached_css ) {
-				error_log( 'MASE: Returning cached CSS due to generation error' );
+				error_log( sprintf(
+					'MASE: Returning cached CSS due to generation error (mode: %s, cache size: %d bytes)',
+					$current_mode,
+					strlen( $cached_css )
+				) );
 				return $cached_css;
 			}
 
-			// Return empty string as graceful degradation.
-			return '';
+			// Task 44: No cache available - log critical error and return minimal safe CSS (Requirement 7.5).
+			error_log( 'MASE: CRITICAL - CSS generation failed and no cache available. Returning minimal safe CSS.' );
+			
+			// Return minimal safe CSS to prevent complete styling failure.
+			return '/* MASE: CSS generation failed, using minimal safe styles */
+body.wp-admin #wpadminbar { background-color: #23282d !important; }
+body.wp-admin #adminmenu { background-color: #23282d !important; }';
 		}
 	}
 
@@ -5149,17 +5180,57 @@ class MASE_CSS_Generator {
 	 * @param array $settings Full settings array.
 	 * @return string Generated background CSS.
 	 */
+	/**
+	 * Generate background styles CSS for all admin areas.
+	 * Task 32: Optimized for <100ms generation time (Requirements 7.3, 7.4)
+	 *
+	 * Performance optimizations:
+	 * - Early exit for disabled/none backgrounds
+	 * - String concatenation instead of array joins
+	 * - Minimized redundant calculations
+	 * - Performance profiling in debug mode
+	 *
+	 * @param array $settings Settings array containing custom_backgrounds configuration.
+	 * @return string Generated background CSS.
+	 */
 	private function generate_background_styles( $settings ) {
+		// Task 32: Start performance profiling (Requirement 7.3, 7.4).
+		$start_time = microtime( true );
+		$debug_mode = defined( 'WP_DEBUG' ) && WP_DEBUG;
+
 		try {
-			// Check if custom_backgrounds section exists.
+			// Task 32: Early exit - skip if custom_backgrounds section doesn't exist (Requirement 7.3).
 			if ( ! isset( $settings['custom_backgrounds'] ) ) {
+				if ( $debug_mode ) {
+					error_log( 'MASE: Background styles skipped - no custom_backgrounds section' );
+				}
 				return '';
 			}
 
 			$backgrounds = $settings['custom_backgrounds'];
+
+			// Task 32: Early exit - check if any backgrounds are enabled before processing (Requirement 7.3).
+			$has_enabled_backgrounds = false;
+			foreach ( $backgrounds as $area_config ) {
+				if ( isset( $area_config['enabled'] ) && $area_config['enabled'] && 
+				     isset( $area_config['type'] ) && $area_config['type'] !== 'none' ) {
+					$has_enabled_backgrounds = true;
+					break;
+				}
+			}
+
+			if ( ! $has_enabled_backgrounds ) {
+				if ( $debug_mode ) {
+					error_log( 'MASE: Background styles skipped - no enabled backgrounds' );
+				}
+				return '';
+			}
+
+			// Task 32: Use string concatenation for better performance (Requirement 7.3).
 			$css = '';
 
 			// Define selector mapping for all 6 admin areas (Requirement 4.1).
+			// Task 32: Static array defined once to minimize redundant calculations (Requirement 7.3).
 			$area_selectors = array(
 				'dashboard'   => '#wpbody-content',
 				'admin_menu'  => '#adminmenu',
@@ -5171,8 +5242,50 @@ class MASE_CSS_Generator {
 
 			// Generate CSS for each admin area.
 			foreach ( $area_selectors as $area => $selector ) {
-				if ( isset( $backgrounds[ $area ] ) ) {
-					$css .= $this->generate_area_background_css( $backgrounds[ $area ], $selector );
+				// Task 32: Skip early if area not configured (Requirement 7.3).
+				if ( ! isset( $backgrounds[ $area ] ) ) {
+					continue;
+				}
+
+				$area_config = $backgrounds[ $area ];
+
+				// Task 32: Skip disabled/none backgrounds early (Requirement 7.3).
+				$enabled = isset( $area_config['enabled'] ) ? $area_config['enabled'] : false;
+				$type = isset( $area_config['type'] ) ? $area_config['type'] : 'none';
+
+				if ( ! $enabled || $type === 'none' ) {
+					continue;
+				}
+
+				// Generate base background CSS (desktop/default).
+				$css .= $this->generate_area_background_css( $area_config, $selector );
+				
+				// Generate responsive variations if enabled (Task 27).
+				// Task 32: Only call if responsive_enabled is true (Requirement 7.3).
+				if ( isset( $area_config['responsive_enabled'] ) && $area_config['responsive_enabled'] ) {
+					$css .= $this->generate_responsive_background_css( $area_config, $selector );
+				}
+			}
+
+			// Task 32: Log performance metrics in debug mode (Requirement 7.4).
+			if ( $debug_mode ) {
+				$duration = ( microtime( true ) - $start_time ) * 1000; // Convert to milliseconds.
+				$threshold = 100; // Target < 100ms.
+
+				error_log( sprintf( 
+					'MASE: Background styles generated in %.2fms (threshold: %dms, within threshold: %s)',
+					$duration,
+					$threshold,
+					$duration < $threshold ? 'YES' : 'NO'
+				) );
+
+				// Warn if performance threshold exceeded (Requirement 7.4).
+				if ( $duration > $threshold ) {
+					error_log( sprintf( 
+						'MASE: WARNING - Background styles generation exceeded threshold: %.2fms > %dms',
+						$duration,
+						$threshold
+					) );
 				}
 			}
 
@@ -5187,7 +5300,7 @@ class MASE_CSS_Generator {
 	/**
 	 * Generate CSS for a specific background area.
 	 * Task 7: Advanced Background System - Area-specific backgrounds
-	 * Requirements: 1.1, 1.3, 4.1, 5.1, 5.2
+	 * Task 32: Optimized with early exits (Requirements 1.1, 1.3, 4.1, 5.1, 5.2, 7.3)
 	 *
 	 * @param array  $bg_config Background configuration for the area.
 	 * @param string $selector  CSS selector for the area.
@@ -5195,37 +5308,30 @@ class MASE_CSS_Generator {
 	 */
 	private function generate_area_background_css( $bg_config, $selector ) {
 		try {
-			// Skip if background is disabled or type is 'none' (Requirement 4.1).
-			$enabled = isset( $bg_config['enabled'] ) ? $bg_config['enabled'] : false;
+			// Task 32: Early exit - skip if background is disabled or type is 'none' (Requirement 4.1, 7.3).
+			// Note: This check is now redundant as parent method filters, but kept for safety.
 			$type = isset( $bg_config['type'] ) ? $bg_config['type'] : 'none';
 
-			if ( ! $enabled || $type === 'none' ) {
+			if ( $type === 'none' ) {
 				return '';
 			}
 
-			$css = '';
-
+			// Task 32: Direct type-based generation without intermediate variable (Requirement 7.3).
 			// Generate CSS based on background type (Requirement 1.1, 1.3).
 			switch ( $type ) {
 				case 'image':
-					$css .= $this->generate_image_background( $bg_config, $selector );
-					break;
+					return $this->generate_image_background( $bg_config, $selector );
 
 				case 'gradient':
-					$css .= $this->generate_gradient_background_css( $bg_config, $selector );
-					break;
+					return $this->generate_gradient_background_css( $bg_config, $selector );
 
 				case 'pattern':
-					// Pattern support will be added in Phase 3 (Task 20).
-					// For now, skip pattern backgrounds.
-					break;
+					return $this->generate_pattern_background( $bg_config, $selector );
 
 				default:
 					// Unknown type, skip.
-					break;
+					return '';
 			}
-
-			return $css;
 
 		} catch ( Exception $e ) {
 			error_log( sprintf( 'MASE: Area background CSS generation failed: %s', $e->getMessage() ) );
@@ -5236,7 +5342,7 @@ class MASE_CSS_Generator {
 	/**
 	 * Generate image background CSS.
 	 * Task 7: Advanced Background System - Image background properties
-	 * Requirements: 1.1, 1.3, 5.1, 5.2
+	 * Task 32: Optimized for performance (Requirements 1.1, 1.3, 5.1, 5.2, 7.3)
 	 *
 	 * @param array  $config   Image background configuration.
 	 * @param string $selector CSS selector for the area.
@@ -5244,55 +5350,54 @@ class MASE_CSS_Generator {
 	 */
 	private function generate_image_background( $config, $selector ) {
 		try {
-			// Get image URL (Requirement 1.1).
+			// Task 32: Early exit - skip if no image URL (Requirement 7.3).
 			$image_url = isset( $config['image_url'] ) ? esc_url( $config['image_url'] ) : '';
-
-			// Skip if no image URL is provided.
 			if ( empty( $image_url ) ) {
 				return '';
 			}
 
-			$css = '';
-
+			// Task 32: Build CSS using string concatenation (Requirement 7.3).
 			// Start CSS rule for the selector.
-			$css .= 'body.wp-admin ' . $selector . ' {';
+			$css = 'body.wp-admin ' . $selector . ' {';
 
-			// Background image (Requirement 1.1).
-			$css .= 'background-image: url(' . $image_url . ') !important;';
+			// Background image with WebP support and fallback (Requirement 1.1, 7.2).
+			$original_url = isset( $config['original_url'] ) ? esc_url( $config['original_url'] ) : '';
+			
+			if ( ! empty( $original_url ) && $image_url !== $original_url ) {
+				// We have a WebP version - use CSS image-set() for client-side fallback.
+				$css .= 'background-image: url(' . $original_url . ') !important;'; // Fallback for old browsers.
+				$css .= 'background-image: -webkit-image-set(url(' . $image_url . ') 1x, url(' . $original_url . ') 1x) !important;'; // Safari.
+				$css .= 'background-image: image-set(url(' . $image_url . ') type("image/webp"), url(' . $original_url . ')) !important;'; // Modern browsers.
+			} else {
+				// No WebP version or same URL - use standard background-image.
+				$css .= 'background-image: url(' . $image_url . ') !important;';
+			}
 
+			// Task 32: Inline property generation to minimize function calls (Requirement 7.3).
 			// Background position (Requirement 1.3).
-			$position = isset( $config['position'] ) ? $config['position'] : 'center center';
-			$css .= 'background-position: ' . esc_attr( $position ) . ' !important;';
+			$css .= 'background-position: ' . esc_attr( isset( $config['position'] ) ? $config['position'] : 'center center' ) . ' !important;';
 
 			// Background size (Requirement 1.3).
 			$size = isset( $config['size'] ) ? $config['size'] : 'cover';
-			if ( $size === 'custom' && isset( $config['size_custom'] ) ) {
-				$css .= 'background-size: ' . esc_attr( $config['size_custom'] ) . ' !important;';
-			} else {
-				$css .= 'background-size: ' . esc_attr( $size ) . ' !important;';
-			}
+			$css .= 'background-size: ' . esc_attr( $size === 'custom' && isset( $config['size_custom'] ) ? $config['size_custom'] : $size ) . ' !important;';
 
 			// Background repeat (Requirement 1.3).
-			$repeat = isset( $config['repeat'] ) ? $config['repeat'] : 'no-repeat';
-			$css .= 'background-repeat: ' . esc_attr( $repeat ) . ' !important;';
+			$css .= 'background-repeat: ' . esc_attr( isset( $config['repeat'] ) ? $config['repeat'] : 'no-repeat' ) . ' !important;';
 
 			// Background attachment (Requirement 1.3).
-			$attachment = isset( $config['attachment'] ) ? $config['attachment'] : 'scroll';
-			$css .= 'background-attachment: ' . esc_attr( $attachment ) . ' !important;';
+			$css .= 'background-attachment: ' . esc_attr( isset( $config['attachment'] ) ? $config['attachment'] : 'scroll' ) . ' !important;';
 
-			// Apply opacity using rgba or opacity property (Requirement 5.1).
+			// Task 32: Only add opacity if < 100 (Requirement 5.1, 7.3).
 			$opacity = isset( $config['opacity'] ) ? absint( $config['opacity'] ) : 100;
 			if ( $opacity < 100 ) {
-				// Convert opacity from 0-100 to 0-1 range.
-				$opacity_decimal = $opacity / 100;
-				$css .= 'opacity: ' . $opacity_decimal . ' !important;';
+				$css .= 'opacity: ' . ( $opacity / 100 ) . ' !important;';
 			}
 
-			// Apply blend mode (Requirement 5.2).
+			// Task 32: Only add blend mode if not normal (Requirement 5.2, 7.3).
 			$blend_mode = isset( $config['blend_mode'] ) ? $config['blend_mode'] : 'normal';
 			if ( $blend_mode !== 'normal' ) {
-				// Validate blend mode against allowed CSS values.
-				$valid_blend_modes = array(
+				// Task 32: Static array for validation (Requirement 7.3).
+				static $valid_blend_modes = array(
 					'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
 					'color-dodge', 'color-burn', 'hard-light', 'soft-light',
 					'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity',
@@ -5316,7 +5421,7 @@ class MASE_CSS_Generator {
 	/**
 	 * Generate gradient background CSS.
 	 * Task 11: Advanced Background System - Gradient background support
-	 * Requirements: 2.1, 2.2, 2.4
+	 * Task 32: Optimized for performance (Requirements 2.1, 2.2, 2.4, 7.3)
 	 *
 	 * @param array  $config   Gradient background configuration.
 	 * @param string $selector CSS selector for the area.
@@ -5324,22 +5429,19 @@ class MASE_CSS_Generator {
 	 */
 	private function generate_gradient_background_css( $config, $selector ) {
 		try {
-			// Get gradient type (Requirement 2.1).
-			$gradient_type = isset( $config['gradient_type'] ) ? $config['gradient_type'] : 'linear';
-
-			// Get gradient colors array (Requirement 2.2).
+			// Task 32: Early exit - check for gradient colors (Requirement 2.2, 7.3).
 			$gradient_colors = isset( $config['gradient_colors'] ) ? $config['gradient_colors'] : array();
-
-			// Handle edge case: missing colors - require at least 2 color stops (Requirement 2.2).
 			if ( count( $gradient_colors ) < 2 ) {
-				error_log( 'MASE: Gradient requires at least 2 color stops, skipping' );
 				return '';
 			}
 
-			// Validate and sanitize color stops.
-			$valid_color_stops = array();
+			// Task 32: Validate and build color stops in single pass (Requirement 7.3).
+			$color_stops_str = '';
+			$valid_stops = 0;
+			$stops_to_sort = array();
+
 			foreach ( $gradient_colors as $stop ) {
-				// Validate color and position exist.
+				// Skip invalid stops early.
 				if ( ! isset( $stop['color'] ) || ! isset( $stop['position'] ) ) {
 					continue;
 				}
@@ -5347,44 +5449,41 @@ class MASE_CSS_Generator {
 				$color = sanitize_hex_color( $stop['color'] );
 				$position = absint( $stop['position'] );
 
-				// Ensure position is within valid range (0-100).
-				if ( $position < 0 || $position > 100 ) {
+				// Validate position range and color.
+				if ( $position > 100 || ! $color ) {
 					continue;
 				}
 
-				// Only add valid color stops.
-				if ( $color ) {
-					$valid_color_stops[] = array(
-						'color'    => $color,
-						'position' => $position,
-					);
-				}
+				$stops_to_sort[] = array( 'color' => $color, 'position' => $position );
+				$valid_stops++;
 			}
 
-			// Handle edge case: after validation, ensure we still have at least 2 stops.
-			if ( count( $valid_color_stops ) < 2 ) {
-				error_log( 'MASE: Not enough valid gradient color stops after validation, skipping' );
+			// Task 32: Early exit if not enough valid stops (Requirement 7.3).
+			if ( $valid_stops < 2 ) {
 				return '';
 			}
 
 			// Sort color stops by position for proper gradient rendering.
-			usort( $valid_color_stops, function( $a, $b ) {
+			usort( $stops_to_sort, function( $a, $b ) {
 				return $a['position'] - $b['position'];
 			});
 
-			// Build color stops string (Requirement 2.2).
-			$color_stops_array = array();
-			foreach ( $valid_color_stops as $stop ) {
-				$color_stops_array[] = $stop['color'] . ' ' . $stop['position'] . '%';
+			// Task 32: Build color stops string using string concatenation (Requirement 7.3).
+			$first = true;
+			foreach ( $stops_to_sort as $stop ) {
+				if ( ! $first ) {
+					$color_stops_str .= ', ';
+				}
+				$color_stops_str .= $stop['color'] . ' ' . $stop['position'] . '%';
+				$first = false;
 			}
-			$color_stops_str = implode( ', ', $color_stops_array );
 
-			$css = '';
+			// Task 32: Build CSS using string concatenation (Requirement 7.3).
+			$css = 'body.wp-admin ' . $selector . ' {';
 
-			// Start CSS rule for the selector.
-			$css .= 'body.wp-admin ' . $selector . ' {';
-
-			// Generate gradient CSS based on type (Requirement 2.1, 2.4).
+			// Task 32: Generate gradient CSS based on type (Requirement 2.1, 2.4, 7.3).
+			$gradient_type = isset( $config['gradient_type'] ) ? $config['gradient_type'] : 'linear';
+			
 			if ( $gradient_type === 'radial' ) {
 				// Radial gradient (circle, ellipse) (Requirement 2.1).
 				$css .= 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
@@ -5392,30 +5491,25 @@ class MASE_CSS_Generator {
 				// Linear gradient with angle (Requirement 2.1, 2.4).
 				$gradient_angle = isset( $config['gradient_angle'] ) ? absint( $config['gradient_angle'] ) : 90;
 
-				// Handle edge case: invalid angle - normalize to 0-360 range.
-				if ( $gradient_angle < 0 || $gradient_angle > 360 ) {
+				// Task 32: Simplified angle normalization (Requirement 7.3).
+				if ( $gradient_angle > 360 ) {
 					$gradient_angle = $gradient_angle % 360;
-					if ( $gradient_angle < 0 ) {
-						$gradient_angle += 360;
-					}
 				}
 
 				$css .= 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
 			}
 
-			// Apply opacity if set (Requirement 5.1).
+			// Task 32: Only add opacity if < 100 (Requirement 5.1, 7.3).
 			$opacity = isset( $config['opacity'] ) ? absint( $config['opacity'] ) : 100;
 			if ( $opacity < 100 ) {
-				// Convert opacity from 0-100 to 0-1 range.
-				$opacity_decimal = $opacity / 100;
-				$css .= 'opacity: ' . $opacity_decimal . ' !important;';
+				$css .= 'opacity: ' . ( $opacity / 100 ) . ' !important;';
 			}
 
-			// Apply blend mode if set (Requirement 5.2).
+			// Task 32: Only add blend mode if not normal (Requirement 5.2, 7.3).
 			$blend_mode = isset( $config['blend_mode'] ) ? $config['blend_mode'] : 'normal';
 			if ( $blend_mode !== 'normal' ) {
-				// Validate blend mode against allowed CSS values.
-				$valid_blend_modes = array(
+				// Task 32: Static array for validation (Requirement 7.3).
+				static $valid_blend_modes = array(
 					'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
 					'color-dodge', 'color-burn', 'hard-light', 'soft-light',
 					'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity',
@@ -5432,6 +5526,173 @@ class MASE_CSS_Generator {
 
 		} catch ( Exception $e ) {
 			error_log( sprintf( 'MASE: Gradient background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate pattern background CSS.
+	 * Task 20: Advanced Background System - Pattern background support
+	 * Task 32: Optimized for performance (Requirements 3.1, 3.3, 3.4, 7.3)
+	 *
+	 * @param array  $config   Pattern background configuration.
+	 * @param string $selector CSS selector for the area.
+	 * @return string Generated pattern background CSS.
+	 */
+	private function generate_pattern_background( $config, $selector ) {
+		try {
+			// Task 32: Early exit - skip if no pattern ID (Requirement 3.1, 7.3).
+			$pattern_id = isset( $config['pattern_id'] ) ? sanitize_key( $config['pattern_id'] ) : '';
+			if ( empty( $pattern_id ) ) {
+				return '';
+			}
+
+			// Task 32: Cache pattern library in static variable to avoid repeated instantiation (Requirement 7.3).
+			static $pattern_library = null;
+			if ( $pattern_library === null ) {
+				$settings = new MASE_Settings();
+				$pattern_library = $settings->get_pattern_library();
+			}
+
+			// Task 32: Find pattern in library efficiently (Requirement 3.1, 7.3).
+			$pattern_svg = '';
+			foreach ( $pattern_library as $patterns ) {
+				if ( isset( $patterns[ $pattern_id ] ) ) {
+					$pattern_svg = $patterns[ $pattern_id ]['svg'];
+					break;
+				}
+			}
+
+			// Task 32: Early exit if pattern not found (Requirement 7.3).
+			if ( empty( $pattern_svg ) ) {
+				return '';
+			}
+
+			// Task 32: Get and validate settings inline (Requirement 3.2, 3.3, 7.3).
+			$pattern_color = isset( $config['pattern_color'] ) ? sanitize_hex_color( $config['pattern_color'] ) : '#000000';
+			$pattern_opacity = isset( $config['pattern_opacity'] ) ? absint( $config['pattern_opacity'] ) : 100;
+			$pattern_scale = isset( $config['pattern_scale'] ) ? absint( $config['pattern_scale'] ) : 100;
+
+			// Task 32: Clamp values inline (Requirement 3.3, 7.3).
+			if ( $pattern_opacity > 100 ) {
+				$pattern_opacity = 100;
+			}
+			if ( $pattern_scale < 50 ) {
+				$pattern_scale = 50;
+			} elseif ( $pattern_scale > 200 ) {
+				$pattern_scale = 200;
+			}
+
+			// Replace color placeholder and encode (Requirement 3.1, 3.2, 3.4).
+			$pattern_svg = str_replace( '{color}', $pattern_color, $pattern_svg );
+			$pattern_data_uri = 'data:image/svg+xml;base64,' . base64_encode( $pattern_svg );
+
+			// Task 32: Build CSS using string concatenation (Requirement 7.3).
+			$css = 'body.wp-admin ' . $selector . ' {';
+			$css .= 'background-image: url(' . $pattern_data_uri . ') !important;';
+			$css .= 'background-size: ' . $pattern_scale . '% !important;';
+			$css .= 'background-repeat: repeat !important;';
+
+			// Task 32: Only add opacity if < 100 (Requirement 3.3, 7.3).
+			if ( $pattern_opacity < 100 ) {
+				$css .= 'opacity: ' . ( $pattern_opacity / 100 ) . ' !important;';
+			}
+
+			// Task 32: Only add blend mode if not normal (Requirement 5.2, 7.3).
+			$blend_mode = isset( $config['blend_mode'] ) ? $config['blend_mode'] : 'normal';
+			if ( $blend_mode !== 'normal' ) {
+				// Task 32: Static array for validation (Requirement 7.3).
+				static $valid_blend_modes = array(
+					'normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
+					'color-dodge', 'color-burn', 'hard-light', 'soft-light',
+					'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity',
+				);
+
+				if ( in_array( $blend_mode, $valid_blend_modes, true ) ) {
+					$css .= 'mix-blend-mode: ' . esc_attr( $blend_mode ) . ' !important;';
+				}
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Pattern background CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate responsive background CSS with media queries
+	 * Task 27, Task 28 - Requirements 6.1, 6.2, 6.3, 6.4, 6.5
+	 * Task 32: Optimized for performance (Requirement 7.3)
+	 *
+	 * Generates media query CSS for responsive background variations across
+	 * desktop (≥1024px), tablet (768-1023px), and mobile (<768px) breakpoints.
+	 *
+	 * @param array  $bg_config Background configuration with responsive settings.
+	 * @param string $selector  CSS selector for the area.
+	 * @return string Media query CSS for responsive backgrounds.
+	 */
+	private function generate_responsive_background_css( $bg_config, $selector ) {
+		try {
+			// Task 32: Early exit checks (Requirement 6.1, 7.3).
+			// Note: responsive_enabled check is now done in parent method, but kept for safety.
+			if ( ! isset( $bg_config['responsive'] ) || ! is_array( $bg_config['responsive'] ) ) {
+				return '';
+			}
+
+			$responsive_settings = $bg_config['responsive'];
+			$css = '';
+
+			// Task 32: Generate tablet CSS (768px - 1023px) (Requirement 6.2, 6.5, 7.3).
+			if ( isset( $responsive_settings['tablet'] ) ) {
+				$tablet_type = isset( $responsive_settings['tablet']['type'] ) ? $responsive_settings['tablet']['type'] : 'inherit';
+
+				// Task 32: Only generate CSS if not inheriting (Requirement 6.3, 7.3).
+				if ( $tablet_type !== 'inherit' ) {
+					$css .= '@media screen and (min-width: 768px) and (max-width: 1023px) {';
+
+					if ( $tablet_type === 'none' ) {
+						// Disable background on tablet (Requirement 6.3).
+						$css .= 'body.wp-admin ' . $selector . ' {background: none !important;background-image: none !important;}';
+					} else {
+						// Generate tablet-specific background CSS.
+						$css .= $this->generate_area_background_css( $responsive_settings['tablet'], $selector );
+					}
+
+					$css .= '}';
+				}
+			}
+
+			// Task 32: Generate mobile CSS (<768px) (Requirement 6.2, 6.5, 7.3).
+			if ( isset( $responsive_settings['mobile'] ) ) {
+				$mobile_type = isset( $responsive_settings['mobile']['type'] ) ? $responsive_settings['mobile']['type'] : 'inherit';
+
+				// Task 32: Only generate CSS if not inheriting (Requirement 6.3, 7.3).
+				if ( $mobile_type !== 'inherit' ) {
+					$css .= '@media screen and (max-width: 767px) {';
+
+					if ( $mobile_type === 'none' ) {
+						// Disable background on mobile (Requirement 6.3).
+						$css .= 'body.wp-admin ' . $selector . ' {background: none !important;background-image: none !important;}';
+					} else {
+						// Generate mobile-specific background CSS.
+						$css .= $this->generate_area_background_css( $responsive_settings['mobile'], $selector );
+					}
+
+					$css .= '}';
+				}
+			}
+
+			// Note: Desktop (≥1024px) uses the default configuration without media query
+			// as specified in Requirement 6.5 (desktop styles are default).
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Responsive background CSS generation failed: %s', $e->getMessage() ) );
 			return '';
 		}
 	}

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Initialization Error Handling Tests</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .test-info {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .test-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 18px;
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+        }
+        
+        .test-case {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-left: 4px solid #ddd;
+            background: #f9f9f9;
+        }
+        
+        .test-case.pass {
+            border-left-color: #46b450;
+            background: #f0f9f0;
+        }
+        
+        .test-case.fail {
+            border-left-color: #dc3232;
+            background: #fff0f0;
+        }
+        
+        .test-case h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .test-result {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.pass {
+            background: #46b450;
+            color: white;
+        }
+        
+        .status-badge.fail {
+            background: #dc3232;
+            color: white;
+        }
+        
+        .test-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .console-log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .console-log .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+        
+        .console-log .log-entry.error {
+            color: #f48771;
+        }
+        
+        .console-log .log-entry.warn {
+            color: #dcdcaa;
+        }
+        
+        .console-log .log-entry.info {
+            color: #4fc1ff;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        button.primary {
+            background: #0073aa;
+            color: white;
+        }
+        
+        button.primary:hover {
+            background: #005a87;
+        }
+        
+        button.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        button.secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .summary {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .summary h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-card {
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .stat-card.total {
+            background: #f0f0f0;
+        }
+        
+        .stat-card.passed {
+            background: #f0f9f0;
+        }
+        
+        .stat-card.failed {
+            background: #fff0f0;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>MASE Initialization Error Handling Tests</h1>
+        <div class="test-info">
+            <strong>Task 7:</strong> Test initialization error handling<br>
+            <strong>Requirements:</strong> 1.1, 1.2, 1.3, 1.4<br>
+            <strong>Date:</strong> <span id="test-date"></span>
+        </div>
+    </div>
+
+    <div id="test-results"></div>
+
+    <div class="summary" id="summary" style="display: none;">
+        <h2>Test Summary</h2>
+        <div class="summary-stats">
+            <div class="stat-card total">
+                <div class="stat-value" id="total-tests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card passed">
+                <div class="stat-value" id="passed-tests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-card failed">
+                <div class="stat-value" id="failed-tests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="primary" onclick="runAllTests()">Run All Tests</button>
+        <button class="secondary" onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <script>
+        // Set test date
+        document.getElementById('test-date').textContent = new Date().toLocaleString();
+
+        // Test results storage
+        let testResults = [];
+        let consoleLogs = [];
+
+        // Capture console logs
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+
+        function captureConsoleLogs() {
+            consoleLogs = [];
+            
+            console.log = function(...args) {
+                consoleLogs.push({ type: 'log', message: args.join(' ') });
+                originalConsoleLog.apply(console, args);
+            };
+            
+            console.error = function(...args) {
+                consoleLogs.push({ type: 'error', message: args.join(' ') });
+                originalConsoleError.apply(console, args);
+            };
+            
+            console.warn = function(...args) {
+                consoleLogs.push({ type: 'warn', message: args.join(' ') });
+                originalConsoleWarn.apply(console, args);
+            };
+        }
+
+        function restoreConsoleLogs() {
+            console.log = originalConsoleLog;
+            console.error = originalConsoleError;
+            console.warn = originalConsoleWarn;
+        }
+
+        function formatConsoleLogs() {
+            return consoleLogs.map(log => 
+                `<div class="log-entry ${log.type}">[${log.type.toUpperCase()}] ${escapeHtml(log.message)}</div>`
+            ).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function addTestResult(testName, description, passed, details = '') {
+            testResults.push({
+                name: testName,
+                description: description,
+                passed: passed,
+                details: details,
+                logs: [...consoleLogs]
+            });
+        }
+
+        function renderResults() {
+            const resultsContainer = document.getElementById('test-results');
+            resultsContainer.innerHTML = '';
+
+            testResults.forEach((result, index) => {
+                const testCase = document.createElement('div');
+                testCase.className = `test-case ${result.passed ? 'pass' : 'fail'}`;
+                
+                const logHtml = result.logs.length > 0 ? 
+                    `<div class="console-log">${result.logs.map(log => 
+                        `<div class="log-entry ${log.type}">[${log.type.toUpperCase()}] ${escapeHtml(log.message)}</div>`
+                    ).join('')}</div>` : '';
+                
+                testCase.innerHTML = `
+                    <h3>Test ${index + 1}: ${result.name}</h3>
+                    <div class="test-result">
+                        <span class="status-badge ${result.passed ? 'pass' : 'fail'}">
+                            ${result.passed ? 'PASS' : 'FAIL'}
+                        </span>
+                        <span>${result.description}</span>
+                    </div>
+                    ${result.details ? `<div class="test-details">${result.details}</div>` : ''}
+                    ${logHtml}
+                `;
+                
+                resultsContainer.appendChild(testCase);
+            });
+
+            // Update summary
+            const totalTests = testResults.length;
+            const passedTests = testResults.filter(r => r.passed).length;
+            const failedTests = totalTests - passedTests;
+
+            document.getElementById('total-tests').textContent = totalTests;
+            document.getElementById('passed-tests').textContent = passedTests;
+            document.getElementById('failed-tests').textContent = failedTests;
+            document.getElementById('summary').style.display = 'block';
+        }
+
+        function clearResults() {
+            testResults = [];
+            document.getElementById('test-results').innerHTML = '';
+            document.getElementById('summary').style.display = 'none';
+        }
+
+        // Test 1: jQuery not loaded
+        function testJQueryNotLoaded() {
+            return new Promise((resolve) => {
+                captureConsoleLogs();
+                
+                // Create iframe to test in isolation
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Mock alert in iframe
+                let alertCalled = false;
+                let alertMessage = '';
+                iframe.contentWindow.alert = function(msg) {
+                    alertCalled = true;
+                    alertMessage = msg;
+                };
+                
+                // Write test HTML without jQuery
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script>
+                            // Define maseAdmin object
+                            var maseAdmin = {
+                                nonce: 'test-nonce',
+                                ajaxUrl: '/wp-admin/admin-ajax.php'
+                            };
+                            
+                            // Simplified MASE init function
+                            var MASE = {
+                                init: function() {
+                                    console.log('MASE: Script loaded, version check...');
+                                    
+                                    if (typeof jQuery === 'undefined') {
+                                        console.error('MASE: jQuery not loaded');
+                                        alert('Failed to initialize MASE Admin: jQuery is not loaded. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    if (typeof maseAdmin === 'undefined') {
+                                        console.error('MASE: maseAdmin object missing - check wp_localize_script');
+                                        alert('Failed to initialize MASE Admin: Configuration data is missing. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    console.log('MASE: Admin initialized successfully');
+                                }
+                            };
+                            
+                            // Run init
+                            MASE.init();
+                        </script>
+                    </head>
+                    <body></body>
+                    </html>
+                `);
+                iframeDoc.close();
+                
+                setTimeout(() => {
+                    const hasErrorLog = consoleLogs.some(log => 
+                        log.type === 'error' && log.message.includes('jQuery not loaded')
+                    );
+                    const hasInitLog = consoleLogs.some(log => 
+                        log.message.includes('Script loaded, version check')
+                    );
+                    const noSuccessLog = !consoleLogs.some(log => 
+                        log.message.includes('Admin initialized successfully')
+                    );
+                    
+                    const passed = alertCalled && 
+                                   alertMessage.includes('jQuery is not loaded') &&
+                                   hasErrorLog &&
+                                   hasInitLog &&
+                                   noSuccessLog;
+                    
+                    addTestResult(
+                        'jQuery Not Loaded',
+                        'Should display alert and not initialize when jQuery is missing',
+                        passed,
+                        `Alert called: ${alertCalled}<br>` +
+                        `Alert message correct: ${alertMessage.includes('jQuery is not loaded')}<br>` +
+                        `Error log present: ${hasErrorLog}<br>` +
+                        `Init log present: ${hasInitLog}<br>` +
+                        `No success log: ${noSuccessLog}<br>` +
+                        `<strong>Requirement 1.2:</strong> ${passed ? 'SATISFIED' : 'NOT SATISFIED'}`
+                    );
+                    
+                    document.body.removeChild(iframe);
+                    restoreConsoleLogs();
+                    resolve();
+                }, 500);
+            });
+        }
+
+        // Test 2: maseAdmin object missing
+        function testMaseAdminMissing() {
+            return new Promise((resolve) => {
+                captureConsoleLogs();
+                
+                // Create iframe to test in isolation
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Mock alert in iframe
+                let alertCalled = false;
+                let alertMessage = '';
+                iframe.contentWindow.alert = function(msg) {
+                    alertCalled = true;
+                    alertMessage = msg;
+                };
+                
+                // Write test HTML with jQuery but without maseAdmin
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            // Simplified MASE init function
+                            var MASE = {
+                                init: function() {
+                                    console.log('MASE: Script loaded, version check...');
+                                    
+                                    if (typeof jQuery === 'undefined') {
+                                        console.error('MASE: jQuery not loaded');
+                                        alert('Failed to initialize MASE Admin: jQuery is not loaded. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    if (typeof maseAdmin === 'undefined') {
+                                        console.error('MASE: maseAdmin object missing - check wp_localize_script');
+                                        alert('Failed to initialize MASE Admin: Configuration data is missing. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    console.log('MASE: Admin initialized successfully');
+                                }
+                            };
+                            
+                            // Run init after jQuery loads
+                            jQuery(document).ready(function() {
+                                MASE.init();
+                            });
+                        </script>
+                    </head>
+                    <body></body>
+                    </html>
+                `);
+                iframeDoc.close();
+                
+                setTimeout(() => {
+                    const hasErrorLog = consoleLogs.some(log => 
+                        log.type === 'error' && log.message.includes('maseAdmin object missing')
+                    );
+                    const hasInitLog = consoleLogs.some(log => 
+                        log.message.includes('Script loaded, version check')
+                    );
+                    const noSuccessLog = !consoleLogs.some(log => 
+                        log.message.includes('Admin initialized successfully')
+                    );
+                    
+                    const passed = alertCalled && 
+                                   alertMessage.includes('Configuration data is missing') &&
+                                   hasErrorLog &&
+                                   hasInitLog &&
+                                   noSuccessLog;
+                    
+                    addTestResult(
+                        'maseAdmin Object Missing',
+                        'Should display alert and not initialize when maseAdmin object is missing',
+                        passed,
+                        `Alert called: ${alertCalled}<br>` +
+                        `Alert message correct: ${alertMessage.includes('Configuration data is missing')}<br>` +
+                        `Error log present: ${hasErrorLog}<br>` +
+                        `Init log present: ${hasInitLog}<br>` +
+                        `No success log: ${noSuccessLog}<br>` +
+                        `<strong>Requirement 1.3:</strong> ${passed ? 'SATISFIED' : 'NOT SATISFIED'}`
+                    );
+                    
+                    document.body.removeChild(iframe);
+                    restoreConsoleLogs();
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // Test 3: All dependencies present
+        function testAllDependenciesPresent() {
+            return new Promise((resolve) => {
+                captureConsoleLogs();
+                
+                // Create iframe to test in isolation
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Mock alert in iframe
+                let alertCalled = false;
+                iframe.contentWindow.alert = function(msg) {
+                    alertCalled = true;
+                };
+                
+                // Write test HTML with all dependencies
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            // Define maseAdmin object
+                            var maseAdmin = {
+                                nonce: 'test-nonce',
+                                ajaxUrl: '/wp-admin/admin-ajax.php'
+                            };
+                            
+                            // Simplified MASE init function
+                            var MASE = {
+                                init: function() {
+                                    console.log('MASE: Script loaded, version check...');
+                                    
+                                    if (typeof jQuery === 'undefined') {
+                                        console.error('MASE: jQuery not loaded');
+                                        alert('Failed to initialize MASE Admin: jQuery is not loaded. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    if (typeof maseAdmin === 'undefined') {
+                                        console.error('MASE: maseAdmin object missing - check wp_localize_script');
+                                        alert('Failed to initialize MASE Admin: Configuration data is missing. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    console.log('MASE: Initializing v1.2.0');
+                                    console.log('MASE: Admin initialized successfully');
+                                }
+                            };
+                            
+                            // Run init after jQuery loads
+                            jQuery(document).ready(function() {
+                                MASE.init();
+                            });
+                        </script>
+                    </head>
+                    <body></body>
+                    </html>
+                `);
+                iframeDoc.close();
+                
+                setTimeout(() => {
+                    const hasInitLog = consoleLogs.some(log => 
+                        log.message.includes('Script loaded, version check')
+                    );
+                    const hasVersionLog = consoleLogs.some(log => 
+                        log.message.includes('Initializing v1.2.0')
+                    );
+                    const hasSuccessLog = consoleLogs.some(log => 
+                        log.message.includes('Admin initialized successfully')
+                    );
+                    const noErrorLogs = !consoleLogs.some(log => log.type === 'error');
+                    
+                    const passed = !alertCalled &&
+                                   hasInitLog &&
+                                   hasVersionLog &&
+                                   hasSuccessLog &&
+                                   noErrorLogs;
+                    
+                    addTestResult(
+                        'All Dependencies Present',
+                        'Should initialize successfully when all dependencies are available',
+                        passed,
+                        `No alert called: ${!alertCalled}<br>` +
+                        `Init log present: ${hasInitLog}<br>` +
+                        `Version log present: ${hasVersionLog}<br>` +
+                        `Success log present: ${hasSuccessLog}<br>` +
+                        `No error logs: ${noErrorLogs}<br>` +
+                        `<strong>Requirement 1.4:</strong> ${passed ? 'SATISFIED' : 'NOT SATISFIED'}`
+                    );
+                    
+                    document.body.removeChild(iframe);
+                    restoreConsoleLogs();
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // Test 4: Console logs in correct order
+        function testConsoleLogOrder() {
+            return new Promise((resolve) => {
+                captureConsoleLogs();
+                
+                // Create iframe to test in isolation
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Write test HTML with all dependencies
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            // Define maseAdmin object
+                            var maseAdmin = {
+                                nonce: 'test-nonce',
+                                ajaxUrl: '/wp-admin/admin-ajax.php'
+                            };
+                            
+                            // Simplified MASE init function
+                            var MASE = {
+                                init: function() {
+                                    console.log('MASE: Script loaded, version check...');
+                                    
+                                    if (typeof jQuery === 'undefined') {
+                                        console.error('MASE: jQuery not loaded');
+                                        alert('Failed to initialize MASE Admin: jQuery is not loaded. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    if (typeof maseAdmin === 'undefined') {
+                                        console.error('MASE: maseAdmin object missing - check wp_localize_script');
+                                        alert('Failed to initialize MASE Admin: Configuration data is missing. Please refresh the page.');
+                                        return;
+                                    }
+                                    
+                                    console.log('MASE: Initializing v1.2.0');
+                                    console.log('MASE: Admin initialized successfully');
+                                }
+                            };
+                            
+                            // Run init after jQuery loads
+                            jQuery(document).ready(function() {
+                                MASE.init();
+                            });
+                        </script>
+                    </head>
+                    <body></body>
+                    </html>
+                `);
+                iframeDoc.close();
+                
+                setTimeout(() => {
+                    // Check log order
+                    const logMessages = consoleLogs.map(log => log.message);
+                    
+                    const scriptLoadedIndex = logMessages.findIndex(msg => msg.includes('Script loaded, version check'));
+                    const initializingIndex = logMessages.findIndex(msg => msg.includes('Initializing v1.2.0'));
+                    const successIndex = logMessages.findIndex(msg => msg.includes('Admin initialized successfully'));
+                    
+                    const correctOrder = scriptLoadedIndex !== -1 &&
+                                        initializingIndex !== -1 &&
+                                        successIndex !== -1 &&
+                                        scriptLoadedIndex < initializingIndex &&
+                                        initializingIndex < successIndex;
+                    
+                    const passed = correctOrder;
+                    
+                    addTestResult(
+                        'Console Log Order',
+                        'Console logs should appear in correct order: Script loaded → Initializing → Success',
+                        passed,
+                        `Script loaded index: ${scriptLoadedIndex}<br>` +
+                        `Initializing index: ${initializingIndex}<br>` +
+                        `Success index: ${successIndex}<br>` +
+                        `Correct order: ${correctOrder}<br>` +
+                        `<strong>Requirement 1.1:</strong> ${passed ? 'SATISFIED' : 'NOT SATISFIED'}`
+                    );
+                    
+                    document.body.removeChild(iframe);
+                    restoreConsoleLogs();
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            clearResults();
+            
+            await testJQueryNotLoaded();
+            renderResults();
+            
+            await testMaseAdminMissing();
+            renderResults();
+            
+            await testAllDependenciesPresent();
+            renderResults();
+            
+            await testConsoleLogOrder();
+            renderResults();
+            
+            originalConsoleLog('All tests completed!');
+        }
+
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

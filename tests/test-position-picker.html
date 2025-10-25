@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Position Picker Test - MASE</title>
+	<link rel="stylesheet" href="../assets/css/mase-admin.css">
+	<style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+			padding: 40px;
+			background: #f0f0f1;
+		}
+		.test-container {
+			max-width: 800px;
+			margin: 0 auto;
+			background: white;
+			padding: 30px;
+			border-radius: 8px;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+		h1 {
+			margin-top: 0;
+			color: #1d2327;
+		}
+		.test-section {
+			margin-bottom: 40px;
+			padding: 20px;
+			background: #f9fafb;
+			border-radius: 8px;
+		}
+		.test-section h2 {
+			margin-top: 0;
+			font-size: 18px;
+			color: #1d2327;
+		}
+		.mase-setting-row {
+			margin-bottom: 20px;
+		}
+		.mase-setting-label {
+			font-weight: 600;
+			margin-bottom: 8px;
+			display: block;
+		}
+		.description {
+			color: #646970;
+			font-size: 13px;
+			margin-top: 8px;
+		}
+		.current-value {
+			margin-top: 20px;
+			padding: 15px;
+			background: #e0f2fe;
+			border-left: 4px solid #3b82f6;
+			border-radius: 4px;
+		}
+		.current-value strong {
+			color: #1e40af;
+		}
+		.preview-box {
+			width: 100%;
+			height: 200px;
+			margin-top: 20px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background-size: cover;
+			border-radius: 8px;
+			border: 2px solid #e5e7eb;
+			position: relative;
+			overflow: hidden;
+		}
+		.preview-box::after {
+			content: 'Background Preview';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			color: white;
+			font-size: 24px;
+			font-weight: bold;
+			text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+		}
+	</style>
+</head>
+<body>
+	<div class="test-container">
+		<h1>🎯 Position Picker Component Test</h1>
+		<p class="description">
+			Test the visual position picker for background images. Click grid cells or enter custom percentages.
+		</p>
+
+		<div class="test-section">
+			<h2>Test 1: Standard Grid Positions</h2>
+			<div class="mase-setting-row">
+				<div class="mase-setting-label">
+					<label>Background Position</label>
+				</div>
+				<div class="mase-setting-control">
+					<!-- 3x3 Position Grid -->
+					<div class="mase-position-picker-grid" data-area="test1">
+						<button type="button" class="mase-position-grid-cell" data-position="left top" data-area="test1" aria-label="Top Left" title="Top Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="center top" data-area="test1" aria-label="Top Center" title="Top Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right top" data-area="test1" aria-label="Top Right" title="Top Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="left center" data-area="test1" aria-label="Center Left" title="Center Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell selected" data-position="center center" data-area="test1" aria-label="Center" title="Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right center" data-area="test1" aria-label="Center Right" title="Center Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="left bottom" data-area="test1" aria-label="Bottom Left" title="Bottom Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="center bottom" data-area="test1" aria-label="Bottom Center" title="Bottom Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right bottom" data-area="test1" aria-label="Bottom Right" title="Bottom Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+					</div>
+
+					<!-- Custom Position Inputs -->
+					<div class="mase-custom-position-inputs">
+						<label class="mase-custom-position-label">Custom Position:</label>
+						<div class="mase-custom-position-fields">
+							<div class="mase-custom-position-field">
+								<input type="number" class="mase-position-x" data-area="test1" placeholder="50" min="0" max="100" step="1">
+								<span class="mase-input-suffix">% X</span>
+							</div>
+							<div class="mase-custom-position-field">
+								<input type="number" class="mase-position-y" data-area="test1" placeholder="50" min="0" max="100" step="1">
+								<span class="mase-input-suffix">% Y</span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Hidden field -->
+					<input type="hidden" class="mase-background-position" data-area="test1" value="center center">
+
+					<p class="description">
+						Click a position in the grid or enter custom X/Y percentages (0-100).
+					</p>
+				</div>
+			</div>
+
+			<div class="current-value">
+				<strong>Current Position:</strong> <span id="current-position-test1">center center</span>
+			</div>
+
+			<div class="preview-box" id="preview-test1"></div>
+		</div>
+
+		<div class="test-section">
+			<h2>Test 2: Custom Percentage Inputs</h2>
+			<p class="description">Enter custom values to test the percentage input functionality.</p>
+			
+			<div class="mase-setting-row">
+				<div class="mase-setting-label">
+					<label>Background Position</label>
+				</div>
+				<div class="mase-setting-control">
+					<div class="mase-position-picker-grid" data-area="test2">
+						<button type="button" class="mase-position-grid-cell" data-position="left top" data-area="test2" aria-label="Top Left" title="Top Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="center top" data-area="test2" aria-label="Top Center" title="Top Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right top" data-area="test2" aria-label="Top Right" title="Top Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="left center" data-area="test2" aria-label="Center Left" title="Center Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="center center" data-area="test2" aria-label="Center" title="Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right center" data-area="test2" aria-label="Center Right" title="Center Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="left bottom" data-area="test2" aria-label="Bottom Left" title="Bottom Left">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="center bottom" data-area="test2" aria-label="Bottom Center" title="Bottom Center">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+						<button type="button" class="mase-position-grid-cell" data-position="right bottom" data-area="test2" aria-label="Bottom Right" title="Bottom Right">
+							<span class="mase-position-cell-dot"></span>
+						</button>
+					</div>
+
+					<div class="mase-custom-position-inputs">
+						<label class="mase-custom-position-label">Custom Position:</label>
+						<div class="mase-custom-position-fields">
+							<div class="mase-custom-position-field">
+								<input type="number" class="mase-position-x" data-area="test2" placeholder="50" min="0" max="100" step="1" value="25">
+								<span class="mase-input-suffix">% X</span>
+							</div>
+							<div class="mase-custom-position-field">
+								<input type="number" class="mase-position-y" data-area="test2" placeholder="50" min="0" max="100" step="1" value="75">
+								<span class="mase-input-suffix">% Y</span>
+							</div>
+						</div>
+					</div>
+
+					<input type="hidden" class="mase-background-position" data-area="test2" value="25% 75%">
+				</div>
+			</div>
+
+			<div class="current-value">
+				<strong>Current Position:</strong> <span id="current-position-test2">25% 75%</span>
+			</div>
+
+			<div class="preview-box" id="preview-test2"></div>
+		</div>
+
+		<div class="test-section">
+			<h2>✅ Test Checklist</h2>
+			<ul>
+				<li>✓ Grid cells are clickable and show hover effects</li>
+				<li>✓ Selected cell is highlighted with blue background</li>
+				<li>✓ Clicking a cell updates the hidden input value</li>
+				<li>✓ Custom X/Y inputs accept values 0-100</li>
+				<li>✓ Entering custom values clears grid selection</li>
+				<li>✓ Position value updates in real-time</li>
+				<li>✓ Keyboard navigation works (Tab + Enter/Space)</li>
+				<li>✓ Responsive design works on mobile</li>
+			</ul>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="../assets/js/mase-position-picker.js"></script>
+	<script>
+		// Mock MASE.livePreview for testing
+		window.MASE = window.MASE || {};
+		MASE.livePreview = {
+			enabled: true,
+			updateBackground: function(area) {
+				console.log('Live preview update for area:', area);
+			}
+		};
+
+		// Update display when position changes
+		$(document).on('change', '.mase-background-position', function() {
+			const area = $(this).data('area');
+			const position = $(this).val();
+			$('#current-position-' + area).text(position);
+			
+			// Update preview box
+			$('#preview-' + area).css('background-position', position);
+		});
+
+		// Initialize with current values
+		$(document).ready(function() {
+			$('.mase-background-position').each(function() {
+				const area = $(this).data('area');
+				const position = $(this).val();
+				$('#current-position-' + area).text(position);
+				$('#preview-' + area).css('background-position', position);
+			});
+		});
+	</script>
+</body>
+</html>
