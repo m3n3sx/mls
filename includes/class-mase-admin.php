@@ -979,11 +979,24 @@ body.wp-admin #adminmenu .wp-submenu {
 
 		// Check for application errors (Requirement 17.3).
 		if ( is_wp_error( $result ) ) {
+			// Get detailed error information for debugging
+			$error_data = $result->get_error_data();
+			$error_message = $result->get_error_message();
+			
+			// Log detailed error information
+			error_log( 'MASE: apply_palette failed with error: ' . $error_message );
+			if ( is_array( $error_data ) ) {
+				error_log( 'MASE: Validation errors: ' . print_r( $error_data, true ) );
+			}
+			
+			// Return detailed error to frontend
 			wp_send_json_error(
 				array(
-					'message' => $result->get_error_message(),
+					'message' => $error_message,
+					'validation_errors' => $error_data,
+					'error_count' => is_array( $error_data ) ? count( $error_data ) : 0,
 				),
-				500
+				400  // Changed from 500 to 400 for validation errors
 			);
 		}
 
@@ -1267,11 +1280,24 @@ body.wp-admin #adminmenu .wp-submenu {
 
 		// Check for application errors (Requirement 10.4).
 		if ( is_wp_error( $result ) ) {
+			// Get detailed error information for debugging
+			$error_data = $result->get_error_data();
+			$error_message = $result->get_error_message();
+			
+			// Log detailed error information
+			error_log( 'MASE: apply_template failed with error: ' . $error_message );
+			if ( is_array( $error_data ) ) {
+				error_log( 'MASE: Validation errors: ' . print_r( $error_data, true ) );
+			}
+			
+			// Return detailed error to frontend
 			wp_send_json_error(
 				array(
-					'message' => $result->get_error_message(),
+					'message' => $error_message,
+					'validation_errors' => $error_data,
+					'error_count' => is_array( $error_data ) ? count( $error_data ) : 0,
 				),
-				500
+				400  // Changed from 500 to 400 for validation errors
 			);
 		}
 
