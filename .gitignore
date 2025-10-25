@@ -17,3 +17,15 @@ Thumbs.db
 
 # Build artifacts
 *.zip
+!dist/*.zip
+
+# Test files in root (should be in tests/)
+/test-*.php
+/test-*.html
+/debug-*.php
+
+# Temporary folders
+temp_*/
+
+# Old translation files
+messages.mo

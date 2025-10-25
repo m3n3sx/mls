@@ -9126,19 +9126,6 @@
                 $('head').append('<style id="mase-spinner-style">@keyframes mase-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>');
             }
             
-            // Validate form inputs before submission (Requirement 13.2)
-            var validation = this.validateFormInputs();
-            if (!validation.isValid) {
-                // Reset saving state
-                this.state.isSaving = false;
-                $button.prop('disabled', false).val(originalText).css('opacity', '1');
-                $spinner.remove();
-                
-                // Show validation errors
-                this.showValidationErrors(validation.errors);
-                return;
-            }
-            
             // Collect all form data (Requirement 11.2)
             var formData = this.collectFormData();
             

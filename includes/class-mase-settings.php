@@ -152,8 +152,14 @@ class MASE_Settings {
 
 		$result = update_option( self::OPTION_NAME, $validated );
 		error_log( 'MASE: update_option result: ' . ( $result ? 'true' : 'false' ) );
+		error_log( 'MASE: Validated data keys: ' . implode( ', ', array_keys( $validated ) ) );
 		
-		// Always return true if no validation errors (update_option returns false if value unchanged) (Requirement 3.5).
+		// Return true even if value unchanged (update_option returns false if value unchanged).
+		// But log the actual result for debugging.
+		if ( ! $result ) {
+			error_log( 'MASE: WordPress update_option returned false - value may be unchanged' );
+		}
+		
 		return true;
 	}
 
@@ -1164,6 +1170,8 @@ class MASE_Settings {
 	 * @return array|WP_Error Validated data or WP_Error on failure.
 	 */
 	public function validate( $input ) {
+		error_log( 'MASE: validate() called with input sections: ' . implode( ', ', array_keys( $input ) ) );
+		
 		$validated = array();
 		$errors    = array();
 
@@ -2069,23 +2077,28 @@ class MASE_Settings {
 				$validated['login_customization']['gradient_colors'] = array();
 				
 				foreach ( $login['gradient_colors'] as $stop ) {
+					// Skip if not an array (defensive handling for malformed data).
+					if ( ! is_array( $stop ) ) {
+						continue;
+					}
+					
 					// Validate each color stop has required keys.
 					if ( ! isset( $stop['color'] ) || ! isset( $stop['position'] ) ) {
-						$errors['login_gradient_colors'] = 'Each gradient color stop must have color and position keys';
+						// Skip invalid stops instead of failing entire save.
 						continue;
 					}
 
 					// Validate color format.
 					$color = sanitize_hex_color( $stop['color'] );
 					if ( ! $color ) {
-						$errors['login_gradient_colors'] = 'Invalid hex color format in gradient colors';
+						// Skip invalid color instead of failing entire save.
 						continue;
 					}
 
 					// Validate position is 0-100.
 					$position = absint( $stop['position'] );
 					if ( $position < 0 || $position > 100 ) {
-						$errors['login_gradient_colors'] = 'Gradient color position must be between 0 and 100';
+						// Skip invalid position instead of failing entire save.
 						continue;
 					}
 
@@ -2093,6 +2106,14 @@ class MASE_Settings {
 					$validated['login_customization']['gradient_colors'][] = array(
 						'color'    => $color,
 						'position' => $position,
+					);
+				}
+				
+				// If no valid stops were found, use defaults.
+				if ( empty( $validated['login_customization']['gradient_colors'] ) ) {
+					$validated['login_customization']['gradient_colors'] = array(
+						array( 'color' => '#667eea', 'position' => 0 ),
+						array( 'color' => '#764ba2', 'position' => 100 ),
 					);
 				}
 			}
@@ -2140,11 +2161,18 @@ class MASE_Settings {
 		}
 
 		if ( ! empty( $errors ) ) {
+			error_log( 'MASE: Validation failed with ' . count( $errors ) . ' errors' );
+			error_log( 'MASE: Validation errors: ' . print_r( $errors, true ) );
 			return new WP_Error( 'validation_failed', 'Validation failed', $errors );
 		}
 
+		error_log( 'MASE: Validation passed, validated sections: ' . implode( ', ', array_keys( $validated ) ) );
+		
 		// Merge with defaults to ensure all keys exist.
-		return array_merge( $this->get_defaults(), $validated );
+		$merged = array_merge( $this->get_defaults(), $validated );
+		error_log( 'MASE: Merged with defaults, final sections: ' . implode( ', ', array_keys( $merged ) ) );
+		
+		return $merged;
 	}
 
 	/**
@@ -3780,21 +3808,28 @@ class MASE_Settings {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public function apply_palette( $palette_id ) {
+		error_log( 'MASE: apply_palette called with palette_id: ' . $palette_id );
+		
 		// Call get_palette() to validate palette exists.
 		$palette = $this->get_palette( $palette_id );
 
 		// Return error if palette not found.
 		if ( is_wp_error( $palette ) ) {
+			error_log( 'MASE: Palette not found: ' . $palette->get_error_message() );
 			return $palette;
 		}
 
+		error_log( 'MASE: Palette found: ' . $palette['name'] );
+		
 		$current_settings = $this->get_option();
+		error_log( 'MASE: Current palette before change: ' . ( $current_settings['palettes']['current'] ?? 'none' ) );
 
 		// Update 'current_palette' setting with palette_id.
 		$current_settings['palettes']['current'] = $palette_id;
 
 		// Loop through palette colors and update settings.
 		if ( isset( $palette['admin_bar'] ) ) {
+			error_log( 'MASE: Applying admin_bar colors from palette' );
 			$current_settings['admin_bar'] = array_merge(
 				$current_settings['admin_bar'],
 				$palette['admin_bar']
@@ -3802,23 +3837,25 @@ class MASE_Settings {
 		}
 
 		if ( isset( $palette['admin_menu'] ) ) {
+			error_log( 'MASE: Applying admin_menu colors from palette' );
 			$current_settings['admin_menu'] = array_merge(
 				$current_settings['admin_menu'],
 				$palette['admin_menu']
 			);
 		}
 
+		error_log( 'MASE: Calling update_option to save palette changes' );
+		
 		// Call save() method to persist changes (using update_option as the save method).
 		$result = $this->update_option( $current_settings );
 
-		// Return result of save operation.
-		if ( ! $result ) {
-			return new WP_Error(
-				'palette_save_failed',
-				__( 'Failed to save palette settings', 'modern-admin-styler' )
-			);
+		// Check if result is WP_Error (validation failed).
+		if ( is_wp_error( $result ) ) {
+			error_log( 'MASE: apply_palette failed - validation error: ' . $result->get_error_message() );
+			return $result;
 		}
 
+		error_log( 'MASE: apply_palette completed successfully' );
 		return true;
 	}
 
