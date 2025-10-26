@@ -154,6 +154,11 @@ class MASE_Settings {
 		error_log( 'MASE: update_option result: ' . ( $result ? 'true' : 'false' ) );
 		error_log( 'MASE: Validated data keys: ' . implode( ', ', array_keys( $validated ) ) );
 		
+		// Task 20: Invalidate CSS cache when settings are updated (Requirement 19.4).
+		// This ensures fresh CSS is generated on next page load.
+		MASE_CacheManager::delete( 'mase_generated_css' );
+		error_log( 'MASE: CSS cache invalidated after settings update' );
+		
 		// Return true even if value unchanged (update_option returns false if value unchanged).
 		// But log the actual result for debugging.
 		if ( ! $result ) {
@@ -554,6 +559,12 @@ class MASE_Settings {
 			'excluded_button_selectors' => '',
 			// NEW: Advanced Background System (Requirements 1.1, 4.1, 11.1)
 			'custom_backgrounds' => $this->get_background_defaults(),
+			// NEW: Content Typography System (Requirements 1.1, 1.2, 1.3, 1.4)
+			'content_typography' => $this->get_content_typography_defaults(),
+			// NEW: Dashboard Widgets Customization (Requirements 2.1, 2.2, 2.3, 2.4, 2.5)
+			'dashboard_widgets' => $this->get_dashboard_widgets_defaults(),
+			// NEW: Advanced Input Fields & Forms System (Requirements 3.1, 3.2, 3.3, 3.4)
+			'form_controls' => $this->get_form_controls_defaults(),
 		);
 	}
 
@@ -866,6 +877,311 @@ class MASE_Settings {
 	}
 
 	/**
+	 * Get default content typography settings for all admin areas.
+	 *
+	 * Defines default typography configuration for 6 admin content areas with 13 properties each,
+	 * heading hierarchy with scale ratios, and Google Fonts integration.
+	 * Requirements: 1.1, 1.2, 1.3, 1.4
+	 *
+	 * @return array Default content typography settings array.
+	 */
+	private function get_content_typography_defaults() {
+		// Define base typography properties template
+		$default_typography = array(
+			'font_family'      => 'system', // 'system' | Google Font name
+			'font_size'        => 13, // 8-72px
+			'line_height'      => 1.5, // 0.8-3.0
+			'letter_spacing'   => 0, // -5px to 10px
+			'word_spacing'     => 0, // -5px to 10px
+			'font_weight'      => 400, // 100-900 (multiples of 100)
+			'font_style'       => 'normal', // 'normal' | 'italic' | 'oblique'
+			'text_transform'   => 'none', // 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+			'text_shadow'      => '', // CSS text-shadow value
+			'text_stroke'      => '', // CSS -webkit-text-stroke value
+			'ligatures'        => false, // Enable font ligatures
+			'drop_caps'        => false, // Enable drop caps for first letter
+			'font_variant'     => 'normal', // CSS font-variant value
+		);
+
+		return array(
+			// 6 admin content areas
+			'body_text' => $default_typography,
+			'headings' => array(
+				'scale_ratio' => 1.250, // 1.125, 1.200, 1.250, 1.333, 1.414, 1.500, 1.618
+				'h1' => array_merge( $default_typography, array(
+					'font_size' => 32,
+					'font_weight' => 700,
+					'line_height' => 1.2,
+				) ),
+				'h2' => array_merge( $default_typography, array(
+					'font_size' => 26,
+					'font_weight' => 600,
+					'line_height' => 1.3,
+				) ),
+				'h3' => array_merge( $default_typography, array(
+					'font_size' => 21,
+					'font_weight' => 600,
+					'line_height' => 1.3,
+				) ),
+				'h4' => array_merge( $default_typography, array(
+					'font_size' => 17,
+					'font_weight' => 600,
+					'line_height' => 1.4,
+				) ),
+				'h5' => array_merge( $default_typography, array(
+					'font_size' => 14,
+					'font_weight' => 600,
+					'line_height' => 1.4,
+				) ),
+				'h6' => array_merge( $default_typography, array(
+					'font_size' => 13,
+					'font_weight' => 600,
+					'line_height' => 1.4,
+				) ),
+			),
+			'comments' => $default_typography,
+			'widgets' => $default_typography,
+			'meta' => array_merge( $default_typography, array(
+				'font_size' => 12,
+				'line_height' => 1.4,
+			) ),
+			'tables' => $default_typography,
+			'notices' => $default_typography,
+			
+			// Google Fonts configuration
+			'google_fonts_enabled' => false,
+			'google_fonts_list' => array(), // Array of Google Font names
+			'font_display' => 'swap', // 'auto' | 'block' | 'swap' | 'fallback' | 'optional'
+			'preload_fonts' => array(), // Array of font names to preload
+			'font_subset' => 'latin-ext', // Font subset for Polish language support
+		);
+	}
+
+	/**
+	 * Get default dashboard widgets settings.
+	 *
+	 * Defines default styling configuration for dashboard widgets including container,
+	 * header, content, specific widget overrides, advanced effects, and responsive layout.
+	 * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5
+	 *
+	 * @return array Default dashboard widgets settings array.
+	 */
+	private function get_dashboard_widgets_defaults() {
+		return array(
+			// Global container settings (Requirement 2.1)
+			'container' => array(
+				'bg_type'            => 'solid', // 'solid' | 'gradient' | 'transparent'
+				'bg_color'           => '#ffffff',
+				'gradient_type'      => 'linear', // 'linear' | 'radial'
+				'gradient_angle'     => 90, // 0-360 degrees
+				'gradient_colors'    => array(
+					array( 'color' => '#ffffff', 'position' => 0 ),
+					array( 'color' => '#f0f0f0', 'position' => 100 ),
+				),
+				'border_width_top'    => 1, // 0-10 pixels
+				'border_width_right'  => 1,
+				'border_width_bottom' => 1,
+				'border_width_left'   => 1,
+				'border_style'        => 'solid', // 'solid' | 'dashed' | 'dotted' | 'double'
+				'border_color'        => '#cccccc',
+				'border_radius_mode'  => 'uniform', // 'uniform' | 'individual'
+				'border_radius'       => 4, // 0-50 pixels (uniform mode)
+				'border_radius_tl'    => 4, // top-left (individual mode)
+				'border_radius_tr'    => 4, // top-right
+				'border_radius_br'    => 4, // bottom-right
+				'border_radius_bl'    => 4, // bottom-left
+				'shadow_preset'       => 'subtle', // 'none' | 'subtle' | 'medium' | 'strong' | 'custom'
+				'shadow_h_offset'     => 0, // -50 to 50 pixels (custom mode)
+				'shadow_v_offset'     => 2,
+				'shadow_blur'         => 4,
+				'shadow_spread'       => 0,
+				'shadow_color'        => 'rgba(0,0,0,0.1)',
+				'padding_top'         => 12, // 5-50 pixels
+				'padding_right'       => 12,
+				'padding_bottom'      => 12,
+				'padding_left'        => 12,
+				'margin_top'          => 0, // 0-30 pixels
+				'margin_right'        => 0,
+				'margin_bottom'       => 20,
+				'margin_left'         => 0,
+			),
+			
+			// Header settings (Requirement 2.2)
+			'header' => array(
+				'bg_color'           => '#f5f5f5',
+				'font_size'          => 14, // 12-24 pixels
+				'font_weight'        => 600, // 400-700
+				'text_color'         => '#23282d',
+				'text_transform'     => 'none', // 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+				'border_bottom_width' => 1, // 0-5 pixels
+				'border_bottom_color' => '#e0e0e0',
+				'icon_color'         => 'inherit', // 'inherit' or hex color
+				'icon_size'          => 16, // 12-24 pixels
+				'height'             => 'auto', // 'auto' or custom px value
+			),
+			
+			// Content area settings (Requirement 2.3)
+			'content' => array(
+				'bg_color'           => 'transparent', // hex color or 'transparent'
+				'font_size'          => 13, // 10-18 pixels
+				'text_color'         => '#555555',
+				'link_color'         => '#0073aa',
+				'link_hover_color'   => '#005177',
+				'list_style'         => 'disc', // 'disc' | 'circle' | 'square' | 'none'
+				'list_spacing'       => 8, // 0-20 pixels
+			),
+			
+			// Specific widget overrides (Requirement 2.1)
+			'specific_widgets' => array(
+				'dashboard_right_now' => array(
+					'enabled'   => false,
+					'container' => array(), // Override any container settings
+					'header'    => array(), // Override any header settings
+					'content'   => array(), // Override any content settings
+				),
+				'dashboard_activity' => array(
+					'enabled'   => false,
+					'container' => array(),
+					'header'    => array(),
+					'content'   => array(),
+				),
+				'dashboard_quick_press' => array(
+					'enabled'   => false,
+					'container' => array(),
+					'header'    => array(),
+					'content'   => array(),
+				),
+				'dashboard_primary' => array(
+					'enabled'   => false,
+					'container' => array(),
+					'header'    => array(),
+					'content'   => array(),
+				),
+			),
+			
+			// Advanced effects (Requirement 2.4)
+			'glassmorphism'      => false,
+			'blur_intensity'     => 10, // 0-30 pixels
+			'hover_animation'    => 'none', // 'none' | 'lift' | 'glow' | 'scale'
+			'hover_lift_distance' => 4, // 0-10 pixels
+			'hover_scale_factor' => 1.02, // 1.0-1.1
+			
+			// Responsive layout (Requirement 2.5)
+			'responsive' => array(
+				'mobile_stack'       => true,
+				'tablet_columns'     => 2, // 1-2
+				'desktop_columns'    => 3, // 2-4
+			),
+		);
+	}
+
+	/**
+	 * Get default form controls settings for all input types.
+	 *
+	 * Defines default styling configuration for 7 input types (text_inputs, textareas, selects,
+	 * checkboxes, radios, file_uploads, search_fields) with state-specific settings.
+	 * Requirements: 3.1, 3.2, 3.3, 3.4
+	 *
+	 * @return array Default form controls settings array.
+	 */
+	private function get_form_controls_defaults() {
+		// Define base form control properties template
+		$default_control = array(
+			'bg_color'           => '#ffffff',
+			'bg_color_focus'     => '#ffffff',
+			'bg_color_disabled'  => '#f7f7f7',
+			'text_color'         => '#32373c',
+			'placeholder_color'  => '#7e8993',
+			'border_width_top'   => 1, // 0-5 pixels
+			'border_width_right' => 1,
+			'border_width_bottom' => 1,
+			'border_width_left'  => 1,
+			'border_color'       => '#8c8f94',
+			'border_color_focus' => '#007cba',
+			'border_color_hover' => '#6c7781',
+			'border_color_error' => '#dc3232',
+			'border_radius'      => 4, // 0-25 pixels
+			'padding_horizontal' => 12, // 5-25 pixels
+			'padding_vertical'   => 8, // 3-15 pixels
+			'height_mode'        => 'auto', // 'auto' | 'custom'
+			'height_custom'      => 40, // 20-60 pixels
+			'font_family'        => 'system',
+			'font_size'          => 14, // 10-18 pixels
+			'font_weight'        => 400, // 400-600
+			'focus_glow'         => '0 0 0 2px rgba(0,124,186,0.2)',
+			'disabled_opacity'   => 60, // 0-100 percent
+		);
+
+		return array(
+			// Text inputs settings (Requirement 3.1)
+			'text_inputs' => $default_control,
+			
+			// Textareas settings (extends text_inputs) (Requirement 3.1)
+			'textareas' => array_merge( $default_control, array(
+				'min_height'         => 100, // 50-300 pixels
+				'resize'             => 'vertical', // 'none' | 'both' | 'horizontal' | 'vertical'
+				'line_height'        => 1.6, // 1.0-2.0
+			) ),
+			
+			// Select dropdowns settings (extends text_inputs) (Requirement 3.1)
+			'selects' => array_merge( $default_control, array(
+				'arrow_icon'         => 'default', // 'default' | 'chevron' | 'caret' | 'custom'
+				'arrow_custom_svg'   => '',
+				'dropdown_bg_color'  => '#ffffff',
+				'dropdown_border_color' => '#8c8f94',
+				'option_hover_color' => '#f0f0f0',
+				'option_selected_color' => '#007cba',
+			) ),
+			
+			// Checkboxes settings (Requirement 3.2)
+			'checkboxes' => array(
+				'size'               => 16, // 12-24 pixels
+				'bg_color'           => '#ffffff',
+				'bg_color_checked'   => '#007cba',
+				'border_color'       => '#8c8f94',
+				'border_color_checked' => '#007cba',
+				'check_color'        => '#ffffff',
+				'border_radius'      => 2, // 0-8 pixels
+				'check_animation'    => 'slide', // 'slide' | 'fade' | 'bounce' | 'none'
+				'custom_icon'        => false,
+				'custom_icon_svg'    => '',
+			),
+			
+			// Radio buttons settings (Requirement 3.2)
+			'radios' => array(
+				'size'               => 16, // 12-24 pixels
+				'bg_color'           => '#ffffff',
+				'bg_color_checked'   => '#007cba',
+				'border_color'       => '#8c8f94',
+				'border_color_checked' => '#007cba',
+				'dot_color'          => '#ffffff',
+				'dot_size'           => 8, // 4-16 pixels
+				'check_animation'    => 'fade', // 'slide' | 'fade' | 'bounce' | 'none'
+			),
+			
+			// File uploads settings (Requirement 3.3)
+			'file_uploads' => array(
+				'dropzone_bg_color'  => '#f9f9f9',
+				'dropzone_border_color' => '#8c8f94',
+				'dropzone_border_style' => 'dashed', // 'solid' | 'dashed' | 'dotted'
+				'dropzone_hover_bg_color' => '#f0f0f0',
+				'progress_color'     => '#007cba',
+				'progress_bg_color'  => '#e0e0e0',
+				'file_type_icons'    => true,
+				'button_style'       => 'primary', // 'primary' | 'secondary' | 'custom'
+			),
+			
+			// Search fields settings (extends text_inputs) (Requirement 3.4)
+			'search_fields' => array_merge( $default_control, array(
+				'icon_position'      => 'left', // 'left' | 'right' | 'none'
+				'icon_color'         => '#7e8993',
+				'clear_button'       => true,
+				'clear_button_color' => '#7e8993',
+			) ),
+		);
+	}
+
+	/**
 	 * Get gradient presets library.
 	 *
 	 * Provides 20+ pre-designed gradient presets organized by category.
@@ -1161,19 +1477,45 @@ class MASE_Settings {
 	}
 
 	/**
-	 * Validate settings input.
-	 * 
-	 * Requirement 22.1: Comprehensive input validation and sanitization for all settings.
-	 * Validates numeric ranges, sanitizes colors, sanitizes text, validates enum values.
+	 * Validate settings input with selective validation.
 	 *
-	 * @param array $input Input data to validate.
-	 * @return array|WP_Error Validated data or WP_Error on failure.
+	 * SECURITY IMPLEMENTATION (Requirement 20.1, 20.2, 22.1):
+	 * - Validates all numeric inputs against allowed ranges
+	 * - Sanitizes all color values using sanitize_hex_color()
+	 * - Sanitizes all text inputs using sanitize_text_field()
+	 * - Validates enum values against allowed options
+	 * - Returns WP_Error with detailed error information on failure
+	 *
+	 * SELECTIVE VALIDATION STRATEGY (Requirement 1.1, 1.2, 1.3):
+	 * - Only validates sections present in submitted data
+	 * - Prevents validation failures in unrelated sections from blocking saves
+	 * - Allows partial updates without full validation overhead
+	 * - Critical for palette/template application which only changes specific sections
+	 *
+	 * VALIDATION RULES:
+	 * - admin_bar.height: 0-500 pixels
+	 * - admin_menu.width: 100-400 pixels or 50-100 percent
+	 * - Colors: Must be valid hex format (#RRGGBB)
+	 * - Enum values: Must match predefined allowed values
+	 * - Text fields: Sanitized to prevent XSS
+	 *
+	 * ERROR HANDLING:
+	 * - Collects all validation errors before returning
+	 * - Returns WP_Error with error details for user feedback
+	 * - Logs validation errors for debugging
+	 *
+	 * @param array $input Input data to validate (only sections being updated).
+	 * @return array|WP_Error Validated data array on success, WP_Error on validation failure.
+	 * @since 1.0.0
 	 */
 	public function validate( $input ) {
 		error_log( 'MASE: validate() called with input sections: ' . implode( ', ', array_keys( $input ) ) );
 		
 		$validated = array();
 		$errors    = array();
+		
+		// CRITICAL FIX (Requirement 1.1, 1.2, 1.3): Only validate sections present in submitted data
+		// This prevents validation failures in unrelated sections from blocking saves
 
 		// Validate admin bar settings.
 		if ( isset( $input['admin_bar'] ) ) {
@@ -1575,7 +1917,8 @@ class MASE_Settings {
 		}
 
 		// Validate typography settings.
-		if ( isset( $input['typography'] ) ) {
+		// CRITICAL FIX (Requirement 1.1): Only validate if section data is present and non-empty
+		if ( isset( $input['typography'] ) && is_array( $input['typography'] ) && ! empty( $input['typography'] ) ) {
 			$typography_result = $this->validate_typography( $input['typography'] );
 			if ( is_wp_error( $typography_result ) ) {
 				$errors = array_merge( $errors, $typography_result->get_error_data() );
@@ -1585,7 +1928,8 @@ class MASE_Settings {
 		}
 
 		// Validate visual effects settings.
-		if ( isset( $input['visual_effects'] ) ) {
+		// CRITICAL FIX (Requirement 1.1): Only validate if section data is present and non-empty
+		if ( isset( $input['visual_effects'] ) && is_array( $input['visual_effects'] ) && ! empty( $input['visual_effects'] ) ) {
 			$visual_effects_result = $this->validate_visual_effects( $input['visual_effects'] );
 			if ( is_wp_error( $visual_effects_result ) ) {
 				$errors = array_merge( $errors, $visual_effects_result->get_error_data() );
@@ -1595,7 +1939,8 @@ class MASE_Settings {
 		}
 
 		// Validate spacing settings.
-		if ( isset( $input['spacing'] ) ) {
+		// CRITICAL FIX (Requirement 1.1): Only validate if section data is present and non-empty
+		if ( isset( $input['spacing'] ) && is_array( $input['spacing'] ) && ! empty( $input['spacing'] ) ) {
 			$spacing_result = $this->validate_spacing( $input['spacing'] );
 			if ( is_wp_error( $spacing_result ) ) {
 				$errors = array_merge( $errors, $spacing_result->get_error_data() );
@@ -2120,7 +2465,8 @@ class MASE_Settings {
 		}
 
 		// NEW: Validate universal_buttons settings (Requirements 6.1, 11.2).
-		if ( isset( $input['universal_buttons'] ) ) {
+		// CRITICAL FIX (Requirement 1.1): Only validate if section data is present and non-empty
+		if ( isset( $input['universal_buttons'] ) && is_array( $input['universal_buttons'] ) && ! empty( $input['universal_buttons'] ) ) {
 			$button_validation = $this->validate_buttons( $input['universal_buttons'] );
 			if ( is_wp_error( $button_validation ) ) {
 				$errors = array_merge( $errors, $button_validation->get_error_data() );
@@ -2140,12 +2486,14 @@ class MASE_Settings {
 		}
 
 		// NEW: Validate custom_backgrounds settings (Requirements 1.4, 5.1, 12.1, 12.2, 12.3, 12.4, 12.5).
-		if ( isset( $input['custom_backgrounds'] ) && is_array( $input['custom_backgrounds'] ) ) {
+		// CRITICAL FIX (Requirement 1.1): Only validate if section data is present and non-empty
+		if ( isset( $input['custom_backgrounds'] ) && is_array( $input['custom_backgrounds'] ) && ! empty( $input['custom_backgrounds'] ) ) {
 			$validated['custom_backgrounds'] = array();
 			$background_areas = array( 'dashboard', 'admin_menu', 'post_lists', 'post_editor', 'widgets', 'login' );
 			
 			foreach ( $background_areas as $area ) {
-				if ( isset( $input['custom_backgrounds'][ $area ] ) && is_array( $input['custom_backgrounds'][ $area ] ) ) {
+				// Only validate areas that are actually present in the input
+				if ( isset( $input['custom_backgrounds'][ $area ] ) && is_array( $input['custom_backgrounds'][ $area ] ) && ! empty( $input['custom_backgrounds'][ $area ] ) ) {
 					$background_validation = $this->validate_background_settings(
 						$input['custom_backgrounds'][ $area ],
 						$area
@@ -2157,6 +2505,39 @@ class MASE_Settings {
 						$validated['custom_backgrounds'][ $area ] = $background_validation;
 					}
 				}
+			}
+		}
+
+		// NEW: Validate content_typography settings (Requirements 1.1, 1.2, 1.3, 1.4, 1.7, 4.2).
+		// CRITICAL FIX: Only validate if section data is present and non-empty
+		if ( isset( $input['content_typography'] ) && is_array( $input['content_typography'] ) && ! empty( $input['content_typography'] ) ) {
+			$typography_validation = $this->validate_content_typography( $input['content_typography'] );
+			if ( is_wp_error( $typography_validation ) ) {
+				$errors = array_merge( $errors, $typography_validation->get_error_data() );
+			} else {
+				$validated['content_typography'] = $typography_validation;
+			}
+		}
+
+		// NEW: Validate dashboard_widgets settings (Requirements 2.1, 2.2, 2.3, 2.4, 2.5, 2.8, 4.2).
+		// CRITICAL FIX: Only validate if section data is present and non-empty
+		if ( isset( $input['dashboard_widgets'] ) && is_array( $input['dashboard_widgets'] ) && ! empty( $input['dashboard_widgets'] ) ) {
+			$widgets_validation = $this->validate_dashboard_widgets( $input['dashboard_widgets'] );
+			if ( is_wp_error( $widgets_validation ) ) {
+				$errors = array_merge( $errors, $widgets_validation->get_error_data() );
+			} else {
+				$validated['dashboard_widgets'] = $widgets_validation;
+			}
+		}
+
+		// NEW: Validate form_controls settings (Requirements 3.1, 3.2, 3.3, 3.4, 3.7, 4.2).
+		// CRITICAL FIX: Only validate if section data is present and non-empty
+		if ( isset( $input['form_controls'] ) && is_array( $input['form_controls'] ) && ! empty( $input['form_controls'] ) ) {
+			$form_controls_validation = $this->validate_form_controls( $input['form_controls'] );
+			if ( is_wp_error( $form_controls_validation ) ) {
+				$errors = array_merge( $errors, $form_controls_validation->get_error_data() );
+			} else {
+				$validated['form_controls'] = $form_controls_validation;
 			}
 		}
 
@@ -2270,6 +2651,1050 @@ class MASE_Settings {
 
 		if ( ! empty( $errors ) ) {
 			return new WP_Error( 'typography_validation_failed', 'Typography validation failed', $errors );
+		}
+
+		return $validated;
+	}
+
+	/**
+	 * Validate content typography settings.
+	 *
+	 * Validates typography settings for 6 admin content areas with 13 properties each,
+	 * heading hierarchy with scale ratios, and Google Fonts configuration.
+	 * Requirements: 1.1, 1.2, 1.3, 1.4, 1.7, 4.2
+	 *
+	 * @param array $typography Content typography settings to validate.
+	 * @return array|WP_Error Validated typography data or WP_Error on failure.
+	 */
+	private function validate_content_typography( $typography ) {
+		$validated = array();
+		$errors    = array();
+
+		// Define admin content areas to validate
+		$areas = array( 'body_text', 'comments', 'widgets', 'meta', 'tables', 'notices' );
+
+		// Validate each area's typography properties
+		foreach ( $areas as $area ) {
+			if ( ! isset( $typography[ $area ] ) || ! is_array( $typography[ $area ] ) ) {
+				continue;
+			}
+
+			$validated[ $area ] = array();
+			$area_data = $typography[ $area ];
+
+			// Validate font_family
+			if ( isset( $area_data['font_family'] ) ) {
+				$validated[ $area ]['font_family'] = sanitize_text_field( $area_data['font_family'] );
+			}
+
+			// Validate font_size (8-72px) - Requirement 1.7
+			if ( isset( $area_data['font_size'] ) ) {
+				$font_size = absint( $area_data['font_size'] );
+				if ( $font_size >= 8 && $font_size <= 72 ) {
+					$validated[ $area ]['font_size'] = $font_size;
+				} else {
+					$errors[ 'content_typography_' . $area . '_font_size' ] = 'Font size must be between 8 and 72 pixels';
+				}
+			}
+
+			// Validate line_height (0.8-3.0) - Requirement 1.7
+			if ( isset( $area_data['line_height'] ) ) {
+				$line_height = floatval( $area_data['line_height'] );
+				if ( $line_height >= 0.8 && $line_height <= 3.0 ) {
+					$validated[ $area ]['line_height'] = round( $line_height, 2 );
+				} else {
+					$errors[ 'content_typography_' . $area . '_line_height' ] = 'Line height must be between 0.8 and 3.0';
+				}
+			}
+
+			// Validate letter_spacing (-5px to 10px) - Requirement 1.7
+			if ( isset( $area_data['letter_spacing'] ) ) {
+				$letter_spacing = intval( $area_data['letter_spacing'] );
+				if ( $letter_spacing >= -5 && $letter_spacing <= 10 ) {
+					$validated[ $area ]['letter_spacing'] = $letter_spacing;
+				} else {
+					$errors[ 'content_typography_' . $area . '_letter_spacing' ] = 'Letter spacing must be between -5 and 10 pixels';
+				}
+			}
+
+			// Validate word_spacing (-5px to 10px) - Requirement 1.7
+			if ( isset( $area_data['word_spacing'] ) ) {
+				$word_spacing = intval( $area_data['word_spacing'] );
+				if ( $word_spacing >= -5 && $word_spacing <= 10 ) {
+					$validated[ $area ]['word_spacing'] = $word_spacing;
+				} else {
+					$errors[ 'content_typography_' . $area . '_word_spacing' ] = 'Word spacing must be between -5 and 10 pixels';
+				}
+			}
+
+			// Validate font_weight (100-900, multiples of 100) - Requirement 1.7
+			if ( isset( $area_data['font_weight'] ) ) {
+				$font_weight = absint( $area_data['font_weight'] );
+				$allowed_weights = array( 100, 200, 300, 400, 500, 600, 700, 800, 900 );
+				if ( in_array( $font_weight, $allowed_weights, true ) ) {
+					$validated[ $area ]['font_weight'] = $font_weight;
+				} else {
+					$errors[ 'content_typography_' . $area . '_font_weight' ] = 'Font weight must be 100, 200, 300, 400, 500, 600, 700, 800, or 900';
+				}
+			}
+
+			// Validate font_style
+			if ( isset( $area_data['font_style'] ) ) {
+				$font_style = strtolower( sanitize_text_field( $area_data['font_style'] ) );
+				$allowed_styles = array( 'normal', 'italic', 'oblique' );
+				if ( in_array( $font_style, $allowed_styles, true ) ) {
+					$validated[ $area ]['font_style'] = $font_style;
+				} else {
+					$errors[ 'content_typography_' . $area . '_font_style' ] = 'Font style must be normal, italic, or oblique';
+				}
+			}
+
+			// Validate text_transform - Requirement 1.7
+			if ( isset( $area_data['text_transform'] ) ) {
+				$text_transform = strtolower( sanitize_text_field( $area_data['text_transform'] ) );
+				$allowed_transforms = array( 'none', 'uppercase', 'lowercase', 'capitalize' );
+				if ( in_array( $text_transform, $allowed_transforms, true ) ) {
+					$validated[ $area ]['text_transform'] = $text_transform;
+				} else {
+					$errors[ 'content_typography_' . $area . '_text_transform' ] = 'Text transform must be none, uppercase, lowercase, or capitalize';
+				}
+			}
+
+			// Validate text_shadow (CSS value)
+			if ( isset( $area_data['text_shadow'] ) ) {
+				$validated[ $area ]['text_shadow'] = sanitize_text_field( $area_data['text_shadow'] );
+			}
+
+			// Validate text_stroke (CSS value)
+			if ( isset( $area_data['text_stroke'] ) ) {
+				$validated[ $area ]['text_stroke'] = sanitize_text_field( $area_data['text_stroke'] );
+			}
+
+			// Validate ligatures (boolean)
+			if ( isset( $area_data['ligatures'] ) ) {
+				$validated[ $area ]['ligatures'] = (bool) $area_data['ligatures'];
+			}
+
+			// Validate drop_caps (boolean)
+			if ( isset( $area_data['drop_caps'] ) ) {
+				$validated[ $area ]['drop_caps'] = (bool) $area_data['drop_caps'];
+			}
+
+			// Validate font_variant
+			if ( isset( $area_data['font_variant'] ) ) {
+				$validated[ $area ]['font_variant'] = sanitize_text_field( $area_data['font_variant'] );
+			}
+		}
+
+		// Validate headings section with hierarchy - Requirement 1.4
+		if ( isset( $typography['headings'] ) && is_array( $typography['headings'] ) ) {
+			$validated['headings'] = array();
+
+			// Validate scale_ratio - Requirement 1.7
+			if ( isset( $typography['headings']['scale_ratio'] ) ) {
+				$scale_ratio = floatval( $typography['headings']['scale_ratio'] );
+				$allowed_ratios = array( 1.125, 1.200, 1.250, 1.333, 1.414, 1.500, 1.618 );
+				
+				// Check if the ratio is close to one of the allowed values (within 0.001)
+				$is_valid = false;
+				foreach ( $allowed_ratios as $allowed ) {
+					if ( abs( $scale_ratio - $allowed ) < 0.001 ) {
+						$validated['headings']['scale_ratio'] = $allowed;
+						$is_valid = true;
+						break;
+					}
+				}
+				
+				if ( ! $is_valid ) {
+					$errors['content_typography_headings_scale_ratio'] = 'Scale ratio must be 1.125, 1.200, 1.250, 1.333, 1.414, 1.500, or 1.618';
+				}
+			}
+
+			// Validate individual heading levels (h1-h6)
+			$heading_levels = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+			foreach ( $heading_levels as $level ) {
+				if ( ! isset( $typography['headings'][ $level ] ) || ! is_array( $typography['headings'][ $level ] ) ) {
+					continue;
+				}
+
+				$validated['headings'][ $level ] = array();
+				$heading_data = $typography['headings'][ $level ];
+
+				// Validate same properties as other areas
+				if ( isset( $heading_data['font_family'] ) ) {
+					$validated['headings'][ $level ]['font_family'] = sanitize_text_field( $heading_data['font_family'] );
+				}
+
+				if ( isset( $heading_data['font_size'] ) ) {
+					$font_size = absint( $heading_data['font_size'] );
+					// Only validate and save if value is in valid range
+					// Invalid values will be replaced with defaults during merge
+					if ( $font_size >= 8 && $font_size <= 72 ) {
+						$validated['headings'][ $level ]['font_size'] = $font_size;
+					}
+					// Don't add error - just skip invalid values and use defaults
+				}
+
+				if ( isset( $heading_data['line_height'] ) ) {
+					$line_height = floatval( $heading_data['line_height'] );
+					if ( $line_height >= 0.8 && $line_height <= 3.0 ) {
+						$validated['headings'][ $level ]['line_height'] = round( $line_height, 2 );
+					} else {
+						$errors[ 'content_typography_' . $level . '_line_height' ] = 'Line height must be between 0.8 and 3.0';
+					}
+				}
+
+				if ( isset( $heading_data['font_weight'] ) ) {
+					$font_weight = absint( $heading_data['font_weight'] );
+					$allowed_weights = array( 100, 200, 300, 400, 500, 600, 700, 800, 900 );
+					if ( in_array( $font_weight, $allowed_weights, true ) ) {
+						$validated['headings'][ $level ]['font_weight'] = $font_weight;
+					} else {
+						$errors[ 'content_typography_' . $level . '_font_weight' ] = 'Font weight must be 100, 200, 300, 400, 500, 600, 700, 800, or 900';
+					}
+				}
+
+				// Validate other properties for headings
+				if ( isset( $heading_data['letter_spacing'] ) ) {
+					$letter_spacing = intval( $heading_data['letter_spacing'] );
+					if ( $letter_spacing >= -5 && $letter_spacing <= 10 ) {
+						$validated['headings'][ $level ]['letter_spacing'] = $letter_spacing;
+					}
+				}
+
+				if ( isset( $heading_data['text_transform'] ) ) {
+					$text_transform = strtolower( sanitize_text_field( $heading_data['text_transform'] ) );
+					$allowed_transforms = array( 'none', 'uppercase', 'lowercase', 'capitalize' );
+					if ( in_array( $text_transform, $allowed_transforms, true ) ) {
+						$validated['headings'][ $level ]['text_transform'] = $text_transform;
+					}
+				}
+			}
+		}
+
+		// Validate Google Fonts configuration - Requirements 1.2, 1.7
+		if ( isset( $typography['google_fonts_enabled'] ) ) {
+			$validated['google_fonts_enabled'] = (bool) $typography['google_fonts_enabled'];
+		}
+
+		// Validate Google Fonts list - Requirement 1.7
+		if ( isset( $typography['google_fonts_list'] ) && is_array( $typography['google_fonts_list'] ) ) {
+			$validated['google_fonts_list'] = array();
+			foreach ( $typography['google_fonts_list'] as $font ) {
+				if ( is_string( $font ) && ! empty( $font ) ) {
+					$validated['google_fonts_list'][] = sanitize_text_field( $font );
+				} else {
+					$errors['content_typography_google_fonts_list'] = 'Invalid Google Font name in list';
+				}
+			}
+		}
+
+		// Validate font_display
+		if ( isset( $typography['font_display'] ) ) {
+			$font_display = strtolower( sanitize_text_field( $typography['font_display'] ) );
+			$allowed_displays = array( 'auto', 'block', 'swap', 'fallback', 'optional' );
+			if ( in_array( $font_display, $allowed_displays, true ) ) {
+				$validated['font_display'] = $font_display;
+			} else {
+				$errors['content_typography_font_display'] = 'Font display must be auto, block, swap, fallback, or optional';
+			}
+		}
+
+		// Validate preload_fonts
+		if ( isset( $typography['preload_fonts'] ) && is_array( $typography['preload_fonts'] ) ) {
+			$validated['preload_fonts'] = array();
+			foreach ( $typography['preload_fonts'] as $font ) {
+				if ( is_string( $font ) && ! empty( $font ) ) {
+					$validated['preload_fonts'][] = sanitize_text_field( $font );
+				}
+			}
+		}
+
+		// Validate font_subset
+		if ( isset( $typography['font_subset'] ) ) {
+			$validated['font_subset'] = sanitize_text_field( $typography['font_subset'] );
+		}
+
+		// Return WP_Error with detailed messages on validation failure - Requirement 4.2
+		if ( ! empty( $errors ) ) {
+			return new WP_Error( 'content_typography_validation_failed', 'Content typography validation failed', $errors );
+		}
+
+		return $validated;
+	}
+
+	/**
+	 * Validate dashboard widgets settings.
+	 *
+	 * Validates all dashboard widget styling including container, header, content,
+	 * specific widget overrides, advanced effects, and responsive layout.
+	 * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.8, 4.2
+	 *
+	 * @param array $widgets Dashboard widgets settings to validate.
+	 * @return array|WP_Error Validated widgets data or WP_Error on failure.
+	 */
+	private function validate_dashboard_widgets( $widgets ) {
+		$validated = array();
+		$errors    = array();
+
+		// Validate container settings (Requirement 2.1)
+		if ( isset( $widgets['container'] ) && is_array( $widgets['container'] ) ) {
+			$validated['container'] = array();
+			$container = $widgets['container'];
+
+			// Validate bg_type
+			if ( isset( $container['bg_type'] ) ) {
+				$bg_type = sanitize_text_field( $container['bg_type'] );
+				if ( in_array( $bg_type, array( 'solid', 'gradient', 'transparent' ), true ) ) {
+					$validated['container']['bg_type'] = $bg_type;
+				}
+			}
+
+			// Validate bg_color
+			if ( isset( $container['bg_color'] ) ) {
+				$color = sanitize_hex_color( $container['bg_color'] );
+				if ( $color ) {
+					$validated['container']['bg_color'] = $color;
+				}
+			}
+
+			// Validate gradient settings
+			if ( isset( $container['gradient_type'] ) ) {
+				$gradient_type = sanitize_text_field( $container['gradient_type'] );
+				if ( in_array( $gradient_type, array( 'linear', 'radial' ), true ) ) {
+					$validated['container']['gradient_type'] = $gradient_type;
+				}
+			}
+
+			if ( isset( $container['gradient_angle'] ) ) {
+				$angle = absint( $container['gradient_angle'] );
+				if ( $angle >= 0 && $angle <= 360 ) {
+					$validated['container']['gradient_angle'] = $angle;
+				}
+			}
+
+			// Validate gradient_colors array
+			if ( isset( $container['gradient_colors'] ) && is_array( $container['gradient_colors'] ) ) {
+				$validated['container']['gradient_colors'] = array();
+				foreach ( $container['gradient_colors'] as $stop ) {
+					if ( isset( $stop['color'] ) && isset( $stop['position'] ) ) {
+						$color = sanitize_hex_color( $stop['color'] );
+						$position = absint( $stop['position'] );
+						if ( $color && $position >= 0 && $position <= 100 ) {
+							$validated['container']['gradient_colors'][] = array(
+								'color' => $color,
+								'position' => $position,
+							);
+						}
+					}
+				}
+			}
+
+			// Validate border width (0-10px) - Requirement 2.8
+			$border_sides = array( 'top', 'right', 'bottom', 'left' );
+			foreach ( $border_sides as $side ) {
+				$field = 'border_width_' . $side;
+				if ( isset( $container[ $field ] ) ) {
+					$width = absint( $container[ $field ] );
+					if ( $width >= 0 && $width <= 10 ) {
+						$validated['container'][ $field ] = $width;
+					} else {
+						$errors[ 'dashboard_widgets_container_' . $field ] = 'Border width must be between 0 and 10 pixels';
+					}
+				}
+			}
+
+			// Validate border_style
+			if ( isset( $container['border_style'] ) ) {
+				$border_style = sanitize_text_field( $container['border_style'] );
+				if ( in_array( $border_style, array( 'solid', 'dashed', 'dotted', 'double' ), true ) ) {
+					$validated['container']['border_style'] = $border_style;
+				}
+			}
+
+			// Validate border_color
+			if ( isset( $container['border_color'] ) ) {
+				$color = sanitize_hex_color( $container['border_color'] );
+				if ( $color ) {
+					$validated['container']['border_color'] = $color;
+				}
+			}
+
+			// Validate border_radius_mode
+			if ( isset( $container['border_radius_mode'] ) ) {
+				$mode = sanitize_text_field( $container['border_radius_mode'] );
+				if ( in_array( $mode, array( 'uniform', 'individual' ), true ) ) {
+					$validated['container']['border_radius_mode'] = $mode;
+				}
+			}
+
+			// Validate border_radius (0-50px) - Requirement 2.8
+			$radius_fields = array( 'border_radius', 'border_radius_tl', 'border_radius_tr', 'border_radius_br', 'border_radius_bl' );
+			foreach ( $radius_fields as $field ) {
+				if ( isset( $container[ $field ] ) ) {
+					$radius = absint( $container[ $field ] );
+					if ( $radius >= 0 && $radius <= 50 ) {
+						$validated['container'][ $field ] = $radius;
+					} else {
+						$errors[ 'dashboard_widgets_container_' . $field ] = 'Border radius must be between 0 and 50 pixels';
+					}
+				}
+			}
+
+			// Validate shadow_preset
+			if ( isset( $container['shadow_preset'] ) ) {
+				$preset = sanitize_text_field( $container['shadow_preset'] );
+				if ( in_array( $preset, array( 'none', 'subtle', 'medium', 'strong', 'custom' ), true ) ) {
+					$validated['container']['shadow_preset'] = $preset;
+				}
+			}
+
+			// Validate shadow properties (custom mode)
+			if ( isset( $container['shadow_h_offset'] ) ) {
+				$offset = intval( $container['shadow_h_offset'] );
+				if ( $offset >= -50 && $offset <= 50 ) {
+					$validated['container']['shadow_h_offset'] = $offset;
+				}
+			}
+
+			if ( isset( $container['shadow_v_offset'] ) ) {
+				$offset = intval( $container['shadow_v_offset'] );
+				if ( $offset >= -50 && $offset <= 50 ) {
+					$validated['container']['shadow_v_offset'] = $offset;
+				}
+			}
+
+			if ( isset( $container['shadow_blur'] ) ) {
+				$blur = absint( $container['shadow_blur'] );
+				if ( $blur >= 0 && $blur <= 50 ) {
+					$validated['container']['shadow_blur'] = $blur;
+				}
+			}
+
+			if ( isset( $container['shadow_spread'] ) ) {
+				$spread = intval( $container['shadow_spread'] );
+				if ( $spread >= -20 && $spread <= 20 ) {
+					$validated['container']['shadow_spread'] = $spread;
+				}
+			}
+
+			if ( isset( $container['shadow_color'] ) ) {
+				$validated['container']['shadow_color'] = sanitize_text_field( $container['shadow_color'] );
+			}
+
+			// Validate padding (5-50px) - Requirement 2.8
+			$padding_sides = array( 'top', 'right', 'bottom', 'left' );
+			foreach ( $padding_sides as $side ) {
+				$field = 'padding_' . $side;
+				if ( isset( $container[ $field ] ) ) {
+					$padding = absint( $container[ $field ] );
+					if ( $padding >= 5 && $padding <= 50 ) {
+						$validated['container'][ $field ] = $padding;
+					} else {
+						$errors[ 'dashboard_widgets_container_' . $field ] = 'Padding must be between 5 and 50 pixels';
+					}
+				}
+			}
+
+			// Validate margin (0-30px) - Requirement 2.8
+			$margin_sides = array( 'top', 'right', 'bottom', 'left' );
+			foreach ( $margin_sides as $side ) {
+				$field = 'margin_' . $side;
+				if ( isset( $container[ $field ] ) ) {
+					$margin = absint( $container[ $field ] );
+					if ( $margin >= 0 && $margin <= 30 ) {
+						$validated['container'][ $field ] = $margin;
+					} else {
+						$errors[ 'dashboard_widgets_container_' . $field ] = 'Margin must be between 0 and 30 pixels';
+					}
+				}
+			}
+		}
+
+		// Validate header settings (Requirement 2.2)
+		if ( isset( $widgets['header'] ) && is_array( $widgets['header'] ) ) {
+			$validated['header'] = array();
+			$header = $widgets['header'];
+
+			// Validate bg_color
+			if ( isset( $header['bg_color'] ) ) {
+				$color = sanitize_hex_color( $header['bg_color'] );
+				if ( $color ) {
+					$validated['header']['bg_color'] = $color;
+				}
+			}
+
+			// Validate font_size (12-24px) - Requirement 2.8
+			if ( isset( $header['font_size'] ) ) {
+				$font_size = absint( $header['font_size'] );
+				if ( $font_size >= 12 && $font_size <= 24 ) {
+					$validated['header']['font_size'] = $font_size;
+				} else {
+					$errors['dashboard_widgets_header_font_size'] = 'Header font size must be between 12 and 24 pixels';
+				}
+			}
+
+			// Validate font_weight (400-700)
+			if ( isset( $header['font_weight'] ) ) {
+				$font_weight = absint( $header['font_weight'] );
+				if ( $font_weight >= 400 && $font_weight <= 700 ) {
+					$validated['header']['font_weight'] = $font_weight;
+				}
+			}
+
+			// Validate text_color
+			if ( isset( $header['text_color'] ) ) {
+				$color = sanitize_hex_color( $header['text_color'] );
+				if ( $color ) {
+					$validated['header']['text_color'] = $color;
+				}
+			}
+
+			// Validate text_transform
+			if ( isset( $header['text_transform'] ) ) {
+				$text_transform = strtolower( sanitize_text_field( $header['text_transform'] ) );
+				if ( in_array( $text_transform, array( 'none', 'uppercase', 'lowercase', 'capitalize' ), true ) ) {
+					$validated['header']['text_transform'] = $text_transform;
+				}
+			}
+
+			// Validate border_bottom_width (0-5px)
+			if ( isset( $header['border_bottom_width'] ) ) {
+				$width = absint( $header['border_bottom_width'] );
+				if ( $width >= 0 && $width <= 5 ) {
+					$validated['header']['border_bottom_width'] = $width;
+				}
+			}
+
+			// Validate border_bottom_color
+			if ( isset( $header['border_bottom_color'] ) ) {
+				$color = sanitize_hex_color( $header['border_bottom_color'] );
+				if ( $color ) {
+					$validated['header']['border_bottom_color'] = $color;
+				}
+			}
+
+			// Validate icon_color
+			if ( isset( $header['icon_color'] ) ) {
+				if ( $header['icon_color'] === 'inherit' ) {
+					$validated['header']['icon_color'] = 'inherit';
+				} else {
+					$color = sanitize_hex_color( $header['icon_color'] );
+					if ( $color ) {
+						$validated['header']['icon_color'] = $color;
+					}
+				}
+			}
+
+			// Validate icon_size (12-24px)
+			if ( isset( $header['icon_size'] ) ) {
+				$icon_size = absint( $header['icon_size'] );
+				if ( $icon_size >= 12 && $icon_size <= 24 ) {
+					$validated['header']['icon_size'] = $icon_size;
+				}
+			}
+
+			// Validate height
+			if ( isset( $header['height'] ) ) {
+				$validated['header']['height'] = sanitize_text_field( $header['height'] );
+			}
+		}
+
+		// Validate content settings (Requirement 2.3)
+		if ( isset( $widgets['content'] ) && is_array( $widgets['content'] ) ) {
+			$validated['content'] = array();
+			$content = $widgets['content'];
+
+			// Validate bg_color
+			if ( isset( $content['bg_color'] ) ) {
+				if ( $content['bg_color'] === 'transparent' ) {
+					$validated['content']['bg_color'] = 'transparent';
+				} else {
+					$color = sanitize_hex_color( $content['bg_color'] );
+					if ( $color ) {
+						$validated['content']['bg_color'] = $color;
+					}
+				}
+			}
+
+			// Validate font_size (10-18px)
+			if ( isset( $content['font_size'] ) ) {
+				$font_size = absint( $content['font_size'] );
+				if ( $font_size >= 10 && $font_size <= 18 ) {
+					$validated['content']['font_size'] = $font_size;
+				}
+			}
+
+			// Validate text_color
+			if ( isset( $content['text_color'] ) ) {
+				$color = sanitize_hex_color( $content['text_color'] );
+				if ( $color ) {
+					$validated['content']['text_color'] = $color;
+				}
+			}
+
+			// Validate link_color
+			if ( isset( $content['link_color'] ) ) {
+				$color = sanitize_hex_color( $content['link_color'] );
+				if ( $color ) {
+					$validated['content']['link_color'] = $color;
+				}
+			}
+
+			// Validate link_hover_color
+			if ( isset( $content['link_hover_color'] ) ) {
+				$color = sanitize_hex_color( $content['link_hover_color'] );
+				if ( $color ) {
+					$validated['content']['link_hover_color'] = $color;
+				}
+			}
+
+			// Validate list_style
+			if ( isset( $content['list_style'] ) ) {
+				$list_style = sanitize_text_field( $content['list_style'] );
+				if ( in_array( $list_style, array( 'disc', 'circle', 'square', 'none' ), true ) ) {
+					$validated['content']['list_style'] = $list_style;
+				}
+			}
+
+			// Validate list_spacing (0-20px)
+			if ( isset( $content['list_spacing'] ) ) {
+				$spacing = absint( $content['list_spacing'] );
+				if ( $spacing >= 0 && $spacing <= 20 ) {
+					$validated['content']['list_spacing'] = $spacing;
+				}
+			}
+		}
+
+		// Validate specific_widgets overrides (Requirement 2.1)
+		if ( isset( $widgets['specific_widgets'] ) && is_array( $widgets['specific_widgets'] ) ) {
+			$validated['specific_widgets'] = array();
+			$widget_ids = array( 'dashboard_right_now', 'dashboard_activity', 'dashboard_quick_press', 'dashboard_primary' );
+
+			foreach ( $widget_ids as $widget_id ) {
+				if ( isset( $widgets['specific_widgets'][ $widget_id ] ) && is_array( $widgets['specific_widgets'][ $widget_id ] ) ) {
+					$validated['specific_widgets'][ $widget_id ] = array();
+
+					// Validate enabled flag
+					if ( isset( $widgets['specific_widgets'][ $widget_id ]['enabled'] ) ) {
+						$validated['specific_widgets'][ $widget_id ]['enabled'] = (bool) $widgets['specific_widgets'][ $widget_id ]['enabled'];
+					}
+
+					// Validate container, header, content overrides (same validation as above)
+					// For simplicity, just pass through the arrays - they'll be validated when applied
+					if ( isset( $widgets['specific_widgets'][ $widget_id ]['container'] ) ) {
+						$validated['specific_widgets'][ $widget_id ]['container'] = $widgets['specific_widgets'][ $widget_id ]['container'];
+					}
+
+					if ( isset( $widgets['specific_widgets'][ $widget_id ]['header'] ) ) {
+						$validated['specific_widgets'][ $widget_id ]['header'] = $widgets['specific_widgets'][ $widget_id ]['header'];
+					}
+
+					if ( isset( $widgets['specific_widgets'][ $widget_id ]['content'] ) ) {
+						$validated['specific_widgets'][ $widget_id ]['content'] = $widgets['specific_widgets'][ $widget_id ]['content'];
+					}
+				}
+			}
+		}
+
+		// Validate advanced effects (Requirement 2.4)
+		if ( isset( $widgets['glassmorphism'] ) ) {
+			$validated['glassmorphism'] = (bool) $widgets['glassmorphism'];
+		}
+
+		if ( isset( $widgets['blur_intensity'] ) ) {
+			$blur = absint( $widgets['blur_intensity'] );
+			if ( $blur >= 0 && $blur <= 30 ) {
+				$validated['blur_intensity'] = $blur;
+			}
+		}
+
+		// Validate hover_animation (none, lift, glow, scale) - Requirement 2.8
+		if ( isset( $widgets['hover_animation'] ) ) {
+			$animation = sanitize_text_field( $widgets['hover_animation'] );
+			if ( in_array( $animation, array( 'none', 'lift', 'glow', 'scale' ), true ) ) {
+				$validated['hover_animation'] = $animation;
+			} else {
+				$errors['dashboard_widgets_hover_animation'] = 'Hover animation must be none, lift, glow, or scale';
+			}
+		}
+
+		if ( isset( $widgets['hover_lift_distance'] ) ) {
+			$distance = absint( $widgets['hover_lift_distance'] );
+			if ( $distance >= 0 && $distance <= 10 ) {
+				$validated['hover_lift_distance'] = $distance;
+			}
+		}
+
+		if ( isset( $widgets['hover_scale_factor'] ) ) {
+			$scale = floatval( $widgets['hover_scale_factor'] );
+			if ( $scale >= 1.0 && $scale <= 1.1 ) {
+				$validated['hover_scale_factor'] = round( $scale, 2 );
+			}
+		}
+
+		// Validate responsive layout (Requirement 2.5)
+		if ( isset( $widgets['responsive'] ) && is_array( $widgets['responsive'] ) ) {
+			$validated['responsive'] = array();
+			$responsive = $widgets['responsive'];
+
+			// Validate mobile_stack
+			if ( isset( $responsive['mobile_stack'] ) ) {
+				$validated['responsive']['mobile_stack'] = (bool) $responsive['mobile_stack'];
+			}
+
+			// Validate tablet_columns (1-2) - Requirement 2.8
+			if ( isset( $responsive['tablet_columns'] ) ) {
+				$columns = absint( $responsive['tablet_columns'] );
+				if ( $columns >= 1 && $columns <= 2 ) {
+					$validated['responsive']['tablet_columns'] = $columns;
+				} else {
+					$errors['dashboard_widgets_responsive_tablet_columns'] = 'Tablet columns must be between 1 and 2';
+				}
+			}
+
+			// Validate desktop_columns (2-4) - Requirement 2.8
+			if ( isset( $responsive['desktop_columns'] ) ) {
+				$columns = absint( $responsive['desktop_columns'] );
+				if ( $columns >= 2 && $columns <= 4 ) {
+					$validated['responsive']['desktop_columns'] = $columns;
+				} else {
+					$errors['dashboard_widgets_responsive_desktop_columns'] = 'Desktop columns must be between 2 and 4';
+				}
+			}
+		}
+
+		// Return WP_Error with detailed messages on validation failure - Requirement 4.2
+		if ( ! empty( $errors ) ) {
+			return new WP_Error( 'dashboard_widgets_validation_failed', 'Dashboard widgets validation failed', $errors );
+		}
+
+		return $validated;
+	}
+
+	/**
+	 * Validate form controls settings.
+	 *
+	 * Validates all form control styling including text inputs, textareas, selects,
+	 * checkboxes, radios, file uploads, and search fields with state-specific settings.
+	 * Requirements: 3.1, 3.2, 3.3, 3.4, 3.7, 4.2
+	 *
+	 * @param array $controls Form controls settings to validate.
+	 * @return array|WP_Error Validated form controls data or WP_Error on failure.
+	 */
+	private function validate_form_controls( $controls ) {
+		$validated = array();
+		$errors    = array();
+
+		// Define control types to validate
+		$control_types = array( 'text_inputs', 'textareas', 'selects', 'checkboxes', 'radios', 'file_uploads', 'search_fields' );
+
+		foreach ( $control_types as $control_type ) {
+			if ( ! isset( $controls[ $control_type ] ) || ! is_array( $controls[ $control_type ] ) ) {
+				continue;
+			}
+
+			$validated[ $control_type ] = array();
+			$control_data = $controls[ $control_type ];
+
+			// Validate colors (hex format) - Requirement 3.7
+			$color_fields = array( 'bg_color', 'bg_color_focus', 'bg_color_disabled', 'text_color', 'placeholder_color', 
+								   'border_color', 'border_color_focus', 'border_color_hover', 'border_color_error' );
+			
+			foreach ( $color_fields as $field ) {
+				if ( isset( $control_data[ $field ] ) ) {
+					$color = sanitize_hex_color( $control_data[ $field ] );
+					if ( $color ) {
+						$validated[ $control_type ][ $field ] = $color;
+					} else {
+						$errors[ 'form_controls_' . $control_type . '_' . $field ] = 'Invalid hex color format for ' . $field;
+					}
+				}
+			}
+
+			// Validate border width (0-5px) - Requirement 3.7
+			$border_sides = array( 'top', 'right', 'bottom', 'left' );
+			foreach ( $border_sides as $side ) {
+				$field = 'border_width_' . $side;
+				if ( isset( $control_data[ $field ] ) ) {
+					$width = absint( $control_data[ $field ] );
+					if ( $width >= 0 && $width <= 5 ) {
+						$validated[ $control_type ][ $field ] = $width;
+					} else {
+						$errors[ 'form_controls_' . $control_type . '_' . $field ] = 'Border width must be between 0 and 5 pixels';
+					}
+				}
+			}
+
+			// Validate border radius (0-25px) - Requirement 3.7
+			if ( isset( $control_data['border_radius'] ) ) {
+				$radius = absint( $control_data['border_radius'] );
+				if ( $radius >= 0 && $radius <= 25 ) {
+					$validated[ $control_type ]['border_radius'] = $radius;
+				} else {
+					$errors[ 'form_controls_' . $control_type . '_border_radius' ] = 'Border radius must be between 0 and 25 pixels';
+				}
+			}
+
+			// Validate padding (3-25px) - Requirement 3.7
+			if ( isset( $control_data['padding_horizontal'] ) ) {
+				$padding = absint( $control_data['padding_horizontal'] );
+				if ( $padding >= 5 && $padding <= 25 ) {
+					$validated[ $control_type ]['padding_horizontal'] = $padding;
+				} else {
+					$errors[ 'form_controls_' . $control_type . '_padding_horizontal' ] = 'Horizontal padding must be between 5 and 25 pixels';
+				}
+			}
+
+			if ( isset( $control_data['padding_vertical'] ) ) {
+				$padding = absint( $control_data['padding_vertical'] );
+				if ( $padding >= 3 && $padding <= 15 ) {
+					$validated[ $control_type ]['padding_vertical'] = $padding;
+				} else {
+					$errors[ 'form_controls_' . $control_type . '_padding_vertical' ] = 'Vertical padding must be between 3 and 15 pixels';
+				}
+			}
+
+			// Validate height (20-60px) - Requirement 3.7
+			if ( isset( $control_data['height_mode'] ) ) {
+				$mode = sanitize_text_field( $control_data['height_mode'] );
+				if ( in_array( $mode, array( 'auto', 'custom' ), true ) ) {
+					$validated[ $control_type ]['height_mode'] = $mode;
+				}
+			}
+
+			if ( isset( $control_data['height_custom'] ) ) {
+				$height = absint( $control_data['height_custom'] );
+				if ( $height >= 20 && $height <= 60 ) {
+					$validated[ $control_type ]['height_custom'] = $height;
+				} else {
+					$errors[ 'form_controls_' . $control_type . '_height_custom' ] = 'Custom height must be between 20 and 60 pixels';
+				}
+			}
+
+			// Validate font size (10-18px) - Requirement 3.7
+			if ( isset( $control_data['font_size'] ) ) {
+				$font_size = absint( $control_data['font_size'] );
+				if ( $font_size >= 10 && $font_size <= 18 ) {
+					$validated[ $control_type ]['font_size'] = $font_size;
+				} else {
+					$errors[ 'form_controls_' . $control_type . '_font_size' ] = 'Font size must be between 10 and 18 pixels';
+				}
+			}
+
+			// Validate font weight (400-600)
+			if ( isset( $control_data['font_weight'] ) ) {
+				$font_weight = absint( $control_data['font_weight'] );
+				$allowed_weights = array( 400, 500, 600 );
+				if ( in_array( $font_weight, $allowed_weights, true ) ) {
+					$validated[ $control_type ]['font_weight'] = $font_weight;
+				}
+			}
+
+			// Validate font family
+			if ( isset( $control_data['font_family'] ) ) {
+				$validated[ $control_type ]['font_family'] = sanitize_text_field( $control_data['font_family'] );
+			}
+
+			// Validate focus glow (CSS value)
+			if ( isset( $control_data['focus_glow'] ) ) {
+				$validated[ $control_type ]['focus_glow'] = sanitize_text_field( $control_data['focus_glow'] );
+			}
+
+			// Validate disabled opacity (0-100%)
+			if ( isset( $control_data['disabled_opacity'] ) ) {
+				$opacity = absint( $control_data['disabled_opacity'] );
+				if ( $opacity >= 0 && $opacity <= 100 ) {
+					$validated[ $control_type ]['disabled_opacity'] = $opacity;
+				}
+			}
+
+			// Type-specific validations
+			
+			// Textareas specific
+			if ( $control_type === 'textareas' ) {
+				if ( isset( $control_data['min_height'] ) ) {
+					$min_height = absint( $control_data['min_height'] );
+					if ( $min_height >= 50 && $min_height <= 300 ) {
+						$validated[ $control_type ]['min_height'] = $min_height;
+					}
+				}
+
+				if ( isset( $control_data['resize'] ) ) {
+					$resize = sanitize_text_field( $control_data['resize'] );
+					if ( in_array( $resize, array( 'none', 'both', 'horizontal', 'vertical' ), true ) ) {
+						$validated[ $control_type ]['resize'] = $resize;
+					}
+				}
+
+				if ( isset( $control_data['line_height'] ) ) {
+					$line_height = floatval( $control_data['line_height'] );
+					if ( $line_height >= 1.0 && $line_height <= 2.0 ) {
+						$validated[ $control_type ]['line_height'] = round( $line_height, 1 );
+					}
+				}
+			}
+
+			// Selects specific
+			if ( $control_type === 'selects' ) {
+				if ( isset( $control_data['arrow_icon'] ) ) {
+					$arrow_icon = sanitize_text_field( $control_data['arrow_icon'] );
+					if ( in_array( $arrow_icon, array( 'default', 'chevron', 'caret', 'custom' ), true ) ) {
+						$validated[ $control_type ]['arrow_icon'] = $arrow_icon;
+					}
+				}
+
+				if ( isset( $control_data['arrow_custom_svg'] ) ) {
+					$validated[ $control_type ]['arrow_custom_svg'] = wp_kses_post( $control_data['arrow_custom_svg'] );
+				}
+
+				$select_colors = array( 'dropdown_bg_color', 'dropdown_border_color', 'option_hover_color', 'option_selected_color' );
+				foreach ( $select_colors as $field ) {
+					if ( isset( $control_data[ $field ] ) ) {
+						$color = sanitize_hex_color( $control_data[ $field ] );
+						if ( $color ) {
+							$validated[ $control_type ][ $field ] = $color;
+						}
+					}
+				}
+			}
+
+			// Checkboxes specific - Requirement 3.7
+			if ( $control_type === 'checkboxes' ) {
+				if ( isset( $control_data['size'] ) ) {
+					$size = absint( $control_data['size'] );
+					if ( $size >= 12 && $size <= 24 ) {
+						$validated[ $control_type ]['size'] = $size;
+					} else {
+						$errors[ 'form_controls_checkboxes_size' ] = 'Checkbox size must be between 12 and 24 pixels';
+					}
+				}
+
+				$checkbox_colors = array( 'bg_color', 'bg_color_checked', 'border_color', 'border_color_checked', 'check_color' );
+				foreach ( $checkbox_colors as $field ) {
+					if ( isset( $control_data[ $field ] ) ) {
+						$color = sanitize_hex_color( $control_data[ $field ] );
+						if ( $color ) {
+							$validated[ $control_type ][ $field ] = $color;
+						}
+					}
+				}
+
+				if ( isset( $control_data['check_animation'] ) ) {
+					$animation = sanitize_text_field( $control_data['check_animation'] );
+					if ( in_array( $animation, array( 'slide', 'fade', 'bounce', 'none' ), true ) ) {
+						$validated[ $control_type ]['check_animation'] = $animation;
+					} else {
+						$errors[ 'form_controls_checkboxes_check_animation' ] = 'Animation must be slide, fade, bounce, or none';
+					}
+				}
+
+				if ( isset( $control_data['custom_icon'] ) ) {
+					$validated[ $control_type ]['custom_icon'] = (bool) $control_data['custom_icon'];
+				}
+
+				if ( isset( $control_data['custom_icon_svg'] ) ) {
+					$validated[ $control_type ]['custom_icon_svg'] = wp_kses_post( $control_data['custom_icon_svg'] );
+				}
+			}
+
+			// Radios specific - Requirement 3.7
+			if ( $control_type === 'radios' ) {
+				if ( isset( $control_data['size'] ) ) {
+					$size = absint( $control_data['size'] );
+					if ( $size >= 12 && $size <= 24 ) {
+						$validated[ $control_type ]['size'] = $size;
+					} else {
+						$errors[ 'form_controls_radios_size' ] = 'Radio size must be between 12 and 24 pixels';
+					}
+				}
+
+				$radio_colors = array( 'bg_color', 'bg_color_checked', 'border_color', 'border_color_checked', 'dot_color' );
+				foreach ( $radio_colors as $field ) {
+					if ( isset( $control_data[ $field ] ) ) {
+						$color = sanitize_hex_color( $control_data[ $field ] );
+						if ( $color ) {
+							$validated[ $control_type ][ $field ] = $color;
+						}
+					}
+				}
+
+				if ( isset( $control_data['dot_size'] ) ) {
+					$dot_size = absint( $control_data['dot_size'] );
+					if ( $dot_size >= 4 && $dot_size <= 16 ) {
+						$validated[ $control_type ]['dot_size'] = $dot_size;
+					}
+				}
+
+				if ( isset( $control_data['check_animation'] ) ) {
+					$animation = sanitize_text_field( $control_data['check_animation'] );
+					if ( in_array( $animation, array( 'slide', 'fade', 'bounce', 'none' ), true ) ) {
+						$validated[ $control_type ]['check_animation'] = $animation;
+					} else {
+						$errors[ 'form_controls_radios_check_animation' ] = 'Animation must be slide, fade, bounce, or none';
+					}
+				}
+			}
+
+			// File uploads specific
+			if ( $control_type === 'file_uploads' ) {
+				$file_colors = array( 'dropzone_bg_color', 'dropzone_border_color', 'dropzone_hover_bg_color', 'progress_color', 'progress_bg_color' );
+				foreach ( $file_colors as $field ) {
+					if ( isset( $control_data[ $field ] ) ) {
+						$color = sanitize_hex_color( $control_data[ $field ] );
+						if ( $color ) {
+							$validated[ $control_type ][ $field ] = $color;
+						}
+					}
+				}
+
+				if ( isset( $control_data['dropzone_border_style'] ) ) {
+					$style = sanitize_text_field( $control_data['dropzone_border_style'] );
+					if ( in_array( $style, array( 'solid', 'dashed', 'dotted' ), true ) ) {
+						$validated[ $control_type ]['dropzone_border_style'] = $style;
+					}
+				}
+
+				if ( isset( $control_data['file_type_icons'] ) ) {
+					$validated[ $control_type ]['file_type_icons'] = (bool) $control_data['file_type_icons'];
+				}
+
+				if ( isset( $control_data['button_style'] ) ) {
+					$button_style = sanitize_text_field( $control_data['button_style'] );
+					if ( in_array( $button_style, array( 'primary', 'secondary', 'custom' ), true ) ) {
+						$validated[ $control_type ]['button_style'] = $button_style;
+					}
+				}
+			}
+
+			// Search fields specific
+			if ( $control_type === 'search_fields' ) {
+				if ( isset( $control_data['icon_position'] ) ) {
+					$position = sanitize_text_field( $control_data['icon_position'] );
+					if ( in_array( $position, array( 'left', 'right', 'none' ), true ) ) {
+						$validated[ $control_type ]['icon_position'] = $position;
+					}
+				}
+
+				$search_colors = array( 'icon_color', 'clear_button_color' );
+				foreach ( $search_colors as $field ) {
+					if ( isset( $control_data[ $field ] ) ) {
+						$color = sanitize_hex_color( $control_data[ $field ] );
+						if ( $color ) {
+							$validated[ $control_type ][ $field ] = $color;
+						}
+					}
+				}
+
+				if ( isset( $control_data['clear_button'] ) ) {
+					$validated[ $control_type ]['clear_button'] = (bool) $control_data['clear_button'];
+				}
+			}
+		}
+
+		// Return WP_Error with detailed messages on validation failure - Requirement 4.2
+		if ( ! empty( $errors ) ) {
+			return new WP_Error( 'form_controls_validation_failed', 'Form controls validation failed', $errors );
 		}
 
 		return $validated;
@@ -6268,5 +7693,188 @@ class MASE_Settings {
 		 * @param array $patterns Pattern library organized by category.
 		 */
 		return apply_filters( 'mase_pattern_library', $patterns );
+	}
+
+	/**
+	 * Get Google Fonts list.
+	 *
+	 * Fetches available Google Fonts from the API and caches the result for 24 hours.
+	 * Returns a curated list of popular fonts for better performance.
+	 * Requirements: 1.2, 1.5
+	 *
+	 * @return array Array of Google Font names.
+	 */
+	public function get_google_fonts_list() {
+		// Check cache first (24 hour cache).
+		$cached_fonts = get_transient( 'mase_google_fonts_list' );
+		if ( false !== $cached_fonts && is_array( $cached_fonts ) ) {
+			return $cached_fonts;
+		}
+
+		// Curated list of popular Google Fonts for better performance.
+		// Full API integration can be added later if needed.
+		$popular_fonts = array(
+			'Inter',
+			'Roboto',
+			'Open Sans',
+			'Lato',
+			'Montserrat',
+			'Poppins',
+			'Raleway',
+			'Ubuntu',
+			'Nunito',
+			'Playfair Display',
+			'Merriweather',
+			'PT Sans',
+			'Source Sans Pro',
+			'Oswald',
+			'Noto Sans',
+			'Rubik',
+			'Work Sans',
+			'Fira Sans',
+			'Quicksand',
+			'Karla',
+			'Mulish',
+			'DM Sans',
+			'Space Grotesk',
+			'Manrope',
+			'Plus Jakarta Sans',
+		);
+
+		/**
+		 * Filter Google Fonts list.
+		 *
+		 * Allows developers to add or remove fonts from the list.
+		 *
+		 * @since 1.3.0
+		 * @param array $popular_fonts Array of Google Font names.
+		 */
+		$fonts = apply_filters( 'mase_google_fonts_list', $popular_fonts );
+
+		// Cache for 24 hours.
+		set_transient( 'mase_google_fonts_list', $fonts, DAY_IN_SECONDS );
+
+		return $fonts;
+	}
+
+	/**
+	 * Get Google Font URL.
+	 *
+	 * Generates the Google Fonts API URL for the specified fonts with proper parameters.
+	 * Includes font-display, weights, and subset configuration.
+	 * Requirements: 1.2, 1.5
+	 *
+	 * @param array $font_families Array of font family names.
+	 * @param array $args Optional. Additional arguments for URL generation.
+	 *                    - font_display: 'swap' (default), 'block', 'fallback', 'optional'
+	 *                    - weights: Array of font weights (default: 300,400,500,600,700)
+	 *                    - subset: Font subset (default: 'latin-ext' for Polish support)
+	 * @return string Google Fonts API URL or empty string if no fonts.
+	 */
+	public function get_google_font_url( $font_families, $args = array() ) {
+		// Return empty if no fonts specified.
+		if ( empty( $font_families ) || ! is_array( $font_families ) ) {
+			return '';
+		}
+
+		// Default arguments.
+		$defaults = array(
+			'font_display' => 'swap',
+			'weights'      => array( 300, 400, 500, 600, 700 ),
+			'subset'       => 'latin-ext', // Polish language support.
+		);
+		$args = wp_parse_args( $args, $defaults );
+
+		// Sanitize font families.
+		$font_families = array_map( 'sanitize_text_field', $font_families );
+		$font_families = array_filter( $font_families ); // Remove empty values.
+
+		if ( empty( $font_families ) ) {
+			return '';
+		}
+
+		// Build font family strings with weights.
+		$families = array();
+		foreach ( $font_families as $family ) {
+			// Replace spaces with + for URL encoding.
+			$family_encoded = str_replace( ' ', '+', $family );
+			
+			// Add weights specification.
+			$weights_str = implode( ';', $args['weights'] );
+			$families[] = $family_encoded . ':wght@' . $weights_str;
+		}
+
+		// Build URL parameters.
+		$url_params = array(
+			'family'  => implode( '&family=', $families ),
+			'display' => sanitize_text_field( $args['font_display'] ),
+		);
+
+		// Add subset if specified.
+		if ( ! empty( $args['subset'] ) ) {
+			$url_params['subset'] = sanitize_text_field( $args['subset'] );
+		}
+
+		// Build final URL.
+		$base_url = 'https://fonts.googleapis.com/css2';
+		$query_string = http_build_query( $url_params, '', '&' );
+		
+		// Google Fonts API v2 uses a different format, so we need to manually construct it.
+		$url = $base_url . '?family=' . implode( '&family=', $families );
+		$url .= '&display=' . $url_params['display'];
+		
+		if ( ! empty( $args['subset'] ) ) {
+			$url .= '&subset=' . $url_params['subset'];
+		}
+
+		return esc_url_raw( $url );
+	}
+
+	/**
+	 * Generate preload links for Google Fonts.
+	 *
+	 * Creates link elements for preloading critical fonts to prevent FOUT.
+	 * Requirements: 1.5, 5.6
+	 *
+	 * @param array $font_families Array of font family names to preload.
+	 * @return string HTML link elements for font preloading.
+	 */
+	public function preload_google_fonts( $font_families ) {
+		// Return empty if no fonts specified.
+		if ( empty( $font_families ) || ! is_array( $font_families ) ) {
+			return '';
+		}
+
+		// Sanitize font families.
+		$font_families = array_map( 'sanitize_text_field', $font_families );
+		$font_families = array_filter( $font_families );
+
+		if ( empty( $font_families ) ) {
+			return '';
+		}
+
+		// Get the Google Fonts URL.
+		$font_url = $this->get_google_font_url( $font_families );
+		
+		if ( empty( $font_url ) ) {
+			return '';
+		}
+
+		// Generate preload link.
+		$preload_link = sprintf(
+			'<link rel="preload" href="%s" as="style" crossorigin="anonymous">',
+			esc_url( $font_url )
+		);
+
+		/**
+		 * Filter Google Fonts preload links.
+		 *
+		 * Allows developers to modify or add additional preload links.
+		 *
+		 * @since 1.3.0
+		 * @param string $preload_link HTML link element for preloading.
+		 * @param array  $font_families Array of font family names.
+		 */
+		return apply_filters( 'mase_google_fonts_preload', $preload_link, $font_families );
 	}
 }

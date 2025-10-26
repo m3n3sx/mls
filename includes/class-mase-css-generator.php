@@ -106,6 +106,18 @@ class MASE_CSS_Generator {
 			// Generate typography CSS (Requirement 6.1, 6.2, 6.3, 6.4, 6.5).
 			$css .= $this->generate_typography_css( $settings );
 
+			// Generate content typography CSS (Advanced Admin Customization - Task 2.2).
+			// Requirements: 1.1, 1.3, 1.8, 4.3, 5.5
+			$css .= $this->generate_content_typography_css( $settings );
+
+			// Generate dashboard widgets CSS (Advanced Admin Customization - Task 8.2).
+			// Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.3
+			$css .= $this->generate_dashboard_widgets_css( $settings );
+
+			// Generate form controls CSS (Advanced Admin Customization - Task 13.2).
+			// Requirements: 3.1, 3.2, 3.3, 3.4, 3.8, 4.3
+			$css .= $this->generate_form_controls_css( $settings );
+
 			// Generate glassmorphism CSS (Requirement 5.1).
 			$css .= $this->generate_glassmorphism_css( $settings );
 
@@ -132,6 +144,12 @@ class MASE_CSS_Generator {
 
 			// Generate button styles CSS (Universal Button Styling System).
 			$css .= $this->generate_button_styles( $settings );
+
+			// Generate universal buttons CSS (Task 14, 16 - Requirements 6.1-6.6).
+			$css .= $this->generate_universal_buttons_css( $settings );
+
+			// Generate content CSS (Task 15, 16 - Requirements 6.1-6.6).
+			$css .= $this->generate_content_css( $settings );
 
 			// Generate background styles CSS (Advanced Background System).
 			$css .= $this->generate_background_styles( $settings );
@@ -5101,7 +5119,10 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 
 	/**
 	 * Get button selectors for a button type.
-	 * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5 - Map types to WordPress selectors
+	 * Task 12: Map button types to WordPress CSS selectors
+	 * Requirements: 6.2, 16.1, 16.2, 16.3, 16.4, 16.5, 16.6
+	 *
+	 * Mapping matches JavaScript implementation for consistency.
 	 *
 	 * @param string $type Button type.
 	 * @return array CSS selectors.
@@ -5109,11 +5130,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 	private function get_button_selectors( $type ) {
 		$button_types = array(
 			'primary'   => array( '.button-primary', '.wp-core-ui .button-primary' ),
-			'secondary' => array( '.button', '.wp-core-ui .button' ),
-			'danger'    => array( '.button.delete', '.submitdelete' ),
-			'success'   => array( '.button.button-large' ),
+			'secondary' => array( '.button', '.button-secondary', '.wp-core-ui .button' ),
+			'danger'    => array( '.button.delete', '.button-link-delete' ),
+			'success'   => array( '.button.button-primary.button-hero' ),
 			'ghost'     => array( '.button-link' ),
-			'tabs'      => array( '.nav-tab', '.nav-tab-active' ),
+			'tabs'      => array( '.nav-tab', '.wp-filter .filter-links li a' ),
 		);
 
 		return isset( $button_types[ $type ] ) ? $button_types[ $type ] : array();
@@ -5696,4 +5717,1965 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			return '';
 		}
 	}
+
+	/**
+	 * Generate Content CSS
+	 * Task 15 - Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
+	 * 
+	 * Generates CSS for content area styling including typography, colors, and spacing.
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Generated CSS.
+	 */
+	/**
+	 * Generate Content CSS
+	 * Task 13 - Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
+	 * 
+	 * Generates CSS for content area styling including typography, colors, and spacing.
+	 * Targets .wrap elements which contain the main WordPress admin content areas.
+	 *
+	 * @param array $settings Settings array containing content configuration.
+	 * @return string Generated content CSS.
+	 */
+	private function generate_content_css( $settings ) {
+		try {
+			$css = '';
+
+			// Check if content settings exist (Requirement 6.1).
+			if ( ! isset( $settings['content'] ) || ! is_array( $settings['content'] ) ) {
+				return $css;
+			}
+
+			$content_settings = $settings['content'];
+
+			// Typography CSS (Requirement 6.2, 6.4).
+			// Target .wrap elements for typography settings.
+			if ( isset( $content_settings['typography'] ) && is_array( $content_settings['typography'] ) ) {
+				$typo = $content_settings['typography'];
+
+				$css .= '.wrap, .wrap p, .wrap div, .wrap td {';
+
+				// Font size (Requirement 6.2).
+				if ( isset( $typo['font_size'] ) ) {
+					$css .= 'font-size: ' . absint( $typo['font_size'] ) . 'px !important;';
+				}
+
+				// Font family (Requirement 6.2).
+				if ( isset( $typo['font_family'] ) && 'system' !== $typo['font_family'] ) {
+					$css .= 'font-family: "' . esc_attr( $typo['font_family'] ) . '", sans-serif !important;';
+				}
+
+				// Line height (Requirement 6.2).
+				if ( isset( $typo['line_height'] ) ) {
+					$css .= 'line-height: ' . floatval( $typo['line_height'] ) . ' !important;';
+				}
+
+				$css .= '}';
+			}
+
+			// Colors CSS (Requirement 6.3, 6.4).
+			if ( isset( $content_settings['colors'] ) && is_array( $content_settings['colors'] ) ) {
+				$colors = $content_settings['colors'];
+
+				// Text color for content elements (Requirement 6.3).
+				if ( isset( $colors['text'] ) ) {
+					$css .= '.wrap, .wrap p, .wrap div, .wrap td {';
+					$css .= 'color: ' . sanitize_hex_color( $colors['text'] ) . ' !important;';
+					$css .= '}';
+				}
+
+				// Link color (Requirement 6.3).
+				if ( isset( $colors['link'] ) ) {
+					$css .= '.wrap a {';
+					$css .= 'color: ' . sanitize_hex_color( $colors['link'] ) . ' !important;';
+					$css .= '}';
+				}
+
+				// Heading color (Requirement 6.3).
+				if ( isset( $colors['heading'] ) ) {
+					$css .= '.wrap h1, .wrap h2, .wrap h3, .wrap h4, .wrap h5, .wrap h6 {';
+					$css .= 'color: ' . sanitize_hex_color( $colors['heading'] ) . ' !important;';
+					$css .= '}';
+				}
+			}
+
+			// Spacing CSS (Requirement 6.4, 6.5).
+			if ( isset( $content_settings['spacing'] ) && is_array( $content_settings['spacing'] ) ) {
+				$spacing = $content_settings['spacing'];
+
+				// Paragraph margin (Requirement 6.4).
+				if ( isset( $spacing['paragraph_margin'] ) ) {
+					$css .= '.wrap p {';
+					$css .= 'margin-bottom: ' . absint( $spacing['paragraph_margin'] ) . 'px !important;';
+					$css .= '}';
+				}
+
+				// Heading margin (Requirement 6.4).
+				if ( isset( $spacing['heading_margin'] ) ) {
+					$css .= '.wrap h1, .wrap h2, .wrap h3, .wrap h4, .wrap h5, .wrap h6 {';
+					$css .= 'margin-bottom: ' . absint( $spacing['heading_margin'] ) . 'px !important;';
+					$css .= '}';
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Content CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate Universal Buttons CSS
+	 * Task 12 - Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
+	 * 
+	 * Generates CSS for all button types and states with proper transitions.
+	 * Uses helper methods for maintainability and consistency.
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Generated CSS.
+	 */
+	private function generate_universal_buttons_css( $settings ) {
+		try {
+			$css = '';
+
+			// Check if universal_buttons settings exist (Requirement 6.1).
+			if ( ! isset( $settings['universal_buttons'] ) || ! is_array( $settings['universal_buttons'] ) ) {
+				return $css;
+			}
+
+			$button_settings = $settings['universal_buttons'];
+
+			// Generate CSS for each button type and state (Requirement 6.1, 6.2).
+			foreach ( $button_settings as $type => $type_settings ) {
+				if ( ! is_array( $type_settings ) ) {
+					continue;
+				}
+
+				foreach ( $type_settings as $state => $state_settings ) {
+					if ( ! is_array( $state_settings ) ) {
+						continue;
+					}
+
+					// Generate CSS for this button type and state using helper method.
+					$css .= $this->generate_button_state_css( $type, $state, $state_settings );
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 'MASE: Universal buttons CSS generation failed: %s', $e->getMessage() ) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate CSS for a specific button type and state.
+	 * Task 12: Helper method for button state CSS generation
+	 * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
+	 *
+	 * @param string $type Button type (primary, secondary, danger, success, ghost, tabs).
+	 * @param string $state Button state (normal, hover, active, focus, disabled).
+	 * @param array  $settings State-specific settings.
+	 * @return string Generated CSS for this button type and state.
+	 */
+	private function generate_button_state_css( $type, $state, $settings ) {
+		try {
+			$css = '';
+
+			// Get selectors for this button type (Requirement 6.2).
+			$selectors = $this->get_button_selectors( $type );
+			if ( empty( $selectors ) ) {
+				return $css;
+			}
+
+			// Get pseudo-class for this state (Requirement 6.3).
+			$pseudo_class = $this->get_button_pseudo_class( $state );
+
+			// Generate CSS for each selector (Requirement 6.2).
+			foreach ( $selectors as $selector ) {
+				$full_selector = $selector . $pseudo_class;
+				$css .= $full_selector . ' {';
+
+				// Background - solid or gradient (Requirement 6.3).
+				if ( isset( $settings['bg_type'] ) && 'gradient' === $settings['bg_type'] ) {
+					// Gradient background.
+					if ( isset( $settings['gradient_colors'] ) && is_array( $settings['gradient_colors'] ) ) {
+						$css .= $this->generate_button_gradient_background( $settings );
+					}
+				} else {
+					// Solid background.
+					if ( isset( $settings['bg_color'] ) ) {
+						$css .= 'background-color: ' . sanitize_hex_color( $settings['bg_color'] ) . ' !important;';
+					}
+				}
+
+				// Text color (Requirement 6.3).
+				if ( isset( $settings['text_color'] ) ) {
+					$css .= 'color: ' . sanitize_hex_color( $settings['text_color'] ) . ' !important;';
+				}
+
+				// Border properties (Requirement 6.4).
+				if ( isset( $settings['border_width'] ) ) {
+					$border_width = absint( $settings['border_width'] );
+					$css .= 'border-width: ' . $border_width . 'px !important;';
+					$css .= 'border-style: solid !important;';
+				}
+
+				if ( isset( $settings['border_color'] ) ) {
+					$css .= 'border-color: ' . sanitize_hex_color( $settings['border_color'] ) . ' !important;';
+				}
+
+				if ( isset( $settings['border_radius'] ) ) {
+					$css .= 'border-radius: ' . absint( $settings['border_radius'] ) . 'px !important;';
+				}
+
+				// Padding (Requirement 6.4).
+				if ( isset( $settings['padding_vertical'] ) && isset( $settings['padding_horizontal'] ) ) {
+					$css .= 'padding: ' . absint( $settings['padding_vertical'] ) . 'px ' . 
+					        absint( $settings['padding_horizontal'] ) . 'px !important;';
+				}
+
+				// Typography (Requirement 6.5).
+				if ( isset( $settings['font_size'] ) ) {
+					$css .= 'font-size: ' . absint( $settings['font_size'] ) . 'px !important;';
+				}
+
+				if ( isset( $settings['font_weight'] ) ) {
+					$css .= 'font-weight: ' . absint( $settings['font_weight'] ) . ' !important;';
+				}
+
+				// Transition for smooth state changes (Requirement 6.6).
+				// Apply transition only to normal state to avoid conflicts.
+				if ( 'normal' === $state ) {
+					$css .= 'transition: all 0.3s ease !important;';
+				}
+
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Button state CSS generation failed for type=%s, state=%s: %s', 
+				$type, 
+				$state, 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Get CSS pseudo-class for button state.
+	 * Task 12: Map button states to CSS pseudo-classes
+	 * Requirements: 6.3
+	 *
+	 * @param string $state Button state (normal, hover, active, focus, disabled).
+	 * @return string CSS pseudo-class (empty string for normal state).
+	 */
+	private function get_button_pseudo_class( $state ) {
+		$pseudo_classes = array(
+			'normal'   => '',
+			'hover'    => ':hover',
+			'active'   => ':active',
+			'focus'    => ':focus',
+			'disabled' => ':disabled',
+		);
+
+		return isset( $pseudo_classes[ $state ] ) ? $pseudo_classes[ $state ] : '';
+	}
+
+	/**
+	 * Generate content typography CSS.
+	 * Advanced Admin Customization - Task 2.1
+	 * Requirements: 1.1, 1.3, 1.8, 4.3, 5.5
+	 *
+	 * Generates typography CSS for 6 admin content areas with Google Fonts support,
+	 * heading hierarchy with scale ratios, and responsive font scaling.
+	 *
+	 * @param array $settings Settings array containing content_typography configuration.
+	 * @return string Typography CSS string.
+	 */
+	private function generate_content_typography_css( $settings ) {
+		try {
+			// Check if typography settings exist.
+			if ( ! isset( $settings['content_typography'] ) ) {
+				return '';
+			}
+
+			$typography = $settings['content_typography'];
+			$css = '';
+
+			// Generate Google Fonts @import if enabled (Requirement 1.2, 1.5).
+			if ( isset( $typography['google_fonts_enabled'] ) && $typography['google_fonts_enabled'] ) {
+				$css .= $this->generate_google_fonts_import_for_typography( $typography );
+			}
+
+			// Define admin area selectors (Requirement 1.1).
+			$area_selectors = array(
+				'body_text' => 'body.wp-admin .wp-editor-area, body.wp-admin .block-editor-writing-flow, body.wp-admin .editor-post-text-editor, body.wp-admin p',
+				'comments'  => 'body.wp-admin .comment-content, body.wp-admin .comment-text',
+				'widgets'   => 'body.wp-admin .widget-content, body.wp-admin .widget-inside',
+				'meta'      => 'body.wp-admin .post-attributes-label-wrapper, body.wp-admin .misc-pub-section',
+				'tables'    => 'body.wp-admin table.wp-list-table td, body.wp-admin table.widefat td',
+				'notices'   => 'body.wp-admin .notice p, body.wp-admin .update-message',
+			);
+
+			// Generate CSS for each admin area (Requirement 1.1, 1.3).
+			foreach ( $area_selectors as $area => $selector ) {
+				if ( isset( $typography[ $area ] ) ) {
+					$css .= $this->generate_typography_area_css( $selector, $typography[ $area ] );
+				}
+			}
+
+			// Generate heading hierarchy CSS (Requirement 1.4).
+			if ( isset( $typography['headings'] ) ) {
+				$css .= $this->generate_heading_hierarchy_css( $typography['headings'] );
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Content typography CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate Google Fonts @import statement for typography.
+	 * Requirements: 1.2, 1.5
+	 *
+	 * @param array $typography Typography settings array.
+	 * @return string Google Fonts @import CSS.
+	 */
+	private function generate_google_fonts_import_for_typography( $typography ) {
+		try {
+			if ( ! isset( $typography['google_fonts_list'] ) || empty( $typography['google_fonts_list'] ) ) {
+				return '';
+			}
+
+			$fonts = $typography['google_fonts_list'];
+			$font_display = isset( $typography['font_display'] ) ? $typography['font_display'] : 'swap';
+			$font_subset = isset( $typography['font_subset'] ) ? $typography['font_subset'] : 'latin-ext';
+
+			// Build Google Fonts URL.
+			$font_families = array();
+			foreach ( $fonts as $font ) {
+				// Include common weights for each font.
+				$font_families[] = str_replace( ' ', '+', sanitize_text_field( $font ) ) . ':300,400,500,600,700';
+			}
+
+			$fonts_param = implode( '|', $font_families );
+			$google_fonts_url = 'https://fonts.googleapis.com/css2?family=' . $fonts_param . 
+			                    '&display=' . $font_display . 
+			                    '&subset=' . $font_subset;
+
+			// Generate @import statement (Requirement 1.2).
+			return '@import url("' . esc_url( $google_fonts_url ) . '");' . "\n";
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Google Fonts import generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate typography CSS for a specific admin area.
+	 * Requirements: 1.1, 1.3, 1.8
+	 *
+	 * @param string $selector CSS selector for the area.
+	 * @param array  $settings Typography settings for the area.
+	 * @return string Typography CSS for the area.
+	 */
+	private function generate_typography_area_css( $selector, $settings ) {
+		try {
+			$css = $selector . ' {';
+
+			// Font family (Requirement 1.1).
+			if ( isset( $settings['font_family'] ) && 'system' !== $settings['font_family'] ) {
+				$css .= 'font-family: "' . sanitize_text_field( $settings['font_family'] ) . '", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;';
+			}
+
+			// Font size with responsive scaling using clamp() (Requirement 1.3, 1.8).
+			if ( isset( $settings['font_size'] ) ) {
+				$font_size = absint( $settings['font_size'] );
+				// Use clamp() for responsive font scaling: min, preferred, max.
+				$min_size = max( 8, $font_size - 2 );
+				$max_size = min( 72, $font_size + 2 );
+				$css .= 'font-size: clamp(' . $min_size . 'px, ' . $font_size . 'px, ' . $max_size . 'px) !important;';
+			}
+
+			// Line height (Requirement 1.3).
+			if ( isset( $settings['line_height'] ) ) {
+				$line_height = floatval( $settings['line_height'] );
+				$css .= 'line-height: ' . $line_height . ' !important;';
+			}
+
+			// Letter spacing (Requirement 1.3).
+			if ( isset( $settings['letter_spacing'] ) ) {
+				$letter_spacing = intval( $settings['letter_spacing'] );
+				$css .= 'letter-spacing: ' . $letter_spacing . 'px !important;';
+			}
+
+			// Word spacing (Requirement 1.3).
+			if ( isset( $settings['word_spacing'] ) ) {
+				$word_spacing = intval( $settings['word_spacing'] );
+				$css .= 'word-spacing: ' . $word_spacing . 'px !important;';
+			}
+
+			// Font weight (Requirement 1.3).
+			if ( isset( $settings['font_weight'] ) ) {
+				$font_weight = absint( $settings['font_weight'] );
+				$css .= 'font-weight: ' . $font_weight . ' !important;';
+			}
+
+			// Font style (Requirement 1.3).
+			if ( isset( $settings['font_style'] ) && 'normal' !== $settings['font_style'] ) {
+				$css .= 'font-style: ' . sanitize_text_field( $settings['font_style'] ) . ' !important;';
+			}
+
+			// Text transform (Requirement 1.3).
+			if ( isset( $settings['text_transform'] ) && 'none' !== $settings['text_transform'] ) {
+				$css .= 'text-transform: ' . sanitize_text_field( $settings['text_transform'] ) . ' !important;';
+			}
+
+			// Text shadow (Requirement 1.3).
+			if ( isset( $settings['text_shadow'] ) && ! empty( $settings['text_shadow'] ) ) {
+				$css .= 'text-shadow: ' . sanitize_text_field( $settings['text_shadow'] ) . ' !important;';
+			}
+
+			// Text stroke (Requirement 1.3).
+			if ( isset( $settings['text_stroke'] ) && ! empty( $settings['text_stroke'] ) ) {
+				$css .= '-webkit-text-stroke: ' . sanitize_text_field( $settings['text_stroke'] ) . ' !important;';
+			}
+
+			// Font ligatures (Requirement 1.3).
+			if ( isset( $settings['ligatures'] ) && $settings['ligatures'] ) {
+				$css .= 'font-variant-ligatures: common-ligatures !important;';
+			}
+
+			// Font variant (Requirement 1.3).
+			if ( isset( $settings['font_variant'] ) && 'normal' !== $settings['font_variant'] ) {
+				$css .= 'font-variant: ' . sanitize_text_field( $settings['font_variant'] ) . ' !important;';
+			}
+
+			// Text rendering (Requirement 1.3).
+			if ( isset( $settings['text_rendering'] ) ) {
+				$css .= 'text-rendering: ' . sanitize_text_field( $settings['text_rendering'] ) . ' !important;';
+			}
+
+			$css .= '}';
+
+			// Drop caps (Requirement 1.3).
+			if ( isset( $settings['drop_caps'] ) && $settings['drop_caps'] ) {
+				$css .= $selector . '::first-letter {';
+				$css .= 'float: left !important;';
+				$css .= 'font-size: 3em !important;';
+				$css .= 'line-height: 0.9 !important;';
+				$css .= 'margin: 0.1em 0.1em 0 0 !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Typography area CSS generation failed for selector %s: %s', 
+				$selector, 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate heading hierarchy CSS with scale ratios.
+	 * Requirements: 1.4
+	 *
+	 * @param array $headings Heading settings array.
+	 * @return string Heading hierarchy CSS.
+	 */
+	private function generate_heading_hierarchy_css( $headings ) {
+		try {
+			$css = '';
+			$scale_ratio = isset( $headings['scale_ratio'] ) ? floatval( $headings['scale_ratio'] ) : 1.250;
+
+			// Base font size for calculations (typically h6 or body text size).
+			$base_size = 16;
+
+			// Generate CSS for each heading level (H1-H6) (Requirement 1.4).
+			$heading_levels = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+			
+			foreach ( $heading_levels as $index => $level ) {
+				// Calculate font size based on scale ratio if not explicitly set.
+				$level_settings = isset( $headings[ $level ] ) ? $headings[ $level ] : array();
+				
+				// Calculate size: h1 is largest (ratio^5), h6 is smallest (ratio^0).
+				$power = 5 - $index;
+				$calculated_size = round( $base_size * pow( $scale_ratio, $power ) );
+				
+				$font_size = isset( $level_settings['font_size'] ) ? 
+					absint( $level_settings['font_size'] ) : 
+					$calculated_size;
+
+				// High-specificity selector to override WordPress defaults (Requirement 1.8).
+				$css .= 'body.wp-admin ' . $level . ', ';
+				$css .= 'body.wp-admin .wp-block-heading ' . $level . ' {';
+
+				// Font size with responsive scaling (Requirement 1.3, 1.8).
+				$min_size = max( 8, $font_size - 4 );
+				$max_size = min( 72, $font_size + 4 );
+				$css .= 'font-size: clamp(' . $min_size . 'px, ' . $font_size . 'px, ' . $max_size . 'px) !important;';
+
+				// Font family (inherit from body_text or custom).
+				if ( isset( $level_settings['font_family'] ) && 'inherit' !== $level_settings['font_family'] ) {
+					$css .= 'font-family: "' . sanitize_text_field( $level_settings['font_family'] ) . '", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;';
+				}
+
+				// Font weight.
+				if ( isset( $level_settings['font_weight'] ) ) {
+					$css .= 'font-weight: ' . absint( $level_settings['font_weight'] ) . ' !important;';
+				}
+
+				// Line height.
+				if ( isset( $level_settings['line_height'] ) ) {
+					$css .= 'line-height: ' . floatval( $level_settings['line_height'] ) . ' !important;';
+				}
+
+				// Letter spacing.
+				if ( isset( $level_settings['letter_spacing'] ) ) {
+					$css .= 'letter-spacing: ' . intval( $level_settings['letter_spacing'] ) . 'px !important;';
+				}
+
+				// Text transform.
+				if ( isset( $level_settings['text_transform'] ) && 'none' !== $level_settings['text_transform'] ) {
+					$css .= 'text-transform: ' . sanitize_text_field( $level_settings['text_transform'] ) . ' !important;';
+				}
+
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Heading hierarchy CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate dashboard widgets CSS.
+	 * Advanced Admin Customization - Task 8.1
+	 * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 4.3
+	 *
+	 * @param array $settings Settings array containing dashboard_widgets configuration.
+	 * @return string Dashboard widgets CSS string.
+	 */
+	private function generate_dashboard_widgets_css( $settings ) {
+		try {
+			// Check if dashboard widgets settings exist.
+			if ( ! isset( $settings['dashboard_widgets'] ) ) {
+				return '';
+			}
+
+			$widgets = $settings['dashboard_widgets'];
+			$css = '';
+
+			// Generate container CSS (Requirement 2.1).
+			$css .= $this->generate_widget_container_css( $widgets );
+
+			// Generate header CSS (Requirement 2.2).
+			$css .= $this->generate_widget_header_css( $widgets );
+
+			// Generate content CSS (Requirement 2.3).
+			$css .= $this->generate_widget_content_css( $widgets );
+
+			// Generate specific widget overrides (Requirement 2.4).
+			$css .= $this->generate_specific_widget_overrides( $widgets );
+
+			// Generate glassmorphism CSS (Requirement 2.4).
+			$css .= $this->generate_widget_glassmorphism_css( $widgets );
+
+			// Generate hover animation CSS (Requirement 2.4).
+			$css .= $this->generate_widget_hover_animations( $widgets );
+
+			// Generate responsive layout CSS (Requirement 2.5).
+			$css .= $this->generate_widget_responsive_layout( $widgets );
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Dashboard widgets CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget container CSS.
+	 * Requirement 2.1
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Widget container CSS.
+	 */
+	private function generate_widget_container_css( $widgets ) {
+		try {
+			if ( ! isset( $widgets['container'] ) ) {
+				return '';
+			}
+
+			$container = $widgets['container'];
+			$css = '';
+
+			// High-specificity selector to override WordPress defaults (Requirement 4.3).
+			$css .= 'body.wp-admin .postbox {';
+
+			// Background (Requirement 2.1).
+			$bg_type = isset( $container['bg_type'] ) ? $container['bg_type'] : 'solid';
+			
+			if ( $bg_type === 'gradient' ) {
+				$css .= $this->generate_widget_gradient_background( $container );
+			} elseif ( $bg_type === 'transparent' ) {
+				$css .= 'background-color: transparent !important;';
+			} else {
+				$bg_color = isset( $container['bg_color'] ) ? $container['bg_color'] : '#ffffff';
+				$css .= 'background-color: ' . sanitize_hex_color( $bg_color ) . ' !important;';
+			}
+
+			// Border (Requirement 2.1).
+			$border_width_top = isset( $container['border_width_top'] ) ? absint( $container['border_width_top'] ) : 1;
+			$border_width_right = isset( $container['border_width_right'] ) ? absint( $container['border_width_right'] ) : 1;
+			$border_width_bottom = isset( $container['border_width_bottom'] ) ? absint( $container['border_width_bottom'] ) : 1;
+			$border_width_left = isset( $container['border_width_left'] ) ? absint( $container['border_width_left'] ) : 1;
+			$border_color = isset( $container['border_color'] ) ? sanitize_hex_color( $container['border_color'] ) : '#cccccc';
+			$border_style = isset( $container['border_style'] ) ? sanitize_text_field( $container['border_style'] ) : 'solid';
+
+			$css .= sprintf(
+				'border-width: %dpx %dpx %dpx %dpx !important;',
+				$border_width_top,
+				$border_width_right,
+				$border_width_bottom,
+				$border_width_left
+			);
+			$css .= 'border-style: ' . $border_style . ' !important;';
+			$css .= 'border-color: ' . $border_color . ' !important;';
+
+			// Border radius (Requirement 2.1).
+			$border_radius_mode = isset( $container['border_radius_mode'] ) ? $container['border_radius_mode'] : 'uniform';
+			
+			if ( $border_radius_mode === 'individual' ) {
+				$tl = isset( $container['border_radius_tl'] ) ? absint( $container['border_radius_tl'] ) : 4;
+				$tr = isset( $container['border_radius_tr'] ) ? absint( $container['border_radius_tr'] ) : 4;
+				$br = isset( $container['border_radius_br'] ) ? absint( $container['border_radius_br'] ) : 4;
+				$bl = isset( $container['border_radius_bl'] ) ? absint( $container['border_radius_bl'] ) : 4;
+				
+				$css .= sprintf(
+					'border-radius: %dpx %dpx %dpx %dpx !important;',
+					$tl,
+					$tr,
+					$br,
+					$bl
+				);
+			} else {
+				$radius = isset( $container['border_radius'] ) ? absint( $container['border_radius'] ) : 4;
+				$css .= 'border-radius: ' . $radius . 'px !important;';
+			}
+
+			// Box shadow (Requirement 2.1).
+			$shadow_preset = isset( $container['shadow_preset'] ) ? $container['shadow_preset'] : 'none';
+			
+			if ( $shadow_preset === 'custom' ) {
+				$h_offset = isset( $container['shadow_h_offset'] ) ? intval( $container['shadow_h_offset'] ) : 0;
+				$v_offset = isset( $container['shadow_v_offset'] ) ? intval( $container['shadow_v_offset'] ) : 2;
+				$blur = isset( $container['shadow_blur'] ) ? absint( $container['shadow_blur'] ) : 4;
+				$spread = isset( $container['shadow_spread'] ) ? intval( $container['shadow_spread'] ) : 0;
+				$shadow_color = isset( $container['shadow_color'] ) ? $container['shadow_color'] : 'rgba(0,0,0,0.1)';
+				
+				$css .= sprintf(
+					'box-shadow: %dpx %dpx %dpx %dpx %s !important;',
+					$h_offset,
+					$v_offset,
+					$blur,
+					$spread,
+					$shadow_color
+				);
+			} elseif ( $shadow_preset !== 'none' ) {
+				$shadow_presets = array(
+					'subtle'   => '0 2px 4px rgba(0, 0, 0, 0.1)',
+					'medium'   => '0 4px 8px rgba(0, 0, 0, 0.15)',
+					'strong'   => '0 8px 16px rgba(0, 0, 0, 0.2)',
+				);
+				
+				if ( isset( $shadow_presets[ $shadow_preset ] ) ) {
+					$css .= 'box-shadow: ' . $shadow_presets[ $shadow_preset ] . ' !important;';
+				}
+			}
+
+			// Padding (Requirement 2.1).
+			$padding_top = isset( $container['padding_top'] ) ? absint( $container['padding_top'] ) : 12;
+			$padding_right = isset( $container['padding_right'] ) ? absint( $container['padding_right'] ) : 12;
+			$padding_bottom = isset( $container['padding_bottom'] ) ? absint( $container['padding_bottom'] ) : 12;
+			$padding_left = isset( $container['padding_left'] ) ? absint( $container['padding_left'] ) : 12;
+			
+			$css .= sprintf(
+				'padding: %dpx %dpx %dpx %dpx !important;',
+				$padding_top,
+				$padding_right,
+				$padding_bottom,
+				$padding_left
+			);
+
+			// Margin (Requirement 2.1).
+			$margin_top = isset( $container['margin_top'] ) ? absint( $container['margin_top'] ) : 0;
+			$margin_right = isset( $container['margin_right'] ) ? absint( $container['margin_right'] ) : 0;
+			$margin_bottom = isset( $container['margin_bottom'] ) ? absint( $container['margin_bottom'] ) : 20;
+			$margin_left = isset( $container['margin_left'] ) ? absint( $container['margin_left'] ) : 0;
+			
+			$css .= sprintf(
+				'margin: %dpx %dpx %dpx %dpx !important;',
+				$margin_top,
+				$margin_right,
+				$margin_bottom,
+				$margin_left
+			);
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget container CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget gradient background CSS.
+	 * Requirement 2.1
+	 *
+	 * @param array $container Container settings array.
+	 * @return string Gradient background CSS.
+	 */
+	private function generate_widget_gradient_background( $container ) {
+		try {
+			$gradient_type = isset( $container['gradient_type'] ) ? $container['gradient_type'] : 'linear';
+			$gradient_angle = isset( $container['gradient_angle'] ) ? absint( $container['gradient_angle'] ) : 90;
+			$gradient_colors = isset( $container['gradient_colors'] ) ? $container['gradient_colors'] : array();
+
+			// Ensure we have at least 2 color stops.
+			if ( count( $gradient_colors ) < 2 ) {
+				$gradient_colors = array(
+					array( 'color' => '#ffffff', 'position' => 0 ),
+					array( 'color' => '#f0f0f0', 'position' => 100 ),
+				);
+			}
+
+			// Build color stops string.
+			$color_stops = array();
+			foreach ( $gradient_colors as $stop ) {
+				$color = isset( $stop['color'] ) ? sanitize_hex_color( $stop['color'] ) : '#ffffff';
+				$position = isset( $stop['position'] ) ? absint( $stop['position'] ) : 0;
+				$color_stops[] = $color . ' ' . $position . '%';
+			}
+			$color_stops_str = implode( ', ', $color_stops );
+
+			// Generate gradient based on type.
+			switch ( $gradient_type ) {
+				case 'linear':
+					return 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+
+				case 'radial':
+					return 'background: radial-gradient(circle, ' . $color_stops_str . ') !important;';
+
+				default:
+					return 'background: linear-gradient(' . $gradient_angle . 'deg, ' . $color_stops_str . ') !important;';
+			}
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget gradient background CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget header CSS.
+	 * Requirement 2.2
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Widget header CSS.
+	 */
+	private function generate_widget_header_css( $widgets ) {
+		try {
+			if ( ! isset( $widgets['header'] ) ) {
+				return '';
+			}
+
+			$header = $widgets['header'];
+			$css = '';
+
+			// High-specificity selector to override WordPress defaults (Requirement 4.3).
+			$css .= 'body.wp-admin .postbox .hndle,';
+			$css .= 'body.wp-admin .postbox .postbox-header {';
+
+			// Background color (Requirement 2.2).
+			$bg_color = isset( $header['bg_color'] ) ? sanitize_hex_color( $header['bg_color'] ) : '#f5f5f5';
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+
+			// Typography (Requirement 2.2).
+			$font_size = isset( $header['font_size'] ) ? absint( $header['font_size'] ) : 14;
+			$font_weight = isset( $header['font_weight'] ) ? absint( $header['font_weight'] ) : 600;
+			$text_color = isset( $header['text_color'] ) ? sanitize_hex_color( $header['text_color'] ) : '#23282d';
+			$text_transform = isset( $header['text_transform'] ) ? sanitize_text_field( $header['text_transform'] ) : 'none';
+
+			$css .= 'font-size: ' . $font_size . 'px !important;';
+			$css .= 'font-weight: ' . $font_weight . ' !important;';
+			$css .= 'color: ' . $text_color . ' !important;';
+			
+			if ( $text_transform !== 'none' ) {
+				$css .= 'text-transform: ' . $text_transform . ' !important;';
+			}
+
+			// Border bottom (Requirement 2.2).
+			$border_bottom_width = isset( $header['border_bottom_width'] ) ? absint( $header['border_bottom_width'] ) : 1;
+			$border_bottom_color = isset( $header['border_bottom_color'] ) ? sanitize_hex_color( $header['border_bottom_color'] ) : '#e0e0e0';
+			
+			if ( $border_bottom_width > 0 ) {
+				$css .= 'border-bottom: ' . $border_bottom_width . 'px solid ' . $border_bottom_color . ' !important;';
+			}
+
+			// Height (Requirement 2.2).
+			$height = isset( $header['height'] ) ? $header['height'] : 'auto';
+			if ( $height !== 'auto' ) {
+				$css .= 'height: ' . absint( $height ) . 'px !important;';
+			}
+
+			$css .= '}';
+
+			// Icon styling (Requirement 2.2).
+			$icon_color = isset( $header['icon_color'] ) ? $header['icon_color'] : 'inherit';
+			$icon_size = isset( $header['icon_size'] ) ? absint( $header['icon_size'] ) : 16;
+
+			if ( $icon_color !== 'inherit' ) {
+				$css .= 'body.wp-admin .postbox .hndle .dashicons,';
+				$css .= 'body.wp-admin .postbox .postbox-header .dashicons {';
+				$css .= 'color: ' . sanitize_hex_color( $icon_color ) . ' !important;';
+				$css .= 'font-size: ' . $icon_size . 'px !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget header CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget content CSS.
+	 * Requirement 2.3
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Widget content CSS.
+	 */
+	private function generate_widget_content_css( $widgets ) {
+		try {
+			if ( ! isset( $widgets['content'] ) ) {
+				return '';
+			}
+
+			$content = $widgets['content'];
+			$css = '';
+
+			// High-specificity selector to override WordPress defaults (Requirement 4.3).
+			$css .= 'body.wp-admin .postbox .inside {';
+
+			// Background color (Requirement 2.3).
+			$bg_color = isset( $content['bg_color'] ) ? $content['bg_color'] : 'transparent';
+			if ( $bg_color !== 'transparent' ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $bg_color ) . ' !important;';
+			}
+
+			// Typography (Requirement 2.3).
+			$font_size = isset( $content['font_size'] ) ? absint( $content['font_size'] ) : 13;
+			$text_color = isset( $content['text_color'] ) ? sanitize_hex_color( $content['text_color'] ) : '#555555';
+
+			$css .= 'font-size: ' . $font_size . 'px !important;';
+			$css .= 'color: ' . $text_color . ' !important;';
+
+			$css .= '}';
+
+			// Link colors (Requirement 2.3).
+			$link_color = isset( $content['link_color'] ) ? sanitize_hex_color( $content['link_color'] ) : '#0073aa';
+			$link_hover_color = isset( $content['link_hover_color'] ) ? sanitize_hex_color( $content['link_hover_color'] ) : '#005177';
+
+			$css .= 'body.wp-admin .postbox .inside a {';
+			$css .= 'color: ' . $link_color . ' !important;';
+			$css .= '}';
+
+			$css .= 'body.wp-admin .postbox .inside a:hover {';
+			$css .= 'color: ' . $link_hover_color . ' !important;';
+			$css .= '}';
+
+			// List styling (Requirement 2.3).
+			$list_style = isset( $content['list_style'] ) ? sanitize_text_field( $content['list_style'] ) : 'disc';
+			$list_spacing = isset( $content['list_spacing'] ) ? absint( $content['list_spacing'] ) : 8;
+
+			$css .= 'body.wp-admin .postbox .inside ul {';
+			$css .= 'list-style-type: ' . $list_style . ' !important;';
+			$css .= '}';
+
+			$css .= 'body.wp-admin .postbox .inside li {';
+			$css .= 'margin-bottom: ' . $list_spacing . 'px !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget content CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate specific widget overrides CSS.
+	 * Requirement 2.4
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Specific widget overrides CSS.
+	 */
+	private function generate_specific_widget_overrides( $widgets ) {
+		try {
+			if ( ! isset( $widgets['specific_widgets'] ) ) {
+				return '';
+			}
+
+			$specific_widgets = $widgets['specific_widgets'];
+			$css = '';
+
+			// Map widget IDs to their selectors (Requirement 2.4).
+			$widget_selectors = array(
+				'dashboard_right_now'   => '#dashboard_right_now',
+				'dashboard_activity'    => '#dashboard_activity',
+				'dashboard_quick_press' => '#dashboard_quick_press',
+				'dashboard_primary'     => '#dashboard_primary',
+			);
+
+			// Generate CSS for each specific widget override.
+			foreach ( $widget_selectors as $widget_id => $selector ) {
+				if ( isset( $specific_widgets[ $widget_id ] ) ) {
+					$widget_settings = $specific_widgets[ $widget_id ];
+
+					// Container overrides.
+					if ( isset( $widget_settings['container'] ) ) {
+						$css .= 'body.wp-admin ' . $selector . '.postbox {';
+						$css .= $this->generate_widget_override_properties( $widget_settings['container'] );
+						$css .= '}';
+					}
+
+					// Header overrides.
+					if ( isset( $widget_settings['header'] ) ) {
+						$css .= 'body.wp-admin ' . $selector . ' .hndle,';
+						$css .= 'body.wp-admin ' . $selector . ' .postbox-header {';
+						$css .= $this->generate_widget_override_properties( $widget_settings['header'] );
+						$css .= '}';
+					}
+
+					// Content overrides.
+					if ( isset( $widget_settings['content'] ) ) {
+						$css .= 'body.wp-admin ' . $selector . ' .inside {';
+						$css .= $this->generate_widget_override_properties( $widget_settings['content'] );
+						$css .= '}';
+					}
+				}
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Specific widget overrides CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget override properties CSS.
+	 * Helper method for specific widget overrides.
+	 *
+	 * @param array $properties Override properties array.
+	 * @return string Override properties CSS.
+	 */
+	private function generate_widget_override_properties( $properties ) {
+		$css = '';
+
+		// Background color.
+		if ( isset( $properties['bg_color'] ) ) {
+			$css .= 'background-color: ' . sanitize_hex_color( $properties['bg_color'] ) . ' !important;';
+		}
+
+		// Text color.
+		if ( isset( $properties['text_color'] ) ) {
+			$css .= 'color: ' . sanitize_hex_color( $properties['text_color'] ) . ' !important;';
+		}
+
+		// Font size.
+		if ( isset( $properties['font_size'] ) ) {
+			$css .= 'font-size: ' . absint( $properties['font_size'] ) . 'px !important;';
+		}
+
+		// Font weight.
+		if ( isset( $properties['font_weight'] ) ) {
+			$css .= 'font-weight: ' . absint( $properties['font_weight'] ) . ' !important;';
+		}
+
+		// Border.
+		if ( isset( $properties['border_color'] ) ) {
+			$css .= 'border-color: ' . sanitize_hex_color( $properties['border_color'] ) . ' !important;';
+		}
+
+		return $css;
+	}
+
+	/**
+	 * Generate widget glassmorphism CSS.
+	 * Requirement 2.4
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Glassmorphism CSS.
+	 */
+	private function generate_widget_glassmorphism_css( $widgets ) {
+		try {
+			// Check if glassmorphism is enabled (Requirement 2.4).
+			$glassmorphism = isset( $widgets['glassmorphism'] ) ? $widgets['glassmorphism'] : false;
+
+			if ( ! $glassmorphism ) {
+				return '';
+			}
+
+			$blur_intensity = isset( $widgets['blur_intensity'] ) ? absint( $widgets['blur_intensity'] ) : 10;
+			$css = '';
+
+			// Apply glassmorphism effect to widgets (Requirement 2.4).
+			$css .= 'body.wp-admin .postbox {';
+			$css .= 'backdrop-filter: blur(' . $blur_intensity . 'px) !important;';
+			$css .= '-webkit-backdrop-filter: blur(' . $blur_intensity . 'px) !important;';
+			$css .= 'background-color: rgba(255, 255, 255, 0.7) !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget glassmorphism CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget hover animations CSS.
+	 * Requirement 2.4
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Hover animations CSS.
+	 */
+	private function generate_widget_hover_animations( $widgets ) {
+		try {
+			$hover_animation = isset( $widgets['hover_animation'] ) ? $widgets['hover_animation'] : 'none';
+
+			if ( $hover_animation === 'none' ) {
+				return '';
+			}
+
+			$css = '';
+
+			// Base transition for smooth animations (Requirement 2.4).
+			$css .= 'body.wp-admin .postbox {';
+			$css .= 'transition: transform 0.3s ease, box-shadow 0.3s ease !important;';
+			$css .= '}';
+
+			// Generate hover animation based on type (Requirement 2.4).
+			$css .= 'body.wp-admin .postbox:hover {';
+
+			switch ( $hover_animation ) {
+				case 'lift':
+					$lift_distance = isset( $widgets['hover_lift_distance'] ) ? absint( $widgets['hover_lift_distance'] ) : 4;
+					$css .= 'transform: translateY(-' . $lift_distance . 'px) !important;';
+					$css .= 'box-shadow: 0 ' . ( $lift_distance * 2 ) . 'px ' . ( $lift_distance * 4 ) . 'px rgba(0, 0, 0, 0.15) !important;';
+					break;
+
+				case 'glow':
+					$css .= 'box-shadow: 0 0 20px rgba(0, 124, 186, 0.3) !important;';
+					break;
+
+				case 'scale':
+					$scale_factor = isset( $widgets['hover_scale_factor'] ) ? floatval( $widgets['hover_scale_factor'] ) : 1.02;
+					$css .= 'transform: scale(' . $scale_factor . ') !important;';
+					break;
+			}
+
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget hover animations CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate widget responsive layout CSS.
+	 * Requirement 2.5
+	 *
+	 * @param array $widgets Dashboard widgets settings array.
+	 * @return string Responsive layout CSS.
+	 */
+	private function generate_widget_responsive_layout( $widgets ) {
+		try {
+			if ( ! isset( $widgets['responsive'] ) ) {
+				return '';
+			}
+
+			$responsive = $widgets['responsive'];
+			$css = '';
+
+			// Mobile layout (Requirement 2.5).
+			$mobile_stack = isset( $responsive['mobile_stack'] ) ? $responsive['mobile_stack'] : true;
+
+			if ( $mobile_stack ) {
+				$css .= '@media screen and (max-width: 767px) {';
+				$css .= 'body.wp-admin #dashboard-widgets .postbox-container {';
+				$css .= 'width: 100% !important;';
+				$css .= '}';
+				$css .= '}';
+			}
+
+			// Tablet layout (Requirement 2.5).
+			$tablet_columns = isset( $responsive['tablet_columns'] ) ? absint( $responsive['tablet_columns'] ) : 2;
+
+			$css .= '@media screen and (min-width: 768px) and (max-width: 1024px) {';
+			$css .= 'body.wp-admin #dashboard-widgets .postbox-container {';
+			$css .= 'width: ' . ( 100 / $tablet_columns ) . '% !important;';
+			$css .= '}';
+			$css .= '}';
+
+			// Desktop layout (Requirement 2.5).
+			$desktop_columns = isset( $responsive['desktop_columns'] ) ? absint( $responsive['desktop_columns'] ) : 3;
+
+			$css .= '@media screen and (min-width: 1025px) {';
+			$css .= 'body.wp-admin #dashboard-widgets .postbox-container {';
+			$css .= 'width: ' . ( 100 / $desktop_columns ) . '% !important;';
+			$css .= '}';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Widget responsive layout CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+
+	/**
+	 * Generate form controls CSS.
+	 * Advanced Admin Customization - Task 13.1
+	 * Requirements: 3.1, 3.2, 3.3, 3.4, 3.8, 4.3
+	 *
+	 * @param array $settings Settings array.
+	 * @return string Form controls CSS string.
+	 */
+	private function generate_form_controls_css( $settings ) {
+		try {
+			// Check if form controls settings exist.
+			if ( ! isset( $settings['form_controls'] ) ) {
+				return '';
+			}
+
+			$controls = $settings['form_controls'];
+			$css = '';
+
+			// Generate text input CSS (Requirement 3.1).
+			$css .= $this->generate_text_input_css( $controls );
+
+			// Generate textarea CSS (Requirement 3.1).
+			$css .= $this->generate_textarea_css( $controls );
+
+			// Generate select dropdown CSS (Requirement 3.2).
+			$css .= $this->generate_select_css( $controls );
+
+			// Generate checkbox CSS (Requirement 3.3).
+			$css .= $this->generate_checkbox_css( $controls );
+
+			// Generate radio button CSS (Requirement 3.3).
+			$css .= $this->generate_radio_css( $controls );
+
+			// Generate file upload CSS (Requirement 3.4).
+			$css .= $this->generate_file_upload_css( $controls );
+
+			// Generate search field CSS (Requirement 3.4).
+			$css .= $this->generate_search_field_css( $controls );
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Form controls CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+
+	/**
+	 * Generate text input CSS.
+	 * Requirement 3.1, 3.8
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Text input CSS.
+	 */
+	private function generate_text_input_css( $controls ) {
+		try {
+			if ( ! isset( $controls['text_inputs'] ) ) {
+				return '';
+			}
+
+			$inputs = $controls['text_inputs'];
+			$css = '';
+
+			// High-specificity selectors to override WordPress defaults (Requirement 3.8, 4.3).
+			$selectors = 'body.wp-admin input[type="text"],' .
+				'body.wp-admin input[type="email"],' .
+				'body.wp-admin input[type="url"],' .
+				'body.wp-admin input[type="password"],' .
+				'body.wp-admin input[type="search"],' .
+				'body.wp-admin input[type="number"],' .
+				'body.wp-admin input[type="tel"],' .
+				'body.wp-admin input[type="date"],' .
+				'body.wp-admin input[type="time"],' .
+				'body.wp-admin input[type="datetime-local"]';
+
+			// Normal state (Requirement 3.1, 3.2).
+			$css .= $selectors . ' {';
+			
+			$bg_color = isset( $inputs['bg_color'] ) ? sanitize_hex_color( $inputs['bg_color'] ) : '#ffffff';
+			$css .= 'background-color: ' . $bg_color . ' !important;';
+			
+			$text_color = isset( $inputs['text_color'] ) ? sanitize_hex_color( $inputs['text_color'] ) : '#32373c';
+			$css .= 'color: ' . $text_color . ' !important;';
+
+			// Border (Requirement 3.2).
+			$border_width_top = isset( $inputs['border_width_top'] ) ? absint( $inputs['border_width_top'] ) : 1;
+			$border_width_right = isset( $inputs['border_width_right'] ) ? absint( $inputs['border_width_right'] ) : 1;
+			$border_width_bottom = isset( $inputs['border_width_bottom'] ) ? absint( $inputs['border_width_bottom'] ) : 1;
+			$border_width_left = isset( $inputs['border_width_left'] ) ? absint( $inputs['border_width_left'] ) : 1;
+			$border_color = isset( $inputs['border_color'] ) ? sanitize_hex_color( $inputs['border_color'] ) : '#8c8f94';
+			
+			$css .= sprintf(
+				'border-width: %dpx %dpx %dpx %dpx !important;',
+				$border_width_top,
+				$border_width_right,
+				$border_width_bottom,
+				$border_width_left
+			);
+			$css .= 'border-style: solid !important;';
+			$css .= 'border-color: ' . $border_color . ' !important;';
+			
+			// Border radius (Requirement 3.2).
+			$border_radius = isset( $inputs['border_radius'] ) ? absint( $inputs['border_radius'] ) : 4;
+			$css .= 'border-radius: ' . $border_radius . 'px !important;';
+			
+			// Padding (Requirement 3.2).
+			$padding_h = isset( $inputs['padding_horizontal'] ) ? absint( $inputs['padding_horizontal'] ) : 12;
+			$padding_v = isset( $inputs['padding_vertical'] ) ? absint( $inputs['padding_vertical'] ) : 8;
+			$css .= sprintf(
+				'padding: %dpx %dpx !important;',
+				$padding_v,
+				$padding_h
+			);
+			
+			// Height (Requirement 3.2).
+			$height_mode = isset( $inputs['height_mode'] ) ? $inputs['height_mode'] : 'auto';
+			if ( $height_mode === 'custom' ) {
+				$height = isset( $inputs['height_custom'] ) ? absint( $inputs['height_custom'] ) : 40;
+				$css .= 'height: ' . $height . 'px !important;';
+			}
+			
+			// Typography (Requirement 3.2).
+			$font_size = isset( $inputs['font_size'] ) ? absint( $inputs['font_size'] ) : 14;
+			$css .= 'font-size: ' . $font_size . 'px !important;';
+			
+			$font_weight = isset( $inputs['font_weight'] ) ? absint( $inputs['font_weight'] ) : 400;
+			$css .= 'font-weight: ' . $font_weight . ' !important;';
+			
+			$css .= '}';
+
+			// Placeholder color (Requirement 3.2).
+			$placeholder_color = isset( $inputs['placeholder_color'] ) ? sanitize_hex_color( $inputs['placeholder_color'] ) : '#7e8993';
+			$css .= $selectors . '::placeholder {';
+			$css .= 'color: ' . $placeholder_color . ' !important;';
+			$css .= 'opacity: 1 !important;';
+			$css .= '}';
+			
+			// Focus state (Requirement 3.3).
+			$css .= $selectors . ':focus {';
+			
+			$bg_color_focus = isset( $inputs['bg_color_focus'] ) ? sanitize_hex_color( $inputs['bg_color_focus'] ) : '#ffffff';
+			$css .= 'background-color: ' . $bg_color_focus . ' !important;';
+			
+			$border_color_focus = isset( $inputs['border_color_focus'] ) ? sanitize_hex_color( $inputs['border_color_focus'] ) : '#007cba';
+			$css .= 'border-color: ' . $border_color_focus . ' !important;';
+			
+			$focus_glow = isset( $inputs['focus_glow'] ) ? $inputs['focus_glow'] : '0 0 0 2px rgba(0,124,186,0.2)';
+			$css .= 'box-shadow: ' . sanitize_text_field( $focus_glow ) . ' !important;';
+			
+			$css .= 'outline: none !important;';
+			$css .= '}';
+			
+			// Hover state (Requirement 3.3).
+			$css .= $selectors . ':hover:not(:focus):not(:disabled) {';
+			$border_color_hover = isset( $inputs['border_color_hover'] ) ? sanitize_hex_color( $inputs['border_color_hover'] ) : '#6c7781';
+			$css .= 'border-color: ' . $border_color_hover . ' !important;';
+			$css .= '}';
+			
+			// Error state (Requirement 3.3).
+			$css .= $selectors . '.error,' . $selectors . '[aria-invalid="true"] {';
+			$border_color_error = isset( $inputs['border_color_error'] ) ? sanitize_hex_color( $inputs['border_color_error'] ) : '#dc3232';
+			$css .= 'border-color: ' . $border_color_error . ' !important;';
+			
+			if ( isset( $inputs['bg_color_error'] ) ) {
+				$bg_color_error = sanitize_hex_color( $inputs['bg_color_error'] );
+				$css .= 'background-color: ' . $bg_color_error . ' !important;';
+			}
+			$css .= '}';
+			
+			// Disabled state (Requirement 3.3).
+			$css .= $selectors . ':disabled {';
+			$bg_color_disabled = isset( $inputs['bg_color_disabled'] ) ? sanitize_hex_color( $inputs['bg_color_disabled'] ) : '#f7f7f7';
+			$css .= 'background-color: ' . $bg_color_disabled . ' !important;';
+			
+			$disabled_opacity = isset( $inputs['disabled_opacity'] ) ? absint( $inputs['disabled_opacity'] ) : 60;
+			$css .= 'opacity: ' . ( $disabled_opacity / 100 ) . ' !important;';
+			$css .= 'cursor: not-allowed !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Text input CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+
+	/**
+	 * Generate textarea CSS.
+	 * Requirement 3.1
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Textarea CSS.
+	 */
+	private function generate_textarea_css( $controls ) {
+		try {
+			if ( ! isset( $controls['textareas'] ) ) {
+				return '';
+			}
+
+			$textareas = $controls['textareas'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin textarea';
+
+			// Inherit text input styles and add textarea-specific properties.
+			$css .= $selector . ' {';
+			
+			// Background and colors.
+			if ( isset( $textareas['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $textareas['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $textareas['text_color'] ) ) {
+				$css .= 'color: ' . sanitize_hex_color( $textareas['text_color'] ) . ' !important;';
+			}
+			
+			// Border.
+			if ( isset( $textareas['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $textareas['border_color'] ) . ' !important;';
+			}
+			if ( isset( $textareas['border_radius'] ) ) {
+				$css .= 'border-radius: ' . absint( $textareas['border_radius'] ) . 'px !important;';
+			}
+			
+			// Padding.
+			if ( isset( $textareas['padding_horizontal'] ) && isset( $textareas['padding_vertical'] ) ) {
+				$css .= sprintf(
+					'padding: %dpx %dpx !important;',
+					absint( $textareas['padding_vertical'] ),
+					absint( $textareas['padding_horizontal'] )
+				);
+			}
+			
+			// Min height (Requirement 3.1).
+			$min_height = isset( $textareas['min_height'] ) ? absint( $textareas['min_height'] ) : 100;
+			$css .= 'min-height: ' . $min_height . 'px !important;';
+			
+			// Resize (Requirement 3.1).
+			$resize = isset( $textareas['resize'] ) ? $textareas['resize'] : 'vertical';
+			$valid_resize = array( 'none', 'both', 'horizontal', 'vertical' );
+			if ( in_array( $resize, $valid_resize, true ) ) {
+				$css .= 'resize: ' . $resize . ' !important;';
+			}
+			
+			// Line height (Requirement 3.1).
+			$line_height = isset( $textareas['line_height'] ) ? floatval( $textareas['line_height'] ) : 1.6;
+			$css .= 'line-height: ' . $line_height . ' !important;';
+			
+			// Typography.
+			if ( isset( $textareas['font_size'] ) ) {
+				$css .= 'font-size: ' . absint( $textareas['font_size'] ) . 'px !important;';
+			}
+			if ( isset( $textareas['font_weight'] ) ) {
+				$css .= 'font-weight: ' . absint( $textareas['font_weight'] ) . ' !important;';
+			}
+			
+			$css .= '}';
+			
+			// Focus state.
+			if ( isset( $textareas['border_color_focus'] ) || isset( $textareas['focus_glow'] ) ) {
+				$css .= $selector . ':focus {';
+				if ( isset( $textareas['border_color_focus'] ) ) {
+					$css .= 'border-color: ' . sanitize_hex_color( $textareas['border_color_focus'] ) . ' !important;';
+				}
+				if ( isset( $textareas['focus_glow'] ) ) {
+					$css .= 'box-shadow: ' . sanitize_text_field( $textareas['focus_glow'] ) . ' !important;';
+				}
+				$css .= 'outline: none !important;';
+				$css .= '}';
+			}
+			
+			// Disabled state.
+			if ( isset( $textareas['bg_color_disabled'] ) || isset( $textareas['disabled_opacity'] ) ) {
+				$css .= $selector . ':disabled {';
+				if ( isset( $textareas['bg_color_disabled'] ) ) {
+					$css .= 'background-color: ' . sanitize_hex_color( $textareas['bg_color_disabled'] ) . ' !important;';
+				}
+				if ( isset( $textareas['disabled_opacity'] ) ) {
+					$opacity = absint( $textareas['disabled_opacity'] ) / 100;
+					$css .= 'opacity: ' . $opacity . ' !important;';
+				}
+				$css .= 'cursor: not-allowed !important;';
+				$css .= '}';
+			}
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Textarea CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate select dropdown CSS.
+	 * Requirement 3.2
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Select dropdown CSS.
+	 */
+	private function generate_select_css( $controls ) {
+		try {
+			if ( ! isset( $controls['selects'] ) ) {
+				return '';
+			}
+
+			$selects = $controls['selects'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin select';
+
+			// Base styles.
+			$css .= $selector . ' {';
+			
+			if ( isset( $selects['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $selects['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $selects['text_color'] ) ) {
+				$css .= 'color: ' . sanitize_hex_color( $selects['text_color'] ) . ' !important;';
+			}
+			if ( isset( $selects['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $selects['border_color'] ) . ' !important;';
+			}
+			if ( isset( $selects['border_radius'] ) ) {
+				$css .= 'border-radius: ' . absint( $selects['border_radius'] ) . 'px !important;';
+			}
+			if ( isset( $selects['padding_horizontal'] ) && isset( $selects['padding_vertical'] ) ) {
+				$css .= sprintf(
+					'padding: %dpx %dpx !important;',
+					absint( $selects['padding_vertical'] ),
+					absint( $selects['padding_horizontal'] )
+				);
+			}
+			if ( isset( $selects['font_size'] ) ) {
+				$css .= 'font-size: ' . absint( $selects['font_size'] ) . 'px !important;';
+			}
+			if ( isset( $selects['font_weight'] ) ) {
+				$css .= 'font-weight: ' . absint( $selects['font_weight'] ) . ' !important;';
+			}
+
+			// Custom arrow icon (Requirement 3.2).
+			$arrow_icon = isset( $selects['arrow_icon'] ) ? $selects['arrow_icon'] : 'default';
+			if ( $arrow_icon !== 'default' ) {
+				$css .= 'appearance: none !important;';
+				$css .= '-webkit-appearance: none !important;';
+				$css .= '-moz-appearance: none !important;';
+				$css .= 'background-repeat: no-repeat !important;';
+				$css .= 'background-position: right 10px center !important;';
+				$css .= 'padding-right: 30px !important;';
+				
+				// Add custom arrow based on type.
+				if ( $arrow_icon === 'chevron' ) {
+					$css .= 'background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23555\' d=\'M6 9L1 4h10z\'/%3E%3C/svg%3E") !important;';
+				} elseif ( $arrow_icon === 'caret' ) {
+					$css .= 'background-image: url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'10\' viewBox=\'0 0 10 10\'%3E%3Cpath fill=\'%23555\' d=\'M5 7L0 2h10z\'/%3E%3C/svg%3E") !important;';
+				}
+			}
+			
+			$css .= '}';
+			
+			// Focus state.
+			$css .= $selector . ':focus {';
+			if ( isset( $selects['border_color_focus'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $selects['border_color_focus'] ) . ' !important;';
+			}
+			if ( isset( $selects['focus_glow'] ) ) {
+				$css .= 'box-shadow: ' . sanitize_text_field( $selects['focus_glow'] ) . ' !important;';
+			}
+			$css .= 'outline: none !important;';
+			$css .= '}';
+			
+			// Disabled state.
+			$css .= $selector . ':disabled {';
+			if ( isset( $selects['bg_color_disabled'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $selects['bg_color_disabled'] ) . ' !important;';
+			}
+			if ( isset( $selects['disabled_opacity'] ) ) {
+				$css .= 'opacity: ' . ( absint( $selects['disabled_opacity'] ) / 100 ) . ' !important;';
+			}
+			$css .= 'cursor: not-allowed !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Select CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate checkbox CSS.
+	 * Requirement 3.3
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Checkbox CSS.
+	 */
+	private function generate_checkbox_css( $controls ) {
+		try {
+			if ( ! isset( $controls['checkboxes'] ) ) {
+				return '';
+			}
+
+			$checkboxes = $controls['checkboxes'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin input[type="checkbox"]';
+
+			// Base styles.
+			$css .= $selector . ' {';
+			
+			$size = isset( $checkboxes['size'] ) ? absint( $checkboxes['size'] ) : 16;
+			$css .= 'width: ' . $size . 'px !important;';
+			$css .= 'height: ' . $size . 'px !important;';
+			$css .= 'min-width: ' . $size . 'px !important;';
+			$css .= 'min-height: ' . $size . 'px !important;';
+			
+			if ( isset( $checkboxes['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $checkboxes['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $checkboxes['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $checkboxes['border_color'] ) . ' !important;';
+			}
+			$css .= 'border-style: solid !important;';
+			$css .= 'border-width: 1px !important;';
+			
+			$border_radius = isset( $checkboxes['border_radius'] ) ? absint( $checkboxes['border_radius'] ) : 2;
+			$css .= 'border-radius: ' . $border_radius . 'px !important;';
+			
+			$css .= 'appearance: none !important;';
+			$css .= '-webkit-appearance: none !important;';
+			$css .= '-moz-appearance: none !important;';
+			$css .= 'cursor: pointer !important;';
+			$css .= 'position: relative !important;';
+			$css .= 'vertical-align: middle !important;';
+			$css .= 'margin: 0 8px 0 0 !important;';
+			
+			$css .= '}';
+
+			// Checked state with checkmark.
+			$css .= $selector . ':checked {';
+			if ( isset( $checkboxes['bg_color_checked'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $checkboxes['bg_color_checked'] ) . ' !important;';
+			}
+			if ( isset( $checkboxes['border_color_checked'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $checkboxes['border_color_checked'] ) . ' !important;';
+			}
+			$css .= '}';
+			
+			// Checkmark icon.
+			$css .= $selector . ':checked::after {';
+			$css .= 'content: "" !important;';
+			$css .= 'display: block !important;';
+			$css .= 'position: absolute !important;';
+			$css .= 'top: 50% !important;';
+			$css .= 'left: 50% !important;';
+			$css .= 'transform: translate(-50%, -50%) rotate(45deg) !important;';
+			$css .= 'width: ' . ( $size * 0.3 ) . 'px !important;';
+			$css .= 'height: ' . ( $size * 0.6 ) . 'px !important;';
+			$css .= 'border-style: solid !important;';
+			$css .= 'border-width: 0 2px 2px 0 !important;';
+			
+			$check_color = isset( $checkboxes['check_color'] ) ? sanitize_hex_color( $checkboxes['check_color'] ) : '#ffffff';
+			$css .= 'border-color: ' . $check_color . ' !important;';
+			
+			// Animation (Requirement 3.3).
+			$animation = isset( $checkboxes['check_animation'] ) ? $checkboxes['check_animation'] : 'slide';
+			if ( $animation === 'slide' ) {
+				$css .= 'animation: mase-checkbox-slide 0.2s ease !important;';
+			} elseif ( $animation === 'fade' ) {
+				$css .= 'animation: mase-checkbox-fade 0.2s ease !important;';
+			} elseif ( $animation === 'bounce' ) {
+				$css .= 'animation: mase-checkbox-bounce 0.3s ease !important;';
+			}
+			
+			$css .= '}';
+			
+			// Focus state.
+			$css .= $selector . ':focus {';
+			$css .= 'outline: 2px solid rgba(0, 124, 186, 0.4) !important;';
+			$css .= 'outline-offset: 2px !important;';
+			$css .= '}';
+			
+			// Disabled state.
+			$css .= $selector . ':disabled {';
+			$css .= 'opacity: 0.5 !important;';
+			$css .= 'cursor: not-allowed !important;';
+			$css .= '}';
+			
+			// Animations.
+			$css .= '@keyframes mase-checkbox-slide {';
+			$css .= '0% { transform: translate(-50%, -50%) rotate(45deg) scale(0); }';
+			$css .= '100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }';
+			$css .= '}';
+			
+			$css .= '@keyframes mase-checkbox-fade {';
+			$css .= '0% { opacity: 0; }';
+			$css .= '100% { opacity: 1; }';
+			$css .= '}';
+			
+			$css .= '@keyframes mase-checkbox-bounce {';
+			$css .= '0% { transform: translate(-50%, -50%) rotate(45deg) scale(0); }';
+			$css .= '50% { transform: translate(-50%, -50%) rotate(45deg) scale(1.2); }';
+			$css .= '100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Checkbox CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate radio button CSS.
+	 * Requirement 3.3
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Radio button CSS.
+	 */
+	private function generate_radio_css( $controls ) {
+		try {
+			if ( ! isset( $controls['radios'] ) ) {
+				return '';
+			}
+
+			$radios = $controls['radios'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin input[type="radio"]';
+
+			// Base styles.
+			$css .= $selector . ' {';
+			
+			$size = isset( $radios['size'] ) ? absint( $radios['size'] ) : 16;
+			$css .= 'width: ' . $size . 'px !important;';
+			$css .= 'height: ' . $size . 'px !important;';
+			$css .= 'min-width: ' . $size . 'px !important;';
+			$css .= 'min-height: ' . $size . 'px !important;';
+			
+			if ( isset( $radios['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $radios['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $radios['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $radios['border_color'] ) . ' !important;';
+			}
+			$css .= 'border-style: solid !important;';
+			$css .= 'border-width: 1px !important;';
+			$css .= 'border-radius: 50% !important;';
+			
+			$css .= 'appearance: none !important;';
+			$css .= '-webkit-appearance: none !important;';
+			$css .= '-moz-appearance: none !important;';
+			$css .= 'cursor: pointer !important;';
+			$css .= 'position: relative !important;';
+			$css .= 'vertical-align: middle !important;';
+			$css .= 'margin: 0 8px 0 0 !important;';
+			
+			$css .= '}';
+			
+			// Checked state with dot.
+			$css .= $selector . ':checked {';
+			if ( isset( $radios['bg_color_checked'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $radios['bg_color_checked'] ) . ' !important;';
+			}
+			if ( isset( $radios['border_color_checked'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $radios['border_color_checked'] ) . ' !important;';
+			}
+			$css .= '}';
+
+			// Radio dot.
+			$css .= $selector . ':checked::after {';
+			$css .= 'content: "" !important;';
+			$css .= 'display: block !important;';
+			$css .= 'position: absolute !important;';
+			$css .= 'top: 50% !important;';
+			$css .= 'left: 50% !important;';
+			$css .= 'transform: translate(-50%, -50%) !important;';
+			
+			$dot_size = isset( $radios['dot_size'] ) ? absint( $radios['dot_size'] ) : 8;
+			$css .= 'width: ' . $dot_size . 'px !important;';
+			$css .= 'height: ' . $dot_size . 'px !important;';
+			$css .= 'border-radius: 50% !important;';
+			
+			$dot_color = isset( $radios['dot_color'] ) ? sanitize_hex_color( $radios['dot_color'] ) : '#ffffff';
+			$css .= 'background-color: ' . $dot_color . ' !important;';
+			
+			// Animation (Requirement 3.3).
+			$animation = isset( $radios['check_animation'] ) ? $radios['check_animation'] : 'fade';
+			if ( $animation === 'fade' ) {
+				$css .= 'animation: mase-radio-fade 0.2s ease !important;';
+			} elseif ( $animation === 'bounce' ) {
+				$css .= 'animation: mase-radio-bounce 0.3s ease !important;';
+			}
+			
+			$css .= '}';
+			
+			// Focus state.
+			$css .= $selector . ':focus {';
+			$css .= 'outline: 2px solid rgba(0, 124, 186, 0.4) !important;';
+			$css .= 'outline-offset: 2px !important;';
+			$css .= '}';
+			
+			// Disabled state.
+			$css .= $selector . ':disabled {';
+			$css .= 'opacity: 0.5 !important;';
+			$css .= 'cursor: not-allowed !important;';
+			$css .= '}';
+			
+			// Animations.
+			$css .= '@keyframes mase-radio-fade {';
+			$css .= '0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }';
+			$css .= '100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }';
+			$css .= '}';
+			
+			$css .= '@keyframes mase-radio-bounce {';
+			$css .= '0% { transform: translate(-50%, -50%) scale(0); }';
+			$css .= '50% { transform: translate(-50%, -50%) scale(1.3); }';
+			$css .= '100% { transform: translate(-50%, -50%) scale(1); }';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Radio button CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate file upload CSS.
+	 * Requirement 3.4
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string File upload CSS.
+	 */
+	private function generate_file_upload_css( $controls ) {
+		try {
+			if ( ! isset( $controls['file_uploads'] ) ) {
+				return '';
+			}
+
+			$file_uploads = $controls['file_uploads'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin input[type="file"]';
+
+			// Base styles.
+			$css .= $selector . ' {';
+			
+			if ( isset( $file_uploads['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $file_uploads['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $file_uploads['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $file_uploads['border_color'] ) . ' !important;';
+			}
+			if ( isset( $file_uploads['border_radius'] ) ) {
+				$css .= 'border-radius: ' . absint( $file_uploads['border_radius'] ) . 'px !important;';
+			}
+			if ( isset( $file_uploads['padding_horizontal'] ) && isset( $file_uploads['padding_vertical'] ) ) {
+				$css .= sprintf(
+					'padding: %dpx %dpx !important;',
+					absint( $file_uploads['padding_vertical'] ),
+					absint( $file_uploads['padding_horizontal'] )
+				);
+			}
+			
+			$css .= 'cursor: pointer !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: File upload CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
+	/**
+	 * Generate search field CSS.
+	 * Requirement 3.4
+	 *
+	 * @param array $controls Form controls settings array.
+	 * @return string Search field CSS.
+	 */
+	private function generate_search_field_css( $controls ) {
+		try {
+			if ( ! isset( $controls['search_fields'] ) ) {
+				return '';
+			}
+
+			$search_fields = $controls['search_fields'];
+			$css = '';
+
+			// High-specificity selector (Requirement 3.8, 4.3).
+			$selector = 'body.wp-admin input[type="search"]';
+
+			// Inherit text input styles and add search-specific properties.
+			$css .= $selector . ' {';
+			
+			// Remove default search input styling.
+			$css .= '-webkit-appearance: none !important;';
+			$css .= '-moz-appearance: none !important;';
+			$css .= 'appearance: none !important;';
+			
+			// Apply custom styles if provided.
+			if ( isset( $search_fields['bg_color'] ) ) {
+				$css .= 'background-color: ' . sanitize_hex_color( $search_fields['bg_color'] ) . ' !important;';
+			}
+			if ( isset( $search_fields['border_color'] ) ) {
+				$css .= 'border-color: ' . sanitize_hex_color( $search_fields['border_color'] ) . ' !important;';
+			}
+			if ( isset( $search_fields['border_radius'] ) ) {
+				$css .= 'border-radius: ' . absint( $search_fields['border_radius'] ) . 'px !important;';
+			}
+			
+			$css .= '}';
+			
+			// Remove search cancel button.
+			$css .= $selector . '::-webkit-search-cancel-button {';
+			$css .= 'display: none !important;';
+			$css .= '}';
+
+			return $css;
+
+		} catch ( Exception $e ) {
+			error_log( sprintf( 
+				'MASE: Search field CSS generation failed: %s', 
+				$e->getMessage() 
+			) );
+			return '';
+		}
+	}
+
 }

@@ -135,6 +135,14 @@ $templates    = $settings_obj->get_all_templates();
 			<span class="dashicons dashicons-editor-textcolor" aria-hidden="true"></span>
 			<span class="mase-tab-label"><?php esc_html_e( 'Typography', 'modern-admin-styler' ); ?></span>
 		</button>
+		<button type="button" class="mase-tab-button" data-tab="widgets" role="tab" aria-selected="false" aria-controls="tab-widgets" id="tab-button-widgets" tabindex="-1">
+			<span class="dashicons dashicons-welcome-widgets-menus" aria-hidden="true"></span>
+			<span class="mase-tab-label"><?php esc_html_e( 'Dashboard Widgets', 'modern-admin-styler' ); ?></span>
+		</button>
+		<button type="button" class="mase-tab-button" data-tab="form-controls" role="tab" aria-selected="false" aria-controls="tab-form-controls" id="tab-button-form-controls" tabindex="-1">
+			<span class="dashicons dashicons-edit" aria-hidden="true"></span>
+			<span class="mase-tab-label"><?php esc_html_e( 'Form Controls', 'modern-admin-styler' ); ?></span>
+		</button>
 		<button type="button" class="mase-tab-button" data-tab="effects" role="tab" aria-selected="false" aria-controls="tab-effects" id="tab-button-effects" tabindex="-1">
 			<span class="dashicons dashicons-art" aria-hidden="true"></span>
 			<span class="mase-tab-label"><?php esc_html_e( 'Effects', 'modern-admin-styler' ); ?></span>
@@ -2829,328 +2837,521 @@ $templates    = $settings_obj->get_all_templates();
 			<!-- CONTENT TAB -->
 			<!-- ============================================ -->
 			<div class="mase-tab-content" id="tab-content" data-tab-content="content" role="tabpanel" aria-labelledby="tab-button-content" tabindex="0">
-				
-				<!-- Content Background -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h2><?php esc_html_e( 'Content Background', 'modern-admin-styler' ); ?></h2>
-						<p class="description"><?php esc_html_e( 'Customize the background of the content area.', 'modern-admin-styler' ); ?></p>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="content-bg-color">
-										<?php esc_html_e( 'Background Color', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="text" 
-										id="content-bg-color"
-										name="content[bg_color]" 
-										class="mase-color-picker"
-										value="<?php echo esc_attr( $settings['content']['bg_color'] ?? '#f0f0f1' ); ?>"
-										data-default-color="#f0f0f1"
-									/>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="content-text-color">
-										<?php esc_html_e( 'Text Color', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="text" 
-										id="content-text-color"
-										name="content[text_color]" 
-										class="mase-color-picker"
-										value="<?php echo esc_attr( $settings['content']['text_color'] ?? '#1d2327' ); ?>"
-										data-default-color="#1d2327"
-									/>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Content Spacing -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h2><?php esc_html_e( 'Content Spacing', 'modern-admin-styler' ); ?></h2>
-						<p class="description"><?php esc_html_e( 'Adjust padding and margins for the content area.', 'modern-admin-styler' ); ?></p>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="content-padding">
-										<?php esc_html_e( 'Padding (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="content-padding"
-										name="content[padding]" 
-										value="<?php echo esc_attr( $settings['content']['padding'] ?? 20 ); ?>"
-										min="0"
-										max="100"
-										step="5"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['content']['padding'] ?? 20 ); ?>px</span>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="content-margin">
-										<?php esc_html_e( 'Margin (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="content-margin"
-										name="content[margin]" 
-										value="<?php echo esc_attr( $settings['content']['margin'] ?? 20 ); ?>"
-										min="0"
-										max="100"
-										step="5"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['content']['margin'] ?? 20 ); ?>px</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<!-- Content Layout -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h2><?php esc_html_e( 'Content Layout', 'modern-admin-styler' ); ?></h2>
-						<p class="description"><?php esc_html_e( 'Control the layout and width of the content area.', 'modern-admin-styler' ); ?></p>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="content-max-width">
-										<?php esc_html_e( 'Max Width (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="number" 
-										id="content-max-width"
-										name="content[max_width]" 
-										class="regular-text"
-										value="<?php echo esc_attr( $settings['content']['max_width'] ?? 0 ); ?>"
-										min="0"
-										max="2000"
-										step="10"
-									/>
-									<p class="description"><?php esc_html_e( 'Set to 0 for no limit. Recommended: 1200-1600px for better readability.', 'modern-admin-styler' ); ?></p>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="content-border-radius">
-										<?php esc_html_e( 'Border Radius (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<input 
-										type="range" 
-										id="content-border-radius"
-										name="content[border_radius]" 
-										value="<?php echo esc_attr( $settings['content']['border_radius'] ?? 0 ); ?>"
-										min="0"
-										max="20"
-										step="1"
-									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['content']['border_radius'] ?? 0 ); ?>px</span>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				
+				<?php 
+				// Load Content Tab template (Task 7 - Requirements 4.1, 4.2, 4.3, 4.4, 4.5)
+				require_once MASE_PLUGIN_DIR . 'includes/templates/content-tab.php'; 
+				?>
 			</div><!-- #tab-content -->
 
-			<!-- ============================================ -->
-			<!-- TYPOGRAPHY TAB -->
-			<!-- ============================================ -->
-			<div class="mase-tab-content" id="tab-typography" data-tab-content="typography" role="tabpanel" aria-labelledby="tab-button-typography" tabindex="0">
-				
-				<!-- Global Typography -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h2><?php esc_html_e( 'Global Typography Settings', 'modern-admin-styler' ); ?></h2>
-						<p class="description"><?php esc_html_e( 'Typography settings that apply across all areas.', 'modern-admin-styler' ); ?></p>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="typography-font-family">
-										<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typography-font-family" name="typography[font_family]">
-										<option value="system" <?php selected( $settings['typography']['font_family'] ?? 'system', 'system' ); ?>><?php esc_html_e( 'System Default', 'modern-admin-styler' ); ?></option>
-										<option value="inter" <?php selected( $settings['typography']['font_family'] ?? 'system', 'inter' ); ?>>Inter</option>
-										<option value="roboto" <?php selected( $settings['typography']['font_family'] ?? 'system', 'roboto' ); ?>>Roboto</option>
-										<option value="open-sans" <?php selected( $settings['typography']['font_family'] ?? 'system', 'open-sans' ); ?>>Open Sans</option>
-										<option value="lato" <?php selected( $settings['typography']['font_family'] ?? 'system', 'lato' ); ?>>Lato</option>
-										<option value="montserrat" <?php selected( $settings['typography']['font_family'] ?? 'system', 'montserrat' ); ?>>Montserrat</option>
-									</select>
-									<p class="description"><?php esc_html_e( 'Google Fonts will be loaded automatically.', 'modern-admin-styler' ); ?></p>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typography-enable-google-fonts">
-										<?php esc_html_e( 'Enable Google Fonts', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<label class="mase-toggle-switch">
-										<input 
-											type="checkbox" 
-											id="typography-enable-google-fonts"
-											name="typography[enabled]" 
-											value="1"
-											<?php checked( $settings['typography']['enabled'] ?? true, true ); ?>
-											role="switch"
-											aria-checked="<?php echo ( $settings['typography']['enabled'] ?? true ) ? 'true' : 'false'; ?>"
-											aria-describedby="typography-enable-google-fonts-desc"
-										/>
-										<span class="mase-toggle-slider" aria-hidden="true"></span>
-									</label>
-									<p class="description" id="typography-enable-google-fonts-desc"><?php esc_html_e( 'Load fonts from Google Fonts CDN.', 'modern-admin-styler' ); ?></p>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+		<!-- ============================================ -->
+		<!-- TYPOGRAPHY TAB -->
+		<!-- ============================================ -->
+		<div class="mase-tab-content" id="tab-typography" data-tab-content="typography" role="tabpanel" aria-labelledby="tab-button-typography" tabindex="0">
+			
+			<!-- Area Selector -->
+			<div class="mase-section">
+				<div class="mase-section-header">
+					<h2><?php esc_html_e( 'Content Typography System', 'modern-admin-styler' ); ?></h2>
+					<p class="description"><?php esc_html_e( 'Customize typography for different admin content areas with advanced font controls.', 'modern-admin-styler' ); ?></p>
 				</div>
+				
+				<div class="mase-typography-area-selector" role="tablist" aria-label="<?php esc_attr_e( 'Typography areas', 'modern-admin-styler' ); ?>">
+					<button type="button" class="mase-area-button active" data-area="body_text" role="tab" aria-selected="true" aria-controls="typography-body_text">
+						<span class="dashicons dashicons-editor-paragraph" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Body Text', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="headings" role="tab" aria-selected="false" aria-controls="typography-headings">
+						<span class="dashicons dashicons-editor-textcolor" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Headings', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="comments" role="tab" aria-selected="false" aria-controls="typography-comments">
+						<span class="dashicons dashicons-admin-comments" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Comments', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="widgets" role="tab" aria-selected="false" aria-controls="typography-widgets">
+						<span class="dashicons dashicons-welcome-widgets-menus" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Widgets', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="meta" role="tab" aria-selected="false" aria-controls="typography-meta">
+						<span class="dashicons dashicons-info" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Meta', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="tables" role="tab" aria-selected="false" aria-controls="typography-tables">
+						<span class="dashicons dashicons-editor-table" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Tables', 'modern-admin-styler' ); ?></span>
+					</button>
+					<button type="button" class="mase-area-button" data-area="notices" role="tab" aria-selected="false" aria-controls="typography-notices">
+						<span class="dashicons dashicons-warning" aria-hidden="true"></span>
+						<span><?php esc_html_e( 'Notices', 'modern-admin-styler' ); ?></span>
+					</button>
+				</div>
+			</div>
 
-				<!-- Content Typography (Detailed) -->
-				<div class="mase-section">
-					<div class="mase-section-header">
-						<h3><?php esc_html_e( 'Content Typography', 'modern-admin-styler' ); ?></h3>
-					</div>
-					
-					<table class="form-table" role="presentation">
-						<tbody>
-							<tr>
-								<th scope="row">
-									<label for="typo-content-font-size">
-										<?php esc_html_e( 'Font Size (px)', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
+			<!-- Typography Controls (shown for all areas except headings) -->
+			<div class="mase-section mase-typography-controls" id="typography-controls-general">
+				<div class="mase-section-header">
+					<h3><?php esc_html_e( 'Typography Properties', 'modern-admin-styler' ); ?></h3>
+				</div>
+				
+				<table class="form-table" role="presentation">
+					<tbody>
+						<!-- Font Family -->
+						<tr>
+							<th scope="row">
+								<label for="typography-font-family">
+									<?php esc_html_e( 'Font Family', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="typography-font-family" name="content_typography[body_text][font_family]" class="typography-font-family">
+									<option value="system"><?php esc_html_e( 'System Font', 'modern-admin-styler' ); ?></option>
+									<optgroup label="<?php esc_attr_e( 'Google Fonts', 'modern-admin-styler' ); ?>">
+										<option value="Inter">Inter</option>
+										<option value="Roboto">Roboto</option>
+										<option value="Open Sans">Open Sans</option>
+										<option value="Lato">Lato</option>
+										<option value="Montserrat">Montserrat</option>
+										<option value="Poppins">Poppins</option>
+										<option value="Raleway">Raleway</option>
+										<option value="Source Sans Pro">Source Sans Pro</option>
+										<option value="Nunito">Nunito</option>
+										<option value="PT Sans">PT Sans</option>
+									</optgroup>
+								</select>
+								<p class="description"><?php esc_html_e( 'Choose from system fonts or Google Fonts.', 'modern-admin-styler' ); ?></p>
+							</td>
+						</tr>
+						
+						<!-- Font Size -->
+						<tr>
+							<th scope="row">
+								<label for="typography-font-size">
+									<?php esc_html_e( 'Font Size', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<div class="mase-range-control">
+									<input 
+										type="range" 
+										id="typography-font-size"
+										name="content_typography[body_text][font_size]" 
+										class="typography-property"
+										data-property="font_size"
+										value="16"
+										min="8"
+										max="72"
+										step="1"
+										aria-describedby="typography-font-size-value"
+									/>
 									<input 
 										type="number" 
-										id="typo-content-font-size"
-										name="typography[content][font_size]" 
-										class="small-text"
-										value="<?php echo esc_attr( $settings['typography']['content']['font_size'] ); ?>"
-										min="10"
-										max="24"
+										id="typography-font-size-value"
+										class="typography-property-value small-text"
+										value="16"
+										min="8"
+										max="72"
 										step="1"
+										aria-label="<?php esc_attr_e( 'Font size in pixels', 'modern-admin-styler' ); ?>"
 									/>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-content-font-weight">
-										<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
-									<select id="typo-content-font-weight" name="typography[content][font_weight]">
-										<option value="300" <?php selected( $settings['typography']['content']['font_weight'], 300 ); ?>>300 (Light)</option>
-										<option value="400" <?php selected( $settings['typography']['content']['font_weight'], 400 ); ?>>400 (Normal)</option>
-										<option value="500" <?php selected( $settings['typography']['content']['font_weight'], 500 ); ?>>500 (Medium)</option>
-										<option value="600" <?php selected( $settings['typography']['content']['font_weight'], 600 ); ?>>600 (Semi-Bold)</option>
-										<option value="700" <?php selected( $settings['typography']['content']['font_weight'], 700 ); ?>>700 (Bold)</option>
-									</select>
-								</td>
-							</tr>
-							
-							<tr>
-								<th scope="row">
-									<label for="typo-content-line-height">
-										<?php esc_html_e( 'Line Height', 'modern-admin-styler' ); ?>
-									</label>
-								</th>
-								<td>
+									<span class="mase-unit">px</span>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- Line Height -->
+						<tr>
+							<th scope="row">
+								<label for="typography-line-height">
+									<?php esc_html_e( 'Line Height', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<div class="mase-range-control">
 									<input 
 										type="range" 
-										id="typo-content-line-height"
-										name="typography[content][line_height]" 
-										value="<?php echo esc_attr( $settings['typography']['content']['line_height'] ); ?>"
-										min="1.0"
-										max="2.0"
+										id="typography-line-height"
+										name="content_typography[body_text][line_height]" 
+										class="typography-property"
+										data-property="line_height"
+										value="1.6"
+										min="0.8"
+										max="3.0"
 										step="0.1"
+										aria-describedby="typography-line-height-value"
 									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['content']['line_height'] ); ?></span>
-								</td>
-							</tr>
-							
+									<input 
+										type="number" 
+										id="typography-line-height-value"
+										class="typography-property-value small-text"
+										value="1.6"
+										min="0.8"
+										max="3.0"
+										step="0.1"
+										aria-label="<?php esc_attr_e( 'Line height value', 'modern-admin-styler' ); ?>"
+									/>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- Letter Spacing -->
+						<tr>
+							<th scope="row">
+								<label for="typography-letter-spacing">
+									<?php esc_html_e( 'Letter Spacing', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<div class="mase-range-control">
+									<input 
+										type="range" 
+										id="typography-letter-spacing"
+										name="content_typography[body_text][letter_spacing]" 
+										class="typography-property"
+										data-property="letter_spacing"
+										value="0"
+										min="-5"
+										max="10"
+										step="0.5"
+										aria-describedby="typography-letter-spacing-value"
+									/>
+									<input 
+										type="number" 
+										id="typography-letter-spacing-value"
+										class="typography-property-value small-text"
+										value="0"
+										min="-5"
+										max="10"
+										step="0.5"
+										aria-label="<?php esc_attr_e( 'Letter spacing in pixels', 'modern-admin-styler' ); ?>"
+									/>
+									<span class="mase-unit">px</span>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- Word Spacing -->
+						<tr>
+							<th scope="row">
+								<label for="typography-word-spacing">
+									<?php esc_html_e( 'Word Spacing', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<div class="mase-range-control">
+									<input 
+										type="range" 
+										id="typography-word-spacing"
+										name="content_typography[body_text][word_spacing]" 
+										class="typography-property"
+										data-property="word_spacing"
+										value="0"
+										min="-5"
+										max="10"
+										step="0.5"
+										aria-describedby="typography-word-spacing-value"
+									/>
+									<input 
+										type="number" 
+										id="typography-word-spacing-value"
+										class="typography-property-value small-text"
+										value="0"
+										min="-5"
+										max="10"
+										step="0.5"
+										aria-label="<?php esc_attr_e( 'Word spacing in pixels', 'modern-admin-styler' ); ?>"
+									/>
+									<span class="mase-unit">px</span>
+								</div>
+							</td>
+						</tr>
+						
+						<!-- Font Weight -->
+						<tr>
+							<th scope="row">
+								<label for="typography-font-weight">
+									<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="typography-font-weight" name="content_typography[body_text][font_weight]" class="typography-property" data-property="font_weight">
+									<option value="100"><?php esc_html_e( 'Thin (100)', 'modern-admin-styler' ); ?></option>
+									<option value="300"><?php esc_html_e( 'Light (300)', 'modern-admin-styler' ); ?></option>
+									<option value="400" selected><?php esc_html_e( 'Regular (400)', 'modern-admin-styler' ); ?></option>
+									<option value="500"><?php esc_html_e( 'Medium (500)', 'modern-admin-styler' ); ?></option>
+									<option value="600"><?php esc_html_e( 'Semi-Bold (600)', 'modern-admin-styler' ); ?></option>
+									<option value="700"><?php esc_html_e( 'Bold (700)', 'modern-admin-styler' ); ?></option>
+									<option value="900"><?php esc_html_e( 'Black (900)', 'modern-admin-styler' ); ?></option>
+								</select>
+							</td>
+						</tr>
+						
+						<!-- Font Style -->
+						<tr>
+							<th scope="row">
+								<label for="typography-font-style">
+									<?php esc_html_e( 'Font Style', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="typography-font-style" name="content_typography[body_text][font_style]" class="typography-property" data-property="font_style">
+									<option value="normal" selected><?php esc_html_e( 'Normal', 'modern-admin-styler' ); ?></option>
+									<option value="italic"><?php esc_html_e( 'Italic', 'modern-admin-styler' ); ?></option>
+									<option value="oblique"><?php esc_html_e( 'Oblique', 'modern-admin-styler' ); ?></option>
+								</select>
+							</td>
+						</tr>
+						
+						<!-- Text Transform -->
+						<tr>
+							<th scope="row">
+								<label for="typography-text-transform">
+									<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="typography-text-transform" name="content_typography[body_text][text_transform]" class="typography-property" data-property="text_transform">
+									<option value="none" selected><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
+									<option value="uppercase"><?php esc_html_e( 'UPPERCASE', 'modern-admin-styler' ); ?></option>
+									<option value="lowercase"><?php esc_html_e( 'lowercase', 'modern-admin-styler' ); ?></option>
+									<option value="capitalize"><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<!-- Advanced Options (Collapsible) -->
+				<details class="mase-typography-advanced">
+					<summary><?php esc_html_e( 'Advanced Options', 'modern-admin-styler' ); ?></summary>
+					
+					<table class="form-table" role="presentation">
+						<tbody>
+							<!-- Text Shadow -->
 							<tr>
 								<th scope="row">
-									<label for="typo-content-letter-spacing">
-										<?php esc_html_e( 'Letter Spacing (px)', 'modern-admin-styler' ); ?>
+									<label for="typography-text-shadow">
+										<?php esc_html_e( 'Text Shadow', 'modern-admin-styler' ); ?>
 									</label>
 								</th>
 								<td>
 									<input 
-										type="range" 
-										id="typo-content-letter-spacing"
-										name="typography[content][letter_spacing]" 
-										value="<?php echo esc_attr( $settings['typography']['content']['letter_spacing'] ); ?>"
-										min="-2"
-										max="5"
-										step="0.5"
+										type="text" 
+										id="typography-text-shadow"
+										name="content_typography[body_text][text_shadow]" 
+										class="regular-text typography-property"
+										data-property="text_shadow"
+										placeholder="2px 2px 4px rgba(0,0,0,0.3)"
+										aria-describedby="typography-text-shadow-desc"
 									/>
-									<span class="mase-range-value"><?php echo esc_html( $settings['typography']['content']['letter_spacing'] ); ?>px</span>
+									<p class="description" id="typography-text-shadow-desc"><?php esc_html_e( 'CSS text-shadow value (e.g., 2px 2px 4px rgba(0,0,0,0.3)).', 'modern-admin-styler' ); ?></p>
 								</td>
 							</tr>
 							
+							<!-- Ligatures -->
 							<tr>
 								<th scope="row">
-									<label for="typo-content-text-transform">
-										<?php esc_html_e( 'Text Transform', 'modern-admin-styler' ); ?>
-									</label>
+									<?php esc_html_e( 'Font Features', 'modern-admin-styler' ); ?>
 								</th>
 								<td>
-									<select id="typo-content-text-transform" name="typography[content][text_transform]">
-										<option value="none" <?php selected( $settings['typography']['content']['text_transform'], 'none' ); ?>><?php esc_html_e( 'None', 'modern-admin-styler' ); ?></option>
-										<option value="uppercase" <?php selected( $settings['typography']['content']['text_transform'], 'uppercase' ); ?>><?php esc_html_e( 'Uppercase', 'modern-admin-styler' ); ?></option>
-										<option value="lowercase" <?php selected( $settings['typography']['content']['text_transform'], 'lowercase' ); ?>><?php esc_html_e( 'Lowercase', 'modern-admin-styler' ); ?></option>
-										<option value="capitalize" <?php selected( $settings['typography']['content']['text_transform'], 'capitalize' ); ?>><?php esc_html_e( 'Capitalize', 'modern-admin-styler' ); ?></option>
-									</select>
+									<label>
+										<input 
+											type="checkbox" 
+											name="content_typography[body_text][ligatures]" 
+											class="typography-property"
+											data-property="ligatures"
+											value="1"
+										/>
+										<?php esc_html_e( 'Enable Ligatures', 'modern-admin-styler' ); ?>
+									</label>
+									<p class="description"><?php esc_html_e( 'Enable font ligatures for better typography (e.g., fi, fl).', 'modern-admin-styler' ); ?></p>
+								</td>
+							</tr>
+							
+							<!-- Drop Caps -->
+							<tr>
+								<th scope="row">
+									<?php esc_html_e( 'Drop Caps', 'modern-admin-styler' ); ?>
+								</th>
+								<td>
+									<label>
+										<input 
+											type="checkbox" 
+											name="content_typography[body_text][drop_caps]" 
+											class="typography-property"
+											data-property="drop_caps"
+											value="1"
+										/>
+										<?php esc_html_e( 'Enable Drop Caps', 'modern-admin-styler' ); ?>
+									</label>
+									<p class="description"><?php esc_html_e( 'Add decorative drop caps to first letter of paragraphs.', 'modern-admin-styler' ); ?></p>
 								</td>
 							</tr>
 						</tbody>
 					</table>
+				</details>
+			</div>
+
+			<!-- Heading Hierarchy (shown only when Headings area is selected) -->
+			<div class="mase-section mase-heading-hierarchy" id="typography-heading-hierarchy" style="display: none;">
+				<div class="mase-section-header">
+					<h3><?php esc_html_e( 'Heading Hierarchy', 'modern-admin-styler' ); ?></h3>
+					<p class="description"><?php esc_html_e( 'Configure heading sizes using a typographic scale ratio.', 'modern-admin-styler' ); ?></p>
 				</div>
 				
-			</div><!-- #tab-typography -->
+				<table class="form-table" role="presentation">
+					<tbody>
+						<!-- Scale Ratio -->
+						<tr>
+							<th scope="row">
+								<label for="heading-scale-ratio">
+									<?php esc_html_e( 'Scale Ratio', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="heading-scale-ratio" name="content_typography[headings][scale_ratio]" class="heading-scale-ratio">
+									<option value="1.125"><?php esc_html_e( 'Minor Second (1.125)', 'modern-admin-styler' ); ?></option>
+									<option value="1.200"><?php esc_html_e( 'Minor Third (1.200)', 'modern-admin-styler' ); ?></option>
+									<option value="1.250" selected><?php esc_html_e( 'Major Third (1.250)', 'modern-admin-styler' ); ?></option>
+									<option value="1.333"><?php esc_html_e( 'Perfect Fourth (1.333)', 'modern-admin-styler' ); ?></option>
+									<option value="1.414"><?php esc_html_e( 'Augmented Fourth (1.414)', 'modern-admin-styler' ); ?></option>
+									<option value="1.500"><?php esc_html_e( 'Perfect Fifth (1.500)', 'modern-admin-styler' ); ?></option>
+									<option value="1.618"><?php esc_html_e( 'Golden Ratio (1.618)', 'modern-admin-styler' ); ?></option>
+								</select>
+								<p class="description"><?php esc_html_e( 'Ratio used to calculate heading sizes from base font size.', 'modern-admin-styler' ); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<!-- Individual Heading Controls -->
+				<div class="mase-heading-controls">
+					<?php
+					$headings = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+					foreach ( $headings as $heading ) :
+						$heading_upper = strtoupper( $heading );
+					?>
+					<details class="mase-heading-control">
+						<summary><?php echo esc_html( $heading_upper ); ?> <?php esc_html_e( 'Settings', 'modern-admin-styler' ); ?></summary>
+						
+						<table class="form-table" role="presentation">
+							<tbody>
+								<tr>
+									<th scope="row">
+										<label for="heading-<?php echo esc_attr( $heading ); ?>-font-size">
+											<?php esc_html_e( 'Font Size', 'modern-admin-styler' ); ?>
+										</label>
+									</th>
+									<td>
+										<input 
+											type="number" 
+											id="heading-<?php echo esc_attr( $heading ); ?>-font-size"
+											name="content_typography[headings][<?php echo esc_attr( $heading ); ?>][font_size]" 
+											class="small-text"
+											min="8"
+											max="72"
+											step="1"
+										/>
+										<span class="mase-unit">px</span>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">
+										<label for="heading-<?php echo esc_attr( $heading ); ?>-font-weight">
+											<?php esc_html_e( 'Font Weight', 'modern-admin-styler' ); ?>
+										</label>
+									</th>
+									<td>
+										<select id="heading-<?php echo esc_attr( $heading ); ?>-font-weight" name="content_typography[headings][<?php echo esc_attr( $heading ); ?>][font_weight]">
+											<option value="400"><?php esc_html_e( 'Regular (400)', 'modern-admin-styler' ); ?></option>
+											<option value="500"><?php esc_html_e( 'Medium (500)', 'modern-admin-styler' ); ?></option>
+											<option value="600"><?php esc_html_e( 'Semi-Bold (600)', 'modern-admin-styler' ); ?></option>
+											<option value="700" selected><?php esc_html_e( 'Bold (700)', 'modern-admin-styler' ); ?></option>
+											<option value="900"><?php esc_html_e( 'Black (900)', 'modern-admin-styler' ); ?></option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</details>
+					<?php endforeach; ?>
+				</div>
+			</div>
 
+			<!-- Google Fonts Settings -->
+			<div class="mase-section">
+				<div class="mase-section-header">
+					<h3><?php esc_html_e( 'Google Fonts Settings', 'modern-admin-styler' ); ?></h3>
+					<p class="description"><?php esc_html_e( 'Configure Google Fonts integration and performance options.', 'modern-admin-styler' ); ?></p>
+				</div>
+				
+				<table class="form-table" role="presentation">
+					<tbody>
+						<!-- Enable Google Fonts -->
+						<tr>
+							<th scope="row">
+								<label for="google-fonts-enabled">
+									<?php esc_html_e( 'Enable Google Fonts', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<label class="mase-toggle-switch">
+									<input 
+										type="checkbox" 
+										id="google-fonts-enabled"
+										name="content_typography[google_fonts_enabled]" 
+										value="1"
+										checked
+										role="switch"
+										aria-checked="true"
+									/>
+									<span class="mase-toggle-slider" aria-hidden="true"></span>
+								</label>
+								<p class="description"><?php esc_html_e( 'Load fonts from Google Fonts CDN.', 'modern-admin-styler' ); ?></p>
+							</td>
+						</tr>
+						
+						<!-- Font Display Strategy -->
+						<tr>
+							<th scope="row">
+								<label for="font-display">
+									<?php esc_html_e( 'Font Display Strategy', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<select id="font-display" name="content_typography[font_display]">
+									<option value="swap" selected><?php esc_html_e( 'Swap (Recommended)', 'modern-admin-styler' ); ?></option>
+									<option value="block"><?php esc_html_e( 'Block', 'modern-admin-styler' ); ?></option>
+									<option value="fallback"><?php esc_html_e( 'Fallback', 'modern-admin-styler' ); ?></option>
+									<option value="optional"><?php esc_html_e( 'Optional', 'modern-admin-styler' ); ?></option>
+								</select>
+								<p class="description"><?php esc_html_e( 'Controls how fonts are displayed while loading. "Swap" shows fallback font immediately.', 'modern-admin-styler' ); ?></p>
+							</td>
+						</tr>
+						
+						<!-- Preload Fonts -->
+						<tr>
+							<th scope="row">
+								<label for="preload-fonts">
+									<?php esc_html_e( 'Preload Critical Fonts', 'modern-admin-styler' ); ?>
+								</label>
+							</th>
+							<td>
+								<input 
+									type="text" 
+									id="preload-fonts"
+									name="content_typography[preload_fonts]" 
+									class="regular-text"
+									placeholder="Inter, Roboto"
+									aria-describedby="preload-fonts-desc"
+								/>
+								<p class="description" id="preload-fonts-desc"><?php esc_html_e( 'Comma-separated list of fonts to preload for better performance.', 'modern-admin-styler' ); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+		</div><!-- #tab-typography -->
 
 			<!-- ============================================ -->
 			<!-- EFFECTS TAB -->
@@ -4817,7 +5018,7 @@ $templates    = $settings_obj->get_all_templates();
 											</label>
 										</div>
 										<div class="mase-setting-control">
-											<select id="button-bg-type" name="universal_buttons[primary][normal][bg_type]" class="mase-button-control" data-property="bg_type">
+											<select id="button-bg-type" name="universal_buttons[primary][normal][bg_type]" class="mase-button-control" data-property="bg_type" data-button-type="primary" data-button-state="normal">
 												<option value="solid"><?php esc_html_e( 'Solid Color', 'modern-admin-styler' ); ?></option>
 												<option value="gradient"><?php esc_html_e( 'Gradient', 'modern-admin-styler' ); ?></option>
 											</select>
@@ -4838,6 +5039,8 @@ $templates    = $settings_obj->get_all_templates();
 												name="universal_buttons[primary][normal][bg_color]" 
 												class="mase-color-picker mase-button-control"
 												data-property="bg_color"
+												data-button-type="primary"
+												data-button-state="normal"
 												value="#0073aa"
 												data-default-color="#0073aa"
 											/>
@@ -4853,7 +5056,7 @@ $templates    = $settings_obj->get_all_templates();
 												</label>
 											</div>
 											<div class="mase-setting-control">
-												<select id="button-gradient-type" name="universal_buttons[primary][normal][gradient_type]" class="mase-button-control" data-property="gradient_type">
+												<select id="button-gradient-type" name="universal_buttons[primary][normal][gradient_type]" class="mase-button-control" data-property="gradient_type" data-button-type="primary" data-button-state="normal">
 													<option value="linear"><?php esc_html_e( 'Linear', 'modern-admin-styler' ); ?></option>
 													<option value="radial"><?php esc_html_e( 'Radial', 'modern-admin-styler' ); ?></option>
 												</select>
@@ -4873,6 +5076,8 @@ $templates    = $settings_obj->get_all_templates();
 													name="universal_buttons[primary][normal][gradient_angle]" 
 													class="mase-button-control"
 													data-property="gradient_angle"
+													data-button-type="primary"
+													data-button-state="normal"
 													min="0"
 													max="360"
 													step="1"
@@ -4895,10 +5100,12 @@ $templates    = $settings_obj->get_all_templates();
 													name="universal_buttons[primary][normal][gradient_colors][0][color]" 
 													class="mase-color-picker mase-button-control"
 													data-property="gradient_colors_0_color"
+													data-button-type="primary"
+													data-button-state="normal"
 													value="#0073aa"
 													data-default-color="#0073aa"
 												/>
-												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][0][position]" value="0" />
+												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][0][position]" value="0" data-button-type="primary" data-button-state="normal" />
 											</div>
 										</div>
 										
@@ -4915,10 +5122,12 @@ $templates    = $settings_obj->get_all_templates();
 													name="universal_buttons[primary][normal][gradient_colors][1][color]" 
 													class="mase-color-picker mase-button-control"
 													data-property="gradient_colors_1_color"
+													data-button-type="primary"
+													data-button-state="normal"
 													value="#005177"
 													data-default-color="#005177"
 												/>
-												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][1][position]" value="100" />
+												<input type="hidden" name="universal_buttons[primary][normal][gradient_colors][1][position]" value="100" data-button-type="primary" data-button-state="normal" />
 											</div>
 										</div>
 									</div>
@@ -4945,6 +5154,8 @@ $templates    = $settings_obj->get_all_templates();
 												name="universal_buttons[primary][normal][text_color]" 
 												class="mase-color-picker mase-button-control"
 												data-property="text_color"
+												data-button-type="primary"
+												data-button-state="normal"
 												value="#ffffff"
 												data-default-color="#ffffff"
 											/>
@@ -5585,6 +5796,147 @@ $templates    = $settings_obj->get_all_templates();
 						</div>
 					</div>
 				</div>
+
+				<!-- Button Controls Initialization Script (Task 10) -->
+				<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					// Initialize button controls with data attributes
+					// This ensures all controls have proper data-button-type and data-button-state attributes
+					var currentButtonType = 'primary';
+					var currentButtonState = 'normal';
+					
+					// Function to update all button control attributes
+					function updateButtonControlAttributes(buttonType, buttonState) {
+						$('.mase-button-control').each(function() {
+							var $control = $(this);
+							var property = $control.data('property');
+							
+							// Update data attributes
+							$control.attr('data-button-type', buttonType);
+							$control.attr('data-button-state', buttonState);
+							
+							// Update name attribute
+							var currentName = $control.attr('name');
+							if (currentName && currentName.indexOf('universal_buttons[') === 0) {
+								// Extract the property path from current name
+								var matches = currentName.match(/universal_buttons\[([^\]]+)\]\[([^\]]+)\]\[(.+)\]/);
+								if (matches && matches[3]) {
+									var propertyPath = matches[3];
+									var newName = 'universal_buttons[' + buttonType + '][' + buttonState + '][' + propertyPath + ']';
+									$control.attr('name', newName);
+								}
+							}
+						});
+						
+						// Update hidden inputs for gradient color positions
+						$('input[type="hidden"][name*="gradient_colors"]').each(function() {
+							var $hidden = $(this);
+							var currentName = $hidden.attr('name');
+							if (currentName && currentName.indexOf('universal_buttons[') === 0) {
+								var matches = currentName.match(/universal_buttons\[([^\]]+)\]\[([^\]]+)\]\[(.+)\]/);
+								if (matches && matches[3]) {
+									var propertyPath = matches[3];
+									var newName = 'universal_buttons[' + buttonType + '][' + buttonState + '][' + propertyPath + ']';
+									$hidden.attr('name', newName);
+									$hidden.attr('data-button-type', buttonType);
+									$hidden.attr('data-button-state', buttonState);
+								}
+							}
+						});
+					}
+					
+					// Initialize on page load
+					updateButtonControlAttributes(currentButtonType, currentButtonState);
+					
+					// Handle button type tab switching
+					$('.mase-button-type-tab').on('click', function() {
+						var $tab = $(this);
+						var buttonType = $tab.data('button-type');
+						
+						// Update active state
+						$('.mase-button-type-tab').removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
+						$tab.addClass('active').attr('aria-selected', 'true').attr('tabindex', '0');
+						
+						// Update current button type
+						currentButtonType = buttonType;
+						
+						// Update all control attributes
+						updateButtonControlAttributes(currentButtonType, currentButtonState);
+						
+						// TODO: Load values from settings for this button type/state combination
+						// This will be implemented in task 11
+					});
+					
+					// Handle button state tab switching
+					$('.mase-button-state-tab').on('click', function() {
+						var $tab = $(this);
+						var buttonState = $tab.data('button-state');
+						
+						// Update active state
+						$('.mase-button-state-tab').removeClass('active').attr('aria-selected', 'false').attr('tabindex', '-1');
+						$tab.addClass('active').attr('aria-selected', 'true').attr('tabindex', '0');
+						
+						// Update current button state
+						currentButtonState = buttonState;
+						
+						// Update all control attributes
+						updateButtonControlAttributes(currentButtonType, currentButtonState);
+						
+						// TODO: Load values from settings for this button type/state combination
+						// This will be implemented in task 11
+					});
+					
+					// Add keyboard navigation for button type tabs
+					$('.mase-button-type-tab').on('keydown', function(e) {
+						var $tabs = $('.mase-button-type-tab');
+						var currentIndex = $tabs.index(this);
+						var $target = null;
+						
+						if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+							e.preventDefault();
+							$target = $tabs.eq((currentIndex + 1) % $tabs.length);
+						} else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+							e.preventDefault();
+							$target = $tabs.eq((currentIndex - 1 + $tabs.length) % $tabs.length);
+						} else if (e.key === 'Home') {
+							e.preventDefault();
+							$target = $tabs.first();
+						} else if (e.key === 'End') {
+							e.preventDefault();
+							$target = $tabs.last();
+						}
+						
+						if ($target) {
+							$target.focus().click();
+						}
+					});
+					
+					// Add keyboard navigation for button state tabs
+					$('.mase-button-state-tab').on('keydown', function(e) {
+						var $tabs = $('.mase-button-state-tab');
+						var currentIndex = $tabs.index(this);
+						var $target = null;
+						
+						if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+							e.preventDefault();
+							$target = $tabs.eq((currentIndex + 1) % $tabs.length);
+						} else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+							e.preventDefault();
+							$target = $tabs.eq((currentIndex - 1 + $tabs.length) % $tabs.length);
+						} else if (e.key === 'Home') {
+							e.preventDefault();
+							$target = $tabs.first();
+						} else if (e.key === 'End') {
+							e.preventDefault();
+							$target = $tabs.last();
+						}
+						
+						if ($target) {
+							$target.focus().click();
+						}
+					});
+				});
+				</script>
 				
 			</div><!-- #tab-buttons -->
 
@@ -5594,6 +5946,20 @@ $templates    = $settings_obj->get_all_templates();
 			<div class="mase-tab-content" id="tab-backgrounds" data-tab-content="backgrounds" role="tabpanel" aria-labelledby="tab-button-backgrounds" tabindex="0">
 				<?php require_once MASE_PLUGIN_DIR . 'includes/backgrounds-tab-content.php'; ?>
 			</div><!-- #tab-backgrounds -->
+
+			<!-- ============================================ -->
+			<!-- DASHBOARD WIDGETS TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-widgets" data-tab-content="widgets" role="tabpanel" aria-labelledby="tab-button-widgets" tabindex="0">
+				<?php require_once MASE_PLUGIN_DIR . 'includes/widgets-tab-content.php'; ?>
+			</div><!-- #tab-widgets -->
+
+			<!-- ============================================ -->
+			<!-- FORM CONTROLS TAB -->
+			<!-- ============================================ -->
+			<div class="mase-tab-content" id="tab-form-controls" data-tab-content="form-controls" role="tabpanel" aria-labelledby="tab-button-form-controls" tabindex="0">
+				<?php require_once MASE_PLUGIN_DIR . 'includes/form-controls-tab-content.php'; ?>
+			</div><!-- #tab-form-controls -->
 			
 		</div><!-- .mase-tab-content-wrapper -->
 		

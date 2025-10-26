@@ -14453,3 +14453,1008 @@ input[type="range"]:focus {
 		white-space: normal;
 	}
 }
+
+
+/* ============================================================================
+   TYPOGRAPHY TAB STYLES
+   ============================================================================
+   
+   Styles for the advanced typography customization system.
+   Includes area selector buttons, typography controls, range sliders,
+   heading hierarchy controls, and Google Fonts settings.
+   
+   Requirements: 1.1, 1.2, 1.3, 6.6
+   ============================================================================ */
+
+/* Typography Area Selector */
+.mase-typography-area-selector {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--mase-space-sm);
+	margin-bottom: var(--mase-space-lg);
+	padding: var(--mase-space-md);
+	background: var(--mase-surface-secondary);
+	border-radius: var(--mase-radius-base);
+}
+
+.mase-area-button {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-space-xs);
+	padding: var(--mase-space-sm) var(--mase-space-md);
+	background: var(--mase-surface);
+	border: 1px solid var(--mase-border);
+	border-radius: var(--mase-radius-base);
+	color: var(--mase-text);
+	font-size: var(--mase-font-size-base);
+	font-weight: var(--mase-font-weight-medium);
+	cursor: pointer;
+	transition: all var(--mase-transition-fast) var(--mase-ease-out);
+}
+
+.mase-area-button:hover {
+	background: var(--mase-surface-hover);
+	border-color: var(--mase-primary);
+	transform: translateY(-1px);
+	box-shadow: var(--mase-shadow-sm);
+}
+
+.mase-area-button:focus {
+	outline: 2px solid var(--mase-primary);
+	outline-offset: 2px;
+}
+
+.mase-area-button.active {
+	background: var(--mase-primary);
+	border-color: var(--mase-primary);
+	color: #ffffff;
+	box-shadow: var(--mase-shadow-md);
+}
+
+.mase-area-button .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+/* Typography Controls */
+.mase-typography-controls {
+	margin-bottom: var(--mase-space-lg);
+}
+
+/* Range Control with Number Input */
+.mase-range-control {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-space-sm);
+}
+
+.mase-range-control input[type="range"] {
+	flex: 1;
+	min-width: 200px;
+}
+
+.mase-range-control input[type="number"] {
+	width: 70px;
+	text-align: center;
+}
+
+.mase-range-control .mase-unit {
+	color: var(--mase-text-secondary);
+	font-size: var(--mase-font-size-sm);
+	font-weight: var(--mase-font-weight-medium);
+	min-width: 25px;
+}
+
+/* Typography Property Inputs */
+.typography-property,
+.typography-font-family {
+	transition: border-color var(--mase-transition-fast) var(--mase-ease-out);
+}
+
+.typography-property:focus,
+.typography-font-family:focus {
+	border-color: var(--mase-primary);
+	box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.1);
+}
+
+/* Advanced Options Collapsible */
+.mase-typography-advanced {
+	margin-top: var(--mase-space-lg);
+	padding: var(--mase-space-md);
+	background: var(--mase-surface-secondary);
+	border: 1px solid var(--mase-border);
+	border-radius: var(--mase-radius-base);
+}
+
+.mase-typography-advanced summary {
+	padding: var(--mase-space-sm);
+	font-size: var(--mase-font-size-base);
+	font-weight: var(--mase-font-weight-semibold);
+	color: var(--mase-text);
+	cursor: pointer;
+	user-select: none;
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: var(--mase-space-xs);
+}
+
+.mase-typography-advanced summary::-webkit-details-marker {
+	display: none;
+}
+
+.mase-typography-advanced summary::before {
+	content: "▶";
+	display: inline-block;
+	transition: transform var(--mase-transition-fast) var(--mase-ease-out);
+	font-size: 10px;
+	color: var(--mase-text-secondary);
+}
+
+.mase-typography-advanced[open] summary::before {
+	transform: rotate(90deg);
+}
+
+.mase-typography-advanced summary:hover {
+	color: var(--mase-primary);
+}
+
+.mase-typography-advanced summary:focus {
+	outline: 2px solid var(--mase-primary);
+	outline-offset: 2px;
+	border-radius: var(--mase-radius-sm);
+}
+
+/* Heading Hierarchy Section */
+.mase-heading-hierarchy {
+	margin-bottom: var(--mase-space-lg);
+}
+
+.mase-heading-controls {
+	display: grid;
+	gap: var(--mase-space-md);
+	margin-top: var(--mase-space-md);
+}
+
+.mase-heading-control {
+	padding: var(--mase-space-md);
+	background: var(--mase-surface-secondary);
+	border: 1px solid var(--mase-border);
+	border-radius: var(--mase-radius-base);
+}
+
+.mase-heading-control summary {
+	padding: var(--mase-space-sm);
+	font-size: var(--mase-font-size-base);
+	font-weight: var(--mase-font-weight-semibold);
+	color: var(--mase-text);
+	cursor: pointer;
+	user-select: none;
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: var(--mase-space-xs);
+}
+
+.mase-heading-control summary::-webkit-details-marker {
+	display: none;
+}
+
+.mase-heading-control summary::before {
+	content: "▶";
+	display: inline-block;
+	transition: transform var(--mase-transition-fast) var(--mase-ease-out);
+	font-size: 10px;
+	color: var(--mase-text-secondary);
+}
+
+.mase-heading-control[open] summary::before {
+	transform: rotate(90deg);
+}
+
+.mase-heading-control summary:hover {
+	color: var(--mase-primary);
+}
+
+.mase-heading-control summary:focus {
+	outline: 2px solid var(--mase-primary);
+	outline-offset: 2px;
+	border-radius: var(--mase-radius-sm);
+}
+
+/* Responsive Layout for Typography Tab */
+@media (max-width: 768px) {
+	.mase-typography-area-selector {
+		flex-direction: column;
+	}
+	
+	.mase-area-button {
+		width: 100%;
+		justify-content: center;
+	}
+	
+	.mase-range-control {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	
+	.mase-range-control input[type="range"] {
+		min-width: 100%;
+	}
+	
+	.mase-range-control input[type="number"] {
+		width: 100%;
+	}
+}
+
+/* Tablet Responsive (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+	.mase-typography-area-selector {
+		gap: var(--mase-space-xs);
+	}
+	
+	.mase-area-button {
+		padding: var(--mase-space-xs) var(--mase-space-sm);
+		font-size: var(--mase-font-size-sm);
+	}
+	
+	.mase-heading-controls {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* Desktop Responsive (> 1024px) */
+@media (min-width: 1024px) {
+	.mase-heading-controls {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+	.mase-area-button,
+	.typography-property,
+	.typography-font-family,
+	.mase-typography-advanced summary::before,
+	.mase-heading-control summary::before {
+		transition: none;
+	}
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+	.mase-area-button {
+		border-width: 2px;
+	}
+	
+	.mase-area-button.active {
+		border-width: 3px;
+	}
+	
+	.mase-typography-advanced,
+	.mase-heading-control {
+		border-width: 2px;
+	}
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+	.mase-typography-area-selector {
+		background: rgba(255, 255, 255, 0.05);
+	}
+	
+	.mase-area-button {
+		background: rgba(255, 255, 255, 0.08);
+		border-color: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.9);
+	}
+	
+	.mase-area-button:hover {
+		background: rgba(255, 255, 255, 0.12);
+	}
+	
+	.mase-typography-advanced,
+	.mase-heading-control {
+		background: rgba(255, 255, 255, 0.05);
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+}
+
+/* ============================================================================
+   SECTION 11: DASHBOARD WIDGETS TAB STYLES
+   ============================================================================
+   
+   Styles for the Dashboard Widgets customization tab including:
+   - Widget selector buttons
+   - Widget control groups
+   - Advanced effects collapsible section
+   - Responsive layout controls
+   - Mobile-responsive layouts
+   
+   Requirements: 2.1, 2.2, 2.3, 2.4, 6.6
+   ============================================================================ */
+
+/* 11.1 Widgets Tab Wrapper */
+.mase-widgets-wrapper {
+	padding: var(--mase-spacing-md, 16px);
+}
+
+/* 11.2 Widget Selector Buttons */
+.mase-widget-selector {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--mase-spacing-sm, 8px);
+	margin-bottom: var(--mase-spacing-lg, 24px);
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-gray-50, #f9fafb);
+	border-radius: var(--mase-radius-md, 8px);
+}
+
+.mase-widget-selector-btn {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-xs, 4px);
+	padding: var(--mase-spacing-sm, 8px) var(--mase-spacing-md, 16px);
+	background: var(--mase-white, #ffffff);
+	border: 2px solid var(--mase-gray-200, #e5e7eb);
+	border-radius: var(--mase-radius-sm, 4px);
+	color: var(--mase-gray-700, #374151);
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.mase-widget-selector-btn:hover {
+	background: var(--mase-gray-100, #f3f4f6);
+	border-color: var(--mase-primary, #0073aa);
+	transform: translateY(-1px);
+}
+
+.mase-widget-selector-btn.active {
+	background: var(--mase-primary, #0073aa);
+	border-color: var(--mase-primary, #0073aa);
+	color: var(--mase-white, #ffffff);
+	box-shadow: 0 2px 4px rgba(0, 115, 170, 0.2);
+}
+
+.mase-widget-selector-btn .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+/* 11.3 Widget Section Visibility */
+.mase-widget-section {
+	display: none;
+}
+
+.mase-widget-section[data-widget-section="container"] {
+	display: block;
+}
+
+/* 11.4 Widget Control Groups */
+.mase-border-width-controls,
+.mase-spacing-controls {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--mase-spacing-sm, 8px);
+}
+
+.mase-border-width-controls input,
+.mase-spacing-controls input {
+	width: 100%;
+	padding: var(--mase-spacing-xs, 4px) var(--mase-spacing-sm, 8px);
+	border: 1px solid var(--mase-gray-300, #d1d5db);
+	border-radius: var(--mase-radius-sm, 4px);
+	font-size: 13px;
+	text-align: center;
+}
+
+.mase-border-width-controls input:focus,
+.mase-spacing-controls input:focus {
+	outline: none;
+	border-color: var(--mase-primary, #0073aa);
+	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+}
+
+/* 11.5 Gradient Builder */
+.mase-gradient-builder {
+	display: flex;
+	flex-direction: column;
+	gap: var(--mase-spacing-md, 16px);
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-gray-50, #f9fafb);
+	border-radius: var(--mase-radius-sm, 4px);
+}
+
+.mase-gradient-type {
+	display: flex;
+	gap: var(--mase-spacing-md, 16px);
+}
+
+.mase-gradient-type label {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-xs, 4px);
+	cursor: pointer;
+}
+
+.mase-gradient-angle {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-sm, 8px);
+}
+
+.mase-gradient-angle input[type="range"] {
+	flex: 1;
+}
+
+.mase-gradient-angle .mase-range-value {
+	min-width: 40px;
+	text-align: right;
+	font-weight: 500;
+	color: var(--mase-gray-700, #374151);
+}
+
+/* 11.6 Advanced Effects Collapsible Section */
+.mase-widget-advanced-effects {
+	border: 1px solid var(--mase-gray-200, #e5e7eb);
+	border-radius: var(--mase-radius-md, 8px);
+	overflow: hidden;
+}
+
+.mase-widget-advanced-effects summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-gray-50, #f9fafb);
+	cursor: pointer;
+	list-style: none;
+	transition: background 0.2s ease;
+}
+
+.mase-widget-advanced-effects summary::-webkit-details-marker {
+	display: none;
+}
+
+.mase-widget-advanced-effects summary:hover {
+	background: var(--mase-gray-100, #f3f4f6);
+}
+
+.mase-widget-advanced-effects summary h3 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--mase-gray-900, #111827);
+}
+
+.mase-widget-advanced-effects summary .dashicons {
+	transition: transform 0.2s ease;
+}
+
+.mase-widget-advanced-effects[open] summary .dashicons {
+	transform: rotate(180deg);
+}
+
+.mase-advanced-effects-content {
+	padding: var(--mase-spacing-md, 16px);
+	background: var(--mase-white, #ffffff);
+}
+
+/* 11.7 Range Value Display */
+.mase-range-value {
+	display: inline-block;
+	min-width: 50px;
+	padding: var(--mase-spacing-xs, 4px) var(--mase-spacing-sm, 8px);
+	background: var(--mase-gray-100, #f3f4f6);
+	border-radius: var(--mase-radius-sm, 4px);
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	color: var(--mase-gray-700, #374151);
+}
+
+/* 11.8 Unit Labels */
+.unit {
+	display: inline-block;
+	margin-left: var(--mase-spacing-xs, 4px);
+	color: var(--mase-gray-500, #6b7280);
+	font-size: 13px;
+}
+
+/* 11.9 Responsive Layout Controls */
+.mase-setting-row {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: var(--mase-spacing-md, 16px);
+	padding: var(--mase-spacing-md, 16px);
+	border-bottom: 1px solid var(--mase-gray-200, #e5e7eb);
+}
+
+.mase-setting-row:last-child {
+	border-bottom: none;
+}
+
+.mase-setting-label label {
+	display: block;
+	margin-bottom: var(--mase-spacing-xs, 4px);
+	font-weight: 500;
+	color: var(--mase-gray-900, #111827);
+}
+
+.mase-setting-label .description {
+	margin: var(--mase-spacing-xs, 4px) 0 0;
+	font-size: 13px;
+	color: var(--mase-gray-600, #4b5563);
+	line-height: 1.5;
+}
+
+.mase-setting-control {
+	display: flex;
+	align-items: center;
+	gap: var(--mase-spacing-sm, 8px);
+}
+
+.mase-setting-control select,
+.mase-setting-control input[type="text"],
+.mase-setting-control input[type="number"] {
+	flex: 1;
+	padding: var(--mase-spacing-sm, 8px) var(--mase-spacing-md, 16px);
+	border: 1px solid var(--mase-gray-300, #d1d5db);
+	border-radius: var(--mase-radius-sm, 4px);
+	font-size: 14px;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mase-setting-control select:focus,
+.mase-setting-control input[type="text"]:focus,
+.mase-setting-control input[type="number"]:focus {
+	outline: none;
+	border-color: var(--mase-primary, #0073aa);
+	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.1);
+}
+
+.mase-setting-control input[type="range"] {
+	flex: 1;
+	height: 6px;
+	background: var(--mase-gray-200, #e5e7eb);
+	border-radius: var(--mase-radius-full, 9999px);
+	outline: none;
+	-webkit-appearance: none;
+}
+
+.mase-setting-control input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 18px;
+	height: 18px;
+	background: var(--mase-primary, #0073aa);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+}
+
+.mase-setting-control input[type="range"]::-webkit-slider-thumb:hover {
+	transform: scale(1.1);
+}
+
+.mase-setting-control input[type="range"]::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	background: var(--mase-primary, #0073aa);
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+}
+
+.mase-setting-control input[type="range"]::-moz-range-thumb:hover {
+	transform: scale(1.1);
+}
+
+/* 11.10 Mobile Responsive Styles (< 768px) */
+@media (max-width: 767px) {
+	.mase-widget-selector {
+		flex-direction: column;
+	}
+	
+	.mase-widget-selector-btn {
+		width: 100%;
+		justify-content: center;
+	}
+	
+	.mase-setting-row {
+		grid-template-columns: 1fr;
+		gap: var(--mase-spacing-sm, 8px);
+	}
+	
+	.mase-border-width-controls,
+	.mase-spacing-controls {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.mase-gradient-builder {
+		padding: var(--mase-spacing-sm, 8px);
+	}
+}
+
+/* 11.11 Tablet Responsive Styles (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+	.mase-widget-selector {
+		justify-content: center;
+	}
+	
+	.mase-setting-row {
+		grid-template-columns: 1fr 1.5fr;
+	}
+}
+
+/* 11.12 Desktop Responsive Styles (≥ 1024px) */
+@media (min-width: 1024px) {
+	.mase-widgets-wrapper {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+}
+
+/* 11.13 Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+	.mase-widget-selector-btn,
+	.mase-widget-advanced-effects summary .dashicons,
+	.mase-setting-control input[type="range"]::-webkit-slider-thumb,
+	.mase-setting-control input[type="range"]::-moz-range-thumb {
+		transition: none;
+	}
+}
+
+/* 11.14 High Contrast Mode Support */
+@media (prefers-contrast: high) {
+	.mase-widget-selector-btn {
+		border-width: 2px;
+	}
+	
+	.mase-widget-selector-btn.active {
+		border-width: 3px;
+	}
+	
+	.mase-widget-advanced-effects {
+		border-width: 2px;
+	}
+}
+
+/* 11.15 Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+	.mase-widgets-wrapper {
+		background: rgba(255, 255, 255, 0.02);
+	}
+	
+	.mase-widget-selector {
+		background: rgba(255, 255, 255, 0.05);
+	}
+	
+	.mase-widget-selector-btn {
+		background: rgba(255, 255, 255, 0.08);
+		border-color: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.9);
+	}
+	
+	.mase-widget-selector-btn:hover {
+		background: rgba(255, 255, 255, 0.12);
+	}
+	
+	.mase-widget-advanced-effects {
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+	
+	.mase-widget-advanced-effects summary {
+		background: rgba(255, 255, 255, 0.05);
+	}
+	
+	.mase-gradient-builder,
+	.mase-advanced-effects-content {
+		background: rgba(255, 255, 255, 0.03);
+	}
+}
+
+/* ============================================
+   12. FORM CONTROLS TAB STYLES
+   ============================================ */
+
+/* 12.1 Form Controls Wrapper */
+.mase-form-controls-wrapper {
+	padding: 20px 0;
+}
+
+/* 12.2 Control Type Selector */
+.mase-form-control-selector {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 20px;
+	background: #f9f9f9;
+	border-radius: 8px;
+	margin-bottom: 24px;
+}
+
+.mase-control-selector-btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 20px;
+	background: #ffffff;
+	border: 2px solid #dcdcdc;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-size: 14px;
+	font-weight: 500;
+	color: #2c3338;
+}
+
+.mase-control-selector-btn:hover {
+	background: #f0f0f0;
+	border-color: #007cba;
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mase-control-selector-btn.active {
+	background: #007cba;
+	border-color: #007cba;
+	color: #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 124, 186, 0.3);
+}
+
+.mase-control-selector-btn .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+}
+
+/* 12.3 Form Control Sections */
+.mase-form-control-section {
+	margin-bottom: 24px;
+}
+
+.mase-form-control-section .mase-section-card {
+	background: #ffffff;
+	border: 1px solid #dcdcdc;
+	border-radius: 8px;
+	padding: 24px;
+}
+
+.mase-form-control-section h3 {
+	margin: 0 0 8px 0;
+	font-size: 18px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.mase-form-control-section .description {
+	margin: 0 0 20px 0;
+	color: #646970;
+	font-size: 13px;
+}
+
+/* 12.4 Border Width Controls */
+.mase-border-width-controls {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 8px;
+}
+
+.mase-border-width-controls input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+/* 12.5 Padding Controls */
+.mase-padding-controls {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 8px;
+}
+
+.mase-padding-controls input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+/* 12.6 State Groups */
+.mase-state-group {
+	margin-bottom: 24px;
+	padding: 16px;
+	background: #f9f9f9;
+	border-radius: 6px;
+	border-left: 4px solid #007cba;
+}
+
+.mase-state-group:last-child {
+	margin-bottom: 0;
+}
+
+.mase-state-group h4 {
+	margin: 0 0 16px 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+/* 12.7 Special Controls Sections */
+.mase-special-controls {
+	display: none;
+}
+
+.mase-special-controls[data-show-for*="checkboxes"].active,
+.mase-special-controls[data-show-for*="radios"].active,
+.mase-special-controls[data-show-for*="selects"].active,
+.mase-special-controls[data-show-for*="file_uploads"].active {
+	display: block;
+}
+
+/* 12.8 Range Input Styling */
+.mase-form-control-section input[type="range"] {
+	width: 100%;
+	max-width: 300px;
+	margin-right: 12px;
+}
+
+.mase-form-control-section .mase-range-value {
+	display: inline-block;
+	min-width: 50px;
+	padding: 4px 8px;
+	background: #f0f0f0;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+}
+
+/* 12.9 Form Control Style Inputs */
+.form-control-style {
+	transition: all 0.2s ease;
+}
+
+.form-control-style:focus {
+	border-color: #007cba;
+	box-shadow: 0 0 0 1px #007cba;
+	outline: none;
+}
+
+/* 12.10 Responsive Layout */
+@media screen and (max-width: 782px) {
+	.mase-form-control-selector {
+		flex-direction: column;
+	}
+	
+	.mase-control-selector-btn {
+		width: 100%;
+		justify-content: center;
+	}
+	
+	.mase-border-width-controls,
+	.mase-padding-controls {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
+	.mase-state-group {
+		padding: 12px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.mase-form-controls-wrapper {
+		padding: 12px 0;
+	}
+	
+	.mase-form-control-selector {
+		padding: 12px;
+		gap: 8px;
+	}
+	
+	.mase-control-selector-btn {
+		padding: 10px 16px;
+		font-size: 13px;
+	}
+	
+	.mase-form-control-section .mase-section-card {
+		padding: 16px;
+	}
+	
+	.mase-border-width-controls,
+	.mase-padding-controls {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* 12.11 Touch Target Sizes (Accessibility) */
+@media (pointer: coarse) {
+	.mase-control-selector-btn {
+		min-height: 44px;
+		padding: 14px 20px;
+	}
+	
+	.form-control-style {
+		min-height: 44px;
+	}
+}
+
+/* 12.12 Focus Indicators (Accessibility) */
+.mase-control-selector-btn:focus {
+	outline: 2px solid #007cba;
+	outline-offset: 2px;
+}
+
+.form-control-style:focus-visible {
+	outline: 2px solid #007cba;
+	outline-offset: 2px;
+}
+
+/* 12.13 Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+	.mase-control-selector-btn,
+	.form-control-style {
+		transition: none;
+	}
+}
+
+/* 12.14 High Contrast Mode Support */
+@media (prefers-contrast: high) {
+	.mase-control-selector-btn {
+		border-width: 2px;
+	}
+	
+	.mase-control-selector-btn.active {
+		border-width: 3px;
+	}
+	
+	.mase-state-group {
+		border-left-width: 6px;
+	}
+}
+
+/* 12.15 Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+	.mase-form-controls-wrapper {
+		background: rgba(255, 255, 255, 0.02);
+	}
+	
+	.mase-form-control-selector {
+		background: rgba(255, 255, 255, 0.05);
+	}
+	
+	.mase-control-selector-btn {
+		background: rgba(255, 255, 255, 0.08);
+		border-color: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.9);
+	}
+	
+	.mase-control-selector-btn:hover {
+		background: rgba(255, 255, 255, 0.12);
+	}
+	
+	.mase-form-control-section .mase-section-card {
+		background: rgba(255, 255, 255, 0.05);
+		border-color: rgba(255, 255, 255, 0.1);
+	}
+	
+	.mase-state-group {
+		background: rgba(255, 255, 255, 0.03);
+		border-left-color: #007cba;
+	}
+	
+	.mase-border-width-controls input,
+	.mase-padding-controls input {
+		background: rgba(255, 255, 255, 0.08);
+		border-color: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.9);
+	}
+}

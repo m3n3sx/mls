@@ -1,0 +1,17 @@
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and '/var/www/html/wp-content/plugins/woow-admin/package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+
+   at quick-smoke-test.spec.js:7
+
+   5 |  */
+   6 |
+>  7 | const { test, expect } = require('@playwright/test');
+     |                          ^
+   8 |
+   9 | const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8080';
+  10 | const ADMIN_USER = 'admin';
+    at /var/www/html/wp-content/plugins/woow-admin/tests/e2e/quick-smoke-test.spec.js:7:26
+Error: No tests found.
+Make sure that arguments are regular expressions matching test files.
+You may need to escape symbols like "$" or "*" and quote the arguments.
+

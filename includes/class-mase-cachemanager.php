@@ -50,12 +50,28 @@ class MASE_CacheManager {
 	/**
 	 * Remember a value with caching.
 	 *
-	 * Tries memory cache first, then transients, then generates new value.
+	 * Implements a two-tier caching strategy for optimal performance:
+	 * 1. Memory cache (fastest, request-scoped)
+	 * 2. WordPress transients (persistent, database-backed)
 	 *
-	 * @param string   $key      Cache key.
+	 * PERFORMANCE OPTIMIZATION (Requirement 19.1, 19.2):
+	 * - Memory cache provides sub-millisecond access for repeated requests
+	 * - Transients provide persistent caching across requests
+	 * - Automatic expiration handling prevents stale data
+	 * - Metrics tracking for cache hit/miss analysis
+	 *
+	 * USAGE EXAMPLE:
+	 * ```php
+	 * $css = $cache->remember('generated_css', function() {
+	 *     return $this->generate_css_internal($settings);
+	 * }, 3600);
+	 * ```
+	 *
+	 * @param string   $key      Cache key (will be prefixed with 'mase_').
 	 * @param callable $callback Function to generate value if not cached.
-	 * @param int      $ttl      Time to live in seconds.
+	 * @param int      $ttl      Time to live in seconds (default: 3600).
 	 * @return mixed Cached or generated value.
+	 * @since 1.1.0
 	 */
 	public function remember( $key, $callback, $ttl = 3600 ) {
 		$full_key = self::CACHE_PREFIX . $key;
@@ -104,8 +120,23 @@ class MASE_CacheManager {
 	/**
 	 * Invalidate a specific cache key.
 	 *
-	 * @param string $key Cache key to invalidate.
+	 * Removes cached value from both memory cache and persistent transients.
+	 * This ensures fresh data is generated on next access.
+	 *
+	 * CACHE INVALIDATION (Requirement 19.3):
+	 * - Called automatically when settings are updated
+	 * - Ensures users see changes immediately after save
+	 * - Clears both memory and persistent cache layers
+	 *
+	 * USAGE EXAMPLE:
+	 * ```php
+	 * // Invalidate CSS cache after settings change
+	 * $cache->invalidate('generated_css');
+	 * ```
+	 *
+	 * @param string $key Cache key to invalidate (without 'mase_' prefix).
 	 * @return bool True on success, false on failure.
+	 * @since 1.1.0
 	 */
 	public function invalidate( $key ) {
 		$full_key = self::CACHE_PREFIX . $key;
@@ -183,5 +214,52 @@ class MASE_CacheManager {
 		$bytes /= pow( 1024, $pow );
 
 		return round( $bytes, 2 ) . ' ' . $units[ $pow ];
+	}
+
+	/**
+	 * Get cached value (static interface).
+	 *
+	 * Provides static access to cache retrieval for backward compatibility
+	 * and simplified usage in static contexts.
+	 *
+	 * @param string $key Cache key.
+	 * @return mixed|false Cached value or false if not found.
+	 * @since 1.2.0
+	 */
+	public static function get( $key ) {
+		$full_key = self::CACHE_PREFIX . $key;
+		return get_transient( $full_key );
+	}
+
+	/**
+	 * Set cached value (static interface).
+	 *
+	 * Provides static access to cache storage for backward compatibility
+	 * and simplified usage in static contexts.
+	 *
+	 * @param string $key        Cache key.
+	 * @param mixed  $value      Value to cache.
+	 * @param int    $expiration Time to live in seconds (default: 3600).
+	 * @return bool True on success, false on failure.
+	 * @since 1.2.0
+	 */
+	public static function set( $key, $value, $expiration = 3600 ) {
+		$full_key = self::CACHE_PREFIX . $key;
+		return set_transient( $full_key, $value, $expiration );
+	}
+
+	/**
+	 * Delete cached value (static interface).
+	 *
+	 * Provides static access to cache deletion for backward compatibility
+	 * and simplified usage in static contexts.
+	 *
+	 * @param string $key Cache key.
+	 * @return bool True on success, false on failure.
+	 * @since 1.2.0
+	 */
+	public static function delete( $key ) {
+		$full_key = self::CACHE_PREFIX . $key;
+		return delete_transient( $full_key );
 	}
 }
