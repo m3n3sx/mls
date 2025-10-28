@@ -1,0 +1,145 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: headless
+   Browser: chromium (headless)
+   Viewport: 1920x1080
+   Slow Motion: 500ms
+   WordPress: http://localhost:8080
+   Filter - Tags: [smoke]
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+✅ Loaded 4 test scenarios
+
+🔐 Logging in to WordPress...
+✅ Logged in successfully
+
+🎨 Navigating to MASE settings...
+✅ Settings page loaded
+
+
+🤖 Running in HEADLESS mode
+   - No browser window
+   - Fast execution
+   - Minimal logging
+
+
+🚀 Executing 4 test scenarios
+
+
+================================================================================
+📝 Test 1: Admin Bar Colors
+   Tab: admin-bar | Tags: [colors, visual, smoke, live-preview]
+   Test all color settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+🎨 Testing background color...
+✏️ Testing text color...
+🖱️ Testing hover color...
+❌ Test failed: page.hover: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('#wpadminbar .ab-item:first-child')[22m
+[2m    - locator resolved to 20 elements. Proceeding with the first one: <a href="#" class="ab-item" role="menuitem" aria-expanded="false">…</a>[22m
+[2m  - attempting hover action[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m      - waiting 100ms[22m
+[2m    19 × waiting for element to be visible and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying hover action[22m
+[2m       - waiting 500ms[22m
+
+
+✅ Test passed: Admin Bar Colors
+   Duration: 25.22s
+
+📊 Progress: 1/4 | ✓ 0 | ✗ 1 | ⊘ 0
+
+
+================================================================================
+📝 Test 2: Comprehensive Live Preview
+   Tab: live-preview | Tags: [live-preview, comprehensive, smoke, critical]
+   Test Live Preview with multiple settings across tabs
+================================================================================
+
+🚀 Starting Comprehensive Live Preview Test...
+
+📍 PART 1: Testing Live Preview ENABLED
+🔄 Enabling Live Preview...
+
+🎨 Test 1: Admin Bar Background Color
+   Original color: rgb(35, 40, 45)
+❌ Test failed: Failed to change setting "mase_settings[admin_bar][bg_color]": Field not found: mase_settings[admin_bar][bg_color]
+
+✅ Test passed: Comprehensive Live Preview
+   Duration: 3.06s
+
+📊 Progress: 2/4 | ✓ 0 | ✗ 2 | ⊘ 0
+
+
+================================================================================
+📝 Test 3: Apply Palette
+   Tab: palettes | Tags: [palettes, colors, visual, smoke]
+   Test applying predefined color palettes and verifying color changes
+================================================================================
+
+📍 Navigating to MASE settings...
+🔍 Finding palette section...
+📍 Trying to navigate to Palettes tab...
+❌ Test failed: Assertion failed: Palette section should be found
+Expected true, got false
+
+✅ Test passed: Apply Palette
+   Duration: 1.82s
+
+📊 Progress: 3/4 | ✓ 0 | ✗ 3 | ⊘ 0
+
+
+================================================================================
+📝 Test 4: Apply Template
+   Tab: templates | Tags: [templates, visual, smoke]
+   Test applying predefined templates and verifying changes
+================================================================================
+
+📍 Navigating to Templates tab...
+🔍 Finding predefined templates...
+📋 Found 0 predefined templates
+❌ Test failed: Assertion failed: Should have at least one predefined template
+Expected true, got false
+
+✅ Test passed: Apply Template
+   Duration: 1.00s
+
+📊 Progress: 4/4 | ✓ 0 | ✗ 4 | ⊘ 0
+
+
+================================================================================
+📊 TEST EXECUTION SUMMARY
+================================================================================
+   Total Tests:    4
+   ✅ Passed:      0
+   ❌ Failed:      4
+   ⊘  Skipped:     0
+   📈 Pass Rate:   0.00%
+   ⏱️  Duration:    31.10s
+================================================================================
+
+📊 Generating test report...
+   Report saved to: playwright-report/visual-interactive/index.html
+   Open in browser: file:///var/www/html/wp-content/plugins/woow-admin/playwright-report/visual-interactive/index.html
+✅ Report generated
+

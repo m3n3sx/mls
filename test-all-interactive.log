@@ -1,0 +1,35 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: interactive
+   Browser: chromium (headed)
+   Viewport: 1920x1080
+   Slow Motion: 800ms
+   WordPress: http://localhost:8080
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+⚠️  Failed to load test metadata from /var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/scenarios/live-preview/comprehensive.spec.cjs: Unexpected token 'const'
+✅ Loaded 39 test scenarios
+
+🔐 Logging in to WordPress...
+
+❌ Fatal error during test execution:
+   Failed to login to WordPress: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8080/wp-login.php
+Call log:
+[2m  - navigating to "http://localhost:8080/wp-login.php", waiting until "networkidle"[22m
+
+
+Stack trace:
+Error: Failed to login to WordPress: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:8080/wp-login.php
+Call log:
+[2m  - navigating to "http://localhost:8080/wp-login.php", waiting until "networkidle"[22m
+
+    at TestHelpers.loginToWordPress (/var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/helpers.cjs:65:13)
+    at async main (/var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/runner.cjs:318:5)

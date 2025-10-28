@@ -1,0 +1,71 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: headless
+   Browser: chromium (headless)
+   Viewport: 1920x1080
+   Slow Motion: 500ms
+   WordPress: http://localhost:8080
+   Filter - Tab: admin-bar
+   Filter - Test: colors
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+⚠️  Failed to load test metadata from /var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/scenarios/live-preview/comprehensive.spec.cjs: Unexpected token 'const'
+✅ Loaded 1 test scenarios
+
+🔐 Logging in to WordPress...
+✅ Logged in successfully
+
+🎨 Navigating to MASE settings...
+✅ Settings page loaded
+
+
+🤖 Running in HEADLESS mode
+   - No browser window
+   - Fast execution
+   - Minimal logging
+
+
+🚀 Executing 1 test scenarios
+
+
+================================================================================
+📝 Test 1: Admin Bar Colors
+   Tab: admin-bar | Tags: [colors, visual, smoke, live-preview]
+   Test color settings in Admin Bar tab
+================================================================================
+
+🎨 Testing background color...
+✏️ Testing text color...
+🖱️ Setting hover color...
+✅ Admin Bar colors test completed
+
+✅ Test passed: Admin Bar Colors
+   Duration: 14.12s
+
+📊 Progress: 1/1 | ✓ 0 | ✗ 1 | ⊘ 0
+
+
+================================================================================
+📊 TEST EXECUTION SUMMARY
+================================================================================
+   Total Tests:    1
+   ✅ Passed:      0
+   ❌ Failed:      1
+   ⊘  Skipped:     0
+   📈 Pass Rate:   0.00%
+   ⏱️  Duration:    14.12s
+================================================================================
+
+📊 Generating test report...
+   Report saved to: playwright-report/visual-interactive/index.html
+   Open in browser: file:///var/www/html/wp-content/plugins/woow-admin/playwright-report/visual-interactive/index.html
+✅ Report generated
+

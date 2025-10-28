@@ -1,0 +1,39 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: headless
+   Browser: chromium (headless)
+   Viewport: 1920x1080
+   Slow Motion: 500ms
+   WordPress: http://localhost:8080
+   Filter - Tab: admin-bar
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+✅ Loaded 4 test scenarios
+
+🔐 Logging in to WordPress...
+✅ Logged in successfully
+
+🎨 Navigating to MASE settings...
+
+❌ Fatal error during test execution:
+   Failed to navigate to settings page: page.waitForSelector: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('.mase-settings-page') to be visible[22m
+
+
+Stack trace:
+Error: Failed to navigate to settings page: page.waitForSelector: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('.mase-settings-page') to be visible[22m
+
+    at TestHelpers.navigateToSettings (/var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/helpers.cjs:88:13)
+    at async main (/var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/runner.cjs:323:5)
+Exit code: 1

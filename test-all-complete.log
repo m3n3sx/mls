@@ -1,0 +1,838 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: headless
+   Browser: chromium (headless)
+   Viewport: 1920x1080
+   Slow Motion: 500ms
+   WordPress: http://localhost:8080
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+⚠️  Failed to load test metadata from /var/www/html/wp-content/plugins/woow-admin/tests/visual-interactive/scenarios/live-preview/comprehensive.spec.cjs: Unexpected token 'const'
+✅ Loaded 39 test scenarios
+
+🔐 Logging in to WordPress...
+✅ Logged in successfully
+
+🎨 Navigating to MASE settings...
+✅ Settings page loaded
+
+
+🤖 Running in HEADLESS mode
+   - No browser window
+   - Fast execution
+   - Minimal logging
+
+
+🚀 Executing 39 test scenarios
+
+
+================================================================================
+📝 Test 1: Template Test Scenario
+   Tab: template | Tags: [template, example]
+   Template for creating new test scenarios
+================================================================================
+
+
+❌ Test failed: Template Test Scenario
+   Error: startTime is not defined
+   Duration: 5.44s
+
+📊 Progress: 1/39 | ✓ 0 | ✗ 1 | ⊘ 0
+
+
+================================================================================
+📝 Test 2: Admin Bar Colors
+   Tab: admin-bar | Tags: [colors, visual, smoke, live-preview]
+   Test color settings in Admin Bar tab
+================================================================================
+
+🎨 Testing background color...
+✏️ Testing text color...
+🖱️ Setting hover color...
+✅ Admin Bar colors test completed
+
+✅ Test passed: Admin Bar Colors
+   Duration: 14.10s
+
+📊 Progress: 2/39 | ✓ 0 | ✗ 2 | ⊘ 0
+
+
+================================================================================
+📝 Test 3: Admin Bar Gradient
+   Tab: admin-bar | Tags: [gradient, visual, live-preview]
+   Test gradient background settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+🎨 Enabling gradient background...
+❌ Test failed: Failed to change setting "admin-bar-bg-type": Field not found: admin-bar-bg-type
+
+✅ Test passed: Admin Bar Gradient
+   Duration: 1.52s
+
+📊 Progress: 3/39 | ✓ 0 | ✗ 3 | ⊘ 0
+
+
+================================================================================
+📝 Test 4: Admin Bar Height
+   Tab: admin-bar | Tags: [height, visual, live-preview]
+   Test height adjustment settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+📏 Getting original admin bar height...
+❌ Test failed: originalHeight is not defined
+
+✅ Test passed: Admin Bar Height
+   Duration: 1.48s
+
+📊 Progress: 4/39 | ✓ 0 | ✗ 4 | ⊘ 0
+
+
+================================================================================
+📝 Test 5: Admin Bar Typography
+   Tab: admin-bar | Tags: [typography, visual, live-preview]
+   Test all typography settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+📏 Testing font size...
+📏 Testing font size...
+  Font size set to 16px (verification skipped)
+  Font size set to 20px (verification skipped)
+❌ Test failed: largerFontSize is not defined
+
+✅ Test passed: Admin Bar Typography
+   Duration: 10.67s
+
+📊 Progress: 5/39 | ✓ 0 | ✗ 5 | ⊘ 0
+
+
+================================================================================
+📝 Test 6: Backup & Restore
+   Tab: advanced | Tags: [advanced, backup, restore, data-safety]
+   Test backup creation and restoration functionality
+================================================================================
+
+📍 Navigating to Advanced tab...
+📜 Scrolling to Backup & Restore section...
+📊 Capturing current settings...
+📝 Original settings:
+   Admin Bar BG: #ff0000
+   Admin Bar Text: #ffffff
+   Menu BG: #23282d
+💾 Testing backup creation...
+📋 Initial backup count: 0
+🔄 Creating backup...
+❌ Test failed: Failed to create backup: Create backup button not found
+
+✅ Test passed: Backup & Restore
+   Duration: 15.87s
+
+📊 Progress: 6/39 | ✓ 0 | ✗ 6 | ⊘ 0
+
+
+================================================================================
+📝 Test 7: Custom CSS
+   Tab: advanced | Tags: [advanced, custom-css, styling]
+   Test custom CSS input and application
+================================================================================
+
+📍 Navigating to Advanced tab...
+📜 Scrolling to Custom CSS section...
+🔍 Verifying custom CSS textarea...
+✓ Custom CSS textarea found
+📝 Current custom CSS length: 0 characters
+✏️ Adding custom CSS code...
+📝 Test CSS code:
+
+/* MASE Visual Test - Custom CSS */
+#wpadminbar {
+  border-bottom: 5px solid #ff00ff !important;
+}
+
+.mase-test-marker {
+  background-color: #00ffff !important;
+  color: #ff0000 !important;
+  font-weight: bold !important;
+}
+
+#adminmenu {
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.5) !important;
+}
+
+✓ Custom CSS entered successfully
+💾 Saving settings with custom CSS...
+🔍 Verifying custom CSS is applied...
+✓ Custom CSS style tag found in page
+⚠️ Custom CSS style tag found but does not contain test marker
+🎨 Checking CSS effects on admin bar...
+📏 Admin bar border-bottom width: 0px
+⚠️ Border width is 0px, expected 5px (may be overridden)
+🔄 Testing CSS persistence after reload...
+❌ Test failed: elementHandle.scrollIntoViewIfNeeded: Element is not attached to the DOM
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    - waiting for element to be stable[22m
+
+
+✅ Test passed: Custom CSS
+   Duration: 10.98s
+
+📊 Progress: 7/39 | ✓ 0 | ✗ 7 | ⊘ 0
+
+
+================================================================================
+📝 Test 8: Import/Export Settings
+   Tab: advanced | Tags: [advanced, import-export, data-transfer]
+   Test settings export and import functionality
+================================================================================
+
+📍 Navigating to Advanced tab...
+📜 Scrolling to Import/Export section...
+📊 Capturing current settings...
+📝 Original settings - BG: #ff0000, Text: #ffffff
+💾 Testing settings export...
+❌ Test failed: Assertion failed: Export button should exist
+Expected true, got false
+
+✅ Test passed: Import/Export Settings
+   Duration: 2.11s
+
+📊 Progress: 8/39 | ✓ 0 | ✗ 8 | ⊘ 0
+
+
+================================================================================
+📝 Test 9: Gradient Backgrounds
+   Tab: backgrounds | Tags: [backgrounds, gradients, visual]
+   Test gradient backgrounds with different types and angles
+================================================================================
+
+📍 Navigating to Backgrounds tab...
+❌ Test failed: Failed to navigate to tab "backgrounds": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="backgrounds"], #backgrounds-tab')[22m
+
+
+✅ Test passed: Gradient Backgrounds
+   Duration: 10.59s
+
+📊 Progress: 9/39 | ✓ 0 | ✗ 9 | ⊘ 0
+
+
+================================================================================
+📝 Test 10: Image Backgrounds
+   Tab: backgrounds | Tags: [backgrounds, images, visual, upload]
+   Test image upload, positioning, and sizing for backgrounds
+================================================================================
+
+📍 Navigating to Backgrounds tab...
+❌ Test failed: Failed to navigate to tab "backgrounds": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="backgrounds"], #backgrounds-tab')[22m
+
+
+✅ Test passed: Image Backgrounds
+   Duration: 10.56s
+
+📊 Progress: 10/39 | ✓ 0 | ✗ 10 | ⊘ 0
+
+
+================================================================================
+📝 Test 11: Solid Backgrounds
+   Tab: backgrounds | Tags: [backgrounds, colors, visual]
+   Test solid color backgrounds for different admin areas
+================================================================================
+
+📍 Navigating to Backgrounds tab...
+❌ Test failed: Failed to navigate to tab "backgrounds": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="backgrounds"], #backgrounds-tab')[22m
+
+
+✅ Test passed: Solid Backgrounds
+   Duration: 10.57s
+
+📊 Progress: 11/39 | ✓ 0 | ✗ 11 | ⊘ 0
+
+
+================================================================================
+📝 Test 12: Button States
+   Tab: buttons | Tags: [buttons, visual, states, live-preview]
+   Test all button states, sizing, and border radius
+================================================================================
+
+📍 Navigating to Universal Buttons tab...
+❌ Test failed: Failed to navigate to tab "buttons": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="buttons"], #buttons-tab')[22m
+
+
+✅ Test passed: Button States
+   Duration: 10.57s
+
+📊 Progress: 12/39 | ✓ 0 | ✗ 12 | ⊘ 0
+
+
+================================================================================
+📝 Test 13: Primary Buttons
+   Tab: buttons | Tags: [buttons, visual, live-preview]
+   Test primary button states and styling
+================================================================================
+
+📍 Navigating to Universal Buttons tab...
+❌ Test failed: Failed to navigate to tab "buttons": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="buttons"], #buttons-tab')[22m
+
+
+✅ Test passed: Primary Buttons
+   Duration: 10.56s
+
+📊 Progress: 13/39 | ✓ 0 | ✗ 13 | ⊘ 0
+
+
+================================================================================
+📝 Test 14: Secondary Buttons
+   Tab: buttons | Tags: [buttons, visual, live-preview]
+   Test secondary button states and verify visual differences from primary
+================================================================================
+
+📍 Navigating to Universal Buttons tab...
+❌ Test failed: Failed to navigate to tab "buttons": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="buttons"], #buttons-tab')[22m
+
+
+✅ Test passed: Secondary Buttons
+   Duration: 10.58s
+
+📊 Progress: 14/39 | ✓ 0 | ✗ 14 | ⊘ 0
+
+
+================================================================================
+📝 Test 15: Content Colors
+   Tab: content | Tags: [colors, visual, content, live-preview]
+   Test all color settings in Content tab
+================================================================================
+
+📍 Navigating to Content tab...
+🔄 Enabling Live Preview...
+🎨 Testing text color...
+❌ Test failed: Failed to change setting "content_text_color": Field not found: content_text_color
+
+✅ Test passed: Content Colors
+   Duration: 1.52s
+
+📊 Progress: 15/39 | ✓ 0 | ✗ 15 | ⊘ 0
+
+
+================================================================================
+📝 Test 16: Content Spacing
+   Tab: content | Tags: [spacing, visual, content, live-preview]
+   Test spacing settings in Content tab
+================================================================================
+
+📍 Navigating to Content tab...
+🔄 Enabling Live Preview...
+📏 Testing paragraph margin...
+❌ Test failed: Paragraph margin slider not found
+
+✅ Test passed: Content Spacing
+   Duration: 1.52s
+
+📊 Progress: 16/39 | ✓ 0 | ✗ 16 | ⊘ 0
+
+
+================================================================================
+📝 Test 17: Content Typography
+   Tab: content | Tags: [typography, visual, content, live-preview]
+   Test typography settings in Content tab
+================================================================================
+
+📍 Navigating to Content tab...
+🔄 Enabling Live Preview...
+🔤 Testing font family...
+❌ Test failed: Failed to change setting "content_font_family": Field not found: content_font_family
+
+✅ Test passed: Content Typography
+   Duration: 1.53s
+
+📊 Progress: 17/39 | ✓ 0 | ✗ 17 | ⊘ 0
+
+
+================================================================================
+📝 Test 18: Effects Animations
+   Tab: effects | Tags: [effects, visual, animations]
+   Test animation and shadow preset settings in Effects tab
+================================================================================
+
+📍 Navigating to Effects tab...
+🔄 Enabling Live Preview...
+🎨 Testing shadow preset selection...
+❌ Test failed: Failed to change setting "visual_effects[preset]": Field not found: visual_effects[preset]
+
+✅ Test passed: Effects Animations
+   Duration: 1.51s
+
+📊 Progress: 18/39 | ✓ 0 | ✗ 18 | ⊘ 0
+
+
+================================================================================
+📝 Test 19: Effects Hover Effects
+   Tab: effects | Tags: [effects, visual, hover]
+   Test hover effect and shadow direction settings in Effects tab
+================================================================================
+
+📍 Navigating to Effects tab...
+🔄 Enabling Live Preview...
+❌ Test failed: Failed to change setting "visual_effects[preset]": Field not found: visual_effects[preset]
+
+✅ Test passed: Effects Hover Effects
+   Duration: 1.49s
+
+📊 Progress: 19/39 | ✓ 0 | ✗ 19 | ⊘ 0
+
+
+================================================================================
+📝 Test 20: Effects Transitions
+   Tab: effects | Tags: [effects, visual, transitions]
+   Test transition timing and duration settings in Effects tab
+================================================================================
+
+📍 Navigating to Effects tab...
+🔄 Enabling Live Preview...
+❌ Test failed: Failed to change setting "visual_effects[preset]": Field not found: visual_effects[preset]
+
+✅ Test passed: Effects Transitions
+   Duration: 1.46s
+
+📊 Progress: 20/39 | ✓ 0 | ✗ 20 | ⊘ 0
+
+
+================================================================================
+📝 Test 21: Form Controls Styling
+   Tab: form-controls | Tags: [form-controls, visual, colors, interactive]
+   Test input field, select dropdown, and checkbox/radio styling
+================================================================================
+
+📍 Navigating to Form Controls tab...
+❌ Test failed: Failed to navigate to tab "form-controls": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="form-controls"], #form-controls-tab')[22m
+
+
+✅ Test passed: Form Controls Styling
+   Duration: 10.57s
+
+📊 Progress: 21/39 | ✓ 0 | ✗ 21 | ⊘ 0
+
+
+================================================================================
+📝 Test 22: Login Page Customization
+   Tab: login | Tags: [login, visual, colors, branding]
+   Test login page color application, logo, and background
+================================================================================
+
+📍 Navigating to Login Page tab...
+❌ Test failed: Failed to navigate to tab "login": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="login"], #login-tab')[22m
+
+
+✅ Test passed: Login Page Customization
+   Duration: 10.56s
+
+📊 Progress: 22/39 | ✓ 0 | ✗ 22 | ⊘ 0
+
+
+================================================================================
+📝 Test 23: Menu Colors
+   Tab: menu | Tags: [colors, visual, menu, live-preview]
+   Test all color settings in Menu tab
+================================================================================
+
+📍 Navigating to Menu tab...
+🔄 Enabling Live Preview...
+🎨 Testing menu background color...
+❌ Test failed: Failed to change setting "menu[bg_color]": Field not found: menu[bg_color]
+
+✅ Test passed: Menu Colors
+   Duration: 1.49s
+
+📊 Progress: 23/39 | ✓ 0 | ✗ 23 | ⊘ 0
+
+
+================================================================================
+📝 Test 24: Menu Height Mode
+   Tab: menu | Tags: [layout, visual, menu, live-preview]
+   Test menu height mode settings (Full Height vs Fit to Content)
+================================================================================
+
+📍 Navigating to Menu tab...
+🔄 Enabling Live Preview...
+📏 Testing Full Height mode...
+❌ Test failed: Failed to change setting "menu[height_mode]": Field not found: menu[height_mode]
+
+✅ Test passed: Menu Height Mode
+   Duration: 1.50s
+
+📊 Progress: 24/39 | ✓ 0 | ✗ 24 | ⊘ 0
+
+
+================================================================================
+📝 Test 25: Menu Hover Effects
+   Tab: menu | Tags: [effects, visual, menu, hover, live-preview]
+   Test menu hover effects and animations
+================================================================================
+
+📍 Navigating to Menu tab...
+🔄 Enabling Live Preview...
+✨ Enabling hover effects...
+❌ Test failed: Failed to change setting "menu[enable_hover_effects]": Field not found: menu[enable_hover_effects]
+
+✅ Test passed: Menu Hover Effects
+   Duration: 1.47s
+
+📊 Progress: 25/39 | ✓ 0 | ✗ 25 | ⊘ 0
+
+
+================================================================================
+📝 Test 26: Menu Typography
+   Tab: menu | Tags: [typography, visual, menu, live-preview]
+   Test all typography settings in Menu tab
+================================================================================
+
+📍 Navigating to Menu tab...
+🔄 Enabling Live Preview...
+📏 Testing menu font size...
+❌ Test failed: Failed to change setting "menu[font_size]": Field not found: menu[font_size]
+
+✅ Test passed: Menu Typography
+   Duration: 1.49s
+
+📊 Progress: 26/39 | ✓ 0 | ✗ 26 | ⊘ 0
+
+
+================================================================================
+📝 Test 27: Apply Palette
+   Tab: palettes | Tags: [palettes, colors, visual, smoke]
+   Test applying predefined color palettes and verifying color changes
+================================================================================
+
+📍 Navigating to MASE settings...
+🔍 Finding palette section...
+📍 Trying to navigate to Palettes tab...
+❌ Test failed: Assertion failed: Palette section should be found
+Expected true, got false
+
+✅ Test passed: Apply Palette
+   Duration: 1.77s
+
+📊 Progress: 27/39 | ✓ 0 | ✗ 27 | ⊘ 0
+
+
+================================================================================
+📝 Test 28: Delete Palette
+   Tab: palettes | Tags: [palettes, custom, delete, visual]
+   Test deleting custom color palettes and verifying removal
+================================================================================
+
+📍 Navigating to MASE settings...
+🔍 Finding palette section...
+📍 Trying to navigate to Palettes tab...
+🎨 Creating a custom palette for deletion test...
+❌ Test failed: elementHandle.fill: Timeout 10000ms exceeded.
+Call log:
+[2m    - fill("#9B59B6")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    20 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
+
+
+✅ Test passed: Delete Palette
+   Duration: 12.31s
+
+📊 Progress: 28/39 | ✓ 0 | ✗ 28 | ⊘ 0
+
+
+================================================================================
+📝 Test 29: Save Custom Palette
+   Tab: palettes | Tags: [palettes, custom, colors, visual]
+   Test creating custom color palettes and verifying they appear in list
+================================================================================
+
+📍 Navigating to MASE settings...
+🔍 Finding palette section...
+📍 Trying to navigate to Palettes tab...
+🎨 Setting up custom color configuration...
+🎨 Test colors: {
+  primary: '#E74C3C',
+  secondary: '#3498DB',
+  accent: '#F39C12',
+  background: '#2C3E50',
+  text: '#ECF0F1'
+}
+❌ Test failed: elementHandle.fill: Timeout 10000ms exceeded.
+Call log:
+[2m    - fill("#E74C3C")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    20 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
+
+
+✅ Test passed: Save Custom Palette
+   Duration: 12.38s
+
+📊 Progress: 29/39 | ✓ 0 | ✗ 29 | ⊘ 0
+
+
+================================================================================
+📝 Test 30: All Viewports Comprehensive
+   Tab: responsive | Tags: [responsive, viewport, comprehensive]
+   Test MASE interface across all viewport sizes
+================================================================================
+
+🔄 Starting comprehensive viewport testing...
+
+📱 Phase 1: Desktop (1920x1080)
+🎨 Setting background color...
+❌ Test failed: Cannot access 'desktopBgColor' before initialization
+
+✅ Test passed: All Viewports Comprehensive
+   Duration: 6.14s
+
+📊 Progress: 30/39 | ✓ 0 | ✗ 30 | ⊘ 0
+
+
+================================================================================
+📝 Test 31: Desktop Viewport (1920x1080)
+   Tab: responsive | Tags: [responsive, viewport, desktop]
+   Test MASE interface at desktop resolution
+================================================================================
+
+📱 Setting viewport to Desktop (1920x1080)...
+📐 Verifying settings page layout...
+❌ Test failed: Assertion failed: Settings page should be visible
+Expected true, got false
+
+✅ Test passed: Desktop Viewport (1920x1080)
+   Duration: 0.71s
+
+📊 Progress: 31/39 | ✓ 0 | ✗ 31 | ⊘ 0
+
+
+================================================================================
+📝 Test 32: Mobile Viewport (375x667)
+   Tab: responsive | Tags: [responsive, viewport, mobile]
+   Test MASE interface at mobile resolution
+================================================================================
+
+📱 Setting viewport to Mobile (375x667)...
+📐 Verifying settings page accessibility at mobile size...
+❌ Test failed: Assertion failed: Settings page should be visible at mobile size
+Expected true, got false
+
+✅ Test passed: Mobile Viewport (375x667)
+   Duration: 0.61s
+
+📊 Progress: 32/39 | ✓ 0 | ✗ 32 | ⊘ 0
+
+
+================================================================================
+📝 Test 33: Tablet Viewport (768x1024)
+   Tab: responsive | Tags: [responsive, viewport, tablet]
+   Test MASE interface at tablet resolution
+================================================================================
+
+📱 Setting viewport to Tablet (768x1024)...
+📐 Verifying settings page accessibility...
+❌ Test failed: Assertion failed: Settings page should be visible
+Expected true, got false
+
+✅ Test passed: Tablet Viewport (768x1024)
+   Duration: 0.61s
+
+📊 Progress: 33/39 | ✓ 0 | ✗ 33 | ⊘ 0
+
+
+================================================================================
+📝 Test 34: Apply Template
+   Tab: templates | Tags: [templates, visual, smoke]
+   Test applying predefined templates and verifying changes
+================================================================================
+
+📍 Navigating to Templates tab...
+🔍 Finding predefined templates...
+📋 Found 0 predefined templates
+❌ Test failed: Assertion failed: Should have at least one predefined template
+Expected true, got false
+
+✅ Test passed: Apply Template
+   Duration: 0.96s
+
+📊 Progress: 34/39 | ✓ 0 | ✗ 34 | ⊘ 0
+
+
+================================================================================
+📝 Test 35: Delete Template
+   Tab: templates | Tags: [templates, custom, delete, visual]
+   Test deleting custom templates and verifying removal
+================================================================================
+
+📍 Navigating to Templates tab...
+🎨 Creating a custom template for deletion test...
+💾 Creating template to delete: "Delete Test 1761589562310"
+❌ Test failed: elementHandle.fill: Timeout 10000ms exceeded.
+Call log:
+[2m    - fill("Delete Test 1761589562310")[22m
+[2m  - attempting fill action[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and editable[22m
+[2m      - element is not visible[22m
+[2m    - retrying fill action[22m
+[2m      - waiting 100ms[22m
+[2m    20 × waiting for element to be visible, enabled and editable[22m
+[2m       - element is not visible[22m
+[2m     - retrying fill action[22m
+[2m       - waiting 500ms[22m
+
+
+✅ Test passed: Delete Template
+   Duration: 19.79s
+
+📊 Progress: 35/39 | ✓ 0 | ✗ 35 | ⊘ 0
+
+
+================================================================================
+📝 Test 36: Save Custom Template
+   Tab: templates | Tags: [templates, custom, visual]
+   Test saving custom templates and verifying they appear in list
+================================================================================
+
+📍 Navigating to Templates tab...
+🎨 Setting up custom configuration...
+📍 Returning to Templates tab...
+📊 Current template count: 0
+💾 Saving custom template: "Test Template 1761589582164"
+✅ Verifying save template dialog...
+❌ Test failed: Save template dialog did not appear
+
+✅ Test passed: Save Custom Template
+   Duration: 9.35s
+
+📊 Progress: 36/39 | ✓ 0 | ✗ 36 | ⊘ 0
+
+
+================================================================================
+📝 Test 37: Global Fonts
+   Tab: typography | Tags: [typography, visual, live-preview, global]
+   Test global font family, size, and weight settings in Typography tab
+================================================================================
+
+📍 Navigating to Typography tab...
+🔄 Enabling Live Preview...
+📝 Selecting Body Text area...
+🔤 Testing font family selection...
+  Original font family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif
+❌ Test failed: Failed to change setting "content_typography[body_text][font_family]": Field not found: content_typography[body_text][font_family]
+
+✅ Test passed: Global Fonts
+   Duration: 1.46s
+
+📊 Progress: 37/39 | ✓ 0 | ✗ 37 | ⊘ 0
+
+
+================================================================================
+📝 Test 38: Section Fonts
+   Tab: typography | Tags: [typography, visual, live-preview, sections]
+   Test section-specific typography settings for different content areas
+================================================================================
+
+📍 Navigating to Typography tab...
+🔄 Enabling Live Preview...
+📰 Testing Headings typography...
+💬 Testing Comments typography...
+📦 Testing Widgets typography...
+ℹ️ Testing Meta typography...
+📊 Testing Tables typography...
+⚠️ Testing Notices typography...
+🔍 Verifying section independence...
+💾 Saving settings...
+🔄 Reloading page to verify persistence...
+✅ Section fonts test completed successfully
+
+✅ Test passed: Section Fonts
+   Duration: 9.22s
+
+📊 Progress: 38/39 | ✓ 0 | ✗ 38 | ⊘ 0
+
+
+================================================================================
+📝 Test 39: Dashboard Widgets Styling
+   Tab: widgets | Tags: [widgets, visual, colors, typography]
+   Test widget color and typography customization
+================================================================================
+
+📍 Navigating to Dashboard Widgets tab...
+❌ Test failed: Failed to navigate to tab "widgets": page.click: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-tab="widgets"], #widgets-tab')[22m
+
+
+✅ Test passed: Dashboard Widgets Styling
+   Duration: 10.54s
+
+📊 Progress: 39/39 | ✓ 0 | ✗ 39 | ⊘ 0
+
+
+================================================================================
+📊 TEST EXECUTION SUMMARY
+================================================================================
+   Total Tests:    39
+   ✅ Passed:      0
+   ❌ Failed:      39
+   ⊘  Skipped:     0
+   📈 Pass Rate:   0.00%
+   ⏱️  Duration:    247.54s
+================================================================================
+
+📊 Generating test report...
+   Report saved to: playwright-report/visual-interactive/index.html
+   Open in browser: file:///var/www/html/wp-content/plugins/woow-admin/playwright-report/visual-interactive/index.html
+✅ Report generated
+

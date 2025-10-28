@@ -1,0 +1,153 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  MASE Visual Interactive Test Runner                       ║
+║                         Starting Test Execution                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚙️  Configuration:
+   Mode: interactive
+   Browser: chromium (headed)
+   Viewport: 1920x1080
+   Slow Motion: 1000ms
+   WordPress: http://localhost:8080
+   Filter - Tab: admin-bar
+
+🌐 Initializing browser...
+✅ Browser initialized
+
+📂 Loading test scenarios...
+✅ Loaded 4 test scenarios
+
+🔐 Logging in to WordPress...
+✅ Logged in successfully
+
+🎨 Navigating to MASE settings...
+✅ Settings page loaded
+
+
+🎭 Running in INTERACTIVE mode
+   - Browser window visible
+   - Slow motion enabled
+   - Visual pauses for inspection
+   - Detailed progress information
+
+
+🚀 Executing 4 test scenarios
+
+
+================================================================================
+📝 Test 1: Admin Bar Colors
+   Tab: admin-bar | Tags: [colors, visual, smoke, live-preview]
+   Test all color settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+🎨 Testing background color...
+✏️ Testing text color...
+🖱️ Testing hover color...
+❌ Test failed: page.hover: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('#wpadminbar .ab-item:first-child')[22m
+[2m    - locator resolved to 20 elements. Proceeding with the first one: <a href="#" class="ab-item" role="menuitem" aria-expanded="false">…</a>[22m
+[2m  - attempting hover action[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying hover action[22m
+[2m      - waiting 100ms[22m
+[2m    19 × waiting for element to be visible and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying hover action[22m
+[2m       - waiting 500ms[22m
+
+
+✅ Test passed: Admin Bar Colors
+   Duration: 26.21s
+
+👀 Pausing 2000ms for visual inspection...
+
+📊 Progress: 1/4 | ✓ 0 | ✗ 1 | ⊘ 0
+
+
+================================================================================
+📝 Test 2: Admin Bar Gradient
+   Tab: admin-bar | Tags: [gradient, visual, live-preview]
+   Test gradient background settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+🎨 Enabling gradient background...
+❌ Test failed: Failed to change setting "admin_bar[use_gradient]": Field not found: admin_bar[use_gradient]
+
+✅ Test passed: Admin Bar Gradient
+   Duration: 2.02s
+
+👀 Pausing 2000ms for visual inspection...
+
+📊 Progress: 2/4 | ✓ 0 | ✗ 2 | ⊘ 0
+
+
+================================================================================
+📝 Test 3: Admin Bar Height
+   Tab: admin-bar | Tags: [height, visual, live-preview]
+   Test height adjustment settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+📏 Getting original admin bar height...
+  Original height: 32px
+⬆️ Testing increased height (48px)...
+  New height: 32px
+❌ Test failed: Assertion failed: Height should be 48px
+Expected "32px" to contain "48"
+
+✅ Test passed: Admin Bar Height
+   Duration: 7.16s
+
+👀 Pausing 2000ms for visual inspection...
+
+📊 Progress: 3/4 | ✓ 0 | ✗ 3 | ⊘ 0
+
+
+================================================================================
+📝 Test 4: Admin Bar Typography
+   Tab: admin-bar | Tags: [typography, visual, live-preview]
+   Test all typography settings in Admin Bar tab
+================================================================================
+
+📍 Navigating to Admin Bar tab...
+🔄 Enabling Live Preview...
+📏 Testing font size...
+  Original font size: 13px
+❌ Test failed: Failed to change setting "admin_bar[font_size]": Field not found: admin_bar[font_size]
+
+✅ Test passed: Admin Bar Typography
+   Duration: 2.02s
+
+👀 Pausing 2000ms for visual inspection...
+
+📊 Progress: 4/4 | ✓ 0 | ✗ 4 | ⊘ 0
+
+
+================================================================================
+📊 TEST EXECUTION SUMMARY
+================================================================================
+   Total Tests:    4
+   ✅ Passed:      0
+   ❌ Failed:      4
+   ⊘  Skipped:     0
+   📈 Pass Rate:   0.00%
+   ⏱️  Duration:    45.42s
+================================================================================
+
+📊 Generating test report...
+   Report saved to: playwright-report/visual-interactive/index.html
+   Open in browser: file:///var/www/html/wp-content/plugins/woow-admin/playwright-report/visual-interactive/index.html
+✅ Report generated
+

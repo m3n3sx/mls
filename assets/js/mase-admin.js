@@ -163,6 +163,25 @@
         },
 
         /**
+         * Update live preview
+         * Central function to trigger live preview updates across all modules
+         * Called by various modules when settings change
+         */
+        updatePreview: function () {
+            if (!this.state.livePreviewEnabled) {
+                return;
+            }
+
+            // Trigger content manager preview if it exists
+            if (this.contentManager && typeof this.contentManager.updatePreview === 'function') {
+                this.contentManager.updatePreview();
+            }
+
+            // Add other module preview updates here as needed
+            MASE_DEBUG.log('MASE: Live preview updated');
+        },
+
+        /**
          * Palette Manager Module
          * Handles palette application, saving, and deletion
          * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5

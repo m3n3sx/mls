@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Current plugin version.
  */
-define( 'MASE_VERSION', '1.2.1' );
+define( 'MASE_VERSION', '1.2.2' );
 
 /**
  * Plugin directory path.

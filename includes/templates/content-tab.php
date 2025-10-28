@@ -22,11 +22,13 @@ $colors = isset( $content_settings['colors'] ) ? $content_settings['colors'] : a
 $spacing = isset( $content_settings['spacing'] ) ? $content_settings['spacing'] : array();
 ?>
 
-<div class="mase-tab-content" data-tab="content">
-	<h2><?php esc_html_e( 'Content Styling', 'mase' ); ?></h2>
-	<p class="mase-tab-description">
-		<?php esc_html_e( 'Customize typography, colors, and spacing for WordPress admin content areas.', 'mase' ); ?>
-	</p>
+<!-- Content Tab Content - no wrapper div needed, already wrapped in admin-settings-page.php -->
+<div class="mase-section">
+	<div class="mase-section-header">
+		<h2><?php esc_html_e( 'Content Styling', 'mase' ); ?></h2>
+		<p class="description"><?php esc_html_e( 'Customize typography, colors, and spacing for WordPress admin content areas.', 'mase' ); ?></p>
+	</div>
+</div>
 
 	<!-- Typography Section -->
 	<div class="mase-section">
@@ -215,4 +217,3 @@ $spacing = isset( $content_settings['spacing'] ) ? $content_settings['spacing'] 
 			</p>
 		</div>
 	</div>
-</div>
