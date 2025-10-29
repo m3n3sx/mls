@@ -27,10 +27,16 @@ export default defineConfig({
     ['list'],
   ],
   
+  // Global setup - authenticate once before all tests
+  globalSetup: './tests/e2e/global-setup.js',
+  
   // Shared settings for all the projects below
   use: {
     // Base URL for tests
     baseURL: process.env.WP_BASE_URL || 'http://localhost:8080',
+    
+    // Use saved authentication state
+    storageState: 'tests/e2e/.auth/user.json',
     
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',

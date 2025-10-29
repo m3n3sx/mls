@@ -141,17 +141,32 @@ class TestHelpers {
    */
   async changeSetting(fieldName, value) {
     try {
-      // Build selector - try name attribute first, then ID
-      let selector = `[name="${fieldName}"]`;
+      // Build selector - try ID first (kebab-case like 'admin-bar-bg-type'), then name attribute
+      // This matches the HTML structure where IDs use kebab-case but names use array notation
+      let selector = `#${fieldName}`;
       let element = await this.page.$(selector);
 
+      // If not found by ID, try name attribute (array notation like 'admin_bar[bg_type]')
       if (!element) {
-        selector = `#${fieldName}`;
+        selector = `[name="${fieldName}"]`;
         element = await this.page.$(selector);
       }
 
+      // If still not found, try converting kebab-case to array notation
+      // e.g., 'admin-bar-bg-type' -> 'admin_bar[bg_type]'
+      if (!element && fieldName.includes('-')) {
+        const parts = fieldName.split('-');
+        if (parts.length >= 2) {
+          const section = parts[0];
+          const field = parts.slice(1).join('_');
+          const arrayName = `${section}[${field}]`;
+          selector = `[name="${arrayName}"]`;
+          element = await this.page.$(selector);
+        }
+      }
+
       if (!element) {
-        throw new Error(`Field not found: ${fieldName}`);
+        throw new Error(`Field not found: ${fieldName}. Tried selectors: #${fieldName}, [name="${fieldName}"]`);
       }
 
       // Check if this is a WordPress Color Picker

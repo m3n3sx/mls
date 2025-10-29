@@ -4,11 +4,11 @@
  * Szybki test sprawdzający podstawową funkcjonalność
  */
 
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8080';
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin';
+const ADMIN_PASS = 'admin123';
 
 test.describe('MASE Quick Smoke Test', () => {
     
@@ -58,7 +58,7 @@ test.describe('MASE Quick Smoke Test', () => {
         await page.waitForLoadState('networkidle');
         
         // Check if settings page loaded
-        const settingsPage = await page.locator('.mase-settings-page');
+        const settingsPage = await page.locator('.mase-settings-wrap');
         await expect(settingsPage).toBeVisible({ timeout: 10000 });
         
         console.log('✓ Strona ustawień MASE istnieje');

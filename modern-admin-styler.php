@@ -3,7 +3,7 @@
  * Plugin Name: Modern Admin Styler Enterprise
  * Plugin URI: https://github.com/m3n3sx/MASE
  * Description: Enterprise-grade WordPress admin styling plugin with clean, maintainable architecture. Features: 10 color palettes, 11 templates, advanced visual effects, mobile optimization, import/export, backup/restore, live preview.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Requires at least: 5.0
  * Requires PHP: 7.4
  * Author: MASE Development Team
@@ -82,7 +82,7 @@ require_once MASE_PLUGIN_DIR . 'includes/class-mase-mobile-optimizer.php';
 /**
  * Load plugin text domain for translations.
  * Task 20: Add localization support (Requirement 1.8)
- * 
+ *
  * @since 1.2.0
  */
 function mase_load_textdomain() {
@@ -112,7 +112,7 @@ function mase_check_migration() {
 	if ( ! is_admin() ) {
 		return;
 	}
-	
+
 	// Run migration check (will only execute if version upgrade detected).
 	MASE_Migration::maybe_migrate();
 }
@@ -140,7 +140,7 @@ function mase_activate() {
 	// Initialize default settings on activation.
 	$settings = new MASE_Settings();
 	$settings->initialize_defaults();
-	
+
 	// Schedule hourly cron job for auto palette switching (Requirement 15.1).
 	if ( ! wp_next_scheduled( 'mase_auto_palette_switch' ) ) {
 		wp_schedule_event( time(), 'hourly', 'mase_auto_palette_switch' );
@@ -162,7 +162,7 @@ function mase_deactivate() {
 	// Clean up all MASE caches.
 	$cache = new MASE_CacheManager();
 	$cache->clear_all();
-	
+
 	// Clear scheduled cron job (Requirement 15.1).
 	$timestamp = wp_next_scheduled( 'mase_auto_palette_switch' );
 	if ( $timestamp ) {
@@ -192,19 +192,19 @@ function mase_init() {
 	$generator = new MASE_CSS_Generator();
 	$cache     = new MASE_CacheManager();
 	$admin     = new MASE_Admin( $settings, $generator, $cache );
-	
+
 	// Initialize mobile optimizer (Requirement 16.1, 16.4).
 	$mobile_optimizer = new MASE_Mobile_Optimizer();
-	
+
 	// Display degradation notice if applicable (Requirement 16.4).
 	add_action( 'admin_notices', array( $mobile_optimizer, 'display_degradation_notice' ) );
-	
+
 	// Enqueue detection script (Requirement 16.1).
 	add_action( 'admin_enqueue_scripts', array( $mobile_optimizer, 'enqueue_detection_script' ) );
-	
+
 	// Register AJAX handler for low-power detection (Requirement 16.1).
 	add_action( 'wp_ajax_mase_store_low_power_detection', array( $mobile_optimizer, 'handle_store_low_power_detection' ) );
-	
+
 	// Register AJAX handler for device capabilities reporting.
 	add_action( 'wp_ajax_mase_report_device_capabilities', array( $mobile_optimizer, 'handle_report_device_capabilities' ) );
 }
@@ -222,7 +222,7 @@ function mase_init_rest_api() {
 	// Instantiate core classes.
 	$settings = new MASE_Settings();
 	$cache    = new MASE_CacheManager();
-	
+
 	// Initialize REST API controller.
 	$rest_api = new MASE_REST_API( $settings, $cache );
 }
@@ -243,26 +243,28 @@ add_action( 'plugins_loaded', 'mase_init_rest_api' );
  */
 function mase_auto_palette_switch_callback() {
 	$settings = new MASE_Settings();
-	
+
 	// Check if auto-switching is enabled (Requirement 15.2).
 	$options = $settings->get_option();
-	if ( ! isset( $options['advanced']['auto_palette_switch'] ) || 
-	     ! $options['advanced']['auto_palette_switch'] ) {
+	if ( ! isset( $options['advanced']['auto_palette_switch'] ) ||
+		! $options['advanced']['auto_palette_switch'] ) {
 		return;
 	}
-	
+
 	// Execute auto palette switch (Requirements 15.3, 15.4).
 	$result = $settings->auto_switch_palette();
-	
+
 	// Log palette switch for debugging (Requirement 15.5).
 	if ( $result && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 		$current_hour = intval( current_time( 'H' ) );
-		$palette_id = $settings->get_palette_for_time( $current_hour );
-		error_log( sprintf(
-			'MASE: Auto palette switch executed at %s. Applied palette: %s',
-			current_time( 'Y-m-d H:i:s' ),
-			$palette_id
-		) );
+		$palette_id   = $settings->get_palette_for_time( $current_hour );
+		error_log(
+			sprintf(
+				'MASE: Auto palette switch executed at %s. Applied palette: %s',
+				current_time( 'Y-m-d H:i:s' ),
+				$palette_id
+			)
+		);
 	}
 }
 

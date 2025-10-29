@@ -1,0 +1,935 @@
+/**
+ * Modern Admin Styler Enterprise (MASE) - Responsive Design Styles
+ * 
+ * Implements mobile-first responsive design with three breakpoints:
+ * - Mobile: <768px (single column, vertical tabs, stacked layout)
+ * - Tablet: 768-1024px (2-column grid, horizontal tabs)
+ * - Desktop: >1024px (multi-column grid, sidebar option)
+ * 
+ * Touch targets are minimum 44x44px on mobile devices.
+ * 
+ * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 19.1, 19.2, 19.3, 19.4, 19.5
+ * 
+ * @package     Modern Admin Styler Enterprise
+ * @version     1.2.0
+ * @author      Modern Admin Styler Team
+ * @license     GPL-2.0+
+ */
+
+/* ============================================================================
+   MOBILE STYLES (<768px)
+   Single column layout, stacked header, vertical tabs
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    
+    /* ========================================================================
+       HEADER - STACKED LAYOUT
+       ======================================================================== */
+    
+    .mase-settings-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+    
+    .mase-header-left {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .mase-header-title {
+        font-size: 20px;
+    }
+    
+    .mase-version-badge {
+        font-size: 11px;
+        padding: 2px 8px;
+    }
+    
+    .mase-header-right {
+        width: 100%;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .mase-header-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mase-header-actions .button {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    /* ========================================================================
+       TAB NAVIGATION - VERTICAL LAYOUT
+       ======================================================================== */
+    
+    .mase-tab-nav {
+        flex-direction: column;
+        border-bottom: none;
+        border-right: 2px solid #e5e7eb;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    .mase-tab-button {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 14px 16px;
+        min-height: 44px;
+        border-radius: 0;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+    
+    .mase-tab-button:last-child {
+        border-bottom: none;
+    }
+    
+    .mase-tab-button.active {
+        border-right: 3px solid var(--mase-primary, #4A90E2);
+        background: rgba(74, 144, 226, 0.05);
+    }
+    
+    .mase-tab-icon {
+        font-size: 18px;
+        margin-right: 12px;
+    }
+    
+    .mase-tab-label {
+        font-size: 14px;
+    }
+    
+    /* ========================================================================
+       CONTENT AREA - SINGLE COLUMN
+       ======================================================================== */
+    
+    .mase-settings-wrap {
+        padding: 16px;
+    }
+    
+    .mase-tab-content {
+        padding: 16px;
+    }
+    
+    .mase-section {
+        margin-bottom: 24px;
+        padding: 16px;
+    }
+    
+    .mase-section-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .mase-section-description {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+    
+    /* ========================================================================
+       PALETTE GRID - SINGLE COLUMN
+       ======================================================================== */
+    
+    .mase-palette-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .mase-palette-card {
+        padding: 16px;
+    }
+    
+    .mase-palette-colors {
+        height: 60px;
+        margin-bottom: 12px;
+    }
+    
+    .mase-palette-name {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .mase-palette-btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    /* ========================================================================
+       TEMPLATE GRID - SINGLE COLUMN
+       ======================================================================== */
+    
+    .mase-template-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .mase-template-card,
+    .mase-template-preview-card {
+        padding: 16px;
+    }
+    
+    .mase-template-thumbnail {
+        height: 150px;
+        margin-bottom: 12px;
+    }
+    
+    .mase-template-name {
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+    
+    .mase-template-description {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .mase-template-btn {
+        width: 100%;
+        min-height: 44px;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    /* ========================================================================
+       FORM CONTROLS - TOUCH FRIENDLY
+       ======================================================================== */
+    
+    /* All buttons minimum 44x44px */
+    button,
+    .button,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"] {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    /* Form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="url"],
+    input[type="password"],
+    input[type="search"],
+    input[type="number"],
+    input[type="tel"],
+    textarea,
+    select {
+        min-height: 44px;
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    textarea {
+        min-height: 120px;
+    }
+    
+    /* Checkboxes and radio buttons */
+    input[type="checkbox"],
+    input[type="radio"] {
+        min-width: 24px;
+        min-height: 24px;
+    }
+    
+    /* Toggle switches */
+    .mase-toggle-switch {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .mase-toggle-slider {
+        width: 50px;
+        height: 28px;
+    }
+    
+    .mase-toggle-slider::before {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* Color pickers */
+    .mase-color-picker,
+    .wp-picker-container .wp-color-result {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Range sliders */
+    input[type="range"] {
+        height: 44px;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* ========================================================================
+       FORM GROUPS - STACKED LAYOUT
+       ======================================================================== */
+    
+    .mase-form-group {
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .mase-form-label {
+        width: 100%;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+    
+    .mase-form-control {
+        width: 100%;
+    }
+    
+    .mase-form-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .mase-form-col {
+        width: 100%;
+    }
+    
+    /* ========================================================================
+       CARDS AND SECTIONS
+       ======================================================================== */
+    
+    .mase-card {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .mase-card-header {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .mase-card-title {
+        font-size: 16px;
+    }
+    
+    .mase-card-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mase-card-actions .button {
+        width: 100%;
+    }
+    
+    /* ========================================================================
+       NOTICES AND ALERTS
+       ======================================================================== */
+    
+    .mase-notice-region {
+        top: 46px; /* WordPress admin bar height on mobile */
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .mase-notice-region .notice {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    /* ========================================================================
+       MODALS AND DIALOGS
+       ======================================================================== */
+    
+    .mase-modal {
+        width: 95%;
+        max-width: none;
+        margin: 20px auto;
+        max-height: calc(100vh - 40px);
+    }
+    
+    .mase-modal-header {
+        padding: 16px;
+    }
+    
+    .mase-modal-title {
+        font-size: 18px;
+    }
+    
+    .mase-modal-body {
+        padding: 16px;
+        max-height: calc(100vh - 200px);
+    }
+    
+    .mase-modal-footer {
+        padding: 16px;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+    
+    .mase-modal-footer .button {
+        width: 100%;
+    }
+    
+    /* ========================================================================
+       BACKUP LIST
+       ======================================================================== */
+    
+    .mase-backup-list {
+        gap: 12px;
+    }
+    
+    .mase-backup-item {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .mase-backup-info {
+        width: 100%;
+    }
+    
+    .mase-backup-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .mase-backup-actions .button {
+        width: 100%;
+    }
+    
+    /* ========================================================================
+       UTILITY CLASSES
+       ======================================================================== */
+    
+    .mase-hide-mobile {
+        display: none !important;
+    }
+    
+    .mase-show-mobile {
+        display: block !important;
+    }
+    
+    /* ========================================================================
+       WORDPRESS ADMIN BAR ADJUSTMENTS
+       ======================================================================== */
+    
+    body.wp-admin {
+        padding-top: 46px; /* WordPress mobile admin bar height */
+    }
+    
+    .mase-settings-wrap {
+        margin-top: 0;
+    }
+}
+
+/* ============================================================================
+   TABLET STYLES (768px - 1024px)
+   2-column grid, horizontal tabs
+   ============================================================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    
+    /* ========================================================================
+       HEADER - HORIZONTAL LAYOUT
+       ======================================================================== */
+    
+    .mase-settings-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 24px;
+    }
+    
+    .mase-header-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .mase-header-title {
+        font-size: 24px;
+    }
+    
+    .mase-header-right {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .mase-header-actions {
+        flex-direction: row;
+        gap: 12px;
+    }
+    
+    /* ========================================================================
+       TAB NAVIGATION - HORIZONTAL LAYOUT
+       ======================================================================== */
+    
+    .mase-tab-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        border-bottom: 2px solid #e5e7eb;
+        padding: 0;
+        margin-bottom: 24px;
+        gap: 4px;
+    }
+    
+    .mase-tab-button {
+        flex: 0 1 auto;
+        padding: 12px 16px;
+        border-radius: 8px 8px 0 0;
+        border-bottom: none;
+    }
+    
+    .mase-tab-button.active {
+        border-bottom: 3px solid var(--mase-primary, #4A90E2);
+        background: rgba(74, 144, 226, 0.05);
+    }
+    
+    .mase-tab-icon {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    
+    .mase-tab-label {
+        font-size: 13px;
+    }
+    
+    /* ========================================================================
+       CONTENT AREA
+       ======================================================================== */
+    
+    .mase-settings-wrap {
+        padding: 24px;
+    }
+    
+    .mase-tab-content {
+        padding: 24px;
+    }
+    
+    .mase-section {
+        margin-bottom: 32px;
+        padding: 20px;
+    }
+    
+    /* ========================================================================
+       PALETTE GRID - 2 COLUMNS
+       ======================================================================== */
+    
+    .mase-palette-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    /* ========================================================================
+       TEMPLATE GRID - 2 COLUMNS
+       ======================================================================== */
+    
+    .mase-template-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .mase-template-preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    /* ========================================================================
+       FORM LAYOUT - 2 COLUMNS
+       ======================================================================== */
+    
+    .mase-form-row {
+        flex-direction: row;
+        gap: 20px;
+    }
+    
+    .mase-form-col {
+        flex: 1;
+    }
+    
+    .mase-form-col-half {
+        flex: 0 0 calc(50% - 10px);
+    }
+    
+    /* ========================================================================
+       CARDS
+       ======================================================================== */
+    
+    .mase-card-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .mase-card-actions {
+        flex-direction: row;
+        gap: 12px;
+        width: auto;
+    }
+    
+    .mase-card-actions .button {
+        width: auto;
+    }
+    
+    /* ========================================================================
+       MODALS
+       ======================================================================== */
+    
+    .mase-modal {
+        width: 80%;
+        max-width: 700px;
+    }
+    
+    .mase-modal-footer {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    
+    .mase-modal-footer .button {
+        width: auto;
+    }
+    
+    /* ========================================================================
+       BACKUP LIST
+       ======================================================================== */
+    
+    .mase-backup-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .mase-backup-info {
+        width: auto;
+        flex: 1;
+    }
+    
+    .mase-backup-actions {
+        width: auto;
+        flex-direction: row;
+        gap: 12px;
+    }
+    
+    .mase-backup-actions .button {
+        width: auto;
+    }
+    
+    /* ========================================================================
+       UTILITY CLASSES
+       ======================================================================== */
+    
+    .mase-hide-tablet {
+        display: none !important;
+    }
+    
+    .mase-show-tablet {
+        display: block !important;
+    }
+}
+
+/* ============================================================================
+   DESKTOP STYLES (>1024px)
+   Multi-column grid, sidebar option
+   ============================================================================ */
+
+@media (min-width: 1025px) {
+    
+    /* ========================================================================
+       HEADER - FULL WIDTH
+       ======================================================================== */
+    
+    .mase-settings-header {
+        padding: 24px 32px;
+    }
+    
+    .mase-header-title {
+        font-size: 28px;
+    }
+    
+    /* ========================================================================
+       TAB NAVIGATION - HORIZONTAL WITH MORE SPACE
+       ======================================================================== */
+    
+    .mase-tab-nav {
+        gap: 8px;
+        margin-bottom: 32px;
+    }
+    
+    .mase-tab-button {
+        padding: 14px 20px;
+    }
+    
+    .mase-tab-icon {
+        font-size: 18px;
+        margin-right: 10px;
+    }
+    
+    .mase-tab-label {
+        font-size: 14px;
+    }
+    
+    /* ========================================================================
+       CONTENT AREA - WIDER
+       ======================================================================== */
+    
+    .mase-settings-wrap {
+        padding: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .mase-tab-content {
+        padding: 32px;
+    }
+    
+    .mase-section {
+        margin-bottom: 40px;
+        padding: 24px;
+    }
+    
+    /* ========================================================================
+       PALETTE GRID - 3-5 COLUMNS (RESPONSIVE)
+       ======================================================================== */
+    
+    .mase-palette-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    
+    @media (min-width: 1200px) {
+        .mase-palette-grid {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
+    
+    /* ========================================================================
+       TEMPLATE GRID - 3 COLUMNS
+       ======================================================================== */
+    
+    .mase-template-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+    
+    .mase-template-preview-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+    
+    /* ========================================================================
+       FORM LAYOUT - MULTI-COLUMN
+       ======================================================================== */
+    
+    .mase-form-row {
+        gap: 24px;
+    }
+    
+    .mase-form-col-third {
+        flex: 0 0 calc(33.333% - 16px);
+    }
+    
+    .mase-form-col-quarter {
+        flex: 0 0 calc(25% - 18px);
+    }
+    
+    /* ========================================================================
+       SIDEBAR LAYOUT OPTION
+       ======================================================================== */
+    
+    .mase-layout-sidebar .mase-settings-wrap {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 32px;
+        max-width: 1600px;
+    }
+    
+    .mase-layout-sidebar .mase-tab-nav {
+        flex-direction: column;
+        border-bottom: none;
+        border-right: 2px solid #e5e7eb;
+        margin-bottom: 0;
+        position: sticky;
+        top: 32px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+    }
+    
+    .mase-layout-sidebar .mase-tab-button {
+        width: 100%;
+        justify-content: flex-start;
+        border-radius: 8px;
+        margin-bottom: 4px;
+    }
+    
+    .mase-layout-sidebar .mase-tab-button.active {
+        border-right: 3px solid var(--mase-primary, #4A90E2);
+        border-bottom: none;
+    }
+    
+    .mase-layout-sidebar .mase-tab-content {
+        padding: 0;
+    }
+    
+    /* ========================================================================
+       MODALS - LARGER
+       ======================================================================== */
+    
+    .mase-modal {
+        width: 70%;
+        max-width: 900px;
+    }
+    
+    /* ========================================================================
+       UTILITY CLASSES
+       ======================================================================== */
+    
+    .mase-hide-desktop {
+        display: none !important;
+    }
+    
+    .mase-show-desktop {
+        display: block !important;
+    }
+}
+
+/* ============================================================================
+   LARGE DESKTOP STYLES (>1440px)
+   Extra wide layouts
+   ============================================================================ */
+
+@media (min-width: 1441px) {
+    
+    .mase-settings-wrap {
+        max-width: 1600px;
+    }
+    
+    .mase-palette-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+    }
+    
+    .mase-template-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+    }
+    
+    .mase-layout-sidebar .mase-settings-wrap {
+        grid-template-columns: 280px 1fr;
+        gap: 40px;
+    }
+}
+
+/* ============================================================================
+   PRINT STYLES
+   Optimize for printing
+   ============================================================================ */
+
+@media print {
+    
+    /* Hide interactive elements */
+    .mase-header-actions,
+    .mase-tab-nav,
+    .mase-palette-btn,
+    .mase-template-btn,
+    button,
+    .button,
+    .mase-toggle-switch,
+    .mase-notice-region {
+        display: none !important;
+    }
+    
+    /* Simplify layout */
+    .mase-settings-wrap {
+        padding: 0;
+        max-width: none;
+    }
+    
+    .mase-tab-content {
+        padding: 0;
+    }
+    
+    /* Show all tabs */
+    .mase-tab-content {
+        display: block !important;
+        page-break-after: always;
+    }
+    
+    /* Optimize colors for print */
+    .mase-palette-card,
+    .mase-template-card,
+    .mase-section {
+        border: 1px solid #000000;
+        box-shadow: none;
+    }
+    
+    /* Ensure text is readable */
+    body,
+    .mase-settings-wrap {
+        color: #000000;
+        background: #ffffff;
+    }
+}
+
+/* ============================================================================
+   LANDSCAPE ORIENTATION (MOBILE/TABLET)
+   Optimize for landscape mode on smaller devices
+   ============================================================================ */
+
+@media (max-width: 1024px) and (orientation: landscape) {
+    
+    .mase-settings-header {
+        padding: 12px 20px;
+    }
+    
+    .mase-header-title {
+        font-size: 20px;
+    }
+    
+    .mase-tab-nav {
+        margin-bottom: 16px;
+    }
+    
+    .mase-tab-button {
+        padding: 10px 14px;
+    }
+    
+    .mase-tab-icon {
+        font-size: 14px;
+    }
+    
+    .mase-tab-label {
+        font-size: 12px;
+    }
+    
+    .mase-modal {
+        max-height: calc(100vh - 20px);
+        margin: 10px auto;
+    }
+    
+    .mase-modal-body {
+        max-height: calc(100vh - 150px);
+    }
+}

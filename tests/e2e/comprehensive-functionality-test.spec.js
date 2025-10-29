@@ -7,12 +7,12 @@
  * @since 1.2.1
  */
 
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 // Configuration
 const BASE_URL = 'http://localhost:8080';
 const ADMIN_USER = 'admin';
-const ADMIN_PASS = 'admin';
+const ADMIN_PASS = 'admin123';
 const SETTINGS_PAGE = `${BASE_URL}/wp-admin/admin.php?page=mase-settings`;
 
 // Test timeout configuration

@@ -1,6 +1,6 @@
 {
   "name": "modern-admin-styler-enterprise",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Modern Admin Styler Enterprise - WordPress Admin Customization Plugin",
   "type": "module",
   "scripts": {
@@ -18,6 +18,10 @@
     "test:visual:tab": "node tests/visual-interactive/runner.cjs --mode interactive --tab",
     "lint": "eslint assets/js/**/*.js",
     "lint:fix": "eslint assets/js/**/*.js --fix",
+    "validate:wpcs": "bash scripts/validate-wpcs.sh",
+    "validate:php": "bash scripts/check-php-syntax.sh",
+    "validate:security": "bash scripts/security-scan.sh",
+    "validate:all": "npm run validate:php && npm run lint && npm run validate:security",
     "format": "prettier --write \"assets/js/**/*.js\"",
     "format:check": "prettier --check \"assets/js/**/*.js\"",
     "analyze": "vite build --mode analyze",
@@ -47,6 +51,7 @@
     "@playwright/test": "^1.40.1",
     "@vitest/coverage-v8": "^1.0.4",
     "@vitest/ui": "^1.0.4",
+    "cypress": "^15.5.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.2",
