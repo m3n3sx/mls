@@ -2,35 +2,55 @@
 /**
  * Clear MASE Cache Script
  * 
- * Run this file directly in browser to clear all MASE caches.
- * URL: http://your-site.com/wp-content/plugins/modern-admin-styler/clear-mase-cache.php
+ * Run this script to clear all MASE caches and force regeneration of CSS.
+ * Usage: php clear-mase-cache.php
  */
 
 // Load WordPress
-require_once('../../../wp-load.php');
+require_once __DIR__ . '/../../../wp-load.php';
 
-// Check if user is admin
-if (!current_user_can('manage_options')) {
-    die('Access denied. You must be an administrator.');
+// Check if we're in WordPress environment
+if (!defined('ABSPATH')) {
+    die('WordPress not loaded. Make sure wp-load.php path is correct.');
 }
 
-// Clear all MASE transients
+echo "=== MASE Cache Clear Script ===\n\n";
+
+// Load MASE classes
+require_once __DIR__ . '/includes/class-mase-cachemanager.php';
+
+// Create cache manager instance
+$cache = new MASE_CacheManager();
+
+// Clear all caches
+echo "Clearing all MASE caches...\n";
+$result = $cache->clear_all();
+
+if ($result) {
+    echo "✓ All MASE caches cleared successfully!\n";
+} else {
+    echo "✗ Failed to clear caches.\n";
+}
+
+// Also clear WordPress object cache if available
+if (function_exists('wp_cache_flush')) {
+    wp_cache_flush();
+    echo "✓ WordPress object cache flushed.\n";
+}
+
+// Clear specific MASE transients
 $cleared = array();
+$keys = array('generated_css', 'mase_css', 'mase_settings');
 
-// Clear generated CSS cache
-if (delete_transient('mase_generated_css')) {
-    $cleared[] = 'generated_css';
+foreach ($keys as $key) {
+    if (delete_transient('mase_' . $key)) {
+        $cleared[] = $key;
+    }
 }
 
-// Clear CacheManager caches
-global $wpdb;
-$deleted = $wpdb->query(
-    "DELETE FROM {$wpdb->options} 
-     WHERE option_name LIKE '_transient_mase_%' 
-     OR option_name LIKE '_transient_timeout_mase_%'"
-);
+if (!empty($cleared)) {
+    echo "✓ Cleared specific transients: " . implode(', ', $cleared) . "\n";
+}
 
-echo '<h1>MASE Cache Cleared</h1>';
-echo '<p>Cleared transients: ' . implode(', ', $cleared) . '</p>';
-echo '<p>Deleted ' . $deleted . ' cache entries from database.</p>';
-echo '<p><a href="' . admin_url('admin.php?page=mase-settings') . '">Go to MASE Settings</a></p>';
+echo "\n=== Cache Clear Complete ===\n";
+echo "Please refresh your WordPress admin page to see changes.\n";

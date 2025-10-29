@@ -479,7 +479,7 @@ class MASE_Settings {
 					'top'    => 20,
 					'right'  => 20,
 					'bottom' => 20,
-					'left'   => 20,
+					'left'   => 0,  // Changed from 20 to 0 - WordPress already has proper margin from menu
 					'unit'   => 'px',
 				),
 				'mobile_overrides' => array(

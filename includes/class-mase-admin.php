@@ -74,7 +74,9 @@ class MASE_Admin {
 
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_global_dark_mode' ) );
 		add_action( 'admin_head', array( $this, 'inject_custom_css' ), 999 );
+		add_action( 'admin_footer', array( $this, 'render_global_dark_mode_fab' ) );
 
 		// Core settings AJAX handlers.
 		add_action( 'wp_ajax_mase_save_settings', array( $this, 'handle_ajax_save_settings' ) );
@@ -142,6 +144,70 @@ class MASE_Admin {
 		 *
 		 * @see modern-admin-styler.php lines 189-192
 		 */
+	}
+
+	/**
+	 * Enqueue global dark mode assets on all admin pages.
+	 * Loads minimal CSS and JS for the floating dark mode toggle button.
+	 *
+	 * @param string $hook Current admin page hook.
+	 */
+	public function enqueue_global_dark_mode( $hook ) {
+		// Enqueue dark mode CSS (contains FAB styles)
+		wp_enqueue_style(
+			'mase-global-dark-mode',
+			plugins_url( '../assets/css/mase-admin.css', __FILE__ ),
+			array(),
+			MASE_VERSION
+		);
+
+		// Enqueue dark mode JavaScript
+		wp_enqueue_script(
+			'mase-global-dark-mode',
+			plugins_url( '../assets/js/mase-global-dark-mode.js', __FILE__ ),
+			array( 'jquery' ),
+			MASE_VERSION,
+			true
+		);
+
+		// Localize script with AJAX URL and nonce
+		wp_localize_script(
+			'mase-global-dark-mode',
+			'maseGlobalDarkMode',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'mase_toggle_dark_mode' ),
+			)
+		);
+	}
+
+	/**
+	 * Render global dark mode FAB (Floating Action Button).
+	 * Displays on all admin pages for easy dark/light mode switching.
+	 */
+	public function render_global_dark_mode_fab() {
+		// Get current dark mode state from user meta
+		$user_id   = get_current_user_id();
+		$dark_mode = get_user_meta( $user_id, 'mase_dark_mode_preference', true );
+		$is_dark   = ( 'dark' === $dark_mode );
+		?>
+		<button 
+			type="button" 
+			id="mase-global-dark-mode-fab" 
+			class="mase-dark-mode-fab" 
+			aria-label="<?php echo $is_dark ? esc_attr__( 'Switch to Light Mode', 'modern-admin-styler' ) : esc_attr__( 'Switch to Dark Mode', 'modern-admin-styler' ); ?>"
+			aria-pressed="<?php echo $is_dark ? 'true' : 'false'; ?>"
+			data-mode="<?php echo $is_dark ? 'dark' : 'light'; ?>"
+		>
+			<span class="dashicons <?php echo $is_dark ? 'dashicons-sun' : 'dashicons-moon'; ?>" aria-hidden="true"></span>
+			<span class="mase-fab-tooltip">
+				<?php echo $is_dark ? esc_html__( 'Light Mode', 'modern-admin-styler' ) : esc_html__( 'Dark Mode', 'modern-admin-styler' ); ?>
+			</span>
+			<span class="sr-only">
+				<?php echo $is_dark ? esc_html__( 'Current mode: Dark', 'modern-admin-styler' ) : esc_html__( 'Current mode: Light', 'modern-admin-styler' ); ?>
+			</span>
+		</button>
+		<?php
 	}
 
 	public function add_admin_menu() {
@@ -698,6 +764,23 @@ class MASE_Admin {
 				}
 			}
 		}
+		
+		// Fix: Force admin bar to be visible on settings page
+		// Admin bar is sometimes hidden by WordPress on certain admin pages
+		add_action('admin_head', function() use ($hook) {
+			if ('toplevel_page_mase-settings' === $hook) {
+				?>
+				<style id="mase-force-adminbar-visibility">
+					/* Force admin bar to be visible on MASE settings page */
+					#wpadminbar {
+						display: flex !important;
+						visibility: visible !important;
+						opacity: 1 !important;
+					}
+				</style>
+				<?php
+			}
+		});
 	}
 
 	/**
@@ -3382,7 +3465,7 @@ body.wp-admin #adminmenu .wp-submenu {
 	public function handle_ajax_toggle_dark_mode() {
 		try {
 			// Security: Verify nonce for CSRF protection (Requirement 2.2, 11.1).
-			if ( ! check_ajax_referer( 'mase_save_settings', 'nonce', false ) ) {
+			if ( ! check_ajax_referer( 'mase_toggle_dark_mode', 'nonce', false ) ) {
 				error_log( 'MASE: Dark mode toggle - Invalid nonce' );
 				wp_send_json_error( array( 'message' => __( 'Invalid nonce', 'mase' ) ), 403 );
 			}

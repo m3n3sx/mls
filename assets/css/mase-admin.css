@@ -457,22 +457,13 @@
    ============================================================================ */
 
 /**
- * Admin Bar FOUC Prevention
+ * Admin Bar Styling
  * 
- * Hide admin bar initially with opacity: 0 to prevent layout shift during
- * page load. The .mase-loaded class is added via JavaScript on window load
- * to trigger the smooth fade-in transition.
+ * WordPress handles FOUC prevention natively, so we don't need to hide it.
+ * We only apply custom styling here.
  * 
  * Requirements: 8.4
  */
-#wpadminbar {
-  opacity: 0;                                    /* Hidden initially */
-  transition: opacity 0.1s ease;                 /* Smooth fade-in */
-}
-
-#wpadminbar.mase-loaded {
-  opacity: 1;                                    /* Visible after load */
-}
 
 /* ============================================================================
    SECTION 2: RESET & BASE STYLES
@@ -9735,187 +9726,90 @@ html.no-transitions * {
   transition: none !important;
 }
 
-/**
- * CRITICAL BUG FIX (v1.2.1): Dark Mode Gray Circle Bug (MASE-DARK-001)
- * 
- * Issue: Large gray circular element (80-90% of viewport) appears in Dark Mode,
- * blocking all content and making the interface unusable.
- * 
- * Root Cause: Unknown decorative element with border-radius: 50% and large dimensions
- * 
- * Solution: Defensive CSS to prevent any large circular elements from appearing
- * in Dark Mode. This fix:
- * 1. Limits maximum size of all pseudo-elements with border-radius: 50%
- * 2. Ensures content elements are not affected
- * 3. Uses !important for specificity to override any conflicting rules
- * 
- * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4, 2.5, 3.1, 3.2, 3.3, 3.4, 3.5
- * 
- * @see .kiro/specs/critical-bugs-fix/requirements.md
- * @see .kiro/specs/critical-bugs-fix/design.md
- */
 
-/* Prevent large circular decorative elements in Dark Mode */
-html[data-theme="dark"] *::before,
-html[data-theme="dark"] *::after,
-body.mase-dark-mode *::before,
-body.mase-dark-mode *::after {
-  /* Limit maximum size of pseudo-elements with circular styling */
-  max-width: 100px !important;
-  max-height: 100px !important;
+/* ============================================================================
+   CLEAN DARK MODE IMPLEMENTATION
+   ============================================================================
+   Simple, professional dark mode without "nuclear options" or element hiding.
+   Uses CSS variables for easy customization and maintenance.
+   ============================================================================ */
+
+/* Dark Mode Colors */
+html[data-theme="dark"],
+body.mase-dark-mode {
+  --mase-bg-primary: #1a1a1a;
+  --mase-bg-secondary: #2a2a2a;
+  --mase-text-primary: #e0e0e0;
+  --mase-text-secondary: #b0b0b0;
+  --mase-border: #3a3a3a;
+  --mase-surface: #2a2a2a;
+  --mase-surface-hover: #3a3a3a;
 }
 
-/* Exception: Allow legitimate large elements (content areas, cards, etc.) */
-html[data-theme="dark"] .mase-content-area,
-html[data-theme="dark"] .mase-settings-wrap,
-html[data-theme="dark"] .mase-card,
-html[data-theme="dark"] .mase-section-card,
+/* Apply to WordPress core elements */
 html[data-theme="dark"] #wpwrap,
 html[data-theme="dark"] #wpcontent,
 html[data-theme="dark"] #wpbody,
 html[data-theme="dark"] #wpbody-content,
-body.mase-dark-mode .mase-content-area,
-body.mase-dark-mode .mase-settings-wrap,
-body.mase-dark-mode .mase-card,
-body.mase-dark-mode .mase-section-card,
 body.mase-dark-mode #wpwrap,
 body.mase-dark-mode #wpcontent,
 body.mase-dark-mode #wpbody,
 body.mase-dark-mode #wpbody-content {
-  max-width: none !important;
-  max-height: none !important;
+  background-color: var(--mase-bg-primary) !important;
+  color: var(--mase-text-primary) !important;
 }
 
-/* Additional safety: Hide any large circular elements that might still appear */
-html[data-theme="dark"] *[style*="border-radius: 50%"],
-html[data-theme="dark"] *[style*="border-radius:50%"],
-body.mase-dark-mode *[style*="border-radius: 50%"],
-body.mase-dark-mode *[style*="border-radius:50%"] {
-  /* If element has border-radius: 50% and is larger than 100px, hide it */
-  max-width: 100px !important;
-  max-height: 100px !important;
+/* Cards and surfaces */
+html[data-theme="dark"] .mase-card,
+html[data-theme="dark"] .mase-section,
+html[data-theme="dark"] .postbox,
+html[data-theme="dark"] .mase-settings-wrap,
+body.mase-dark-mode .mase-card,
+body.mase-dark-mode .mase-section,
+body.mase-dark-mode .postbox,
+body.mase-dark-mode .mase-settings-wrap {
+  background-color: var(--mase-surface) !important;
+  border-color: var(--mase-border) !important;
 }
 
-/* Ensure no large background decorations appear */
-html[data-theme="dark"]::before,
-html[data-theme="dark"]::after,
-body.mase-dark-mode::before,
-body.mase-dark-mode::after {
-  display: none !important;
+/* Text colors */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] p,
+html[data-theme="dark"] label,
+html[data-theme="dark"] .description,
+body.mase-dark-mode h1,
+body.mase-dark-mode h2,
+body.mase-dark-mode h3,
+body.mase-dark-mode p,
+body.mase-dark-mode label,
+body.mase-dark-mode .description {
+  color: var(--mase-text-primary) !important;
 }
 
-/* CRITICAL FIX: Prevent circular background on WordPress core containers */
-html[data-theme="dark"] #wpwrap,
-html[data-theme="dark"] #wpwrap::before,
-html[data-theme="dark"] #wpwrap::after,
-html[data-theme="dark"] #wpcontent,
-html[data-theme="dark"] #wpcontent::before,
-html[data-theme="dark"] #wpcontent::after,
-html[data-theme="dark"] #wpbody,
-html[data-theme="dark"] #wpbody::before,
-html[data-theme="dark"] #wpbody::after,
-html[data-theme="dark"] #wpbody-content,
-html[data-theme="dark"] #wpbody-content::before,
-html[data-theme="dark"] #wpbody-content::after,
-body.mase-dark-mode #wpwrap,
-body.mase-dark-mode #wpwrap::before,
-body.mase-dark-mode #wpwrap::after,
-body.mase-dark-mode #wpcontent,
-body.mase-dark-mode #wpcontent::before,
-body.mase-dark-mode #wpcontent::after,
-body.mase-dark-mode #wpbody,
-body.mase-dark-mode #wpbody::before,
-body.mase-dark-mode #wpbody::after,
-body.mase-dark-mode #wpbody-content,
-body.mase-dark-mode #wpbody-content::before,
-body.mase-dark-mode #wpbody-content::after {
-  /* Force remove any circular styling */
-  border-radius: 0 !important;
-  /* Ensure no background circles */
-  background-image: none !important;
-  /* Remove any box shadows that might create circles */
-  box-shadow: none !important;
-  /* Ensure proper background */
-  background-color: var(--mase-bg) !important;
+/* Inputs and form elements */
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select,
+body.mase-dark-mode input[type="text"],
+body.mase-dark-mode input[type="number"],
+body.mase-dark-mode textarea,
+body.mase-dark-mode select {
+  background-color: var(--mase-bg-secondary) !important;
+  color: var(--mase-text-primary) !important;
+  border-color: var(--mase-border) !important;
 }
 
-/**
- * CRITICAL BUG FIX (v1.2.1): Dark Mode Gray Circle Bug (MASE-DARK-001)
- * 
- * Bug ID: MASE-DARK-001
- * Version: 1.2.1
- * Severity: Critical - Dark Mode completely unusable
- * 
- * Bug Description:
- * - Large gray circular element (500px+) with background color #6b6b6b (rgb(107, 107, 107))
- * - Covers entire screen in Dark Mode, blocking all content and controls
- * - Users cannot access any settings or interact with the interface
- * 
- * Root Cause:
- * - Decorative pseudo-element with border-radius: 50% and excessive dimensions
- * - Applied via inline styles, making it difficult to override with normal CSS
- * - Only appears when data-theme="dark" or .mase-dark-mode class is active
- * 
- * Solution (CSS Layer - Part of Triple-Layer Defense):
- * - Target ANY element with inline style containing gray color #6b6b6b
- * - Use attribute selectors to match inline style attributes
- * - Apply aggressive hiding with !important to override inline styles
- * - Set multiple properties to ensure complete removal:
- *   * display: none - Remove from layout
- *   * visibility: hidden - Hide from view
- *   * opacity: 0 - Make transparent
- *   * width/height: 0 - Collapse dimensions
- *   * pointer-events: none - Prevent interaction
- * 
- * Additional Protection:
- * - JavaScript nuclear scan in mase-admin.js:2210-2360 (removeGrayCircleBug function)
- * - MutationObserver catches dynamically added elements
- * - Periodic re-scans for late-loading elements
- * 
- * Testing:
- * - Automated: tests/visual-testing/dark-mode-circle-test.js
- * - Manual: User confirmed "szare koło zniknęło" (gray circle disappeared)
- * - Verification: No large circles in Dark Mode across all tabs
- * 
- * @since 1.2.1
- * @see assets/js/mase-admin.js:2210-2360 for JavaScript-based protection
- * @see .kiro/specs/critical-bugs-fix/design.md for detailed analysis
- * @see .kiro/specs/critical-bugs-fix/requirements.md for requirements (1.1-1.5, 2.1-2.5, 3.1-3.5)
- */
-
-/* NUCLEAR OPTION: Hide ANY element with gray background (#6b6b6b) in Dark Mode */
-/* Targets elements with inline styles containing the problematic gray color */
-html[data-theme="dark"] *[style*="#6b6b6b"],
-html[data-theme="dark"] *[style*="rgb(107, 107, 107)"],
-html[data-theme="dark"] *[style*="rgb(107,107,107)"],
-body.mase-dark-mode *[style*="#6b6b6b"],
-body.mase-dark-mode *[style*="rgb(107, 107, 107)"],
-body.mase-dark-mode *[style*="rgb(107,107,107)"] {
-  /* Aggressive hiding with multiple properties to ensure complete removal */
-  display: none !important;           /* Remove from layout flow */
-  visibility: hidden !important;      /* Hide from view */
-  opacity: 0 !important;              /* Make transparent */
-  width: 0 !important;                /* Collapse width */
-  height: 0 !important;               /* Collapse height */
-  pointer-events: none !important;    /* Prevent any interaction */
-}
-
-/* Hide any pseudo-element with gray background in Dark Mode */
-/* Targets ::before and ::after pseudo-elements that might have the bug */
-html[data-theme="dark"] *::before,
-html[data-theme="dark"] *::after,
-body.mase-dark-mode *::before,
-body.mase-dark-mode *::after {
-  /* Force transparent background to prevent gray circles from pseudo-elements */
-  background-color: transparent !important;
-}
-
-/* Specifically target large circular elements */
-@media screen {
-  html[data-theme="dark"] *,
-  body.mase-dark-mode * {
-    /* If element is circular and large, force it to be small or hidden */
-  }
+/* Smooth transitions */
+#wpwrap,
+#wpcontent,
+#wpbody,
+#wpbody-content,
+.mase-card,
+.mase-section {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Force #wpwrap to never be circular */

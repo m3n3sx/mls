@@ -9727,154 +9727,7 @@
          * @see .kiro/specs/critical-bugs-fix/design.md for detailed analysis
          * @see .kiro/specs/critical-bugs-fix/requirements.md for requirements
          */
-        removeGrayCircleBug: function () {
-            var self = this;
-
-            MASE_DEBUG.log('MASE: 🔍 NUCLEAR SCAN: Searching for gray circle bug...');
-
-            var totalRemoved = 0;
-            var scanCount = 0;
-
-            // Function to check if element is a large gray circle
-            function isGrayCircle(element) {
-                try {
-                    if (!element || !element.nodeType) return false;
-
-                    var styles = window.getComputedStyle(element);
-                    if (!styles) return false;
-
-                    // Check border-radius (circular)
-                    var borderRadius = styles.borderRadius || '';
-                    var isCircular = borderRadius.includes('50%') ||
-                        borderRadius.includes('9999px') ||
-                        borderRadius.includes('100%');
-
-                    // Check size (large)
-                    var width = element.offsetWidth || 0;
-                    var height = element.offsetHeight || 0;
-                    var isLarge = width > 500 || height > 500;
-
-                    // Check background color (gray #6b6b6b)
-                    var bgColor = styles.backgroundColor || '';
-                    var isGray = bgColor.includes('107, 107, 107') || // rgb(107, 107, 107)
-                        bgColor.includes('107,107,107') ||
-                        bgColor === 'rgb(107, 107, 107)';
-
-                    // Check position (might be fixed/absolute)
-                    var position = styles.position || '';
-                    var isSuspicious = position === 'fixed' || position === 'absolute';
-
-                    // Log suspicious elements
-                    if ((isCircular && isLarge) || (isGray && isLarge)) {
-                        MASE_DEBUG.log('MASE: 🔍 Suspicious element found:', {
-                            element: element.tagName + (element.id ? '#' + element.id : '') + (element.className ? '.' + element.className.split(' ')[0] : ''),
-                            isCircular: isCircular,
-                            isLarge: isLarge,
-                            isGray: isGray,
-                            width: width,
-                            height: height,
-                            borderRadius: borderRadius,
-                            backgroundColor: bgColor,
-                            position: position
-                        });
-                    }
-
-                    // Return true if it matches the bug pattern
-                    return (isCircular && isLarge && isGray) ||
-                        (isCircular && isLarge && isSuspicious);
-
-                } catch (error) {
-                    return false;
-                }
-            }
-
-            // Function to perform one scan
-            function performScan() {
-                scanCount++;
-                var removed = 0;
-
-                MASE_DEBUG.log('MASE: 🔍 Scan #' + scanCount + ' starting...');
-
-                // Scan all elements
-                $('*').each(function () {
-                    if (isGrayCircle(this)) {
-                        MASE_DEBUG.log('MASE: ❌ REMOVING gray circle bug element:', this);
-                        $(this).css({
-                            'display': 'none !important',
-                            'visibility': 'hidden !important',
-                            'opacity': '0 !important',
-                            'width': '0 !important',
-                            'height': '0 !important',
-                            'pointer-events': 'none !important'
-                        });
-                        $(this).remove();
-                        removed++;
-                        totalRemoved++;
-                    }
-                });
-
-                // Special check for #wpwrap
-                var wpwrap = document.getElementById('wpwrap');
-                if (wpwrap) {
-                    var wpwrapStyles = window.getComputedStyle(wpwrap);
-                    var wpwrapBorderRadius = wpwrapStyles.borderRadius || '';
-                    if (wpwrapBorderRadius.includes('50%')) {
-                        MASE_DEBUG.log('MASE: ❌ #wpwrap has circular border-radius! Fixing...');
-                        $(wpwrap).css('border-radius', '0 !important');
-                        removed++;
-                    }
-                }
-
-                if (removed > 0) {
-                    MASE_DEBUG.log('MASE: ✅ Scan #' + scanCount + ' removed ' + removed + ' element(s)');
-                }
-
-                return removed;
-            }
-
-            // Perform initial scan
-            performScan();
-
-            // Perform additional scans over 2 seconds to catch late-loading elements
-            var scanIntervals = [100, 200, 500, 1000, 2000];
-            scanIntervals.forEach(function (delay) {
-                setTimeout(performScan, delay);
-            });
-
-            // Install mutation observer for dynamically added elements
-            if (typeof MutationObserver !== 'undefined') {
-                var observer = new MutationObserver(function (mutations) {
-                    mutations.forEach(function (mutation) {
-                        mutation.addedNodes.forEach(function (node) {
-                            if (node.nodeType === 1 && isGrayCircle(node)) {
-                                MASE_DEBUG.log('MASE: ❌ Removing dynamically added gray circle:', node);
-                                $(node).remove();
-                                totalRemoved++;
-                            }
-                        });
-                    });
-                });
-
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true,
-                    attributes: true,
-                    attributeFilter: ['style', 'class']
-                });
-
-                MASE_DEBUG.log('MASE: 👁️ Mutation observer installed');
-            }
-
-            // Final report after 2.5 seconds
-            setTimeout(function () {
-                if (totalRemoved > 0) {
-                    MASE_DEBUG.log('MASE: ✅ FINAL REPORT: Removed ' + totalRemoved + ' gray circle element(s) total');
-                    self.showNotice('success', 'Dark mode display issue fixed (' + totalRemoved + ' elements removed)');
-                } else {
-                    MASE_DEBUG.log('MASE: ✅ FINAL REPORT: No gray circle elements found');
-                }
-            }, 2500);
-        },
+        // removeGrayCircleBug function removed - replaced with clean dark mode implementation
 
         /**
          * Initialize the admin interface
@@ -10020,9 +9873,6 @@
                 // Initialize accessibility validator (Task 11.2)
                 this.accessibilityValidator.init();
 
-                // CRITICAL FIX: Remove gray circle bug in Dark Mode
-                this.removeGrayCircleBug();
-
                 // Requirement 7.1, 7.2: Restore scroll position after component initialization
                 $(window).scrollTop(initialScrollTop);
                 MASE_DEBUG.log('MASE: Restored scroll position to:', initialScrollTop);
@@ -10038,12 +9888,6 @@
                 } catch (error) {
                     MASE_DEBUG.log('MASE: Could not remove focus from auto-focused elements:', error);
                 }
-
-                // Requirement 8.4: Add .mase-loaded class on window load to prevent FOUC
-                $(window).on('load', function () {
-                    $('#wpadminbar').addClass('mase-loaded');
-                    MASE_DEBUG.log('MASE: Admin bar loaded, FOUC prevention complete');
-                });
 
                 // Task 1: Log successful initialization (Requirement 1.4)
                 MASE_DEBUG.log('MASE: Admin initialized successfully');
@@ -10412,12 +10256,7 @@
             // Tab navigation is now handled by tabNavigation module
 
             // Reset to defaults - fixed selector to match HTML id
-            $('#mase-reset-all').on('click', function (e) {
-                e.preventDefault();
-                if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
-                    self.resetToDefaults();
-                }
-            });
+            // Reset All button handler - moved to bindBackupEvents() to avoid duplication
         },
 
         /**
@@ -11931,50 +11770,7 @@
             };
         },
 
-        /**
-         * Reset all settings to defaults
-         */
-        resetToDefaults: function () {
-            var self = this;
-            
-            // Confirm reset action
-            if (!confirm('Are you sure you want to reset all settings to defaults?\n\nThis will:\n• Remove all customizations\n• Reset colors to defaults\n• Clear custom palettes and templates\n• Remove uploaded images\n\nThis action cannot be undone.')) {
-                return;
-            }
-            
-            var $button = $('#mase-reset-all');
-            var originalText = $button.find('span:last').text();
-
-            $button.prop('disabled', true);
-            $button.find('span:last').text('Resetting...');
-
-            $.ajax({
-                url: this.config.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'mase_reset_settings',
-                    nonce: this.config.nonce
-                },
-                success: function (response) {
-                    if (response.success) {
-                        self.showNotice('success', response.data.message || 'Settings reset to defaults');
-                        // Reload page to show default settings
-                        setTimeout(function () {
-                            location.reload();
-                        }, 1000);
-                    } else {
-                        self.showNotice('error', response.data.message || 'Failed to reset settings');
-                        $button.prop('disabled', false);
-                        $button.find('span:last').text(originalText);
-                    }
-                },
-                error: function () {
-                    self.showNotice('error', 'Network error. Please try again.');
-                    $button.prop('disabled', false);
-                    $button.find('span:last').text(originalText);
-                }
-            });
-        },
+        // resetToDefaults() function removed - duplicate of function at line 9149
 
         /**
          * Unbind all palette events

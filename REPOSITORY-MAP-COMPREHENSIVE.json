@@ -1,0 +1,481 @@
+{
+  "plugin_info": {
+    "name": "Modern Admin Styler Enterprise (MASE)",
+    "version": "1.3.0",
+    "description": "Enterprise-grade WordPress admin styling plugin with clean dark mode implementation",
+    "main_file": "modern-admin-styler.php",
+    "last_updated": "2025-10-29",
+    "status": "ACTIVE DEVELOPMENT - Menu padding fix applied for folded menu icon clipping"
+  },
+
+  "recent_changes": [
+    {
+      "file": "includes/class-mase-css-generator.php",
+      "lines": "1116-1128",
+      "date": "2025-10-29",
+      "change": "Fixed menu padding for folded menu state",
+      "details": [
+        "Split padding shorthand into individual properties (top, right, bottom, left)",
+        "Added folded menu specific rule: padding-left: 0 to prevent icon clipping",
+        "Maintains consistent padding in normal menu state"
+      ],
+      "reason": "WordPress folded menu (collapsed sidebar) was clipping menu icons due to excessive left padding",
+      "impact": "Menu icons now display correctly in both normal and folded states"
+    }
+  ],
+
+  "php_files": {
+    "core_classes": [
+      {
+        "file": "includes/class-mase-admin.php",
+        "class": "MASE_Admin",
+        "lines": 5483,
+        "purpose": "Admin interface, asset enqueuing, AJAX handlers",
+        "key_methods": [
+          "enqueue_assets($hook) - Conditional asset loading for settings page only",
+          "enqueue_global_dark_mode($hook) - Global dark mode assets on all admin pages",
+          "render_global_dark_mode_fab() - Floating action button for dark mode toggle",
+          "handle_ajax_toggle_dark_mode() - Dark mode toggle AJAX handler",
+          "inject_custom_css() - Injects generated CSS into admin head",
+          "handle_ajax_save_settings() - Main settings save with full validation",
+          "ajax_apply_palette() - Palette application (bypasses full validation)",
+          "ajax_apply_template() - Template application (bypasses full validation)"
+        ],
+        "security": {
+          "nonce_verification": "All AJAX handlers use check_ajax_referer()",
+          "capability_checks": "All AJAX handlers verify current_user_can('manage_options')",
+          "input_sanitization": "sanitize_text_field(), sanitize_hex_color(), absint()",
+          "output_escaping": "esc_html(), esc_attr(), esc_url()"
+        }
+      },
+      {
+        "file": "includes/class-mase-settings.php",
+        "class": "MASE_Settings",
+        "lines": 7881,
+        "purpose": "Settings storage, retrieval, validation, defaults",
+        "option_name": "mase_settings",
+        "key_methods": [
+          "get_option() - Retrieve settings with defaults",
+          "update_option($settings) - Save settings with full validation",
+          "validate($settings) - Comprehensive validation of all settings",
+          "get_defaults() - Return default settings structure"
+        ]
+      },
+      {
+        "file": "includes/class-mase-css-generator.php",
+        "class": "MASE_CSS_Generator",
+        "lines": 7920,
+        "purpose": "Generates CSS from settings with mode-specific caching",
+        "performance_target": "<100ms generation time",
+        "key_methods": [
+          "generate($settings) - Main CSS generation with caching",
+          "generate_css_internal($settings) - Internal generation logic",
+          "generate_admin_bar_css($settings) - Admin bar styles",
+          "generate_menu_item_padding_css($admin_menu) - Menu padding (RECENTLY MODIFIED)",
+          "generate_admin_menu_css($settings) - Admin menu styles",
+          "generate_dark_mode_css($settings) - Dark mode specific styles",
+          "generate_palette_css($settings) - Color palette CSS variables",
+          "generate_typography_css($settings) - Typography styles"
+        ],
+        "recent_fix": {
+          "method": "generate_menu_item_padding_css",
+          "lines": "1116-1128",
+          "issue": "Menu icons clipping in folded menu state",
+          "solution": "Added folded menu specific padding-left: 0 rule"
+        }
+      },
+      {
+        "file": "includes/class-mase-cache.php",
+        "class": "MASE_Cache",
+        "purpose": "CSS caching using WordPress transients",
+        "cache_keys": [
+          "mase_generated_css_light_v1.3.0",
+          "mase_generated_css_dark_v1.3.0",
+          "mase_login_css",
+          "mase_button_css"
+        ],
+        "methods": [
+          "get_cached_light_mode_css() - Retrieve light mode CSS cache",
+          "set_cached_light_mode_css($css, $duration) - Store light mode CSS",
+          "get_cached_dark_mode_css() - Retrieve dark mode CSS cache",
+          "set_cached_dark_mode_css($css, $duration) - Store dark mode CSS",
+          "clear_all_caches() - Clear all MASE caches"
+        ]
+      },
+      {
+        "file": "includes/class-mase-cachemanager.php",
+        "class": "MASE_CacheManager",
+        "purpose": "Advanced cache management and invalidation"
+      },
+      {
+        "file": "includes/class-mase-migration.php",
+        "class": "MASE_Migration",
+        "purpose": "Database migrations and version upgrades"
+      },
+      {
+        "file": "includes/class-mase-mobile-optimizer.php",
+        "class": "MASE_Mobile_Optimizer",
+        "purpose": "Mobile-specific optimizations and responsive behavior"
+      },
+      {
+        "file": "includes/class-mase-rest-api.php",
+        "class": "MASE_REST_API",
+        "purpose": "REST API endpoints for external integrations"
+      },
+      {
+        "file": "includes/class-mase-background-migration.php",
+        "class": "MASE_Background_Migration",
+        "purpose": "Background system data migration"
+      }
+    ],
+    "template_files": [
+      {
+        "file": "includes/admin-settings-page.php",
+        "lines": 5972,
+        "purpose": "Main admin settings page HTML template",
+        "sections": [
+          "Header with title and dark mode toggle",
+          "Tab navigation (Admin Bar, Menu, Content, Typography, etc.)",
+          "Settings forms for each tab",
+          "Palette and template galleries",
+          "Save/Reset buttons"
+        ]
+      },
+      "includes/backgrounds-tab-content.php",
+      "includes/form-controls-tab-content.php",
+      "includes/login-tab-section.php",
+      "includes/universal-buttons-tab-content.php",
+      "includes/visual-effects-section.php",
+      "includes/widgets-tab-content.php",
+      "includes/templates/content-tab.php"
+    ]
+  },
+
+  "js_files": {
+    "main_scripts": [
+      {
+        "file": "assets/js/mase-admin.js",
+        "lines": 13770,
+        "purpose": "Main admin interface JavaScript with integrated live preview",
+        "dependencies": ["jquery", "wp-color-picker", "mase-asset-loader"],
+        "key_modules": [
+          "MASE_DEBUG - Debug logging module",
+          "MASE.livePreview - Live preview functionality (INTEGRATED, not separate file)",
+          "MASE.darkMode - Dark mode toggle",
+          "MASE.paletteManager - Palette management",
+          "MASE.templateManager - Template management",
+          "MASE.settings - Settings save/load"
+        ],
+        "critical_note": "Live preview is INTEGRATED into this file, NOT a separate file. This prevents duplicate event handlers and race conditions."
+      },
+      {
+        "file": "assets/js/mase-global-dark-mode.js",
+        "lines": 200,
+        "purpose": "Global dark mode toggle for all admin pages",
+        "dependencies": ["jquery"],
+        "features": [
+          "FAB click handler",
+          "Keyboard shortcut: Ctrl+Shift+D",
+          "localStorage persistence (primary)",
+          "User meta synchronization (backup)",
+          "AJAX save to server",
+          "Smooth mode switching"
+        ],
+        "localized_data": "maseGlobalDarkMode (ajaxUrl, nonce)",
+        "ajax_action": "mase_toggle_dark_mode"
+      },
+      {
+        "file": "assets/js/mase-accessibility.js",
+        "purpose": "Accessibility features (WCAG 2.1 AA compliance)",
+        "dependencies": ["jquery"]
+      },
+      {
+        "file": "assets/js/mase-pattern-library.js",
+        "purpose": "Pattern library for backgrounds",
+        "dependencies": ["jquery", "mase-admin", "mase-asset-loader"]
+      },
+      {
+        "file": "assets/js/mase-position-picker.js",
+        "purpose": "Background position picker UI",
+        "dependencies": ["jquery", "mase-admin", "mase-asset-loader"]
+      }
+    ],
+    "modules": [
+      {
+        "file": "assets/js/modules/mase-asset-loader.js",
+        "purpose": "MUST load FIRST - provides debounce/throttle utilities",
+        "load_order": 1
+      },
+      "assets/js/modules/mase-gradient-builder.js - Gradient builder UI",
+      "assets/js/modules/mase-compatibility.js - Browser feature detection",
+      "assets/js/modules/mase-error-recovery.js - Error recovery mechanisms",
+      "assets/js/modules/mase-background-accessibility.js - Background accessibility",
+      "assets/js/modules/event-bus.js",
+      "assets/js/modules/state-manager.js",
+      "assets/js/modules/palette-manager.js",
+      "assets/js/modules/template-manager.js",
+      "assets/js/modules/preview-engine.js",
+      "assets/js/modules/animations.js",
+      "assets/js/modules/animation-timeline.js",
+      "assets/js/modules/animation-presets.js",
+      "assets/js/modules/color-system.js",
+      "assets/js/modules/typography.js",
+      "assets/js/modules/api-client.js",
+      "assets/js/modules/ai-suggestions.js",
+      "assets/js/modules/event-adapter.js",
+      "assets/js/modules/main-admin.js",
+      "assets/js/modules/index.js"
+    ],
+    "non_existent_files": [
+      {
+        "file": "assets/js/mase-admin-live-preview.js",
+        "status": "DOES NOT EXIST",
+        "reason": "Live preview is integrated into mase-admin.js to prevent duplicate event handlers",
+        "alternative": "Use MASE.livePreview module in mase-admin.js"
+      }
+    ]
+  },
+
+  "css_files": {
+    "main_stylesheets": [
+      {
+        "file": "assets/css/mase-admin.css",
+        "lines": 15355,
+        "purpose": "Main admin interface styles with clean dark mode implementation",
+        "dependencies": ["wp-color-picker"],
+        "sections": [
+          "CSS Variables & Design Tokens (lines 1-943)",
+          "Reset & Base Styles",
+          "Layout Structure (Header, Tabs, Content)",
+          "Form Controls (Toggles, Sliders, Color Pickers)",
+          "Components (Cards, Buttons, Badges, Notices)",
+          "Responsive Design (Mobile, Tablet, Desktop)",
+          "Interactions & Animations",
+          "Utility Classes",
+          "RTL Support"
+        ],
+        "dark_mode": {
+          "variables": "lines 1.1.1 - Dark mode color palette",
+          "status": "Clean implementation using CSS variables",
+          "activation": "data-theme='dark' attribute on :root"
+        }
+      },
+      {
+        "file": "assets/css/mase-palettes.css",
+        "purpose": "Palette gallery styles",
+        "dependencies": ["mase-admin"]
+      },
+      {
+        "file": "assets/css/mase-templates.css",
+        "purpose": "Template gallery styles",
+        "dependencies": ["mase-admin"]
+      },
+      {
+        "file": "assets/css/mase-accessibility.css",
+        "purpose": "Accessibility enhancements (WCAG 2.1 AA)",
+        "dependencies": ["mase-admin"]
+      },
+      {
+        "file": "assets/css/mase-responsive.css",
+        "purpose": "Responsive design styles",
+        "dependencies": ["mase-admin"]
+      },
+      {
+        "file": "assets/css/mase-pattern-library.css",
+        "purpose": "Pattern library UI styles"
+      },
+      {
+        "file": "assets/css/mase-animation-editor.css",
+        "purpose": "Animation editor UI styles"
+      }
+    ]
+  },
+
+  "test_files": {
+    "e2e_tests": [
+      "tests/e2e/comprehensive-functionality-test.spec.js",
+      "tests/e2e/quick-smoke-test.spec.js",
+      "tests/e2e/global-setup.js",
+      "tests/e2e/helpers/auth.js"
+    ],
+    "visual_tests": [
+      "tests/visual-interactive/**/* - Visual regression and interactive testing"
+    ],
+    "cypress_tests": [
+      "tests/cypress/e2e/mase-basic.cy.js",
+      "tests/cypress/support/commands.js",
+      "tests/cypress/support/e2e.js"
+    ]
+  },
+
+  "key_directories": {
+    "includes": "PHP backend classes and admin functionality",
+    "assets/js": "JavaScript files for admin interface",
+    "assets/css": "Stylesheets for admin styling",
+    "tests": "Testing suites (e2e, visual-interactive, cypress, benchmarks)",
+    "docs": "Documentation and guides",
+    "languages": "Localization files"
+  },
+
+  "asset_enqueue_mechanism": {
+    "settings_page_only": {
+      "hook": "admin_enqueue_scripts",
+      "condition": "toplevel_page_mase-settings",
+      "method": "enqueue_assets($hook)",
+      "file": "includes/class-mase-admin.php",
+      "line": "237",
+      "load_order": [
+        "1. wp-color-picker (CSS + JS)",
+        "2. mase-admin.css [line 247]",
+        "3. mase-palettes.css [line 255]",
+        "4. mase-templates.css [line 263]",
+        "5. mase-accessibility.css [line 271]",
+        "6. mase-responsive.css [line 279]",
+        "7. mase-asset-loader.js [line 288] - MUST LOAD FIRST",
+        "8. mase-admin.js [line 297] - Main script with integrated live preview",
+        "9. mase-gradient-builder.js [line 307]",
+        "10. mase-pattern-library.css [line 316]",
+        "11. mase-pattern-library.js [line 323]",
+        "12. mase-position-picker.js [line 343]",
+        "13. mase-compatibility.js [line 354]",
+        "14. mase-error-recovery.js [line 365]",
+        "15. mase-background-accessibility.js [line 381]"
+      ],
+      "inline_scripts": {
+        "dark_mode_fouc_prevention": {
+          "position": "before mase-admin.js",
+          "line": "428",
+          "purpose": "Synchronous dark mode detection to prevent FOUC",
+          "execution_time": "<50ms",
+          "checks": ["localStorage (primary)", "user_meta (fallback)"]
+        }
+      },
+      "localized_data": {
+        "maseL10n": {
+          "line": "448",
+          "contains": ["ajaxUrl", "nonce", "translations", "dark_mode_strings"]
+        },
+        "maseAdmin": {
+          "line": "543",
+          "contains": ["palettes", "templates", "gradientPresets", "strings"]
+        }
+      }
+    },
+    "all_admin_pages": {
+      "hook": "admin_enqueue_scripts",
+      "method": "enqueue_global_dark_mode($hook)",
+      "file": "includes/class-mase-admin.php",
+      "line": "156",
+      "loads": [
+        "mase-global-dark-mode.css [line 157] - Reuses mase-admin.css",
+        "mase-global-dark-mode.js [line 165]"
+      ],
+      "localized_data": {
+        "maseGlobalDarkMode": {
+          "line": "174",
+          "contains": ["ajaxUrl", "nonce"]
+        }
+      }
+    }
+  },
+
+  "dark_mode_architecture": {
+    "status": "FULLY IMPLEMENTED - Clean CSS variables approach",
+    "components": {
+      "css": {
+        "file": "assets/css/mase-admin.css",
+        "status": "Clean implementation with CSS variables",
+        "dark_mode_variables": "lines 1.1.1",
+        "activation": "data-theme='dark' attribute on :root element"
+      },
+      "global_toggle": {
+        "file": "assets/js/mase-global-dark-mode.js",
+        "status": "FULLY IMPLEMENTED",
+        "lines": 200,
+        "features": [
+          "FAB in bottom-right corner",
+          "Keyboard shortcut: Ctrl+Shift+D",
+          "localStorage persistence (primary)",
+          "User meta synchronization (backup)",
+          "Smooth transitions",
+          "ARIA attributes for accessibility"
+        ]
+      },
+      "php_handler": {
+        "file": "includes/class-mase-admin.php",
+        "method": "handle_ajax_toggle_dark_mode()",
+        "line": "124",
+        "action": "wp_ajax_mase_toggle_dark_mode",
+        "saves_to": "user_meta: mase_dark_mode_preference",
+        "security": ["nonce verification", "capability check"]
+      },
+      "fouc_prevention": {
+        "file": "includes/class-mase-admin.php",
+        "type": "inline_script",
+        "line": "428",
+        "position": "before mase-admin.js",
+        "execution": "synchronous",
+        "checks": ["localStorage (primary)", "user_meta (fallback)"],
+        "applies": "body.mase-dark-mode class immediately",
+        "performance": "<50ms execution time"
+      }
+    }
+  },
+
+  "live_preview_architecture": {
+    "integration": "Integrated into mase-admin.js as MASE.livePreview module",
+    "not_separate_file": true,
+    "primary_file": "assets/js/mase-admin.js",
+    "module_name": "MASE.livePreview",
+    "purpose": "Prevent duplicate event handlers and race conditions",
+    "warning": "DO NOT create separate mase-admin-live-preview.js file - it will cause conflicts"
+  },
+
+  "settings_save_system": {
+    "status": "FIXED - Do not modify",
+    "main_save": {
+      "method": "handle_ajax_save_settings()",
+      "file": "includes/class-mase-admin.php",
+      "validation": "Full validation via $this->settings->update_option()",
+      "use_case": "Main form save - changes all sections"
+    },
+    "quick_apply": {
+      "methods": [
+        "ajax_apply_palette()",
+        "ajax_apply_template()",
+        "save_custom_palette()",
+        "delete_custom_palette()"
+      ],
+      "validation": "Bypasses full validation - uses update_option() directly",
+      "use_case": "Quick operations that only change specific sections",
+      "reason": "Full validation was rejecting valid data in unrelated sections"
+    },
+    "critical_rule": "DO NOT change quick apply methods to use $this->update_option()"
+  },
+
+  "documentation_files": {
+    "dark_mode": [
+      "docs/DARK-MODE-REBUILD-PLAN.md",
+      "docs/DARK-MODE-REFACTOR-PLAN.md",
+      "docs/GLOBAL-DARK-MODE-IMPLEMENTATION.md"
+    ],
+    "architecture": [
+      "docs/ARCHITECTURE.md",
+      "docs/DEVELOPER-GUIDE.md",
+      "docs/MODERN-ARCHITECTURE-SETUP.md"
+    ],
+    "testing": [
+      "docs/TESTING.md",
+      "docs/MANUAL-TESTING-CHECKLIST.md",
+      "docs/TEST-EXECUTION-REPORT.md"
+    ]
+  },
+
+  "critical_notes": {
+    "live_preview": "INTEGRATED into mase-admin.js - DO NOT create separate file",
+    "settings_save": "Quick apply methods bypass validation - DO NOT modify",
+    "dark_mode": "Uses CSS variables with data-theme attribute - clean implementation",
+    "asset_loading": "mase-asset-loader.js MUST load first - provides utilities for other modules",
+    "menu_padding": "Recently fixed for folded menu state - padding-left: 0 prevents icon clipping"
+  }
+}

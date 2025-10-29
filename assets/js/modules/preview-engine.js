@@ -716,10 +716,18 @@ class PreviewEngine {
     // Glassmorphism effect (if enabled)
     if (adminBarEffects.glassmorphism) {
       const blur = adminBarEffects.blur_intensity || 20;
+      
+      // Convert admin bar bg_color to rgba for glass effect
+      let bgColor = adminBar.bg_color || '#23282d';
+      let rgba = this.hexToRgba(bgColor, 0.7);
+      let rgbaBorder = this.hexToRgba(bgColor, 0.3);
+      
       css += `body.wp-admin #wpadminbar{
         backdrop-filter:blur(${blur}px)!important;
         -webkit-backdrop-filter:blur(${blur}px)!important;
-        background-color:rgba(35,40,45,0.8)!important;
+        background:${rgba}!important;
+        border-bottom:1px solid ${rgbaBorder}!important;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1)!important;
       }`;
     } else {
       // Explicitly disable glassmorphism when turned off
@@ -950,6 +958,32 @@ class PreviewEngine {
     css += `body.wp-admin #adminmenu .wp-submenu li{
       padding:5px 0!important;
     }`;
+
+    // Glassmorphism effect for admin menu (if enabled)
+    const visualEffects = settings.visual_effects || {};
+    const adminMenuEffects = visualEffects.admin_menu || {};
+    
+    if (adminMenuEffects.glassmorphism) {
+      const blur = adminMenuEffects.blur_intensity || 20;
+      
+      // Convert admin menu bg_color to rgba for glass effect
+      let bgColor = adminMenu.bg_color || '#23282d';
+      let rgba = this.hexToRgba(bgColor, 0.7);
+      let rgbaBorder = this.hexToRgba(bgColor, 0.3);
+      
+      css += `body.wp-admin #adminmenu,
+        body.wp-admin #adminmenuback,
+        body.wp-admin #adminmenuwrap{
+        backdrop-filter:blur(${blur}px)!important;
+        -webkit-backdrop-filter:blur(${blur}px)!important;
+        background:${rgba}!important;
+      }`;
+      
+      css += `body.wp-admin #adminmenuwrap{
+        border-right:1px solid ${rgbaBorder}!important;
+        box-shadow:2px 0 8px rgba(0,0,0,0.1)!important;
+      }`;
+    }
 
     return css;
   }
@@ -1182,6 +1216,29 @@ class PreviewEngine {
     const spread = base.spread;
 
     return `${x}px ${y}px ${blur}px ${spread}px ${color}`;
+  }
+
+  /**
+   * Convert hex color to rgba string
+   * @param {string} hex - Hex color code (with or without #)
+   * @param {number} alpha - Alpha value (0-1)
+   * @return {string} rgba color string
+   */
+  hexToRgba(hex, alpha = 1) {
+    // Remove # if present
+    hex = hex.replace(/^#/, '');
+    
+    // Handle 3-character hex codes
+    if (hex.length === 3) {
+      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    
+    // Convert to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return `rgba(${r},${g},${b},${alpha})`;
   }
 }
 

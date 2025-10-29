@@ -260,11 +260,25 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			// Admin bar background, height, and flexbox alignment (Requirements 1.1, 1.2, 1.3, 5.1, 5.2, 5.3).
 			$css .= 'body.wp-admin #wpadminbar {';
 
-			// Apply background based on type (Requirement 5.5).
-			if ( $bg_type === 'gradient' ) {
-				$css .= $this->generate_gradient_background( $admin_bar );
-			} else {
-				$css .= 'background-color: ' . $bg_color . ' !important;';
+			// Ensure proper positioning (fix for glassmorphism shift)
+			$css .= 'position: fixed !important;';
+			$css .= 'top: 0 !important;';
+			$css .= 'left: 0 !important;';
+			$css .= 'right: 0 !important;';
+			$css .= 'width: 100% !important;';
+			$css .= 'z-index: 99999 !important;';
+
+			// Skip background if glassmorphism is enabled (will be set by generate_glassmorphism_css)
+			$visual_effects = isset( $settings['visual_effects'] ) ? $settings['visual_effects'] : array();
+			$glassmorphism_enabled = isset( $visual_effects['admin_bar']['glassmorphism'] ) && $visual_effects['admin_bar']['glassmorphism'];
+
+			if ( ! $glassmorphism_enabled ) {
+				// Apply background based on type (Requirement 5.5).
+				if ( $bg_type === 'gradient' ) {
+					$css .= $this->generate_gradient_background( $admin_bar );
+				} else {
+					$css .= 'background-color: ' . $bg_color . ' !important;';
+				}
 			}
 
 			$css .= 'height: ' . $height . 'px !important;';
@@ -940,20 +954,38 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			$css = '';
 
 			// Admin menu background (solid or gradient) (Requirements 6.1, 6.2, 6.4).
+			// Skip background if glassmorphism is enabled (will be set by generate_glassmorphism_css)
+			$visual_effects = isset( $settings['visual_effects'] ) ? $settings['visual_effects'] : array();
+			$glassmorphism_enabled = isset( $visual_effects['admin_menu']['glassmorphism'] ) && $visual_effects['admin_menu']['glassmorphism'];
+
+			if ( ! $glassmorphism_enabled ) {
+				// Apply background only to #adminmenuback to avoid color stacking
+				// #adminmenuback is the background layer that fills the entire wrapper
+				// This prevents 3 layers of the same color (adminmenu + adminmenuback + adminmenuwrap)
+				$css .= 'body.wp-admin #adminmenuback {';
+
+				// Apply background based on type (Requirement 6.5).
+				if ( $bg_type === 'gradient' ) {
+					$css .= $this->generate_gradient_background_menu( $admin_menu );
+				} else {
+					$css .= 'background-color: ' . $bg_color . ' !important;';
+				}
+
+				$css .= '}';
+				
+				// Ensure #adminmenu and #adminmenuwrap are transparent
+				$css .= 'body.wp-admin #adminmenu,';
+				$css .= 'body.wp-admin #adminmenuwrap {';
+				$css .= 'background-color: transparent !important;';
+				$css .= 'background-image: none !important;';
+				$css .= '}';
+			}
+
+			// Apply border radius (Requirements 12.1, 12.2, 12.3) - always apply
 			$css .= 'body.wp-admin #adminmenu,';
 			$css .= 'body.wp-admin #adminmenuback,';
 			$css .= 'body.wp-admin #adminmenuwrap {';
-
-			// Apply background based on type (Requirement 6.5).
-			if ( $bg_type === 'gradient' ) {
-				$css .= $this->generate_gradient_background_menu( $admin_menu );
-			} else {
-				$css .= 'background-color: ' . $bg_color . ' !important;';
-			}
-
-			// Apply border radius (Requirements 12.1, 12.2, 12.3).
 			$css .= $this->generate_menu_border_radius_css( $admin_menu );
-
 			$css .= '}';
 
 			// Generate shadow CSS (Requirements 13.1, 13.2, 13.3).
@@ -1084,7 +1116,15 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 
 			// Apply padding to menu items (Requirement 1.1, 1.5).
 			$css .= 'body.wp-admin #adminmenu li.menu-top > a {';
-			$css .= 'padding: ' . $v_padding . 'px ' . $h_padding . 'px !important;';
+			$css .= 'padding-top: ' . $v_padding . 'px !important;';
+			$css .= 'padding-right: ' . $h_padding . 'px !important;';
+			$css .= 'padding-bottom: ' . $v_padding . 'px !important;';
+			$css .= 'padding-left: ' . $h_padding . 'px !important;';
+			$css .= '}';
+
+			// Reduce left padding when menu is folded to prevent icon clipping.
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a {';
+			$css .= 'padding-left: 0 !important;';
 			$css .= '}';
 
 			// Also apply to submenu items for consistency.
@@ -2496,6 +2536,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 				}
 
 				$css .= '}';
+
+				// Reduce left padding when menu is folded to prevent icon clipping.
+				$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a{';
+				$css .= 'padding-left:0!important;';
+				$css .= '}';
 			}
 
 			// Generate menu margin CSS.
@@ -2826,6 +2871,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			}
 
 			$css .= '}';
+
+			// Reduce left padding when menu is folded to prevent icon clipping.
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a{';
+			$css .= 'padding-left:0!important;';
+			$css .= '}';
 		}
 
 		// Scale menu margin by 90%.
@@ -2877,6 +2927,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			}
 
 			$css .= '}';
+
+			// Reduce left padding when menu is folded to prevent icon clipping.
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a{';
+			$css .= 'padding-left:0!important;';
+			$css .= '}';
 		} elseif ( isset( $spacing['menu_padding'] ) ) {
 			// Scale down by 75% (Requirement 9.2, 9.3).
 			$menu_padding = $spacing['menu_padding'];
@@ -2901,6 +2956,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 				$css         .= 'padding-left:' . $this->format_spacing_value( $scaled_value, $unit ) . '!important;';
 			}
 
+			$css .= '}';
+
+			// Reduce left padding when menu is folded to prevent icon clipping.
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a{';
+			$css .= 'padding-left:0!important;';
 			$css .= '}';
 		}
 
@@ -3075,17 +3135,27 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 				// Clamp blur intensity to 0-50px range.
 				$blur_intensity = max( 0, min( 50, $blur_intensity ) );
 
+				// Get current admin bar colors to create semi-transparent version
+				$admin_bar = isset( $settings['admin_bar'] ) ? $settings['admin_bar'] : array();
+				$bg_color = isset( $admin_bar['bg_color'] ) ? $admin_bar['bg_color'] : '#23282d';
+				
+				// Convert hex to RGB for semi-transparent background
+				$rgb = $this->hex_to_rgb( $bg_color );
+				$rgba_bg = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.7)';
+				$rgba_border = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.3)';
+
 				$css .= 'body.wp-admin #wpadminbar{';
 				$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
 				$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= 'background:rgba(255,255,255,0.1)!important;';
-				$css .= 'border:1px solid rgba(255,255,255,0.2)!important;';
+				$css .= 'background:' . $rgba_bg . '!important;';
+				$css .= 'border-bottom:1px solid ' . $rgba_border . '!important;';
+				$css .= 'box-shadow:0 2px 8px rgba(0,0,0,0.1)!important;';
 				$css .= '}';
 
 				// Fallback for browsers without backdrop-filter support (Requirement 19.5).
 				$css .= '@supports not (backdrop-filter:blur(10px)){';
 				$css .= 'body.wp-admin #wpadminbar{';
-				$css .= 'background:rgba(255,255,255,0.9)!important;';
+				$css .= 'background:' . $bg_color . '!important;';
 				$css .= '}';
 				$css .= '}';
 			}
@@ -3099,12 +3169,33 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 
 				$blur_intensity = max( 0, min( 50, $blur_intensity ) );
 
-				$css .= 'body.wp-admin #adminmenu,';
-				$css .= 'body.wp-admin #adminmenuback,';
-				$css .= 'body.wp-admin #adminmenuwrap{';
+				// Get current admin menu colors to create semi-transparent version
+				$admin_menu = isset( $settings['admin_menu'] ) ? $settings['admin_menu'] : array();
+				$bg_color = isset( $admin_menu['bg_color'] ) ? $admin_menu['bg_color'] : '#23282d';
+				
+				// Convert hex to RGB for semi-transparent background
+				$rgb = $this->hex_to_rgb( $bg_color );
+				$rgba_bg = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.7)';
+				$rgba_border = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.3)';
+
+				// Apply glassmorphism only to #adminmenuback to avoid color stacking
+				$css .= 'body.wp-admin #adminmenuback{';
 				$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
 				$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= 'background:rgba(255,255,255,0.1)!important;';
+				$css .= 'background:' . $rgba_bg . '!important;';
+				$css .= '}';
+				
+				// Ensure #adminmenu and #adminmenuwrap are transparent
+				$css .= 'body.wp-admin #adminmenu,';
+				$css .= 'body.wp-admin #adminmenuwrap {';
+				$css .= 'background-color: transparent !important;';
+				$css .= 'background-image: none !important;';
+				$css .= '}';
+				
+				// Add subtle border and shadow to wrapper for glass effect
+				$css .= 'body.wp-admin #adminmenuwrap{';
+				$css .= 'border-right:1px solid ' . $rgba_border . '!important;';
+				$css .= 'box-shadow:2px 0 8px rgba(0,0,0,0.1)!important;';
 				$css .= '}';
 
 				// Fallback for browsers without backdrop-filter support.
@@ -3112,7 +3203,7 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 				$css .= 'body.wp-admin #adminmenu,';
 				$css .= 'body.wp-admin #adminmenuback,';
 				$css .= 'body.wp-admin #adminmenuwrap{';
-				$css .= 'background:rgba(255,255,255,0.9)!important;';
+				$css .= 'background:' . $bg_color . '!important;';
 				$css .= '}';
 				$css .= '}';
 			}
