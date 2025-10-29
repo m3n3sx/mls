@@ -1,0 +1,143 @@
+/**
+ * MASE Template Picker Styles
+ */
+
+.mase-template-picker-section {
+    margin: 30px 0;
+    padding: 25px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mase-template-picker-section h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #23282d;
+}
+
+#mase-template-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.mase-template-card {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.mase-template-card:hover {
+    border-color: #0073aa;
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.2);
+    transform: translateY(-2px);
+}
+
+.mase-template-card.active {
+    border-color: #00a32a;
+    box-shadow: 0 4px 12px rgba(0, 163, 42, 0.3);
+}
+
+.mase-template-card.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.mase-template-preview {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-preview::before {
+    content: 'Preview';
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.mase-template-info {
+    padding: 15px 15px 10px 15px;
+    position: relative;
+}
+
+.mase-template-name {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.mase-template-description {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.mase-template-category-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f0f0f1;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.mase-template-active-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 4px 10px;
+    background: #00a32a;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mase-template-actions {
+    padding: 0 15px 15px 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.mase-template-apply-btn {
+    flex: 1;
+    max-width: 150px;
+}
+
+.mase-template-apply-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    #mase-template-picker-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 783px) and (max-width: 1200px) {
+    #mase-template-picker-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

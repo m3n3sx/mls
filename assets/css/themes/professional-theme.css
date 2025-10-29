@@ -1,0 +1,96 @@
+/**
+ * Professional Dark Theme
+ * Corporate elegance with gold accents
+ */
+
+.mase-template-professional {
+    background: linear-gradient(135deg, #2d3436 0%, #636e72 25%, #2d3436 50%, #636e72 75%, #2d3436 100%);
+    color: #ddd;
+    border: 1px solid #fdcb6e;
+    border-radius: 8px;
+    box-shadow: 0 5px 30px rgba(253, 203, 110, 0.2);
+}
+
+/* Admin Bar Professional Style */
+.mase-template-professional #wpadminbar {
+    background: linear-gradient(90deg, #2d3436, #636e72);
+    border-bottom: 1px solid #fdcb6e;
+    box-shadow: 0 2px 15px rgba(253, 203, 110, 0.15);
+}
+
+.mase-template-professional #wpadminbar .ab-item,
+.mase-template-professional #wpadminbar a.ab-item {
+    color: #ddd;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.mase-template-professional #wpadminbar .ab-item:hover {
+    background: rgba(253, 203, 110, 0.1);
+    color: #fdcb6e;
+}
+
+/* Admin Menu Professional Style */
+.mase-template-professional #adminmenu {
+    background: linear-gradient(180deg, #2d3436 0%, #636e72 50%, #2d3436 100%);
+    border-right: 1px solid #fdcb6e;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.mase-template-professional #adminmenu .wp-submenu {
+    background: #2d3436;
+    border-left: 1px solid rgba(253, 203, 110, 0.3);
+}
+
+.mase-template-professional #adminmenu a {
+    color: #ddd;
+    transition: all 0.2s ease;
+}
+
+.mase-template-professional #adminmenu a:hover,
+.mase-template-professional #adminmenu li.menu-top:hover {
+    background: rgba(253, 203, 110, 0.1);
+    color: #fdcb6e;
+    border-left: 3px solid #fdcb6e;
+}
+
+.mase-template-professional #adminmenu li.current a.menu-top {
+    background: rgba(253, 203, 110, 0.15);
+    color: #fdcb6e;
+    border-left: 4px solid #fdcb6e;
+    font-weight: 600;
+}
+
+/* Content Area */
+.mase-template-professional .wrap {
+    background: rgba(45, 52, 54, 0.95);
+    border: 1px solid rgba(253, 203, 110, 0.3);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+}
+
+.mase-template-professional h1,
+.mase-template-professional h2 {
+    color: #fdcb6e;
+    font-weight: 600;
+}
+
+/* Corporate Buttons */
+.mase-template-professional .button,
+.mase-template-professional .button-primary {
+    background: linear-gradient(135deg, #636e72, #2d3436);
+    border: 1px solid #fdcb6e;
+    border-radius: 5px;
+    color: #fdcb6e;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.mase-template-professional .button:hover,
+.mase-template-professional .button-primary:hover {
+    background: linear-gradient(135deg, #fdcb6e, #f39c12);
+    border-color: #fdcb6e;
+    color: #2d3436;
+    box-shadow: 0 5px 20px rgba(253, 203, 110, 0.3);
+}

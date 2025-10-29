@@ -266,6 +266,14 @@ class MASE_Admin {
 			array( 'mase-admin' ),
 			MASE_VERSION
 		);
+		
+		// Enqueue template picker CSS
+		wp_enqueue_style(
+			'mase-template-picker',
+			plugins_url( '../assets/css/mase-template-picker.css', __FILE__ ),
+			array( 'mase-admin' ),
+			MASE_VERSION
+		);
 
 		// Enqueue mase-accessibility.css with mase-admin dependency (Requirement 13.1-13.5).
 		wp_enqueue_style(
@@ -765,22 +773,46 @@ class MASE_Admin {
 			}
 		}
 		
-		// Fix: Force admin bar to be visible on settings page
-		// Admin bar is sometimes hidden by WordPress on certain admin pages
-		add_action('admin_head', function() use ($hook) {
-			if ('toplevel_page_mase-settings' === $hook) {
-				?>
-				<style id="mase-force-adminbar-visibility">
-					/* Force admin bar to be visible on MASE settings page */
-					#wpadminbar {
-						display: flex !important;
-						visibility: visible !important;
-						opacity: 1 !important;
-					}
-				</style>
-				<?php
-			}
-		});
+		// CRITICAL FIX: Force admin bar to be visible on ALL admin pages
+		// Admin bar is sometimes hidden by WordPress or conflicts with other plugins
+		add_action('admin_head', function() {
+			?>
+			<style id="mase-force-adminbar-visibility">
+				/* Force admin bar to be visible on ALL admin pages */
+				#wpadminbar {
+					display: flex !important;
+					visibility: visible !important;
+					opacity: 1 !important;
+					position: fixed !important;
+					top: 0 !important;
+					left: 0 !important;
+					right: 0 !important;
+					width: 100% !important;
+					z-index: 99999 !important;
+				}
+				
+				/* Ensure admin bar items are visible */
+				#wpadminbar * {
+					visibility: visible !important;
+					opacity: 1 !important;
+				}
+				
+				/* Fix for empty admin bar - ensure content is rendered */
+				#wpadminbar #wp-toolbar {
+					display: flex !important;
+					width: 100% !important;
+					visibility: visible !important;
+				}
+				
+				/* Fix for left and right sections */
+				#wpadminbar #wp-admin-bar-root-default,
+				#wpadminbar #wp-admin-bar-top-secondary {
+					display: flex !important;
+					visibility: visible !important;
+				}
+			</style>
+			<?php
+		}, 1); // Priority 1 to load early
 	}
 
 	/**
@@ -3674,10 +3706,12 @@ body.wp-admin #adminmenu .wp-submenu {
 				$settings = $this->settings->get_defaults();
 			}
 
-			// Check if login customization is enabled (Requirement 8.1).
-			// Skip if no login customization settings exist.
+			// CRITICAL FIX: Always ensure login_customization exists with defaults
+			// Even if empty, we need to generate CSS for proper login page styling
 			if ( empty( $settings['login_customization'] ) ) {
-				return;
+				error_log( 'MASE: Login CSS injection - login_customization empty, using defaults' );
+				$defaults = $this->settings->get_defaults();
+				$settings['login_customization'] = $defaults['login_customization'];
 			}
 
 			// Try to get cached CSS with key 'login_css' (Requirement 8.3).
@@ -5479,4 +5513,5 @@ body.wp-admin #adminmenu .wp-submenu {
 			);
 		}
 	}
+	
 }

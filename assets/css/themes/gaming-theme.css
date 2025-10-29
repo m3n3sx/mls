@@ -1,0 +1,139 @@
+/**
+ * Gaming Cyberpunk Theme
+ * RGB neon effects for gamers
+ */
+
+:root {
+    --cyber-cyan: #00f5ff;
+    --cyber-magenta: #ff0080;
+    --cyber-purple: #8000ff;
+    --cyber-blue: #0080ff;
+}
+
+.mase-template-gaming {
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a0033 50%, #000000 100%),
+                radial-gradient(circle at 20% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
+    color: #ffffff;
+    border: 2px solid transparent;
+    border-image: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)) 1;
+    box-shadow: 0 0 30px rgba(0, 245, 255, 0.3),
+                0 0 60px rgba(255, 0, 128, 0.2);
+}
+
+/* Neon Glow Animations */
+@keyframes neonPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.4),
+                    0 0 40px rgba(255, 0, 128, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 245, 255, 0.6),
+                    0 0 80px rgba(255, 0, 128, 0.5);
+    }
+}
+
+@keyframes rgbBorder {
+    0% { border-image-source: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)); }
+    33% { border-image-source: linear-gradient(45deg, var(--cyber-magenta), var(--cyber-purple), var(--cyber-cyan)); }
+    66% { border-image-source: linear-gradient(45deg, var(--cyber-purple), var(--cyber-cyan), var(--cyber-magenta)); }
+    100% { border-image-source: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)); }
+}
+
+.mase-template-gaming {
+    animation: neonPulse 3s ease-in-out infinite;
+}
+
+/* Admin Bar Gaming Style */
+.mase-template-gaming #wpadminbar {
+    background: linear-gradient(90deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
+    border-bottom: 2px solid var(--cyber-cyan);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
+}
+
+.mase-template-gaming #wpadminbar .ab-item,
+.mase-template-gaming #wpadminbar a.ab-item {
+    color: var(--cyber-cyan);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.8);
+    font-weight: 600;
+}
+
+.mase-template-gaming #wpadminbar .ab-item:hover {
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--cyber-magenta);
+    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
+    transition: all 0.3s ease;
+}
+
+/* Admin Menu Gaming Style */
+.mase-template-gaming #adminmenu {
+    background: linear-gradient(180deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
+    border-right: 2px solid var(--cyber-purple);
+    box-shadow: 0 0 30px rgba(128, 0, 255, 0.3);
+}
+
+.mase-template-gaming #adminmenu a {
+    color: var(--cyber-cyan);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.mase-template-gaming #adminmenu a:hover,
+.mase-template-gaming #adminmenu li.menu-top:hover {
+    background: linear-gradient(90deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 128, 0.1));
+    color: var(--cyber-magenta);
+    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
+    border-left: 3px solid var(--cyber-magenta);
+    box-shadow: inset 0 0 20px rgba(255, 0, 128, 0.2);
+}
+
+.mase-template-gaming #adminmenu li.current a.menu-top {
+    background: linear-gradient(90deg, rgba(128, 0, 255, 0.2), rgba(0, 245, 255, 0.2));
+    color: var(--cyber-purple);
+    text-shadow: 0 0 15px rgba(128, 0, 255, 1);
+    border-left: 4px solid var(--cyber-purple);
+}
+
+/* Neon Menu Indicators */
+.mase-template-gaming #adminmenu .wp-menu-arrow {
+    border-right-color: var(--cyber-cyan);
+    filter: drop-shadow(0 0 5px var(--cyber-cyan));
+}
+
+/* Content Area */
+.mase-template-gaming .wrap {
+    background: rgba(12, 12, 12, 0.9);
+    border: 2px solid transparent;
+    border-image: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta)) 1;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.2);
+}
+
+.mase-template-gaming h1,
+.mase-template-gaming h2 {
+    color: var(--cyber-cyan);
+    text-shadow: 0 0 15px rgba(0, 245, 255, 0.8);
+    font-weight: 700;
+}
+
+/* Glowing Buttons */
+.mase-template-gaming .button,
+.mase-template-gaming .button-primary {
+    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 128, 0.1));
+    border: 2px solid var(--cyber-cyan);
+    color: var(--cyber-cyan);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mase-template-gaming .button:hover,
+.mase-template-gaming .button-primary:hover {
+    background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(128, 0, 255, 0.2));
+    border-color: var(--cyber-magenta);
+    color: var(--cyber-magenta);
+    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
+    box-shadow: 0 0 25px rgba(255, 0, 128, 0.5);
+    transform: translateY(-2px);
+}

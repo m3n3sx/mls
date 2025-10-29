@@ -1221,3 +1221,11 @@ body.mase-dark-mode .mase-dark-mode-fab:hover {
     margin-right: 0;
   }
 }
+
+/* ============================================================================
+   HIDE WORDPRESS MENU ARROW
+   Hide the arrow indicator next to active menu items
+   ============================================================================ */
+#adminmenu .wp-menu-arrow {
+  display: none !important;
+}

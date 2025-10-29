@@ -1,0 +1,141 @@
+/**
+ * Glass Material Theme
+ * Advanced glassmorphism with prismatic effects
+ */
+
+.mase-template-glass {
+    backdrop-filter: blur(25px) saturate(200%) brightness(115%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2)),
+                linear-gradient(45deg, rgba(0, 245, 255, 0.05), rgba(255, 0, 128, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #333;
+}
+
+/* Prismatic Effects */
+@keyframes prismShift {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: hue-rotate(30deg);
+    }
+}
+
+@keyframes glassShimmer {
+    0%, 100% {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+}
+
+.mase-template-glass {
+    animation: glassShimmer 4s ease-in-out infinite;
+}
+
+/* Admin Bar Glass Style */
+.mase-template-glass #wpadminbar {
+    backdrop-filter: blur(20px) saturate(180%);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.mase-template-glass #wpadminbar .ab-item,
+.mase-template-glass #wpadminbar a.ab-item {
+    color: #333;
+    font-weight: 500;
+}
+
+.mase-template-glass #wpadminbar .ab-item:hover {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin Menu Glass Style */
+.mase-template-glass #adminmenu {
+    backdrop-filter: blur(25px) saturate(200%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 15px 15px 0;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.1);
+}
+
+.mase-template-glass #adminmenu .wp-submenu {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0 12px 12px 0;
+}
+
+.mase-template-glass #adminmenu a {
+    color: #333;
+    border-radius: 10px;
+    margin: 2px 5px;
+    transition: all 0.3s ease;
+}
+
+.mase-template-glass #adminmenu a:hover,
+.mase-template-glass #adminmenu li.menu-top:hover {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.mase-template-glass #adminmenu li.current a.menu-top {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border-left: 4px solid rgba(0, 123, 255, 0.6);
+}
+
+/* Content Area */
+.mase-template-glass .wrap {
+    backdrop-filter: blur(30px) saturate(200%);
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.mase-template-glass h1,
+.mase-template-glass h2 {
+    color: #222;
+    font-weight: 600;
+}
+
+/* Glass Buttons */
+.mase-template-glass .button,
+.mase-template-glass .button-primary {
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.mase-template-glass .button:hover,
+.mase-template-glass .button-primary:hover {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+}

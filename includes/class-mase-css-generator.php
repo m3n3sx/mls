@@ -3108,9 +3108,14 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 	}
 
 	/**
-	 * Generate glassmorphism CSS with backdrop-filter effects.
-	 * Requirement 5.1 - Apply backdrop-filter blur with configurable intensity.
-	 *
+	 * Generate modern glassmorphism CSS with 2024 trends
+	 * Requirements: WCAG 2.1 AA compliance, GPU acceleration, multi-layer effects
+	 * 
+	 * Sources:
+	 * - MDN backdrop-filter: https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
+	 * - CSS Glass: https://css.glass/
+	 * - Modern trends: https://www.sliderrevolution.com/resources/css-glassmorphism/
+	 * 
 	 * @param array $settings Settings array.
 	 * @return string Glassmorphism CSS.
 	 */
@@ -3118,102 +3123,356 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 		try {
 			$visual_effects = isset( $settings['visual_effects'] ) ? $settings['visual_effects'] : array();
 
-			// Return empty if visual effects not configured.
 			if ( empty( $visual_effects ) ) {
+				error_log( 'MASE: No visual effects settings found' );
 				return '';
 			}
 
 			$css = '';
 
-			// Admin bar glassmorphism.
+			// STEP 1: CSS Custom Properties for Modern Glassmorphism 2024
+			$css .= ':root{';
+			$css .= '--glass-blur:20px;';
+			$css .= '--glass-saturation:180%;';
+			$css .= '--glass-brightness:110%;';
+			$css .= '--glass-opacity:0.1;';
+			$css .= '--glass-border-opacity:0.18;';
+			$css .= '--glass-shadow:0 8px 32px 0 rgba(31,38,135,0.37);';
+			$css .= '--neon-cyan:#00f5ff;';
+			$css .= '--neon-magenta:#ff0080;';
+			$css .= '--neon-blue:#0080ff;';
+			$css .= '--neon-green:#39ff14;';
+			$css .= '--neon-purple:#8000ff;';
+			$css .= '--glass-transition:all 0.3s cubic-bezier(0.4,0,0.2,1);';
+			$css .= '--glass-hover-transition:all 0.2s cubic-bezier(0.25,0.46,0.45,0.94);';
+			$css .= '}';
+
+			// STEP 2: Admin Bar Modern Glassmorphism
 			if ( isset( $visual_effects['admin_bar']['glassmorphism'] ) &&
 				$visual_effects['admin_bar']['glassmorphism'] ) {
-
-				$blur_intensity = isset( $visual_effects['admin_bar']['blur_intensity'] ) ?
-					absint( $visual_effects['admin_bar']['blur_intensity'] ) : 20;
-
-				// Clamp blur intensity to 0-50px range.
-				$blur_intensity = max( 0, min( 50, $blur_intensity ) );
-
-				// Get current admin bar colors to create semi-transparent version
-				$admin_bar = isset( $settings['admin_bar'] ) ? $settings['admin_bar'] : array();
-				$bg_color = isset( $admin_bar['bg_color'] ) ? $admin_bar['bg_color'] : '#23282d';
-				
-				// Convert hex to RGB for semi-transparent background
-				$rgb = $this->hex_to_rgb( $bg_color );
-				$rgba_bg = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.7)';
-				$rgba_border = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.3)';
-
-				$css .= 'body.wp-admin #wpadminbar{';
-				$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= 'background:' . $rgba_bg . '!important;';
-				$css .= 'border-bottom:1px solid ' . $rgba_border . '!important;';
-				$css .= 'box-shadow:0 2px 8px rgba(0,0,0,0.1)!important;';
-				$css .= '}';
-
-				// Fallback for browsers without backdrop-filter support (Requirement 19.5).
-				$css .= '@supports not (backdrop-filter:blur(10px)){';
-				$css .= 'body.wp-admin #wpadminbar{';
-				$css .= 'background:' . $bg_color . '!important;';
-				$css .= '}';
-				$css .= '}';
+				error_log( 'MASE: Generating admin bar glassmorphism' );
+				$css .= $this->generate_admin_bar_glassmorphism_2024( $visual_effects['admin_bar'], $settings );
 			}
 
-			// Admin menu glassmorphism.
+			// STEP 3: Admin Menu Modern Glassmorphism
 			if ( isset( $visual_effects['admin_menu']['glassmorphism'] ) &&
 				$visual_effects['admin_menu']['glassmorphism'] ) {
-
-				$blur_intensity = isset( $visual_effects['admin_menu']['blur_intensity'] ) ?
-					absint( $visual_effects['admin_menu']['blur_intensity'] ) : 20;
-
-				$blur_intensity = max( 0, min( 50, $blur_intensity ) );
-
-				// Get current admin menu colors to create semi-transparent version
-				$admin_menu = isset( $settings['admin_menu'] ) ? $settings['admin_menu'] : array();
-				$bg_color = isset( $admin_menu['bg_color'] ) ? $admin_menu['bg_color'] : '#23282d';
-				
-				// Convert hex to RGB for semi-transparent background
-				$rgb = $this->hex_to_rgb( $bg_color );
-				$rgba_bg = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.7)';
-				$rgba_border = 'rgba(' . $rgb['r'] . ',' . $rgb['g'] . ',' . $rgb['b'] . ',0.3)';
-
-				// Apply glassmorphism only to #adminmenuback to avoid color stacking
-				$css .= 'body.wp-admin #adminmenuback{';
-				$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px)!important;';
-				$css .= 'background:' . $rgba_bg . '!important;';
-				$css .= '}';
-				
-				// Ensure #adminmenu and #adminmenuwrap are transparent
-				$css .= 'body.wp-admin #adminmenu,';
-				$css .= 'body.wp-admin #adminmenuwrap {';
-				$css .= 'background-color: transparent !important;';
-				$css .= 'background-image: none !important;';
-				$css .= '}';
-				
-				// Add subtle border and shadow to wrapper for glass effect
-				$css .= 'body.wp-admin #adminmenuwrap{';
-				$css .= 'border-right:1px solid ' . $rgba_border . '!important;';
-				$css .= 'box-shadow:2px 0 8px rgba(0,0,0,0.1)!important;';
-				$css .= '}';
-
-				// Fallback for browsers without backdrop-filter support.
-				$css .= '@supports not (backdrop-filter:blur(10px)){';
-				$css .= 'body.wp-admin #adminmenu,';
-				$css .= 'body.wp-admin #adminmenuback,';
-				$css .= 'body.wp-admin #adminmenuwrap{';
-				$css .= 'background:' . $bg_color . '!important;';
-				$css .= '}';
-				$css .= '}';
+				error_log( 'MASE: Generating admin menu glassmorphism' );
+				$css .= $this->generate_admin_menu_glassmorphism_2024( $visual_effects['admin_menu'], $settings );
 			}
 
+			// STEP 4: Login Screen Glassmorphism (NEW!)
+			if ( isset( $visual_effects['login']['glassmorphism'] ) &&
+				$visual_effects['login']['glassmorphism'] ) {
+				error_log( 'MASE: Generating login glassmorphism' );
+				$css .= $this->generate_login_glassmorphism_2024( $visual_effects['login'] );
+			}
+
+			// STEP 5: Dashboard Widgets Glassmorphism (NEW!)
+			if ( isset( $visual_effects['dashboard']['glassmorphism'] ) &&
+				$visual_effects['dashboard']['glassmorphism'] ) {
+				$css .= $this->generate_dashboard_glassmorphism_2024( $visual_effects['dashboard'] );
+			}
+
+			// STEP 6: Mobile optimization and performance
+			$css .= $this->generate_glassmorphism_mobile_optimizations();
+
+			// STEP 7: Accessibility and WCAG compliance
+			$css .= $this->generate_glassmorphism_accessibility_fixes();
+
+			error_log( 'MASE: Glassmorphism CSS generated successfully' );
 			return $css;
 
 		} catch ( Exception $e ) {
-			error_log( sprintf( 'MASE: Glassmorphism CSS generation failed: %s', $e->getMessage() ) );
-			return '';
+			error_log( 'MASE: Glassmorphism CSS generation failed: ' . $e->getMessage() );
+			return $this->generate_glassmorphism_fallback();
 		}
+	}
+
+	/**
+	 * Generate modern admin bar glassmorphism with 2024 trends
+	 * Features: multi-layer blur, vibrancy boost, gradient borders, WCAG compliance
+	 * 
+	 * @param array $admin_bar_effects Admin bar effects settings.
+	 * @param array $settings Full settings array.
+	 * @return string Admin bar glassmorphism CSS.
+	 */
+	private function generate_admin_bar_glassmorphism_2024( $admin_bar_effects, $settings ) {
+		$blur_intensity = isset( $admin_bar_effects['blur_intensity'] ) ?
+			absint( $admin_bar_effects['blur_intensity'] ) : 20;
+		$vibrancy = isset( $admin_bar_effects['vibrancy'] ) ?
+			absint( $admin_bar_effects['vibrancy'] ) : 180;
+		$brightness = isset( $admin_bar_effects['brightness'] ) ?
+			absint( $admin_bar_effects['brightness'] ) : 110;
+		$glass_opacity = isset( $admin_bar_effects['glass_opacity'] ) ?
+			floatval( $admin_bar_effects['glass_opacity'] ) : 0.1;
+
+		$blur_intensity = max( 5, min( 50, $blur_intensity ) );
+		$vibrancy = max( 100, min( 300, $vibrancy ) );
+		$brightness = max( 80, min( 150, $brightness ) );
+		$glass_opacity = max( 0.05, min( 0.3, $glass_opacity ) );
+
+		$css = '';
+
+		$css .= 'body.wp-admin #wpadminbar{';
+		$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px) saturate(' . $vibrancy . '%) brightness(' . $brightness . '%) contrast(105%)!important;';
+		$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px) saturate(' . $vibrancy . '%) brightness(' . $brightness . '%) contrast(105%)!important;';
+		$css .= 'background:linear-gradient(90deg,rgba(255,255,255,' . $glass_opacity . '),rgba(255,255,255,' . ($glass_opacity + 0.05) . '),rgba(255,255,255,' . $glass_opacity . ')),linear-gradient(45deg,rgba(0,245,255,0.03),transparent 30%,rgba(255,0,128,0.03) 70%,transparent)!important;';
+		$css .= 'border-bottom:1px solid transparent!important;';
+		$css .= 'border-image:linear-gradient(90deg,rgba(0,245,255,0.3) 0%,rgba(128,0,255,0.3) 25%,rgba(255,0,128,0.3) 50%,rgba(0,245,255,0.3) 75%,transparent 100%) 1!important;';
+		$css .= 'box-shadow:0 8px 32px 0 rgba(31,38,135,0.37),0 2px 8px 0 rgba(0,245,255,0.1),inset 0 1px 0 rgba(255,255,255,0.5),inset 0 -1px 0 rgba(255,255,255,0.2)!important;';
+		$css .= 'will-change:backdrop-filter,background,border-image!important;';
+		$css .= 'transform:translateZ(0)!important;';
+		$css .= 'backface-visibility:hidden!important;';
+		$css .= 'perspective:1000px!important;';
+		$css .= 'transition:var(--glass-transition)!important;';
+		$css .= '}';
+
+		$css .= 'body.wp-admin #wpadminbar:hover{';
+		$css .= 'backdrop-filter:blur(' . ($blur_intensity + 5) . 'px) saturate(' . ($vibrancy + 20) . '%) brightness(' . ($brightness + 10) . '%) contrast(110%)!important;';
+		$css .= 'border-image:linear-gradient(90deg,rgba(0,245,255,0.5) 0%,rgba(128,0,255,0.5) 25%,rgba(255,0,128,0.5) 50%,rgba(0,245,255,0.5) 75%,rgba(128,0,255,0.3) 100%) 1!important;';
+		$css .= 'transform:translateZ(0) translateY(-1px)!important;';
+		$css .= 'transition:var(--glass-hover-transition)!important;';
+		$css .= '}';
+
+		$css .= 'body.wp-admin #wpadminbar .ab-item,body.wp-admin #wpadminbar a.ab-item,body.wp-admin #wpadminbar > #wp-toolbar span.ab-label{';
+		$css .= 'text-shadow:0 1px 3px rgba(0,0,0,0.8),0 0 6px rgba(0,0,0,0.6),1px 1px 0 rgba(255,255,255,0.1)!important;';
+		$css .= 'color:#ffffff!important;';
+		$css .= 'font-weight:500!important;';
+		$css .= '}';
+
+		$css .= 'body.wp-admin #wpadminbar .ab-icon,body.wp-admin #wpadminbar .dashicons,body.wp-admin #wpadminbar svg{';
+		$css .= 'filter:drop-shadow(0 1px 2px rgba(0,0,0,0.8))!important;';
+		$css .= 'color:#ffffff!important;';
+		$css .= 'fill:#ffffff!important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Generate modern admin menu glassmorphism with 2024 trends
+	 * 
+	 * @param array $admin_menu_effects Admin menu effects settings.
+	 * @param array $settings Full settings array.
+	 * @return string Admin menu glassmorphism CSS.
+	 */
+	private function generate_admin_menu_glassmorphism_2024( $admin_menu_effects, $settings ) {
+		$blur_intensity = isset( $admin_menu_effects['blur_intensity'] ) ?
+			absint( $admin_menu_effects['blur_intensity'] ) : 25;
+		$vibrancy = isset( $admin_menu_effects['vibrancy'] ) ?
+			absint( $admin_menu_effects['vibrancy'] ) : 160;
+		$brightness = isset( $admin_menu_effects['brightness'] ) ?
+			absint( $admin_menu_effects['brightness'] ) : 105;
+
+		$css = '';
+
+		$css .= 'body.wp-admin #adminmenu,body.wp-admin #adminmenuback,body.wp-admin #adminmenuwrap{';
+		$css .= 'backdrop-filter:blur(' . $blur_intensity . 'px) saturate(' . $vibrancy . '%) brightness(' . $brightness . '%) contrast(103%)!important;';
+		$css .= '-webkit-backdrop-filter:blur(' . $blur_intensity . 'px) saturate(' . $vibrancy . '%) brightness(' . $brightness . '%) contrast(103%)!important;';
+		$css .= 'background:linear-gradient(180deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.12) 50%,rgba(255,255,255,0.08) 100%),linear-gradient(45deg,rgba(0,245,255,0.02),transparent 40%,rgba(255,0,128,0.02))!important;';
+		$css .= 'border-right:1px solid transparent!important;';
+		$css .= 'border-image:linear-gradient(180deg,rgba(255,255,255,0.3) 0%,rgba(0,245,255,0.2) 50%,rgba(255,255,255,0.3) 100%) 1!important;';
+		$css .= 'box-shadow:2px 0 15px rgba(0,0,0,0.1),1px 0 5px rgba(0,245,255,0.05),inset -1px 0 0 rgba(255,255,255,0.3),inset 0 0 20px rgba(255,255,255,0.05)!important;';
+		$css .= 'will-change:backdrop-filter,background!important;';
+		$css .= 'transform:translateZ(0)!important;';
+		$css .= 'backface-visibility:hidden!important;';
+		$css .= '}';
+
+		$css .= 'body.wp-admin #adminmenu li.menu-top:hover > a,body.wp-admin #adminmenu li.current > a{';
+		$css .= 'backdrop-filter:blur(15px) saturate(180%) brightness(115%)!important;';
+		$css .= 'background:linear-gradient(90deg,rgba(255,255,255,0.1),rgba(255,255,255,0.15),rgba(255,255,255,0.05)),linear-gradient(45deg,rgba(0,245,255,0.05),rgba(255,0,128,0.03))!important;';
+		$css .= 'border-left:3px solid transparent!important;';
+		$css .= 'border-image:linear-gradient(45deg,var(--neon-cyan),var(--neon-magenta)) 1!important;';
+		$css .= 'box-shadow:inset 3px 0 0 rgba(0,245,255,0.5),0 0 15px rgba(0,245,255,0.2),inset 0 1px 0 rgba(255,255,255,0.4)!important;';
+		$css .= 'transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94)!important;';
+		$css .= 'transform:translateX(2px)!important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Generate login screen glassmorphism - FIX for broken login options
+	 * 
+	 * @param array $login_effects Login effects settings.
+	 * @return string Login glassmorphism CSS.
+	 */
+	private function generate_login_glassmorphism_2024( $login_effects ) {
+		$css = '';
+
+		$css .= 'body.login{';
+		$css .= 'background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%),radial-gradient(circle at 20% 80%,rgba(0,245,255,0.1),transparent 50%),radial-gradient(circle at 80% 20%,rgba(255,0,128,0.1),transparent 50%)!important;';
+		$css .= 'background-attachment:fixed!important;';
+		$css .= 'min-height:100vh!important;';
+		$css .= 'display:flex!important;';
+		$css .= 'align-items:center!important;';
+		$css .= 'justify-content:center!important;';
+		$css .= '}';
+
+		$css .= 'body.login #login{';
+		$css .= 'backdrop-filter:blur(30px) saturate(200%) brightness(115%)!important;';
+		$css .= '-webkit-backdrop-filter:blur(30px) saturate(200%) brightness(115%)!important;';
+		$css .= 'background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,rgba(255,255,255,0.25) 50%,rgba(255,255,255,0.15) 100%),linear-gradient(45deg,rgba(0,245,255,0.08),transparent 30%,rgba(255,0,128,0.08) 70%,transparent)!important;';
+		$css .= 'border:2px solid transparent!important;';
+		$css .= 'border-image:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,rgba(0,245,255,0.3) 25%,rgba(255,0,128,0.3) 75%,rgba(255,255,255,0.4) 100%) 1!important;';
+		$css .= 'box-shadow:0 30px 60px rgba(0,0,0,0.15),0 15px 35px rgba(0,245,255,0.1),0 5px 15px rgba(255,0,128,0.1),inset 0 2px 0 rgba(255,255,255,0.6),inset 0 -2px 0 rgba(255,255,255,0.3)!important;';
+		$css .= 'border-radius:24px!important;';
+		$css .= 'padding:50px 40px!important;';
+		$css .= 'margin:0 20px!important;';
+		$css .= 'max-width:400px!important;';
+		$css .= 'width:100%!important;';
+		$css .= 'transform:translateY(-20px)!important;';
+		$css .= 'transition:all 0.4s cubic-bezier(0.25,0.46,0.45,0.94)!important;';
+		$css .= 'will-change:backdrop-filter,transform,box-shadow!important;';
+		$css .= 'transform-style:preserve-3d!important;';
+		$css .= 'backface-visibility:hidden!important;';
+		$css .= '}';
+
+		$css .= 'body.login #loginform{';
+		$css .= 'background:transparent!important;';
+		$css .= 'box-shadow:none!important;';
+		$css .= 'border:none!important;';
+		$css .= 'padding:0!important;';
+		$css .= 'margin:0!important;';
+		$css .= '}';
+
+		$css .= 'body.login input[type="text"],body.login input[type="password"],body.login input[type="email"]{';
+		$css .= 'backdrop-filter:blur(10px) saturate(150%)!important;';
+		$css .= 'background:rgba(255,255,255,0.15)!important;';
+		$css .= 'border:1.5px solid rgba(255,255,255,0.3)!important;';
+		$css .= 'border-radius:16px!important;';
+		$css .= 'padding:18px 20px!important;';
+		$css .= 'font-size:16px!important;';
+		$css .= 'color:#333!important;';
+		$css .= 'font-weight:500!important;';
+		$css .= 'margin-bottom:20px!important;';
+		$css .= 'width:100%!important;';
+		$css .= 'box-sizing:border-box!important;';
+		$css .= 'transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94)!important;';
+		$css .= '}';
+
+		$css .= 'body.login input[type="text"]:focus,body.login input[type="password"]:focus,body.login input[type="email"]:focus{';
+		$css .= 'backdrop-filter:blur(15px) saturate(180%) brightness(110%)!important;';
+		$css .= 'background:rgba(255,255,255,0.25)!important;';
+		$css .= 'border:1.5px solid transparent!important;';
+		$css .= 'border-image:linear-gradient(45deg,var(--neon-cyan),var(--neon-magenta)) 1!important;';
+		$css .= 'box-shadow:0 0 25px rgba(0,245,255,0.4),0 0 15px rgba(255,0,128,0.3),inset 0 1px 0 rgba(255,255,255,0.5)!important;';
+		$css .= 'outline:none!important;';
+		$css .= 'transform:translateY(-2px) scale(1.02)!important;';
+		$css .= '}';
+
+		$css .= 'body.login .button-primary,body.login #wp-submit{';
+		$css .= 'backdrop-filter:blur(20px) saturate(180%)!important;';
+		$css .= 'background:linear-gradient(135deg,var(--neon-cyan) 0%,var(--neon-blue) 50%,var(--neon-purple) 100%)!important;';
+		$css .= 'border:1px solid rgba(255,255,255,0.4)!important;';
+		$css .= 'border-radius:16px!important;';
+		$css .= 'padding:16px 40px!important;';
+		$css .= 'font-size:16px!important;';
+		$css .= 'font-weight:700!important;';
+		$css .= 'text-transform:uppercase!important;';
+		$css .= 'letter-spacing:1px!important;';
+		$css .= 'color:#ffffff!important;';
+		$css .= 'text-shadow:0 1px 3px rgba(0,0,0,0.5)!important;';
+		$css .= 'width:100%!important;';
+		$css .= 'cursor:pointer!important;';
+		$css .= 'box-shadow:0 10px 30px rgba(0,245,255,0.4),0 5px 15px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.4)!important;';
+		$css .= 'transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94)!important;';
+		$css .= '}';
+
+		$css .= 'body.login .button-primary:hover,body.login #wp-submit:hover{';
+		$css .= 'transform:translateY(-4px) scale(1.02)!important;';
+		$css .= 'box-shadow:0 20px 40px rgba(0,245,255,0.6),0 10px 25px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.6)!important;';
+		$css .= 'background:linear-gradient(135deg,var(--neon-blue) 0%,var(--neon-magenta) 50%,var(--neon-cyan) 100%)!important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Generate dashboard glassmorphism (placeholder for future implementation)
+	 * 
+	 * @param array $dashboard_effects Dashboard effects settings.
+	 * @return string Dashboard glassmorphism CSS.
+	 */
+	private function generate_dashboard_glassmorphism_2024( $dashboard_effects ) {
+		return '';
+	}
+
+	/**
+	 * Mobile optimizations for glassmorphism performance
+	 * 
+	 * @return string Mobile optimization CSS.
+	 */
+	private function generate_glassmorphism_mobile_optimizations() {
+		$css = '';
+
+		$css .= '@media screen and (max-width:1024px){';
+		$css .= 'body.wp-admin #wpadminbar{backdrop-filter:blur(15px) saturate(160%) brightness(108%)!important;}';
+		$css .= 'body.wp-admin #adminmenu{backdrop-filter:blur(20px) saturate(140%) brightness(103%)!important;}';
+		$css .= '}';
+
+		$css .= '@media screen and (max-width:782px){';
+		$css .= 'body.wp-admin #wpadminbar{backdrop-filter:blur(12px) saturate(140%) brightness(105%)!important;background:rgba(255,255,255,0.15)!important;}';
+		$css .= 'body.login #login{backdrop-filter:blur(20px) saturate(160%)!important;margin:10px!important;padding:30px 25px!important;border-radius:20px!important;}';
+		$css .= 'body.login input[type="text"],body.login input[type="password"]{backdrop-filter:blur(8px)!important;padding:15px!important;font-size:16px!important;}';
+		$css .= '}';
+
+		$css .= '@media screen and (max-width:480px){';
+		$css .= '.mase-glassmorphism-enabled *{backdrop-filter:none!important;background:rgba(255,255,255,0.9)!important;border:1px solid rgba(0,0,0,0.1)!important;}';
+		$css .= '}';
+
+		$css .= '@media (prefers-reduced-motion:reduce){';
+		$css .= 'body.wp-admin #wpadminbar,body.wp-admin #adminmenu,body.login #login,body.login input,body.login .button-primary{';
+		$css .= 'transition:none!important;animation:none!important;transform:none!important;';
+		$css .= '}';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * WCAG 2.1 AA accessibility fixes for glassmorphism
+	 * 
+	 * @return string Accessibility CSS.
+	 */
+	private function generate_glassmorphism_accessibility_fixes() {
+		$css = '';
+
+		$css .= '@media (prefers-contrast:high){';
+		$css .= 'body.wp-admin #wpadminbar,body.wp-admin #adminmenu{';
+		$css .= 'backdrop-filter:none!important;background:#000000!important;border:2px solid #ffffff!important;';
+		$css .= '}';
+		$css .= 'body.wp-admin #wpadminbar .ab-item,body.wp-admin #adminmenu a{';
+		$css .= 'color:#ffffff!important;text-shadow:none!important;font-weight:700!important;';
+		$css .= '}';
+		$css .= '}';
+
+		$css .= 'body.wp-admin .mase-glassmorphism *:focus,body.login input:focus,body.login .button:focus{';
+		$css .= 'outline:3px solid #0073aa!important;outline-offset:2px!important;';
+		$css .= 'box-shadow:0 0 0 1px #fff,0 0 0 4px #0073aa,0 0 10px rgba(0,115,170,0.5)!important;';
+		$css .= '}';
+
+		$css .= 'body.wp-admin #adminmenu li.current > a::before{';
+		$css .= 'content:"▶"!important;position:absolute!important;left:5px!important;';
+		$css .= 'color:var(--neon-cyan)!important;font-weight:bold!important;';
+		$css .= '}';
+
+		return $css;
+	}
+
+	/**
+	 * Fallback CSS when glassmorphism fails
+	 * 
+	 * @return string Fallback CSS.
+	 */
+	private function generate_glassmorphism_fallback() {
+		error_log( 'MASE: Using glassmorphism fallback CSS' );
+
+		return '/* MASE Glassmorphism Fallback */
+body.wp-admin #wpadminbar{background:rgba(35,40,45,0.95)!important;border-bottom:1px solid rgba(255,255,255,0.1)!important;box-shadow:0 2px 8px rgba(0,0,0,0.1)!important;}
+body.wp-admin #adminmenu{background:rgba(35,40,45,0.95)!important;border-right:1px solid rgba(255,255,255,0.1)!important;}
+body.login #login{background:rgba(255,255,255,0.95)!important;border:1px solid rgba(0,0,0,0.1)!important;border-radius:8px!important;box-shadow:0 4px 20px rgba(0,0,0,0.15)!important;}';
 	}
 
 	/**

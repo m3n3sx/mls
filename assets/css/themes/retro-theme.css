@@ -1,0 +1,148 @@
+/**
+ * Retro 80s Synthwave Theme
+ * Vaporwave aesthetics with animated gradients
+ */
+
+.mase-template-retro {
+    background: linear-gradient(135deg, #ff006e 0%, #8338ec 25%, #3a86ff 50%, #06ffa5 75%, #ffbe0b 100%);
+    background-size: 400% 400%;
+    animation: retroShift 8s ease-in-out infinite;
+    border: 3px solid #ffbe0b;
+    color: #ffffff;
+    box-shadow: 0 0 40px rgba(255, 190, 11, 0.5);
+    font-family: 'Orbitron', 'Arial', sans-serif;
+}
+
+/* Synthwave Animations */
+@keyframes retroShift {
+    0% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: hue-rotate(180deg);
+    }
+    100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes neonFlicker {
+    0%, 100% { opacity: 1; text-shadow: 0 0 10px currentColor; }
+    50% { opacity: 0.8; text-shadow: 0 0 20px currentColor; }
+}
+
+@keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+/* Admin Bar Retro Style */
+.mase-template-retro #wpadminbar {
+    background: linear-gradient(90deg, #ff006e, #8338ec, #3a86ff);
+    border-bottom: 3px solid #ffbe0b;
+    box-shadow: 0 0 30px rgba(255, 190, 11, 0.6);
+}
+
+.mase-template-retro #wpadminbar .ab-item,
+.mase-template-retro #wpadminbar a.ab-item {
+    color: #ffffff;
+    text-shadow: 0 0 10px #ffbe0b;
+    font-weight: 700;
+    animation: neonFlicker 2s ease-in-out infinite;
+}
+
+.mase-template-retro #wpadminbar .ab-item:hover {
+    background: rgba(255, 190, 11, 0.2);
+    color: #ffbe0b;
+    text-shadow: 0 0 20px #ffbe0b;
+}
+
+/* Admin Menu Retro Style */
+.mase-template-retro #adminmenu {
+    background: linear-gradient(180deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+    background-size: 100% 400%;
+    animation: retroShift 10s ease-in-out infinite;
+    border-right: 3px solid #ffbe0b;
+    box-shadow: 0 0 40px rgba(131, 56, 236, 0.5);
+}
+
+.mase-template-retro #adminmenu a {
+    color: #ffffff;
+    text-shadow: 0 0 8px #06ffa5;
+    font-weight: 600;
+}
+
+.mase-template-retro #adminmenu a:hover,
+.mase-template-retro #adminmenu li.menu-top:hover {
+    background: rgba(255, 190, 11, 0.3);
+    color: #ffbe0b;
+    text-shadow: 0 0 15px #ffbe0b;
+    border-left: 4px solid #ffbe0b;
+}
+
+.mase-template-retro #adminmenu li.current a.menu-top {
+    background: rgba(6, 255, 165, 0.3);
+    color: #06ffa5;
+    text-shadow: 0 0 15px #06ffa5;
+    border-left: 5px solid #06ffa5;
+}
+
+/* Grid Pattern Overlay */
+.mase-template-retro::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(rgba(255, 190, 11, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 190, 11, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 2s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Content Area */
+.mase-template-retro .wrap {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ffbe0b;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 0 40px rgba(255, 190, 11, 0.4);
+    position: relative;
+    z-index: 2;
+}
+
+.mase-template-retro h1,
+.mase-template-retro h2 {
+    color: #ffbe0b;
+    text-shadow: 0 0 20px #ffbe0b;
+    font-weight: 700;
+    animation: neonFlicker 3s ease-in-out infinite;
+}
+
+/* 80s Buttons */
+.mase-template-retro .button,
+.mase-template-retro .button-primary {
+    background: linear-gradient(135deg, #ff006e, #8338ec);
+    border: 2px solid #ffbe0b;
+    color: #ffffff;
+    text-shadow: 0 0 10px #06ffa5;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.mase-template-retro .button:hover,
+.mase-template-retro .button-primary:hover {
+    background: linear-gradient(135deg, #8338ec, #3a86ff);
+    border-color: #06ffa5;
+    color: #06ffa5;
+    text-shadow: 0 0 20px #06ffa5;
+    box-shadow: 0 0 30px rgba(6, 255, 165, 0.6);
+    transform: translateY(-3px);
+}

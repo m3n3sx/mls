@@ -1,0 +1,138 @@
+/**
+ * Gradient Flow Theme
+ * Dynamic flowing gradients with motion
+ */
+
+.mase-template-gradient {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab, #ff6b6b, #4ecdc4);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Flow Animations */
+@keyframes gradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-20px) translateX(10px);
+        opacity: 0.6;
+    }
+}
+
+/* Admin Bar Gradient Style */
+.mase-template-gradient #wpadminbar {
+    background: linear-gradient(90deg, #ee7752, #e73c7e, #23a6d5);
+    background-size: 200% 100%;
+    animation: gradientFlow 10s ease infinite;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.mase-template-gradient #wpadminbar .ab-item,
+.mase-template-gradient #wpadminbar a.ab-item {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mase-template-gradient #wpadminbar .ab-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Admin Menu Gradient Style */
+.mase-template-gradient #adminmenu {
+    background: linear-gradient(180deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 100% 400%;
+    animation: gradientFlow 12s ease infinite;
+    border-right: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.mase-template-gradient #adminmenu a {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.mase-template-gradient #adminmenu a:hover,
+.mase-template-gradient #adminmenu li.menu-top:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-left: 3px solid #ffffff;
+    transform: translateX(5px);
+}
+
+.mase-template-gradient #adminmenu li.current a.menu-top {
+    background: rgba(255, 255, 255, 0.3);
+    border-left: 4px solid #ffffff;
+    font-weight: 600;
+}
+
+/* Particle Overlay */
+.mase-template-gradient::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: particleFloat 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Content Area */
+.mase-template-gradient .wrap {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.mase-template-gradient h1,
+.mase-template-gradient h2 {
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    font-weight: 700;
+}
+
+/* Dynamic Buttons */
+.mase-template-gradient .button,
+.mase-template-gradient .button-primary {
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.mase-template-gradient .button:hover,
+.mase-template-gradient .button-primary:hover {
+    background: linear-gradient(135deg, #4ecdc4, #ff6b6b);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}

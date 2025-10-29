@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Template Picker Test</title>
+    <link rel="stylesheet" href="../../assets/css/mase-template-picker.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f1;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Template Picker UI Test</h1>
+        
+        <div class="mase-template-picker-section">
+            <div class="mase-section-header">
+                <h2>Theme Templates</h2>
+                <p class="description">Choose from spectacular pre-designed themes with stunning visual effects.</p>
+            </div>
+            
+            <div id="mase-template-picker-grid">
+                <!-- Templates will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Mock data for testing
+        window.maseAdmin = {
+            ajaxUrl: '/wp-admin/admin-ajax.php',
+            nonce: 'test-nonce',
+            themeTemplates: {
+                'terminal': {
+                    name: 'Terminal Linux',
+                    description: 'Hacker/Developer theme with matrix effects',
+                    css_class: 'mase-template-terminal',
+                    category: 'tech'
+                },
+                'gaming': {
+                    name: 'Gaming Cyberpunk',
+                    description: 'Epic gaming theme with RGB neon effects',
+                    css_class: 'mase-template-gaming',
+                    category: 'gaming'
+                },
+                'floral': {
+                    name: 'Floral Natural',
+                    description: 'Organic theme with pastel colors',
+                    css_class: 'mase-template-floral',
+                    category: 'nature'
+                },
+                'professional': {
+                    name: 'Professional Dark',
+                    description: 'Corporate elegance with gold accents',
+                    css_class: 'mase-template-professional',
+                    category: 'business'
+                },
+                'retro': {
+                    name: 'Retro 80s Synthwave',
+                    description: 'Nostalgic 80s theme with vaporwave aesthetics',
+                    css_class: 'mase-template-retro',
+                    category: 'retro'
+                },
+                'glass': {
+                    name: 'Glass Material',
+                    description: 'Premium glassmorphism with prismatic effects',
+                    css_class: 'mase-template-glass',
+                    category: 'modern'
+                },
+                'gradient': {
+                    name: 'Gradient Flow',
+                    description: 'Dynamic theme with flowing gradients',
+                    css_class: 'mase-template-gradient',
+                    category: 'modern'
+                },
+                'minimal': {
+                    name: 'Minimalist Modern',
+                    description: 'Clean design with typography focus',
+                    css_class: 'mase-template-minimal',
+                    category: 'minimal'
+                }
+            },
+            activeTemplate: null
+        };
+    </script>
+    <script src="../../assets/js/mase-template-picker.js"></script>
+</body>
+</html>

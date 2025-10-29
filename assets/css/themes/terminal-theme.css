@@ -1,0 +1,136 @@
+/**
+ * Terminal Linux Theme
+ * Matrix-style hacker/developer theme
+ */
+
+.mase-template-terminal {
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+                linear-gradient(0deg, #000000 0%, #0a0a0a 100%);
+    color: #00ff41;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    border: 2px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+}
+
+/* Admin Bar Terminal Style */
+.mase-template-terminal #wpadminbar {
+    background: #000000;
+    border-bottom: 2px solid #00ff41;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.mase-template-terminal #wpadminbar .ab-item,
+.mase-template-terminal #wpadminbar a.ab-item,
+.mase-template-terminal #wpadminbar > #wp-toolbar span.ab-label,
+.mase-template-terminal #wpadminbar > #wp-toolbar span.noticon {
+    color: #00ff41;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+}
+
+.mase-template-terminal #wpadminbar .ab-item:hover,
+.mase-template-terminal #wpadminbar a.ab-item:hover {
+    background: rgba(0, 255, 65, 0.1);
+    color: #00ff41;
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.9);
+    animation: terminalGlow 0.3s ease;
+}
+
+/* Admin Menu Terminal Style */
+.mase-template-terminal #adminmenu {
+    background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+    border-right: 2px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+}
+
+.mase-template-terminal #adminmenu .wp-submenu,
+.mase-template-terminal #adminmenu .wp-has-current-submenu .wp-submenu {
+    background: #000000;
+    border-left: 2px solid rgba(0, 255, 65, 0.3);
+}
+
+.mase-template-terminal #adminmenu a {
+    color: #00ff41;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+}
+
+.mase-template-terminal #adminmenu a:hover,
+.mase-template-terminal #adminmenu li.menu-top:hover,
+.mase-template-terminal #adminmenu li.opensub > a.menu-top,
+.mase-template-terminal #adminmenu li > a.menu-top:focus {
+    background: rgba(0, 255, 65, 0.15);
+    color: #00ff41;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+    border-left: 3px solid #00ff41;
+}
+
+.mase-template-terminal #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
+.mase-template-terminal #adminmenu .wp-menu-arrow,
+.mase-template-terminal #adminmenu .wp-menu-arrow div,
+.mase-template-terminal #adminmenu li.current a.menu-top,
+.mase-template-terminal #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu {
+    background: rgba(0, 255, 65, 0.2);
+    color: #00ff41;
+    border-left: 4px solid #00ff41;
+}
+
+/* Blinking Cursor Animation */
+.mase-template-terminal #adminmenu a::after {
+    content: '▮';
+    margin-left: 5px;
+    animation: terminalBlink 1s infinite;
+    opacity: 0;
+}
+
+.mase-template-terminal #adminmenu a:hover::after {
+    opacity: 1;
+}
+
+@keyframes terminalBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes terminalGlow {
+    0% { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
+    50% { text-shadow: 0 0 20px rgba(0, 255, 65, 1); }
+    100% { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
+}
+
+/* Content Area */
+.mase-template-terminal .wrap {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+}
+
+.mase-template-terminal h1,
+.mase-template-terminal h2,
+.mase-template-terminal h3 {
+    color: #00ff41;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+    font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+/* Buttons */
+.mase-template-terminal .button,
+.mase-template-terminal .button-primary {
+    background: #000000;
+    border: 2px solid #00ff41;
+    color: #00ff41;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+    font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+.mase-template-terminal .button:hover,
+.mase-template-terminal .button-primary:hover {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: #00ff41;
+    color: #00ff41;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+}
