@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE CSS Animation Performance Test</title>
+    <link rel="stylesheet" href="../../assets/css/mase-admin.css">
+    <style>
+        body {
+            padding: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-top: 0;
+        }
+        .performance-stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+            min-width: 200px;
+        }
+        .stat {
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            font-weight: 600;
+            color: #646970;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2271b1;
+        }
+        .stat-value.good {
+            color: #00a32a;
+        }
+        .stat-value.warning {
+            color: #dba617;
+        }
+        .stat-value.bad {
+            color: #d63638;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>MASE CSS Animation Performance Test</h1>
+        <p>This page tests the performance of CSS animations. Target: 60 FPS (16.67ms per frame)</p>
+        
+        <div class="performance-stats">
+            <div class="stat">
+                <div class="stat-label">Current FPS</div>
+                <div class="stat-value" id="fps">--</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Frame Time</div>
+                <div class="stat-value" id="frameTime">--</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Status</div>
+                <div class="stat-value" id="status">Measuring...</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Toggle Switches (Transform Animation)</h2>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <label class="mase-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-switch">
+                    <input type="checkbox">
+                    <span class="mase-toggle-slider"></span>
+                </label>
+                <label class="mase-toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="mase-toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Palette Cards (Transform + Box-Shadow)</h2>
+            <div class="test-grid">
+                <div class="mase-palette-card">
+                    <div class="mase-palette-preview">
+                        <div class="mase-palette-color" style="background: #2271b1;"></div>
+                        <div class="mase-palette-color" style="background: #135e96;"></div>
+                        <div class="mase-palette-color" style="background: #f0f6fc;"></div>
+                    </div>
+                    <div class="mase-palette-name">Test Palette 1</div>
+                </div>
+                <div class="mase-palette-card">
+                    <div class="mase-palette-preview">
+                        <div class="mase-palette-color" style="background: #00a32a;"></div>
+                        <div class="mase-palette-color" style="background: #e7f7ed;"></div>
+                        <div class="mase-palette-color" style="background: #dba617;"></div>
+                    </div>
+                    <div class="mase-palette-name">Test Palette 2</div>
+                </div>
+                <div class="mase-palette-card active">
+                    <div class="mase-palette-preview">
+                        <div class="mase-palette-color" style="background: #d63638;"></div>
+                        <div class="mase-palette-color" style="background: #fcf0f1;"></div>
+                        <div class="mase-palette-color" style="background: #2271b1;"></div>
+                    </div>
+                    <div class="mase-palette-name">Test Palette 3</div>
+                    <span class="mase-active-badge">Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Buttons (Transform Animation)</h2>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <button class="button button-primary">Primary Button</button>
+                <button class="button button-secondary">Secondary Button</button>
+                <button class="button button-primary">Another Primary</button>
+                <button class="button button-secondary">Another Secondary</button>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Color Swatches (Scale Transform)</h2>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div class="mase-color-swatch" style="background: #2271b1;"></div>
+                <div class="mase-color-swatch" style="background: #00a32a;"></div>
+                <div class="mase-color-swatch" style="background: #dba617;"></div>
+                <div class="mase-color-swatch" style="background: #d63638;"></div>
+                <div class="mase-color-swatch" style="background: #6b7280;"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Dark Mode FAB (Rotate + Transform)</h2>
+            <button class="mase-dark-mode-fab">
+                <span class="dashicons dashicons-admin-appearance"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // FPS Counter
+        let lastTime = performance.now();
+        let frames = 0;
+        let fps = 0;
+        let frameTime = 0;
+
+        function measureFPS() {
+            const currentTime = performance.now();
+            frames++;
+            
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round((frames * 1000) / (currentTime - lastTime));
+                frameTime = ((currentTime - lastTime) / frames).toFixed(2);
+                frames = 0;
+                lastTime = currentTime;
+                
+                // Update display
+                const fpsElement = document.getElementById('fps');
+                const frameTimeElement = document.getElementById('frameTime');
+                const statusElement = document.getElementById('status');
+                
+                fpsElement.textContent = fps;
+                frameTimeElement.textContent = frameTime + 'ms';
+                
+                // Color code based on performance
+                if (fps >= 55) {
+                    fpsElement.className = 'stat-value good';
+                    statusElement.textContent = '✓ Excellent';
+                    statusElement.className = 'stat-value good';
+                } else if (fps >= 45) {
+                    fpsElement.className = 'stat-value warning';
+                    statusElement.textContent = '⚠ Good';
+                    statusElement.className = 'stat-value warning';
+                } else {
+                    fpsElement.className = 'stat-value bad';
+                    statusElement.textContent = '✗ Poor';
+                    statusElement.className = 'stat-value bad';
+                }
+            }
+            
+            requestAnimationFrame(measureFPS);
+        }
+        
+        measureFPS();
+
+        // Auto-toggle switches for animation testing
+        const toggles = document.querySelectorAll('.mase-toggle-switch input');
+        setInterval(() => {
+            toggles.forEach(toggle => {
+                toggle.checked = !toggle.checked;
+            });
+        }, 2000);
+
+        // Auto-rotate FAB icon
+        const fab = document.querySelector('.mase-dark-mode-fab');
+        setInterval(() => {
+            fab.classList.add('mase-icon-rotating');
+            setTimeout(() => {
+                fab.classList.remove('mase-icon-rotating');
+            }, 300);
+        }, 3000);
+
+        // Add dashicons for FAB
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/dashicons.min.css';
+        document.head.appendChild(link);
+    </script>
+</body>
+</html>

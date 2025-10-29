@@ -1,0 +1,406 @@
+# Implementation Plan
+
+- [x] 1. Preparation and Backup
+  - Create Git branch `feature/visual-redesign-settings-page` for redesign work
+  - Create timestamped backup of `assets/css/mase-admin.css` file
+  - Create backup of `includes/admin-settings-page.php` file
+  - Document current file sizes and performance metrics for comparison
+  - _Requirements: 14.1, 14.2, 14.3, 14.4_
+
+- [x] 2. Design Token System Implementation
+  - [x] 2.1 Update CSS custom properties in `:root` selector
+    - Implement refined color palette with WordPress 5.9+ colors
+    - Define enhanced spacing scale (xs through 2xl)
+    - Set up typography system with font sizes, weights, and line heights
+    - Add refined shadow system (xs through xl)
+    - Define border radius values (sm through full)
+    - Set up transition timing values
+    - _Requirements: 1.1, 1.3, 1.4, 2.1, 2.2, 2.3, 2.4, 3.1, 3.2_
+  - [x] 2.2 Implement dark mode design tokens
+    - Create `:root[data-theme="dark"]` selector with dark mode values
+    - Define dark mode color palette with proper contrast
+    - Adjust shadow values for dark backgrounds
+    - Ensure all tokens have dark mode equivalents
+    - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+
+- [x] 3. Header Component Redesign
+  - [x] 3.1 Update header container styles
+    - Apply refined background with backdrop-filter blur
+    - Add subtle shadow for elevation
+    - Implement sticky positioning with proper z-index
+    - Adjust padding using new spacing scale
+    - _Requirements: 9.1, 9.3, 9.4_
+  - [x] 3.2 Enhance header typography
+    - Increase title font size to 30px (3xl)
+    - Apply refined font weight and letter spacing
+    - Style version badge with modern pill design
+    - Update subtitle styling with secondary text color
+    - _Requirements: 2.1, 2.2, 9.1_
+  - [x] 3.3 Redesign header action buttons
+    - Apply new button system styles (primary/secondary)
+    - Implement hover and focus states with transitions
+    - Ensure proper spacing between buttons
+    - Add icon alignment improvements
+    - _Requirements: 4.1, 4.2, 4.3, 4.5, 9.2, 9.5_
+
+- [x] 4. Tab Navigation Redesign
+  - [x] 4.1 Update tab container layout
+    - Apply refined background and border
+    - Implement proper spacing between tabs
+    - Add horizontal scroll with custom scrollbar styling
+    - Ensure proper padding and alignment
+    - _Requirements: 7.1, 7.2_
+  - [x] 4.2 Enhance individual tab button styles
+    - Implement modern tab design with rounded corners
+    - Add smooth transitions for all state changes
+    - Create clear visual distinction for active state
+    - Add bottom border indicator for active tab
+    - _Requirements: 7.1, 7.2, 7.4_
+  - [x] 4.3 Improve tab interaction states
+    - Style hover state with background color change
+    - Implement focus state with proper outline
+    - Ensure icon and label alignment
+    - Add smooth color transitions
+    - _Requirements: 4.1, 4.2, 7.3, 7.5_
+
+- [x] 5. Card Component Redesign
+  - [x] 5.1 Update section card base styles
+    - Apply refined border and border-radius
+    - Implement subtle shadow for elevation
+    - Set consistent internal padding (32px)
+    - Add smooth hover state with shadow increase
+    - _Requirements: 8.1, 8.2, 8.5_
+  - [x] 5.2 Enhance card header typography
+    - Style h2 headings with refined font size and weight
+    - Update description text with secondary color
+    - Implement proper spacing between header and content
+    - Ensure visual hierarchy within cards
+    - _Requirements: 2.1, 2.2, 2.5, 8.3_
+  - [x] 5.3 Add card content organization
+    - Implement dividers between settings groups
+    - Apply consistent spacing for setting rows
+    - Create clear visual separation for related controls
+    - Ensure proper alignment of labels and inputs
+    - _Requirements: 3.2, 3.4, 8.4_
+
+- [x] 6. Form Controls - Toggle Switches
+  - [x] 6.1 Implement iOS-style toggle switch design
+    - Create toggle container with proper dimensions (44x24px)
+    - Style toggle slider with rounded background
+    - Design toggle knob with shadow
+    - Implement smooth slide animation
+    - _Requirements: 6.1_
+  - [x] 6.2 Add toggle interaction states
+    - Style checked state with primary color
+    - Implement hover state feedback
+    - Add focus state with ring shadow
+    - Create disabled state styling
+    - _Requirements: 4.1, 4.2, 4.4_
+
+- [x] 7. Form Controls - Color Pickers
+  - [x] 7.1 Redesign color picker layout
+    - Create wrapper with flexbox layout
+    - Style color swatch with larger size (40x40px)
+    - Add border and shadow to swatch
+    - Implement proper spacing between elements
+    - _Requirements: 6.2_
+  - [x] 7.2 Enhance color picker interactions
+    - Add hover scale effect to swatch
+    - Style hex input with monospace font
+    - Implement focus state for input
+    - Add smooth transitions for all states
+    - _Requirements: 4.1, 4.2, 4.3_
+
+- [x] 8. Form Controls - Range Sliders
+  - [x] 8.1 Implement modern slider design
+    - Style slider track with refined appearance
+    - Design prominent slider thumb (20x20px)
+    - Add shadow to thumb for depth
+    - Create value display badge
+    - _Requirements: 6.3_
+  - [x] 8.2 Add slider interaction states
+    - Implement hover scale effect on thumb
+    - Add focus state styling
+    - Create smooth transitions for interactions
+    - Style value indicator with background
+    - _Requirements: 4.1, 4.2, 4.3_
+
+- [x] 9. Form Controls - Text Inputs and Selects
+  - [x] 9.1 Update input base styles
+    - Apply refined border and border-radius
+    - Set consistent padding (8px 16px)
+    - Implement proper font sizing
+    - Add background color
+    - _Requirements: 6.4_
+  - [x] 9.2 Implement input interaction states
+    - Style hover state with border color change
+    - Add focus state with ring shadow
+    - Create disabled state with reduced opacity
+    - Implement smooth transitions
+    - _Requirements: 4.1, 4.2, 4.4_
+
+- [x] 10. Palette Cards Redesign
+  - [x] 10.1 Update palette grid layout
+    - Implement responsive grid with auto-fill
+    - Set minimum card width (280px)
+    - Apply consistent gap spacing (24px)
+    - Ensure proper margin from section header
+    - _Requirements: 5.1_
+  - [x] 10.2 Enhance individual palette card design
+    - Apply refined border (2px) and border-radius
+    - Implement hover state with elevation and transform
+    - Style active state with primary color border
+    - Add smooth transitions for all states
+    - _Requirements: 5.2, 5.3, 5.4_
+  - [x] 10.3 Improve palette color preview
+    - Increase preview height to 60px
+    - Add hover scale effect to color swatches
+    - Implement proper spacing between swatches
+    - Apply rounded corners to individual swatches
+    - _Requirements: 5.2_
+  - [x] 10.4 Redesign palette card actions
+    - Style palette name with larger font and weight
+    - Design active badge with pill shape
+    - Update action buttons with new button system
+    - Ensure proper spacing and alignment
+    - _Requirements: 5.3, 5.5_
+
+- [x] 11. Button System Redesign
+  - [x] 11.1 Implement primary button styles
+    - Apply primary color background
+    - Add subtle shadow for depth
+    - Implement hover state with darker color and elevation
+    - Add smooth transitions and transform
+    - _Requirements: 4.5_
+  - [x] 11.2 Implement secondary button styles
+    - Apply surface background with border
+    - Style hover state with background change
+    - Ensure proper contrast with primary buttons
+    - Add consistent padding and border-radius
+    - _Requirements: 4.5_
+  - [x] 11.3 Add button interaction states
+    - Implement focus state with ring shadow
+    - Style disabled state with reduced opacity
+    - Add loading state styling (if needed)
+    - Ensure icon alignment within buttons
+    - _Requirements: 4.1, 4.2, 4.4_
+
+- [x] 12. Template Cards Redesign
+  - [x] 12.1 Update template preview grid
+    - Implement responsive grid layout
+    - Set consistent card dimensions
+    - Apply proper gap spacing
+    - Ensure alignment with palette grid
+    - _Requirements: 3.3_
+  - [x] 12.2 Enhance template card design
+    - Style thumbnail container with border-radius
+    - Add hover state with elevation
+    - Implement active state indicator
+    - Apply smooth transitions
+    - _Requirements: 8.1, 8.2_
+
+- [x] 13. Settings Row Layout
+  - [x] 13.1 Implement consistent setting row structure
+    - Create flexbox layout for label and control
+    - Apply proper spacing between rows
+    - Ensure label and control alignment
+    - Add responsive behavior for mobile
+    - _Requirements: 3.4, 3.5_
+  - [x] 13.2 Style setting labels and descriptions
+    - Apply appropriate font weight to labels
+    - Style helper text with secondary color
+    - Implement proper spacing between label and description
+    - Ensure readability and hierarchy
+    - _Requirements: 2.5_
+
+- [x] 14. Responsive Design Implementation
+  - [x] 14.1 Implement mobile styles (< 768px)
+    - Stack header elements vertically
+    - Convert tab navigation to dropdown or stacked layout
+    - Adjust card padding for smaller screens
+    - Ensure touch targets meet 44x44px minimum
+    - Reduce font sizes appropriately
+    - _Requirements: 10.1, 10.4_
+  - [x] 14.2 Implement tablet styles (768-1024px)
+    - Optimize grid layouts for medium screens
+    - Adjust spacing values for tablet
+    - Ensure horizontal tab scrolling works smoothly
+    - Test touch interactions
+    - _Requirements: 10.2, 10.3_
+  - [x] 14.3 Optimize desktop styles (> 1024px)
+    - Ensure multi-column layouts work properly
+    - Apply maximum width constraints where appropriate
+    - Optimize spacing for large screens
+    - Test all hover states
+    - _Requirements: 10.3_
+
+- [x] 15. Dark Mode Refinement
+  - [x] 15.1 Test all components in dark mode
+    - Verify header appearance in dark mode
+    - Check tab navigation contrast
+    - Test card visibility and shadows
+    - Verify form control styling
+    - _Requirements: 12.1, 12.2, 12.3_
+  - [x] 15.2 Adjust dark mode specific styles
+    - Fine-tune shadow values for dark backgrounds
+    - Ensure proper contrast for all text
+    - Verify interactive element visibility
+    - Test color palette cards in dark mode
+    - _Requirements: 12.2, 12.4, 12.5_
+
+- [x] 16. Accessibility Verification
+  - [x] 16.1 Verify color contrast ratios
+    - Test all text against backgrounds (4.5:1 minimum)
+    - Check interactive element contrast (3:1 minimum)
+    - Verify dark mode contrast ratios
+    - Document any contrast issues and fixes
+    - _Requirements: 11.1_
+  - [x] 16.2 Test keyboard navigation
+    - Verify all interactive elements are keyboard accessible
+    - Check focus indicators are visible
+    - Test tab order is logical
+    - Ensure no keyboard traps exist
+    - _Requirements: 11.2_
+  - [x] 16.3 Test with screen readers
+    - Verify semantic HTML structure maintained
+    - Check ARIA labels are preserved
+    - Test with NVDA or JAWS
+    - Ensure visual changes don't break screen reader functionality
+    - _Requirements: 11.3_
+  - [ ]\* 16.4 Test reduced motion preferences
+    - Implement prefers-reduced-motion media query
+    - Disable or reduce animations when requested
+    - Ensure functionality works without animations
+    - _Requirements: 11.4_
+
+- [x] 17. Performance Optimization
+  - [x] 17.1 Optimize CSS file size
+    - Remove unused styles
+    - Combine similar selectors
+    - Minify CSS for production
+    - Verify file size is under 150KB
+    - _Requirements: 13.1_
+  - [x] 17.2 Optimize CSS performance
+    - Use transform and opacity for animations
+    - Avoid expensive properties (filter, backdrop-filter fallbacks)
+    - Minimize layout-triggering properties
+    - Test animation performance (60fps target)
+    - _Requirements: 13.3, 13.4_
+  - [ ]\* 17.3 Optimize asset loading
+    - Ensure CSS loads efficiently
+    - Test page load time (< 200ms target)
+    - Verify no layout shifts occur
+    - Measure and document performance metrics
+    - _Requirements: 13.2, 13.5_
+
+- [x] 18. Browser Compatibility Testing
+  - [x] 18.1 Test in Chrome
+    - Verify all styles render correctly
+    - Test all interactions work
+    - Check responsive behavior
+    - Test dark mode
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 18.2 Test in Firefox
+    - Verify all styles render correctly
+    - Test all interactions work
+    - Check responsive behavior
+    - Test dark mode
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 18.3 Test in Safari
+    - Verify all styles render correctly
+    - Test all interactions work
+    - Check responsive behavior
+    - Test dark mode
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 18.4 Test in Edge
+    - Verify all styles render correctly
+    - Test all interactions work
+    - Check responsive behavior
+    - Test dark mode
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+
+- [x] 19. Functional Regression Testing
+  - [x] 19.1 Verify form controls functionality
+    - Test all toggle switches save correctly
+    - Verify color pickers work properly
+    - Check range sliders update values
+    - Test text inputs and selects
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 19.2 Test palette and template application
+    - Verify palette preview works
+    - Test palette application saves correctly
+    - Check template preview functionality
+    - Test template application
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 19.3 Test live preview functionality
+    - Verify live preview toggle works
+    - Check that changes preview correctly
+    - Test that preview doesn't affect saved settings
+    - Verify preview can be disabled
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 19.4 Test settings save/load
+    - Verify all settings save correctly
+    - Test settings load on page refresh
+    - Check that no data is lost
+    - Test reset functionality
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+
+- [x] 20. Visual Quality Assurance
+  - [x] 20.1 Review overall visual consistency
+    - Check spacing consistency across all tabs
+    - Verify typography hierarchy is clear
+    - Ensure color usage is consistent
+    - Review shadow and border usage
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 20.2 Capture before/after screenshots
+    - Take screenshots of all tabs (before)
+    - Take screenshots of all tabs (after)
+    - Compare at mobile, tablet, and desktop sizes
+    - Document visual improvements
+    - _Requirements: 1.1_
+  - [ ]\* 20.3 Conduct user acceptance testing
+    - Get feedback on visual improvements
+    - Verify usability is maintained or improved
+    - Check that interface feels modern
+    - Document any requested adjustments
+    - _Requirements: 1.1_
+
+- [x] 21. Documentation and Cleanup
+  - [x] 21.1 Document CSS changes
+    - Add comments explaining major changes
+    - Document new design token system
+    - Create changelog of visual updates
+    - Update any relevant documentation files
+    - _Requirements: 14.3_
+  - [x] 21.2 Create rollback procedure documentation
+    - Document backup file locations
+    - Write step-by-step rollback instructions
+    - Test rollback procedure
+    - Verify rollback restores original appearance
+    - _Requirements: 14.3, 14.5_
+  - [x] 21.3 Clean up development artifacts
+    - Remove any temporary CSS files
+    - Clean up commented-out code
+    - Organize CSS file structure
+    - Ensure production-ready code
+    - _Requirements: 13.1_
+
+- [-] 22. Final Review and Deployment
+  - [x] 22.1 Conduct final review
+    - Review all requirements are met
+    - Check all acceptance criteria pass
+    - Verify no functional regressions
+    - Confirm visual quality meets standards
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 22.2 Prepare for deployment
+    - Create deployment checklist
+    - Prepare rollback plan
+    - Document any known issues
+    - Get final approval for deployment
+    - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5_
+  - [-] 22.3 Deploy redesign
+    - Merge feature branch to main
+    - Deploy to production
+    - Monitor for any issues
+    - Be ready to rollback if needed
+    - _Requirements: 14.5_
