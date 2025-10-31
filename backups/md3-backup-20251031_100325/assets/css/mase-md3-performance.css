@@ -1,0 +1,542 @@
+/**
+ * Material Design 3 Performance Optimization
+ * 
+ * GPU acceleration and performance optimizations for all animated elements.
+ * Implements will-change, transform optimizations, and performance best practices.
+ * 
+ * Requirements: 22.1, 22.2, 22.3, 22.4, 22.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ==========================================================================
+   GPU Acceleration Base Classes (Requirement 22.2, 22.3)
+   ========================================================================== */
+
+/**
+ * Force GPU acceleration for animated elements
+ * Uses transform: translateZ(0) to create a new composite layer
+ */
+.md-gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/**
+ * Will-change for elements about to animate (Requirement 22.1, 22.4)
+ * Applied dynamically to elements that will animate
+ */
+.md-will-animate {
+    will-change: transform, opacity;
+}
+
+/**
+ * Remove will-change after animation completes (Requirement 22.4, 22.5)
+ * This prevents excessive memory usage
+ */
+.md-animation-complete {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Template Cards - GPU Acceleration (Requirement 22.1, 22.2, 22.3)
+   ========================================================================== */
+
+.mase-template-card {
+    /* Force GPU layer for smooth hover animations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    
+    /* Add will-change on hover preparation */
+    will-change: transform, box-shadow;
+}
+
+/* Remove will-change when not hovering or animating (Requirement 22.4) */
+.mase-template-card:not(:hover):not(.animating) {
+    will-change: auto;
+}
+
+/* Optimize hover transform - use transform instead of position (Requirement 22.2) */
+.mase-template-card:hover {
+    /* Already using transform - optimized */
+    transform: translateY(-4px) scale(1.02) translateZ(0);
+}
+
+/* ==========================================================================
+   Form Controls - GPU Acceleration
+   ========================================================================== */
+
+/* Color Picker - Optimize gradient animation (Requirement 22.1, 22.2) */
+.mase-color-picker {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: background-position;
+}
+
+.mase-color-picker:not(:hover):not(.animating) {
+    will-change: auto;
+}
+
+/* Color Picker Handle - Optimize position changes (Requirement 22.2) */
+.mase-color-picker::after {
+    transform: translate(-50%, -50%) translateZ(0);
+    will-change: transform;
+}
+
+.mase-color-picker:not(:active)::after {
+    will-change: auto;
+}
+
+/* Toggle Switch - GPU acceleration for thumb movement (Requirement 22.1, 22.2) */
+.mase-toggle {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+.mase-toggle::before {
+    /* Thumb uses transform - already optimized */
+    transform: translateY(-50%) translateZ(0);
+    will-change: transform, width, height;
+}
+
+.mase-toggle:not(.animating)::before {
+    will-change: auto;
+}
+
+/* Toggle Ripple Effect - GPU acceleration (Requirement 22.2) */
+.mase-toggle::after {
+    transform: translate(-50%, -50%) translateZ(0);
+    will-change: transform, width, height;
+}
+
+.mase-toggle:not(:active)::after {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Navigation Tabs - GPU Acceleration
+   ========================================================================== */
+
+.mase-md3-tab {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, background-color;
+}
+
+.mase-md3-tab:not(:hover):not(.active):not(.animating) {
+    will-change: auto;
+}
+
+/* Tab state layer - optimize opacity changes (Requirement 22.2) */
+.mase-md3-tab::before {
+    transform: translateZ(0);
+    will-change: opacity;
+}
+
+.mase-md3-tab:not(:hover):not(:focus)::before {
+    will-change: auto;
+}
+
+/* Tab content transitions - GPU acceleration (Requirement 22.1, 22.2) */
+.mase-tab-content {
+    transform: translateY(8px) translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+.mase-tab-content.active {
+    transform: translateY(0) translateZ(0);
+}
+
+.mase-tab-content:not(.animating) {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Buttons - GPU Acceleration
+   ========================================================================== */
+
+.mase-button-filled,
+.mase-button-outlined,
+.mase-button-text {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
+}
+
+.mase-button-filled:not(:hover):not(:active),
+.mase-button-outlined:not(:hover):not(:active),
+.mase-button-text:not(:hover):not(:active) {
+    will-change: auto;
+}
+
+/* Ripple effect - GPU acceleration (Requirement 22.1, 22.2) */
+.mase-ripple {
+    transform: scale(0) translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   Loading States - GPU Acceleration
+   ========================================================================== */
+
+/* Shimmer effect - optimize background animation (Requirement 22.1, 22.2) */
+.mase-loading-shimmer,
+.md-shimmer,
+.md-skeleton {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: background-position;
+}
+
+/* Circular progress - optimize rotation (Requirement 22.1, 22.2) */
+.mase-progress-circular,
+.md-progress-circular {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* ==========================================================================
+   Animations - GPU Acceleration (Requirement 22.1, 22.2, 22.3)
+   ========================================================================== */
+
+/* All animation utility classes get GPU acceleration */
+.md-fade-in,
+.md-fade-out,
+.md-slide-in-bottom,
+.md-slide-in-top,
+.md-slide-in-left,
+.md-slide-in-right,
+.md-scale-in,
+.md-scale-out,
+.md-bounce,
+.md-pulse,
+.md-spin,
+.md-float,
+.md-entrance {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* Remove will-change after animation completes (Requirement 22.4) */
+.md-fade-in.animation-complete,
+.md-fade-out.animation-complete,
+.md-slide-in-bottom.animation-complete,
+.md-slide-in-top.animation-complete,
+.md-slide-in-left.animation-complete,
+.md-slide-in-right.animation-complete,
+.md-scale-in.animation-complete,
+.md-scale-out.animation-complete,
+.md-bounce.animation-complete,
+.md-entrance.animation-complete {
+    will-change: auto;
+}
+
+/* Continuous animations keep will-change (Requirement 22.4) */
+.md-pulse,
+.md-spin,
+.md-float,
+.md-shimmer {
+    /* These loop infinitely, so keep will-change */
+    will-change: transform, opacity;
+}
+
+/* ==========================================================================
+   Mini Preview Elements - GPU Acceleration
+   ========================================================================== */
+
+/* Mini admin bar shimmer - optimize animation (Requirement 22.1, 22.2) */
+.mase-template-minibar {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: opacity, transform;
+}
+
+/* Mini menu items pulse - optimize animation (Requirement 22.1, 22.2) */
+.mase-template-menuitem {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: opacity, transform;
+}
+
+/* ==========================================================================
+   Floating Action Button - GPU Acceleration
+   ========================================================================== */
+
+.mase-fab {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
+}
+
+.mase-fab:not(:hover):not(:active) {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Snackbar Notifications - GPU Acceleration
+   ========================================================================== */
+
+.mase-snackbar {
+    transform: translateX(-50%) translateY(100px) translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+.mase-snackbar.show {
+    transform: translateX(-50%) translateY(0) translateZ(0);
+}
+
+.mase-snackbar:not(.show):not(.animating) {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Admin Header - GPU Acceleration
+   ========================================================================== */
+
+/* Floating orb animation - optimize (Requirement 22.1, 22.2) */
+.mase-admin-header::before {
+    transform: translate(0, 0) translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* ==========================================================================
+   Hover Effects - GPU Acceleration (Requirement 22.1, 22.2)
+   ========================================================================== */
+
+/* Lift effect */
+.md-hover-lift {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.md-hover-lift:not(:hover) {
+    will-change: auto;
+}
+
+/* Scale effects */
+.md-hover-scale,
+.md-hover-icon-scale {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.md-hover-scale:not(:hover),
+.md-hover-icon-scale:not(:hover) {
+    will-change: auto;
+}
+
+/* ==========================================================================
+   Performance Monitoring Classes
+   ========================================================================== */
+
+/**
+ * Class to mark elements for performance monitoring
+ * Can be used with JavaScript performance APIs
+ */
+.md-perf-monitor {
+    /* Marker class for performance tracking */
+}
+
+/**
+ * Class to indicate high-performance mode
+ * Disables expensive effects on low-end devices
+ */
+.md-high-performance-mode .md-expensive-effect {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* ==========================================================================
+   Composite Layer Optimization (Requirement 22.3)
+   ========================================================================== */
+
+/**
+ * Create composite layers for frequently animated elements
+ * This prevents repaints of parent elements
+ */
+.md-composite-layer {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    isolation: isolate;
+}
+
+/* ==========================================================================
+   Avoid Layout Thrashing (Requirement 22.2)
+   ========================================================================== */
+
+/**
+ * Use transform instead of top/left/right/bottom for positioning
+ * Use transform instead of width/height for sizing
+ * Use opacity instead of visibility for fading
+ */
+
+/* Example: Avoid animating layout properties */
+.md-no-layout-animation {
+    /* GOOD: Animate transform and opacity */
+    transition: transform 300ms, opacity 300ms;
+    
+    /* BAD: Don't animate these (commented out as examples)
+    transition: width 300ms, height 300ms, top 300ms, left 300ms;
+    */
+}
+
+/* ==========================================================================
+   RequestAnimationFrame Optimization (Requirement 22.2)
+   ========================================================================== */
+
+/**
+ * Marker class for JavaScript animations using requestAnimationFrame
+ * JavaScript should check for this class and use RAF for smooth animations
+ */
+.md-use-raf {
+    /* Marker for JS to use requestAnimationFrame */
+}
+
+/* ==========================================================================
+   Reduced Motion - Performance (Requirement 22.5)
+   ========================================================================== */
+
+/**
+ * When reduced motion is preferred, remove all will-change
+ * to improve performance for users who don't see animations
+ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        will-change: auto !important;
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    /* Keep GPU acceleration for instant transitions */
+    .md-gpu-accelerated {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+}
+
+/* ==========================================================================
+   Mobile Performance Optimization (Requirement 22.5)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Reduce animation complexity on mobile */
+    .md-expensive-effect {
+        animation-duration: 0.5s !important;
+    }
+    
+    /* Simplify transforms on mobile */
+    .mase-template-card:hover {
+        transform: translateY(-2px) translateZ(0);
+    }
+    
+    /* Disable some effects on mobile for performance */
+    .mase-template-minibar,
+    .mase-template-menuitem {
+        animation: none;
+    }
+}
+
+/* ==========================================================================
+   Low-End Device Detection (Requirement 22.5)
+   ========================================================================== */
+
+/**
+ * Class added by JavaScript when low-end device is detected
+ * Disables expensive effects for better performance
+ */
+.md-low-end-device .md-expensive-effect {
+    animation: none !important;
+    will-change: auto !important;
+}
+
+.md-low-end-device .mase-color-picker {
+    animation: none;
+    background: linear-gradient(45deg, #ff6b6b, #4d96ff);
+}
+
+.md-low-end-device .mase-template-minibar,
+.md-low-end-device .mase-template-menuitem {
+    animation: none;
+}
+
+/* ==========================================================================
+   Paint Optimization (Requirement 22.3)
+   ========================================================================== */
+
+/**
+ * Contain paint and layout for better performance
+ * Prevents repaints from affecting parent elements
+ */
+.md-contain-paint {
+    contain: paint;
+}
+
+.md-contain-layout {
+    contain: layout;
+}
+
+.md-contain-strict {
+    contain: strict;
+}
+
+/* ==========================================================================
+   Content Visibility Optimization (Requirement 22.5)
+   ========================================================================== */
+
+/**
+ * Use content-visibility for off-screen content
+ * Improves initial render performance
+ */
+.md-content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* ==========================================================================
+   Performance Best Practices Summary
+   ========================================================================== */
+
+/**
+ * BEST PRACTICES IMPLEMENTED:
+ * 
+ * 1. GPU Acceleration (Requirement 22.2, 22.3):
+ *    - transform: translateZ(0) for composite layers
+ *    - backface-visibility: hidden to prevent flickering
+ *    - perspective: 1000px for 3D transforms
+ * 
+ * 2. Will-Change Management (Requirement 22.1, 22.4):
+ *    - Add will-change before animations
+ *    - Remove will-change after animations complete
+ *    - Only use for properties that will actually change
+ * 
+ * 3. Transform Over Layout (Requirement 22.2):
+ *    - Use transform instead of top/left/width/height
+ *    - Use opacity instead of visibility
+ *    - Avoid animating layout properties
+ * 
+ * 4. RequestAnimationFrame (Requirement 22.2):
+ *    - Marker classes for JS to use RAF
+ *    - Smooth 60fps animations
+ * 
+ * 5. Performance Monitoring (Requirement 22.5):
+ *    - Classes for performance tracking
+ *    - Low-end device detection
+ *    - Mobile optimizations
+ * 
+ * 6. Reduced Motion (Requirement 22.5):
+ *    - Respect user preferences
+ *    - Remove animations when requested
+ *    - Maintain functionality
+ */

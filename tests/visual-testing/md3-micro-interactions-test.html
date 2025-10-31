@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Micro-interactions Test</title>
+    
+    <!-- MD3 Foundation CSS -->
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-typography.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    
+    <!-- Micro-interactions CSS -->
+    <link rel="stylesheet" href="../../assets/css/mase-micro-interactions.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--md-background);
+            color: var(--md-on-background);
+            padding: 40px;
+            margin: 0;
+        }
+        
+        .test-section {
+            background: var(--md-surface);
+            border-radius: var(--md-corner-l);
+            padding: var(--md-space-2xl);
+            margin-bottom: var(--md-space-2xl);
+            box-shadow: var(--md-elevation-1);
+        }
+        
+        .test-section h2 {
+            font-size: var(--md-headline-medium);
+            margin-top: 0;
+            margin-bottom: var(--md-space-l);
+            color: var(--md-primary);
+        }
+        
+        .test-section h3 {
+            font-size: var(--md-title-medium);
+            margin-top: var(--md-space-xl);
+            margin-bottom: var(--md-space-m);
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: var(--md-space-l);
+            margin-bottom: var(--md-space-xl);
+        }
+        
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--md-space-s);
+            padding: var(--md-space-m);
+            cursor: pointer;
+        }
+        
+        .icon-item .dashicons {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--md-space-l);
+            margin-bottom: var(--md-space-xl);
+        }
+        
+        .mase-template-card {
+            background: var(--md-surface);
+            border-radius: var(--md-corner-l);
+            padding: var(--md-space-l);
+            box-shadow: var(--md-elevation-1);
+            cursor: pointer;
+            min-height: 150px;
+        }
+        
+        .button-grid {
+            display: flex;
+            gap: var(--md-space-l);
+            flex-wrap: wrap;
+            margin-bottom: var(--md-space-xl);
+        }
+        
+        .mase-button-filled,
+        .mase-button-outlined,
+        .mase-button-text {
+            padding: var(--md-space-m) var(--md-space-xl);
+            border-radius: var(--md-corner-full);
+            font-size: var(--md-label-large);
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .mase-button-filled {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+        
+        .mase-button-outlined {
+            background: transparent;
+            color: var(--md-primary);
+            border: 1px solid var(--md-outline);
+        }
+        
+        .mase-button-text {
+            background: transparent;
+            color: var(--md-primary);
+        }
+        
+        .notification-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+        }
+        
+        .form-test {
+            max-width: 400px;
+        }
+        
+        .form-test input[type="text"] {
+            width: 100%;
+            padding: var(--md-space-m);
+            border: 1px solid var(--md-outline);
+            border-radius: var(--md-corner-xs);
+            margin-bottom: var(--md-space-l);
+            font-size: var(--md-body-large);
+        }
+        
+        .mase-submit-button {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: var(--md-space-m) var(--md-space-xl);
+            border-radius: var(--md-corner-full);
+            border: none;
+            font-size: var(--md-label-large);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        /* Dashicons font */
+        @font-face {
+            font-family: 'dashicons';
+            src: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHBhdGggZD0iTTEwIDJhOCA4IDAgMSAwIDAgMTYgOCA4IDAgMCAwIDAtMTZ6bTAgMTRhNiA2IDAgMSAxIDAtMTIgNiA2IDAgMCAxIDAgMTJ6Ii8+PC9zdmc+');
+        }
+        
+        .dashicons {
+            font-family: 'dashicons';
+            display: inline-block;
+            line-height: 1;
+            font-weight: 400;
+            font-style: normal;
+            speak: never;
+            text-decoration: inherit;
+            text-transform: none;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            vertical-align: top;
+        }
+        
+        .dashicons::before {
+            content: '●';
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-size: var(--md-display-small); margin-bottom: var(--md-space-2xl);">
+        MD3 Micro-interactions Test
+    </h1>
+    
+    <!-- 9.1 Icon Hover Animations -->
+    <div class="test-section">
+        <h2>9.1 Icon Hover Animations</h2>
+        <p>Hover over icons to see scale animation (1.1x, 200ms)</p>
+        
+        <div class="icon-grid">
+            <div class="icon-item">
+                <span class="dashicons mase-icon"></span>
+                <small>Generic Icon</small>
+            </div>
+            <div class="icon-item">
+                <span class="dashicons mase-help-icon"></span>
+                <small>Help Icon</small>
+            </div>
+            <div class="icon-item">
+                <span class="dashicons mase-close-icon"></span>
+                <small>Close Icon</small>
+            </div>
+            <div class="icon-item">
+                <span class="dashicons mase-settings-icon"></span>
+                <small>Settings Icon</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 9.2 Card Lift Effect -->
+    <div class="test-section">
+        <h2>9.2 Card Lift Effect</h2>
+        <p>Hover over cards to see lift effect (translateY -4px, scale 1.02)</p>
+        
+        <div class="card-grid">
+            <div class="mase-template-card">
+                <h3>Card 1</h3>
+                <p>Hover to see lift effect with shadow expansion</p>
+            </div>
+            <div class="mase-template-card">
+                <h3>Card 2</h3>
+                <p>Smooth emphasized easing curve</p>
+            </div>
+            <div class="mase-template-card">
+                <h3>Card 3</h3>
+                <p>Coordinated transform and shadow</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 9.3 Color Transitions -->
+    <div class="test-section">
+        <h2>9.3 Color Transitions</h2>
+        <p>Hover over buttons to see smooth color transitions (200ms)</p>
+        
+        <div class="button-grid">
+            <button class="mase-button-filled">Filled Button</button>
+            <button class="mase-button-outlined">Outlined Button</button>
+            <button class="mase-button-text">Text Button</button>
+        </div>
+    </div>
+    
+    <!-- 9.4 Notification Animations -->
+    <div class="test-section">
+        <h2>9.4 Notification Animations</h2>
+        <p>Click buttons to see notification animations</p>
+        
+        <div class="button-grid">
+            <button class="mase-button-filled" onclick="showSuccessNotification()">
+                Show Success
+            </button>
+            <button class="mase-button-filled" onclick="showErrorNotification()">
+                Show Error
+            </button>
+            <button class="mase-button-filled" onclick="showInfoNotification()">
+                Show Info
+            </button>
+        </div>
+    </div>
+    
+    <!-- 9.5 Form Submission Animation -->
+    <div class="test-section">
+        <h2>9.5 Form Submission Animation</h2>
+        <p>Submit form to see expanding circle success animation</p>
+        
+        <form class="form-test" onsubmit="handleFormSubmit(event)">
+            <input type="text" placeholder="Enter something..." required>
+            <button type="submit" class="mase-submit-button">Submit Form</button>
+        </form>
+    </div>
+    
+    <div class="notification-container"></div>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Micro-interactions JS -->
+    <script src="../../assets/js/mase-micro-interactions.js"></script>
+    
+    <script>
+        function showSuccessNotification() {
+            if (window.MASEMicroInteractions) {
+                window.MASEMicroInteractions.showNotification(
+                    'Success! Your action completed successfully.',
+                    'success',
+                    4000
+                );
+            }
+        }
+        
+        function showErrorNotification() {
+            if (window.MASEMicroInteractions) {
+                window.MASEMicroInteractions.showNotification(
+                    'Error! Something went wrong.',
+                    'error',
+                    4000
+                );
+            }
+        }
+        
+        function showInfoNotification() {
+            if (window.MASEMicroInteractions) {
+                window.MASEMicroInteractions.showNotification(
+                    'Info: This is an informational message.',
+                    'info',
+                    4000
+                );
+            }
+        }
+        
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const $button = jQuery(event.target).find('.mase-submit-button');
+            
+            // Add submitting state
+            $button.addClass('submitting loading');
+            
+            // Simulate AJAX delay
+            setTimeout(function() {
+                // Trigger success animation
+                if (window.MASEMicroInteractions) {
+                    window.MASEMicroInteractions.triggerFormSuccess($button);
+                    window.MASEMicroInteractions.showNotification(
+                        'Form submitted successfully!',
+                        'success',
+                        4000
+                    );
+                }
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

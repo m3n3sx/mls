@@ -1,0 +1,281 @@
+/**
+ * Material Design 3 Snackbar Notification System
+ * 
+ * Implements MD3 snackbar component with:
+ * - Bottom-center positioning
+ * - Elevation-3 shadow
+ * - Inverse surface colors
+ * - Smooth animations
+ * - Success, error, and info variants
+ * 
+ * Requirements: 18.1, 18.2, 18.3, 18.4, 18.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.2.0
+ */
+
+/* ============================================================================
+   Base Snackbar Styles - Requirement 18.1, 18.5
+   ========================================================================= */
+
+.mase-snackbar {
+	position: fixed;
+	bottom: var(--md-space-l, 16px);
+	left: 50%;
+	transform: translateX(-50%) translateY(100px);
+	z-index: 10000;
+	
+	/* Inverse Surface Colors */
+	background: var(--md-inverse-surface, #313033);
+	color: var(--md-inverse-on-surface, #f4eff4);
+	
+	/* Elevation */
+	box-shadow: var(--md-elevation-3);
+	
+	/* Shape */
+	border-radius: var(--md-corner-s, 8px);
+	
+	/* Layout */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--md-space-l, 16px);
+	padding: var(--md-space-l, 16px) var(--md-space-xl, 24px);
+	min-width: 300px;
+	max-width: 500px;
+	
+	/* Initial State */
+	opacity: 0;
+	pointer-events: none;
+	
+	/* Transitions */
+	transition: 
+		transform var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0)),
+		opacity var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+/* Show State */
+.mase-snackbar.show {
+	transform: translateX(-50%) translateY(0);
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* ============================================================================
+   Snackbar Content
+   ========================================================================= */
+
+.mase-snackbar-content {
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-m, 12px);
+	flex: 1;
+}
+
+.mase-snackbar-icon {
+	font-size: 20px;
+	flex-shrink: 0;
+}
+
+.mase-snackbar-message {
+	font-size: var(--md-body-medium, 14px);
+	line-height: var(--md-line-height-normal, 1.5);
+	font-weight: var(--md-weight-regular, 400);
+}
+
+/* ============================================================================
+   Snackbar Actions
+   ========================================================================= */
+
+.mase-snackbar-actions {
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-s, 8px);
+	flex-shrink: 0;
+}
+
+.mase-snackbar-action,
+.mase-snackbar-close {
+	background: transparent;
+	border: none;
+	color: var(--md-inverse-primary, #d0bcff);
+	font-size: var(--md-label-large, 14px);
+	font-weight: var(--md-weight-medium, 500);
+	padding: var(--md-space-s, 8px) var(--md-space-m, 12px);
+	border-radius: var(--md-corner-xs, 4px);
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	transition: background var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+.mase-snackbar-close {
+	padding: var(--md-space-s, 8px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.mase-snackbar-close .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+
+/* State Layers */
+.mase-snackbar-action:hover,
+.mase-snackbar-close:hover {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.mase-snackbar-action:focus,
+.mase-snackbar-close:focus {
+	outline: 2px solid var(--md-inverse-primary, #d0bcff);
+	outline-offset: 2px;
+	background: rgba(255, 255, 255, 0.12);
+}
+
+.mase-snackbar-action:active,
+.mase-snackbar-close:active {
+	background: rgba(255, 255, 255, 0.12);
+}
+
+/* ============================================================================
+   Snackbar Variants - Requirement 18.2
+   ========================================================================= */
+
+/* Success Variant */
+.mase-snackbar.success {
+	background: var(--md-primary-container, #e9ddff);
+	color: var(--md-on-primary-container, #22005d);
+}
+
+.mase-snackbar.success .mase-snackbar-icon {
+	color: var(--md-primary, #6750a4);
+}
+
+.mase-snackbar.success .mase-snackbar-action,
+.mase-snackbar.success .mase-snackbar-close {
+	color: var(--md-primary, #6750a4);
+}
+
+.mase-snackbar.success .mase-snackbar-action:hover,
+.mase-snackbar.success .mase-snackbar-close:hover {
+	background: rgba(103, 80, 164, 0.08);
+}
+
+.mase-snackbar.success .mase-snackbar-action:focus,
+.mase-snackbar.success .mase-snackbar-close:focus {
+	outline-color: var(--md-primary, #6750a4);
+	background: rgba(103, 80, 164, 0.12);
+}
+
+/* Error Variant */
+.mase-snackbar.error {
+	background: var(--md-error-container, #ffdad6);
+	color: var(--md-on-error-container, #410002);
+}
+
+.mase-snackbar.error .mase-snackbar-icon {
+	color: var(--md-error, #ba1a1a);
+}
+
+.mase-snackbar.error .mase-snackbar-action,
+.mase-snackbar.error .mase-snackbar-close {
+	color: var(--md-error, #ba1a1a);
+}
+
+.mase-snackbar.error .mase-snackbar-action:hover,
+.mase-snackbar.error .mase-snackbar-close:hover {
+	background: rgba(186, 26, 26, 0.08);
+}
+
+.mase-snackbar.error .mase-snackbar-action:focus,
+.mase-snackbar.error .mase-snackbar-close:focus {
+	outline-color: var(--md-error, #ba1a1a);
+	background: rgba(186, 26, 26, 0.12);
+}
+
+/* Info Variant */
+.mase-snackbar.info {
+	background: var(--md-tertiary-container, #ffd8e4);
+	color: var(--md-on-tertiary-container, #370b1e);
+}
+
+.mase-snackbar.info .mase-snackbar-icon {
+	color: var(--md-tertiary, #7d5260);
+}
+
+.mase-snackbar.info .mase-snackbar-action,
+.mase-snackbar.info .mase-snackbar-close {
+	color: var(--md-tertiary, #7d5260);
+}
+
+.mase-snackbar.info .mase-snackbar-action:hover,
+.mase-snackbar.info .mase-snackbar-close:hover {
+	background: rgba(125, 82, 96, 0.08);
+}
+
+.mase-snackbar.info .mase-snackbar-action:focus,
+.mase-snackbar.info .mase-snackbar-close:focus {
+	outline-color: var(--md-tertiary, #7d5260);
+	background: rgba(125, 82, 96, 0.12);
+}
+
+/* ============================================================================
+   Responsive Design
+   ========================================================================= */
+
+@media (max-width: 768px) {
+	.mase-snackbar {
+		left: var(--md-space-l, 16px);
+		right: var(--md-space-l, 16px);
+		transform: translateX(0) translateY(100px);
+		min-width: auto;
+		max-width: none;
+	}
+	
+	.mase-snackbar.show {
+		transform: translateX(0) translateY(0);
+	}
+}
+
+/* ============================================================================
+   Reduced Motion Support - Requirement 21.4
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+	.mase-snackbar {
+		transition-duration: 0.01ms;
+	}
+}
+
+/* ============================================================================
+   Dark Mode Support - Requirement 20.1, 20.2
+   ========================================================================= */
+
+:root[data-theme="dark"] .mase-snackbar {
+	background: var(--md-inverse-surface, #e6e1e5);
+	color: var(--md-inverse-on-surface, #313033);
+}
+
+:root[data-theme="dark"] .mase-snackbar-action,
+:root[data-theme="dark"] .mase-snackbar-close {
+	color: var(--md-inverse-primary, #6750a4);
+}
+
+/* Dark mode variants maintain their container colors */
+:root[data-theme="dark"] .mase-snackbar.success {
+	background: var(--md-primary-container, #4f378a);
+	color: var(--md-on-primary-container, #e9ddff);
+}
+
+:root[data-theme="dark"] .mase-snackbar.error {
+	background: var(--md-error-container, #93000a);
+	color: var(--md-on-error-container, #ffdad6);
+}
+
+:root[data-theme="dark"] .mase-snackbar.info {
+	background: var(--md-tertiary-container, #633b48);
+	color: var(--md-on-tertiary-container, #ffd8e4);
+}

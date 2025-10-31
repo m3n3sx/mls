@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Loading States Test</title>
+    
+    <!-- MD3 Foundation CSS -->
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    
+    <!-- MD3 Loading States CSS -->
+    <link rel="stylesheet" href="../../assets/css/mase-md3-loading.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--md-background);
+            color: var(--md-on-background);
+            padding: 40px;
+            margin: 0;
+        }
+        
+        .test-section {
+            margin-bottom: 60px;
+        }
+        
+        .test-section h2 {
+            font-size: var(--md-headline-medium);
+            color: var(--md-primary);
+            margin-bottom: 24px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .test-card {
+            background: var(--md-surface);
+            border-radius: var(--md-corner-l);
+            padding: 24px;
+            box-shadow: var(--md-elevation-1);
+        }
+        
+        .test-card h3 {
+            font-size: var(--md-title-medium);
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: var(--md-on-surface);
+        }
+        
+        .demo-container {
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--md-surface-variant);
+            border-radius: var(--md-corner-s);
+            padding: 24px;
+        }
+        
+        .button-demo {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .mase-button-filled {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            border-radius: var(--md-corner-full);
+            padding: 12px 24px;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border: none;
+            border-radius: var(--md-corner-full);
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+    
+    <h1 style="font-size: var(--md-headline-large); margin-bottom: 40px;">MD3 Loading States Test</h1>
+    
+    <!-- Shimmer Loading Effects -->
+    <div class="test-section">
+        <h2>1. Shimmer Loading Effects</h2>
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Skeleton Text</h3>
+                <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                <div class="mase-loading-shimmer mase-skeleton-text"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Skeleton Heading</h3>
+                <div class="mase-loading-shimmer mase-skeleton-heading"></div>
+                <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                <div class="mase-loading-shimmer mase-skeleton-text"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Skeleton Card</h3>
+                <div class="mase-loading-shimmer mase-skeleton-card"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Skeleton Button</h3>
+                <div class="mase-loading-shimmer mase-skeleton-button"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Skeleton Avatar</h3>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <div class="mase-loading-shimmer mase-skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="mase-loading-shimmer mase-skeleton-text" style="width: 60%; margin-bottom: 8px;"></div>
+                        <div class="mase-loading-shimmer mase-skeleton-text" style="width: 40%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Complete Skeleton</h3>
+                <div class="mase-skeleton-container">
+                    <div class="mase-loading-shimmer mase-skeleton-heading"></div>
+                    <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                    <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                    <div class="mase-loading-shimmer mase-skeleton-text"></div>
+                    <div class="mase-loading-shimmer mase-skeleton-button"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Circular Progress Indicators -->
+    <div class="test-section">
+        <h2>2. Circular Progress Indicators</h2>
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Small Progress</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-circular mase-progress-circular--small"></div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Medium Progress (Default)</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-circular mase-progress-circular--medium"></div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Large Progress</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-circular mase-progress-circular--large"></div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Progress with Label</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-labeled">
+                        <div class="mase-progress-circular"></div>
+                        <div class="mase-progress-label">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Secondary Color</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-circular mase-progress-circular--secondary"></div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Error Color</h3>
+                <div class="demo-container">
+                    <div class="mase-progress-circular mase-progress-circular--error"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Animations -->
+    <div class="test-section">
+        <h2>3. Success Animations</h2>
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Success Checkmark</h3>
+                <div class="demo-container">
+                    <div class="mase-success-checkmark mase-success-animation"></div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Success with Message</h3>
+                <div class="demo-container" style="flex-direction: column;">
+                    <div class="mase-success-checkmark mase-success-animation"></div>
+                    <div class="mase-success-message">
+                        <div class="mase-success-title">Settings Saved!</div>
+                        <div class="mase-success-description">Your changes have been applied successfully.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Expanding Circle Success</h3>
+                <div class="demo-container">
+                    <div class="mase-success-expanding">
+                        <div class="mase-success-checkmark mase-success-animation"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Button Loading States -->
+    <div class="test-section">
+        <h2>4. Button Loading States</h2>
+        <div class="test-card">
+            <h3>Button Loading Demo</h3>
+            <div class="button-demo">
+                <button class="mase-button-filled" onclick="simulateButtonLoading(this)">
+                    Click to Load
+                </button>
+                <button class="mase-button-filled mase-button-loading">
+                    Loading State
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Dots -->
+    <div class="test-section">
+        <h2>5. Loading Dots Animation</h2>
+        <div class="test-card">
+            <h3>Loading Dots</h3>
+            <div class="demo-container">
+                <div class="mase-loading-dots">
+                    <div class="mase-loading-dot"></div>
+                    <div class="mase-loading-dot"></div>
+                    <div class="mase-loading-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="test-section">
+        <h2>6. Loading Overlay</h2>
+        <div class="test-card">
+            <h3>Overlay Demo</h3>
+            <div class="mase-loading-container" style="min-height: 200px; position: relative;">
+                <div class="mase-loading-overlay">
+                    <div class="mase-progress-labeled">
+                        <div class="mase-progress-circular"></div>
+                        <div class="mase-progress-label">Loading content...</div>
+                    </div>
+                </div>
+                <div style="padding: 24px;">
+                    <h4>Content Behind Overlay</h4>
+                    <p>This content is hidden by the loading overlay.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleTheme() {
+            const root = document.documentElement;
+            const currentTheme = root.getAttribute('data-theme');
+            root.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+        }
+        
+        function simulateButtonLoading(button) {
+            button.classList.add('mase-button-loading');
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.classList.remove('mase-button-loading');
+                button.disabled = false;
+            }, 2000);
+        }
+        
+        // Restart animations periodically for demo
+        setInterval(() => {
+            document.querySelectorAll('.mase-success-animation').forEach(el => {
+                el.style.animation = 'none';
+                setTimeout(() => {
+                    el.style.animation = '';
+                }, 10);
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

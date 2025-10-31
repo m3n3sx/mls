@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE - Enhanced Retro Theme Effects Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .test-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .controls {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 2px solid #444;
+            background: #333;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .test-section {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .test-section h3 {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            color: #888;
+        }
+
+        .effect-demo {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .demo-button {
+            padding: 12px 24px;
+            border: 3px solid #ffbe0b;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #ff006e, #8338ec);
+            color: white;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: linear-gradient(135deg, #8338ec, #3a86ff);
+            border-color: #06ffa5;
+            color: #06ffa5;
+            box-shadow: 0 0 40px rgba(6, 255, 165, 0.7);
+            transform: translateY(-4px);
+        }
+
+        .demo-text {
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-indicator.active {
+            background: #4ade80;
+            box-shadow: 0 0 10px #4ade80;
+        }
+
+        .status-indicator.inactive {
+            background: #666;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+    </style>
+    
+    <!-- Load retro theme base CSS -->
+    <link rel="stylesheet" href="../../assets/css/themes/retro-theme.css">
+    
+    <!-- Load retro theme enhanced CSS -->
+    <link rel="stylesheet" href="../../assets/css/themes/retro-theme-enhanced.css">
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🎮 Enhanced Retro Theme Effects Test</h1>
+            <p>Testing VHS distortion, chromatic aberration, scan lines, color bleeding, and film grain effects</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="intensity">Intensity:</label>
+                <select id="intensity">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="vhs-mode">VHS Mode:</label>
+                <button id="vhs-toggle" class="primary">Enable VHS</button>
+            </div>
+
+            <div class="control-group">
+                <label for="performance-mode">Performance Mode:</label>
+                <button id="performance-toggle" class="primary">Disable</button>
+            </div>
+        </div>
+
+        <!-- Test Section 1: VHS Distortion -->
+        <div class="test-section">
+            <h2>12.1 VHS Distortion Effect</h2>
+            <div class="info-box">
+                <strong>Expected:</strong> Horizontal shift animation, color distortion, random glitch timing
+            </div>
+            
+            <div class="effect-demo">
+                <h3 data-text="VHS Tracking Effect">VHS Tracking Effect</h3>
+                <p class="demo-text">
+                    This text should show subtle horizontal shifting and color distortion effects,
+                    simulating authentic VHS tape tracking issues. The effect should be random and
+                    unpredictable, just like real VHS artifacts.
+                </p>
+                <div class="status-indicator inactive" id="vhs-status"></div>
+                <span>VHS Mode: <span id="vhs-status-text">Disabled</span></span>
+            </div>
+        </div>
+
+        <!-- Test Section 2: Chromatic Aberration -->
+        <div class="test-section">
+            <h2>12.2 Chromatic Aberration</h2>
+            <div class="info-box">
+                <strong>Expected:</strong> RGB channel separation on headings, red/cyan offset
+            </div>
+            
+            <div class="effect-demo">
+                <h1 data-text="Chromatic Aberration Test">Chromatic Aberration Test</h1>
+                <h2 data-text="RGB Channel Separation">RGB Channel Separation</h2>
+                <h3 data-text="Hover to See Animation">Hover to See Animation</h3>
+                <p class="demo-text">
+                    Hover over the headings above to see the chromatic aberration effect animate.
+                    You should see red and cyan color channels separated slightly from the main text.
+                </p>
+            </div>
+        </div>
+
+        <!-- Test Section 3: Scan Line Animation -->
+        <div class="test-section">
+            <h2>12.3 Scan Line Animation</h2>
+            <div class="info-box">
+                <strong>Expected:</strong> Horizontal line pattern, vertical movement, CRT flicker
+            </div>
+            
+            <div class="effect-demo">
+                <h3>CRT Monitor Simulation</h3>
+                <p class="demo-text">
+                    The entire page should have subtle horizontal scan lines moving vertically,
+                    simulating a CRT monitor. There should also be a very subtle flicker effect
+                    that mimics the refresh rate of old monitors.
+                </p>
+                <div class="status-indicator active" id="scanline-status"></div>
+                <span>Scan Lines: <span id="scanline-status-text">Active</span></span>
+            </div>
+        </div>
+
+        <!-- Test Section 4: Color Bleeding -->
+        <div class="test-section">
+            <h2>12.4 Color Bleeding Effect</h2>
+            <div class="info-box">
+                <strong>Expected:</strong> Glow on bright elements, color overflow on hover/active
+            </div>
+            
+            <div class="effect-demo">
+                <h3>Interactive Color Bleeding</h3>
+                <p class="demo-text">
+                    Hover over and click the buttons below to see the color bleeding effect.
+                    Bright elements should have a glowing halo that intensifies on interaction.
+                </p>
+                <div class="demo-buttons">
+                    <button class="demo-button">Hover Me</button>
+                    <button class="demo-button">Click Me</button>
+                    <button class="demo-button">Test Button</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Section 5: Film Grain -->
+        <div class="test-section">
+            <h2>12.5 Film Grain Overlay</h2>
+            <div class="info-box">
+                <strong>Expected:</strong> Animated noise pattern, subtle vignette effect
+            </div>
+            
+            <div class="effect-demo">
+                <h3>Film Grain & Vignette</h3>
+                <p class="demo-text">
+                    The entire page should have a subtle animated film grain overlay that moves
+                    randomly, simulating old film stock. There should also be a vignette effect
+                    darkening the edges of the screen for an authentic film look.
+                </p>
+                <div class="status-indicator active" id="grain-status"></div>
+                <span>Film Grain: <span id="grain-status-text">Active</span></span>
+            </div>
+        </div>
+
+        <!-- Combined Effects Demo -->
+        <div class="test-section">
+            <h2>Combined Effects Demo</h2>
+            <div class="info-box">
+                <strong>All effects active:</strong> This section demonstrates all retro effects working together
+            </div>
+            
+            <div class="effect-demo mase-template-retro">
+                <h1 data-text="Retro Gaming Console">Retro Gaming Console</h1>
+                <h2 data-text="Press Start to Continue">Press Start to Continue</h2>
+                <p class="demo-text">
+                    This demo area has all retro effects applied simultaneously. You should see:
+                    VHS distortion, chromatic aberration on headings, scan lines, color bleeding
+                    on buttons, and film grain overlay all working together to create an authentic
+                    80s aesthetic.
+                </p>
+                <div class="demo-buttons">
+                    <button class="demo-button">Start Game</button>
+                    <button class="demo-button">Options</button>
+                    <button class="demo-button">High Scores</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/js/mase-retro-effects.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            let vhsEnabled = false;
+            let performanceMode = false;
+
+            // VHS toggle
+            $('#vhs-toggle').on('click', function() {
+                vhsEnabled = !vhsEnabled;
+                
+                if (vhsEnabled) {
+                    $('body').addClass('mase-template-retro');
+                    $(this).text('Disable VHS');
+                    $('#vhs-status').removeClass('inactive').addClass('active');
+                    $('#vhs-status-text').text('Enabled');
+                    
+                    // Trigger initialization
+                    if (window.MASERetroEffects) {
+                        window.MASERetroEffects.init();
+                    }
+                } else {
+                    $('body').removeClass('mase-template-retro');
+                    $(this).text('Enable VHS');
+                    $('#vhs-status').removeClass('active').addClass('inactive');
+                    $('#vhs-status-text').text('Disabled');
+                    
+                    // Cleanup
+                    if (window.MASERetroEffects) {
+                        window.MASERetroEffects.cleanup();
+                    }
+                }
+            });
+
+            // Intensity control
+            $('#intensity').on('change', function() {
+                const intensity = $(this).val();
+                $('html').attr('data-intensity', intensity);
+                
+                // Trigger intensity change event
+                $(document).trigger('mase:intensity-changed', [intensity]);
+            });
+
+            // Performance mode toggle
+            $('#performance-toggle').on('click', function() {
+                performanceMode = !performanceMode;
+                
+                if (performanceMode) {
+                    $('html').attr('data-performance-mode', 'true');
+                    $(this).text('Enable');
+                    
+                    // Trigger performance mode event
+                    $(document).trigger('mase:performance-mode-changed', [true]);
+                } else {
+                    $('html').attr('data-performance-mode', 'false');
+                    $(this).text('Disable');
+                    
+                    // Trigger performance mode event
+                    $(document).trigger('mase:performance-mode-changed', [false]);
+                }
+            });
+
+            // Initialize with medium intensity
+            $('html').attr('data-intensity', 'medium');
+
+            console.log('Retro theme effects test page loaded');
+        });
+    </script>
+</body>
+</html>

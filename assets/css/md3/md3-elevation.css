@@ -1,0 +1,326 @@
+/**
+ * Material Design 3 Elevation System
+ * 
+ * Implements the MD3 5-level elevation system with:
+ * - Shadow definitions (0dp through 4dp)
+ * - Surface tint overlays
+ * - Dark mode adjustments
+ * - Utility classes
+ * 
+ * @package ModernAdminStyler
+ */
+
+/* ==========================================================================
+   Elevation Shadow Definitions
+   ========================================================================== */
+
+:root {
+    /* Level 0 - No elevation */
+    --md-elevation-0: none;
+    
+    /* Level 1 - Subtle elevation (cards, chips) */
+    --md-elevation-1: 
+        0px 1px 3px 1px rgba(0, 0, 0, 0.15),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+    
+    /* Level 2 - Medium elevation (raised buttons, FABs at rest) */
+    --md-elevation-2: 
+        0px 2px 6px 2px rgba(0, 0, 0, 0.15),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+    
+    /* Level 3 - High elevation (dialogs, menus, FABs on hover) */
+    --md-elevation-3: 
+        0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+        0px 1px 3px 0px rgba(0, 0, 0, 0.30);
+    
+    /* Level 4 - Highest elevation (modal overlays) */
+    --md-elevation-4: 
+        0px 6px 10px 4px rgba(0, 0, 0, 0.15),
+        0px 2px 3px 0px rgba(0, 0, 0, 0.30);
+    
+    /* Surface Tint Opacity by Level (Light Mode) */
+    --md-tint-opacity-0: 0;
+    --md-tint-opacity-1: 0.05;
+    --md-tint-opacity-2: 0.08;
+    --md-tint-opacity-3: 0.11;
+    --md-tint-opacity-4: 0.12;
+}
+
+/* ==========================================================================
+   Dark Mode Elevation Adjustments
+   ========================================================================== */
+
+:root[data-theme="dark"],
+.mase-dark-mode {
+    /* Lighter shadows for visibility on dark backgrounds */
+    --md-elevation-1: 
+        0px 1px 3px 1px rgba(0, 0, 0, 0.30),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.40);
+    
+    --md-elevation-2: 
+        0px 2px 6px 2px rgba(0, 0, 0, 0.30),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.40);
+    
+    --md-elevation-3: 
+        0px 4px 8px 3px rgba(0, 0, 0, 0.30),
+        0px 1px 3px 0px rgba(0, 0, 0, 0.40);
+    
+    --md-elevation-4: 
+        0px 6px 10px 4px rgba(0, 0, 0, 0.30),
+        0px 2px 3px 0px rgba(0, 0, 0, 0.40);
+    
+    /* Increased tint opacity for dark mode */
+    --md-tint-opacity-1: 0.08;
+    --md-tint-opacity-2: 0.11;
+    --md-tint-opacity-3: 0.14;
+    --md-tint-opacity-4: 0.16;
+}
+
+/* ==========================================================================
+   Elevation Utility Classes
+   ========================================================================== */
+
+/* Level 0 - No elevation */
+.md-elevation-0 {
+    box-shadow: var(--md-elevation-0);
+    position: relative;
+}
+
+/* Level 1 - Subtle elevation */
+.md-elevation-1 {
+    box-shadow: var(--md-elevation-1);
+    position: relative;
+}
+
+.md-elevation-1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-1)),
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-1))
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* Level 2 - Medium elevation */
+.md-elevation-2 {
+    box-shadow: var(--md-elevation-2);
+    position: relative;
+}
+
+.md-elevation-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-2)),
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-2))
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* Level 3 - High elevation */
+.md-elevation-3 {
+    box-shadow: var(--md-elevation-3);
+    position: relative;
+}
+
+.md-elevation-3::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-3)),
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-3))
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* Level 4 - Highest elevation */
+.md-elevation-4 {
+    box-shadow: var(--md-elevation-4);
+    position: relative;
+}
+
+.md-elevation-4::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-4)),
+        rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-4))
+    );
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* ==========================================================================
+   Surface Tint Only (No Shadow)
+   ========================================================================== */
+
+.md-tint-1 {
+    position: relative;
+}
+
+.md-tint-1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-1));
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+.md-tint-2 {
+    position: relative;
+}
+
+.md-tint-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-2));
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+.md-tint-3 {
+    position: relative;
+}
+
+.md-tint-3::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-3));
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+.md-tint-4 {
+    position: relative;
+}
+
+.md-tint-4::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(var(--md-surface-tint-rgb), var(--md-tint-opacity-4));
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 0;
+}
+
+/* ==========================================================================
+   Elevation Transitions
+   ========================================================================== */
+
+/* Smooth elevation transitions for interactive elements */
+.md-elevation-transition {
+    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.md-elevation-transition::before {
+    transition: opacity 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Content Positioning for Elevated Elements
+   ========================================================================== */
+
+/* Ensure content appears above tint overlay */
+.md-elevation-1 > *,
+.md-elevation-2 > *,
+.md-elevation-3 > *,
+.md-elevation-4 > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Elevation Hover States
+   ========================================================================== */
+
+/* Elevate on hover (for cards, buttons) */
+.md-elevation-hover-1:hover {
+    box-shadow: var(--md-elevation-1);
+}
+
+.md-elevation-hover-2:hover {
+    box-shadow: var(--md-elevation-2);
+}
+
+.md-elevation-hover-3:hover {
+    box-shadow: var(--md-elevation-3);
+}
+
+.md-elevation-hover-4:hover {
+    box-shadow: var(--md-elevation-4);
+}
+
+/* ==========================================================================
+   Scrim Overlay (for modals and dialogs)
+   ========================================================================== */
+
+.md-scrim {
+    background: rgba(0, 0, 0, 0.32);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+}
+
+:root[data-theme="dark"] .md-scrim,
+.mase-dark-mode .md-scrim {
+    background: rgba(0, 0, 0, 0.54);
+}
+
+/* ==========================================================================
+   Performance Optimization
+   ========================================================================== */
+
+/* GPU acceleration for elevated elements */
+.md-elevation-1,
+.md-elevation-2,
+.md-elevation-3,
+.md-elevation-4 {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}

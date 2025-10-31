@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Dark Mode Comprehensive Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
+
+        select, button {
+            padding: 10px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        select {
+            background: white;
+            min-width: 200px;
+        }
+
+        button {
+            background: #2271b1;
+            color: white;
+            border-color: #2271b1;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #135e96;
+            border-color: #135e96;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .test-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-pass {
+            background: #46b450;
+        }
+
+        .status-fail {
+            background: #dc3232;
+        }
+
+        .status-pending {
+            background: #ffb900;
+        }
+
+        .test-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .test-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .test-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-card.total {
+            background: #e7f3ff;
+            border: 2px solid #2271b1;
+        }
+
+        .summary-card.passed {
+            background: #d4edda;
+            border: 2px solid #46b450;
+        }
+
+        .summary-card.failed {
+            background: #f8d7da;
+            border: 2px solid #dc3232;
+        }
+
+        .summary-card.pending {
+            background: #fff3cd;
+            border: 2px solid #ffb900;
+        }
+
+        .summary-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .instructions {
+            background: #e7f3ff;
+            border-left: 4px solid #2271b1;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            color: #2271b1;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: #444;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌙 MASE Dark Mode Comprehensive Test</h1>
+        <p class="subtitle">Visual verification of all components in dark mode across all template themes</p>
+
+        <div class="instructions">
+            <h2>📋 Testing Instructions</h2>
+            <ol>
+                <li>Select a template theme from the dropdown</li>
+                <li>Toggle dark mode ON using the button</li>
+                <li>Verify each component in the checklist below</li>
+                <li>Mark items as Pass/Fail based on visual inspection</li>
+                <li>Check contrast ratios using browser DevTools</li>
+                <li>Test glassmorphism effects (Glass theme only)</li>
+                <li>Repeat for all template themes</li>
+            </ol>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="themeSelect">Template Theme:</label>
+                <select id="themeSelect">
+                    <option value="glass">Glass Theme</option>
+                    <option value="gradient">Gradient Theme</option>
+                    <option value="minimal">Minimal Theme</option>
+                    <option value="professional">Professional Theme</option>
+                    <option value="terminal">Terminal Theme</option>
+                    <option value="retro">Retro Theme</option>
+                    <option value="gaming">Gaming Theme</option>
+                    <option value="floral">Floral Theme</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button id="toggleDarkMode">🌙 Toggle Dark Mode</button>
+                <button id="runAllTests">▶️ Run All Tests</button>
+                <button id="resetTests">🔄 Reset Tests</button>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card total">
+                <div class="summary-number" id="totalTests">0</div>
+                <div class="summary-label">Total Tests</div>
+            </div>
+            <div class="summary-card passed">
+                <div class="summary-number" id="passedTests">0</div>
+                <div class="summary-label">Passed</div>
+            </div>
+            <div class="summary-card failed">
+                <div class="summary-number" id="failedTests">0</div>
+                <div class="summary-label">Failed</div>
+            </div>
+            <div class="summary-card pending">
+                <div class="summary-number" id="pendingTests">0</div>
+                <div class="summary-label">Pending</div>
+            </div>
+        </div>
+
+        <div class="test-grid">
+            <!-- Template Themes Card -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-themes"></span>
+                    Template Themes
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Glass theme dark mode</span>
+                        <span class="result-badge badge-pending" data-test="glass-dark">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Gradient theme dark mode</span>
+                        <span class="result-badge badge-pending" data-test="gradient-dark">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Minimal theme dark mode</span>
+                        <span class="result-badge badge-pending" data-test="minimal-dark">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Other themes dark mode</span>
+                        <span class="result-badge badge-pending" data-test="other-dark">Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Components -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-cards"></span>
+                    Card Components
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Template cards visibility</span>
+                        <span class="result-badge badge-pending" data-test="template-cards">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Palette cards visibility</span>
+                        <span class="result-badge badge-pending" data-test="palette-cards">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Card shadows visible</span>
+                        <span class="result-badge badge-pending" data-test="card-shadows">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Card borders visible</span>
+                        <span class="result-badge badge-pending" data-test="card-borders">Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Controls -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-forms"></span>
+                    Form Controls
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Input fields readable</span>
+                        <span class="result-badge badge-pending" data-test="input-fields">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Select dropdowns readable</span>
+                        <span class="result-badge badge-pending" data-test="select-dropdowns">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Checkboxes/radios visible</span>
+                        <span class="result-badge badge-pending" data-test="checkboxes">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Focus states visible</span>
+                        <span class="result-badge badge-pending" data-test="focus-states">Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Glassmorphism Effects -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-glass"></span>
+                    Glassmorphism Effects
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Backdrop-filter works</span>
+                        <span class="result-badge badge-pending" data-test="backdrop-filter">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Glass borders visible</span>
+                        <span class="result-badge badge-pending" data-test="glass-borders">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Glass shadows visible</span>
+                        <span class="result-badge badge-pending" data-test="glass-shadows">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Fallback works</span>
+                        <span class="result-badge badge-pending" data-test="glass-fallback">Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contrast Ratios -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-contrast"></span>
+                    Contrast Ratios (WCAG AA)
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Body text ≥ 4.5:1</span>
+                        <span class="result-badge badge-pending" data-test="body-contrast">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Headings ≥ 4.5:1</span>
+                        <span class="result-badge badge-pending" data-test="heading-contrast">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Links ≥ 4.5:1</span>
+                        <span class="result-badge badge-pending" data-test="link-contrast">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Buttons ≥ 3:1</span>
+                        <span class="result-badge badge-pending" data-test="button-contrast">Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shadow Visibility -->
+            <div class="test-card">
+                <h3>
+                    <span class="status-indicator status-pending" id="status-shadows"></span>
+                    Shadow Visibility
+                </h3>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Card shadows visible</span>
+                        <span class="result-badge badge-pending" data-test="shadow-cards">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Button shadows visible</span>
+                        <span class="result-badge badge-pending" data-test="shadow-buttons">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Hover shadows visible</span>
+                        <span class="result-badge badge-pending" data-test="shadow-hover">Pending</span>
+                    </div>
+                </div>
+                <div class="test-item">
+                    <div class="test-result">
+                        <span>Shadow depth perception</span>
+                        <span class="result-badge badge-pending" data-test="shadow-depth">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <h2 style="margin-bottom: 15px; color: #333;">Visual Preview</h2>
+            <p style="color: #666; margin-bottom: 15px;">Click on test items to mark them as Pass/Fail. Use browser DevTools to verify contrast ratios.</p>
+        </div>
+    </div>
+
+    <script>
+        // Test state management
+        const testState = {};
+        let isDarkMode = false;
+
+        // Initialize test state
+        document.querySelectorAll('[data-test]').forEach(badge => {
+            const testId = badge.getAttribute('data-test');
+            testState[testId] = 'pending';
+        });
+
+        // Update summary counts
+        function updateSummary() {
+            const total = Object.keys(testState).length;
+            const passed = Object.values(testState).filter(s => s === 'pass').length;
+            const failed = Object.values(testState).filter(s => s === 'fail').length;
+            const pending = Object.values(testState).filter(s => s === 'pending').length;
+
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('pendingTests').textContent = pending;
+
+            // Update category status indicators
+            updateCategoryStatus();
+        }
+
+        // Update category status indicators
+        function updateCategoryStatus() {
+            const categories = {
+                'themes': ['glass-dark', 'gradient-dark', 'minimal-dark', 'other-dark'],
+                'cards': ['template-cards', 'palette-cards', 'card-shadows', 'card-borders'],
+                'forms': ['input-fields', 'select-dropdowns', 'checkboxes', 'focus-states'],
+                'glass': ['backdrop-filter', 'glass-borders', 'glass-shadows', 'glass-fallback'],
+                'contrast': ['body-contrast', 'heading-contrast', 'link-contrast', 'button-contrast'],
+                'shadows': ['shadow-cards', 'shadow-buttons', 'shadow-hover', 'shadow-depth']
+            };
+
+            Object.keys(categories).forEach(category => {
+                const tests = categories[category];
+                const statuses = tests.map(t => testState[t]);
+                const indicator = document.getElementById(`status-${category}`);
+
+                if (statuses.every(s => s === 'pass')) {
+                    indicator.className = 'status-indicator status-pass';
+                } else if (statuses.some(s => s === 'fail')) {
+                    indicator.className = 'status-indicator status-fail';
+                } else {
+                    indicator.className = 'status-indicator status-pending';
+                }
+            });
+        }
+
+        // Toggle test status on click
+        document.querySelectorAll('[data-test]').forEach(badge => {
+            badge.addEventListener('click', function() {
+                const testId = this.getAttribute('data-test');
+                const currentStatus = testState[testId];
+
+                // Cycle through: pending -> pass -> fail -> pending
+                if (currentStatus === 'pending') {
+                    testState[testId] = 'pass';
+                    this.className = 'result-badge badge-pass';
+                    this.textContent = 'Pass ✓';
+                } else if (currentStatus === 'pass') {
+                    testState[testId] = 'fail';
+                    this.className = 'result-badge badge-fail';
+                    this.textContent = 'Fail ✗';
+                } else {
+                    testState[testId] = 'pending';
+                    this.className = 'result-badge badge-pending';
+                    this.textContent = 'Pending';
+                }
+
+                updateSummary();
+            });
+        });
+
+        // Dark mode toggle
+        document.getElementById('toggleDarkMode').addEventListener('click', function() {
+            isDarkMode = !isDarkMode;
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            this.textContent = isDarkMode ? '☀️ Toggle Light Mode' : '🌙 Toggle Dark Mode';
+            
+            // Update container styling for dark mode
+            const container = document.querySelector('.test-container');
+            if (isDarkMode) {
+                container.style.background = '#1a1a1a';
+                container.style.color = '#e0e0e0';
+                document.body.style.background = '#0a0a0a';
+            } else {
+                container.style.background = 'white';
+                container.style.color = '#333';
+                document.body.style.background = '#f5f5f5';
+            }
+        });
+
+        // Run all tests (auto-pass for demonstration)
+        document.getElementById('runAllTests').addEventListener('click', function() {
+            if (confirm('This will mark all tests as PASS. Are you sure? (You should manually verify each test first)')) {
+                Object.keys(testState).forEach(testId => {
+                    testState[testId] = 'pass';
+                    const badge = document.querySelector(`[data-test="${testId}"]`);
+                    badge.className = 'result-badge badge-pass';
+                    badge.textContent = 'Pass ✓';
+                });
+                updateSummary();
+            }
+        });
+
+        // Reset all tests
+        document.getElementById('resetTests').addEventListener('click', function() {
+            if (confirm('This will reset all test results. Are you sure?')) {
+                Object.keys(testState).forEach(testId => {
+                    testState[testId] = 'pending';
+                    const badge = document.querySelector(`[data-test="${testId}"]`);
+                    badge.className = 'result-badge badge-pending';
+                    badge.textContent = 'Pending';
+                });
+                updateSummary();
+            }
+        });
+
+        // Theme selector
+        document.getElementById('themeSelect').addEventListener('change', function() {
+            const theme = this.value;
+            console.log(`Switched to ${theme} theme - verify in actual WordPress admin`);
+            alert(`Theme switched to: ${theme}\n\nPlease verify this theme in the actual WordPress admin interface with dark mode enabled.`);
+        });
+
+        // Initialize summary
+        updateSummary();
+
+        // Add helpful console messages
+        console.log('%c🌙 MASE Dark Mode Test Suite', 'font-size: 20px; font-weight: bold; color: #2271b1;');
+        console.log('%cInstructions:', 'font-weight: bold;');
+        console.log('1. Toggle dark mode using the button');
+        console.log('2. Click on test items to mark as Pass/Fail');
+        console.log('3. Use DevTools to check contrast ratios');
+        console.log('4. Test all template themes');
+        console.log('\n%cContrast Ratio Checking:', 'font-weight: bold;');
+        console.log('- Right-click element → Inspect');
+        console.log('- Check Computed styles');
+        console.log('- Use Lighthouse accessibility audit');
+        console.log('- Or use browser extensions like "WCAG Color Contrast Checker"');
+    </script>
+</body>
+</html>

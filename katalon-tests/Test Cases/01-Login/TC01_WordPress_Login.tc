@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TestCaseEntity>
-   <description>Test logowania do panelu WordPress</description>
-   <name>TC01_WordPress_Login</name>
-   <tag>login, smoke</tag>
-   <comment>Weryfikuje poprawne logowanie do panelu administracyjnego WordPress</comment>
-   <testCaseGuid>tc-login-001</testCaseGuid>
-</TestCaseEntity>

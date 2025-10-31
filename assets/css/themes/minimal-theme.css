@@ -1,96 +1,450 @@
-/**
- * Minimalist Modern Theme
- * Clean design with focus on typography
- */
-
 .mase-template-minimal {
-    background: #ffffff;
-    color: #333333;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
+ background: #fff;
+ color: #333;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+ font-family: 'Inter', system-ui, -apple-system, sans-serif}
 
-/* Admin Bar Minimal Style */
 .mase-template-minimal #wpadminbar {
-    background: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
+ background: #fff;
+ border-bottom: 1px solid #e0e0e0;
+ box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05)}
 
 .mase-template-minimal #wpadminbar .ab-item,
 .mase-template-minimal #wpadminbar a.ab-item {
-    color: #333333;
-    font-weight: 500;
-}
+ color: #333;
+ font-weight: 500;
+ font-size: 14px;
+ padding: 8px 16px;
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-minimal #wpadminbar .ab-item:hover {
-    background: #f5f5f5;
-    color: #0066cc;
-}
+ background: #f5f5f5;
+ color: #06c;
+ transform: translateY(-1px)}
 
-/* Admin Menu Minimal Style */
+.mase-template-minimal #wpadminbar .ab-item:focus {
+ outline: 2px solid #06c;
+ outline-offset: 2px;
+ box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)}
+
 .mase-template-minimal #adminmenu {
-    background: #fafafa;
-    border-right: 1px solid #e0e0e0;
-}
+ background: #fafafa;
+ border-right: 1px solid #e0e0e0}
 
 .mase-template-minimal #adminmenu .wp-submenu {
-    background: #ffffff;
-}
+ background: #fff;
+ padding: 8px 0}
 
 .mase-template-minimal #adminmenu a {
-    color: #555555;
-    transition: all 0.2s ease;
-}
+ color: #555;
+ font-size: 14px;
+ font-weight: 400;
+ padding: 12px 16px;
+ margin: 4px 8px;
+ border-radius: 8px;
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-minimal #adminmenu a:hover,
 .mase-template-minimal #adminmenu li.menu-top:hover {
-    background: #f0f0f0;
-    color: #0066cc;
-}
+ background: #f0f0f0;
+ color: #06c;
+ transform: translateX(4px)}
+
+.mase-template-minimal #adminmenu a:focus {
+ outline: 2px solid #06c;
+ outline-offset: 2px;
+ box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)}
 
 .mase-template-minimal #adminmenu li.current a.menu-top {
-    background: #ffffff;
-    color: #0066cc;
-    border-left: 3px solid #0066cc;
-    font-weight: 600;
-}
+ background: #fff;
+ color: #06c;
+ border-left: 3px solid #06c;
+ font-weight: 600}
 
-/* Content Area */
 .mase-template-minimal .wrap {
-    background: #ffffff;
-    padding: 30px;
-}
+ background: #fff;
+ padding: 32px;
+ margin: 24px}
 
-.mase-template-minimal h1,
+.mase-template-minimal h1 {
+ color: #222;
+ font-size: 30px;
+ font-weight: 700;
+ line-height: 1.25;
+ letter-spacing: -0.02em;
+ margin-bottom: 24px}
+
 .mase-template-minimal h2 {
-    color: #222222;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-}
+ color: #222;
+ font-size: 24px;
+ font-weight: 600;
+ line-height: 1.3;
+ letter-spacing: -0.015em;
+ margin-bottom: 20px;
+ margin-top: 32px}
 
-/* Clean Buttons */
+.mase-template-minimal h3 {
+ color: #333;
+ font-size: 20px;
+ font-weight: 600;
+ line-height: 1.4;
+ letter-spacing: -0.01em;
+ margin-bottom: 16px;
+ margin-top: 24px}
+
+.mase-template-minimal h4 {
+ color: #333;
+ font-size: 18px;
+ font-weight: 600;
+ line-height: 1.4;
+ margin-bottom: 12px;
+ margin-top: 20px}
+
+.mase-template-minimal h5,
+.mase-template-minimal h6 {
+ color: #444;
+ font-size: 16px;
+ font-weight: 600;
+ line-height: 1.5;
+ margin-bottom: 12px;
+ margin-top: 16px}
+
+.mase-template-minimal p {
+ font-size: 14px;
+ font-weight: 400;
+ line-height: 1.6;
+ margin-bottom: 16px;
+ color: #555}
+
+.mase-template-minimal .description,
+.mase-template-minimal .help-text {
+ font-size: 13px;
+ font-weight: 400;
+ line-height: 1.5;
+ color: #777;
+ margin-top: 8px}
+
+.mase-template-minimal a {
+ color: #06c;
+ text-decoration: none;
+ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+ border-bottom: 1px solid transparent}
+
+.mase-template-minimal a:hover {
+ color: #0052a3;
+ border-bottom-color: #0052a3}
+
+.mase-template-minimal a:focus {
+ outline: 2px solid #06c;
+ outline-offset: 2px;
+ border-radius: 2px}
+
 .mase-template-minimal .button,
 .mase-template-minimal .button-primary {
-    background: #0066cc;
-    border: 1px solid #0066cc;
-    border-radius: 6px;
-    color: #ffffff;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
+ background: #06c;
+ border: 1px solid #06c;
+ border-radius: 8px;
+ color: #fff;
+ font-weight: 500;
+ font-size: 14px;
+ padding: 10px 24px;
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)}
 
 .mase-template-minimal .button:hover,
 .mase-template-minimal .button-primary:hover {
-    background: #0052a3;
-    border-color: #0052a3;
-    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.2);
-}
+ background: #0052a3;
+ border-color: #0052a3;
+ box-shadow: 0 4px 12px rgba(0, 102, 204, 0.25);
+ transform: translateY(-2px)}
+
+.mase-template-minimal .button:active,
+.mase-template-minimal .button-primary:active {
+ transform: translateY(0);
+ box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)}
 
 .mase-template-minimal .button:focus,
 .mase-template-minimal .button-primary:focus {
-    outline: 2px solid #0066cc;
-    outline-offset: 2px;
+ outline: 2px solid #06c;
+ outline-offset: 2px;
+ box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)}
+
+.mase-template-minimal .button:disabled,
+.mase-template-minimal .button-primary:disabled {
+ opacity: 0.5;
+ cursor: not-allowed;
+ transform: none}
+
+.mase-template-minimal .button-secondary {
+ background: #fff;
+ border: 1px solid #e0e0e0;
+ color: #555;
+ font-weight: 500;
+ font-size: 14px;
+ padding: 10px 24px;
+ border-radius: 8px;
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05)}
+
+.mase-template-minimal .button-secondary:hover {
+ background: #f5f5f5;
+ border-color: #06c;
+ color: #06c;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+ transform: translateY(-2px)}
+
+.mase-template-minimal .button-secondary:focus {
+ outline: 2px solid #06c;
+ outline-offset: 2px;
+ box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)}
+
+.mase-template-minimal input[type="text"],
+.mase-template-minimal input[type="email"],
+.mase-template-minimal input[type="password"],
+.mase-template-minimal input[type="number"],
+.mase-template-minimal textarea,
+.mase-template-minimal select {
+ background: #fff;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ padding: 10px 16px;
+ font-size: 14px;
+ line-height: 1.5;
+ color: #333;
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)}
+
+.mase-template-minimal input[type="text"]:hover,
+.mase-template-minimal input[type="email"]:hover,
+.mase-template-minimal input[type="password"]:hover,
+.mase-template-minimal input[type="number"]:hover,
+.mase-template-minimal textarea:hover,
+.mase-template-minimal select:hover {
+ border-color: #ccc}
+
+.mase-template-minimal input[type="text"]:focus,
+.mase-template-minimal input[type="email"]:focus,
+.mase-template-minimal input[type="password"]:focus,
+.mase-template-minimal input[type="number"]:focus,
+.mase-template-minimal textarea:focus,
+.mase-template-minimal select:focus {
+ outline: none;
+ border-color: #06c;
+ box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1)}
+
+.mase-template-minimal table {
+ border-collapse: separate;
+ border-spacing: 0;
+ margin: 24px 0}
+
+.mase-template-minimal table th {
+ background: #fafafa;
+ border-bottom: 2px solid #e0e0e0;
+ padding: 16px;
+ font-weight: 600;
+ font-size: 14px;
+ text-align: left;
+ color: #333}
+
+.mase-template-minimal table td {
+ padding: 16px;
+ border-bottom: 1px solid #f0f0f0;
+ font-size: 14px;
+ color: #555}
+
+.mase-template-minimal table tr:hover td {
+ background: #fafafa}
+
+.mase-template-minimal .postbox,
+.mase-template-minimal .card {
+ background: #fff;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ padding: 24px;
+ margin-bottom: 24px;
+ box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+ transition: box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1)}
+
+.mase-template-minimal .postbox:hover,
+.mase-template-minimal .card:hover {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)}
+
+.mase-template-minimal ul,
+.mase-template-minimal ol {
+ margin: 16px 0;
+ padding-left: 24px}
+
+.mase-template-minimal li {
+ margin-bottom: 8px;
+ line-height: 1.6;
+ font-size: 14px;
+ color: #555}
+
+.mase-template-minimal .notice {
+ padding: 16px 20px;
+ margin: 16px 0;
+ border-left: 4px solid #06c;
+ border-radius: 4px}
+
+.mase-template-minimal .mt-4 { margin-top: 4px}
+.mase-template-minimal .mt-8 { margin-top: 8px}
+.mase-template-minimal .mt-16 { margin-top: 16px}
+.mase-template-minimal .mt-24 { margin-top: 24px}
+.mase-template-minimal .mt-32 { margin-top: 32px}
+.mase-template-minimal .mt-48 { margin-top: 48px}
+
+.mase-template-minimal .mb-4 { margin-bottom: 4px}
+.mase-template-minimal .mb-8 { margin-bottom: 8px}
+.mase-template-minimal .mb-16 { margin-bottom: 16px}
+.mase-template-minimal .mb-24 { margin-bottom: 24px}
+.mase-template-minimal .mb-32 { margin-bottom: 32px}
+.mase-template-minimal .mb-48 { margin-bottom: 48px}
+
+.mase-template-minimal .p-16 { padding: 16px}
+.mase-template-minimal .p-24 { padding: 24px}
+.mase-template-minimal .p-32 { padding: 32px}
+
+:root[data-theme="dark"] .mase-template-minimal {
+ background: #1a1a1a;
+ color: #e0e0e0;
+ border-color: #333}
+
+:root[data-theme="dark"] .mase-template-minimal #wpadminbar {
+ background: #1a1a1a;
+ border-bottom-color: #333}
+
+:root[data-theme="dark"] .mase-template-minimal #wpadminbar .ab-item,
+:root[data-theme="dark"] .mase-template-minimal #wpadminbar a.ab-item {
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-minimal #wpadminbar .ab-item:hover {
+ background: #2a2a2a;
+ color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal #adminmenu {
+ background: #1a1a1a;
+ border-right-color: #333}
+
+:root[data-theme="dark"] .mase-template-minimal #adminmenu .wp-submenu {
+ background: #222}
+
+:root[data-theme="dark"] .mase-template-minimal #adminmenu a {
+ color: #ccc}
+
+:root[data-theme="dark"] .mase-template-minimal #adminmenu a:hover,
+:root[data-theme="dark"] .mase-template-minimal #adminmenu li.menu-top:hover {
+ background: #2a2a2a;
+ color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal #adminmenu li.current a.menu-top {
+ background: #222;
+ color: #4d9fff;
+ border-left-color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal .wrap {
+ background: #1a1a1a}
+
+:root[data-theme="dark"] .mase-template-minimal h1,
+:root[data-theme="dark"] .mase-template-minimal h2,
+:root[data-theme="dark"] .mase-template-minimal h3 {
+ color: #f0f0f0}
+
+:root[data-theme="dark"] .mase-template-minimal h4,
+:root[data-theme="dark"] .mase-template-minimal h5,
+:root[data-theme="dark"] .mase-template-minimal h6 {
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-minimal p {
+ color: #ccc}
+
+:root[data-theme="dark"] .mase-template-minimal .description,
+:root[data-theme="dark"] .mase-template-minimal .help-text {
+ color: #999}
+
+:root[data-theme="dark"] .mase-template-minimal a {
+ color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal a:hover {
+ color: #6bb0ff;
+ border-bottom-color: #6bb0ff}
+
+:root[data-theme="dark"] .mase-template-minimal .button,
+:root[data-theme="dark"] .mase-template-minimal .button-primary {
+ background: #4d9fff;
+ border-color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal .button:hover,
+:root[data-theme="dark"] .mase-template-minimal .button-primary:hover {
+ background: #6bb0ff;
+ border-color: #6bb0ff;
+ box-shadow: 0 4px 12px rgba(77, 159, 255, 0.3)}
+
+:root[data-theme="dark"] .mase-template-minimal .button-secondary {
+ background: #2a2a2a;
+ border-color: #444;
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-minimal .button-secondary:hover {
+ background: #333;
+ border-color: #4d9fff;
+ color: #4d9fff}
+
+:root[data-theme="dark"] .mase-template-minimal input[type="text"],
+:root[data-theme="dark"] .mase-template-minimal input[type="email"],
+:root[data-theme="dark"] .mase-template-minimal input[type="password"],
+:root[data-theme="dark"] .mase-template-minimal input[type="number"],
+:root[data-theme="dark"] .mase-template-minimal textarea,
+:root[data-theme="dark"] .mase-template-minimal select {
+ background: #222;
+ border-color: #444;
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-minimal input[type="text"]:hover,
+:root[data-theme="dark"] .mase-template-minimal input[type="email"]:hover,
+:root[data-theme="dark"] .mase-template-minimal input[type="password"]:hover,
+:root[data-theme="dark"] .mase-template-minimal input[type="number"]:hover,
+:root[data-theme="dark"] .mase-template-minimal textarea:hover,
+:root[data-theme="dark"] .mase-template-minimal select:hover {
+ border-color: #555}
+
+:root[data-theme="dark"] .mase-template-minimal input[type="text"]:focus,
+:root[data-theme="dark"] .mase-template-minimal input[type="email"]:focus,
+:root[data-theme="dark"] .mase-template-minimal input[type="password"]:focus,
+:root[data-theme="dark"] .mase-template-minimal input[type="number"]:focus,
+:root[data-theme="dark"] .mase-template-minimal textarea:focus,
+:root[data-theme="dark"] .mase-template-minimal select:focus {
+ border-color: #4d9fff;
+ box-shadow: 0 0 0 3px rgba(77, 159, 255, 0.2)}
+
+:root[data-theme="dark"] .mase-template-minimal table th {
+ background: #222;
+ border-bottom-color: #444;
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-minimal table td {
+ border-bottom-color: #2a2a2a;
+ color: #ccc}
+
+:root[data-theme="dark"] .mase-template-minimal table tr:hover td {
+ background: #222}
+
+:root[data-theme="dark"] .mase-template-minimal .postbox,
+:root[data-theme="dark"] .mase-template-minimal .card {
+ background: #222;
+ border-color: #333}
+
+:root[data-theme="dark"] .mase-template-minimal li {
+ color: #ccc}
+
+:root[data-theme="dark"] .mase-template-minimal .notice {
+ border-left-color: #4d9fff;
+ background: #222}
+
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-minimal * {
+ animation-duration: 0.01ms !important;
+ animation-iteration-count: 1 !important;
+ transition-duration: 0.01ms !important}
 }

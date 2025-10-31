@@ -1,0 +1,274 @@
+body.mase-active #adminmenuwrap {
+ position: fixed !important;
+ top: 32px !important;
+ left: 0 !important;
+ width: 160px !important;
+ height: calc(100vh - 32px) !important;
+ z-index: 99999 !important;
+ overflow: hidden !important;
+
+ background: unset !important;
+ backdrop-filter: unset !important;
+ box-shadow: unset !important;
+ border: unset !important}
+
+body.mase-active.folded #adminmenuwrap {
+ width: 36px !important}
+
+body.mase-active:not(.folded) #adminmenuwrap {
+ width: 160px !important}
+
+body.mase-active #adminmenuback {
+
+ height: 100% !important;
+ width: 100% !important;
+
+ background: var(--mase-menu-bg, linear-gradient(180deg, #23282d 0%, #1d2327 100%)) !important;
+ backdrop-filter: var(--mase-menu-glassmorphism, none) !important;
+ border-right: var(--mase-menu-border, 1px solid rgba(255, 255, 255, 0.1)) !important;
+ box-shadow: var(--mase-menu-shadow, 2px 0 10px rgba(0, 0, 0, 0.1)) !important;
+
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.8);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1);
+
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important}
+
+body.mase-active #adminmenu {
+ padding: 0 !important;
+ margin: 0 !important;
+ list-style: none !important;
+
+ background: unset !important}
+
+body.mase-template-modern #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+ --mase-menu-glassmorphism: blur(20px) saturate(180%);
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.2);
+ --mase-menu-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.9);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1)}
+
+body.mase-template-dark #adminmenuback {
+ --mase-menu-bg: #1a1a1a;
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid #333;
+ --mase-menu-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+ --mase-menu-text: #e0e0e0;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.7);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.3);
+ --mase-submenu-text: rgba(255, 255, 255, 0.8);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1)}
+
+body.mase-template-light #adminmenuback {
+ --mase-menu-bg: #fff;
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid #e2e8f0;
+ --mase-menu-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+ --mase-menu-text: #2d3748;
+ --mase-menu-text-hover: #1a202c;
+ --mase-menu-icon: rgba(45, 55, 72, 0.7);
+ --mase-menu-icon-hover: #1a202c;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.03);
+ --mase-submenu-text: rgba(45, 55, 72, 0.9);
+ --mase-submenu-text-hover: #1a202c;
+ --mase-submenu-hover-bg: rgba(0, 0, 0, 0.05)}
+
+body.mase-template-glass #adminmenuback {
+ --mase-menu-bg: rgba(255, 255, 255, 0.1);
+ --mase-menu-glassmorphism: blur(20px) saturate(180%);
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.2);
+ --mase-menu-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.9);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.15)}
+
+body.mase-template-gradient #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.3);
+ --mase-menu-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.9);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1)}
+
+body.mase-template-minimal #adminmenuback {
+ --mase-menu-bg: #fafafa;
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid #e0e0e0;
+ --mase-menu-shadow: none;
+ --mase-menu-text: #424242;
+ --mase-menu-text-hover: #212121;
+ --mase-menu-icon: rgba(66, 66, 66, 0.7);
+ --mase-menu-icon-hover: #212121;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.03);
+ --mase-submenu-text: rgba(66, 66, 66, 0.9);
+ --mase-submenu-text-hover: #212121;
+ --mase-submenu-hover-bg: rgba(0, 0, 0, 0.05)}
+
+body.mase-template-professional #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.15);
+ --mase-menu-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.9);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1)}
+
+body.mase-template-terminal #adminmenuback {
+ --mase-menu-bg: #0d1117;
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid #30363d;
+ --mase-menu-shadow: 2px 0 10px rgba(0, 255, 0, 0.1);
+ --mase-menu-text: #58a6ff;
+ --mase-menu-text-hover: #79c0ff;
+ --mase-menu-icon: rgba(88, 166, 255, 0.8);
+ --mase-menu-icon-hover: #79c0ff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.3);
+ --mase-submenu-text: rgba(88, 166, 255, 0.9);
+ --mase-submenu-text-hover: #79c0ff;
+ --mase-submenu-hover-bg: rgba(88, 166, 255, 0.1)}
+
+body.mase-template-retro #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #ff6b6b 0%, #feca57 100%);
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.3);
+ --mase-menu-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+ --mase-menu-text: #fff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(255, 255, 255, 0.9);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.2);
+ --mase-submenu-text: rgba(255, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.1)}
+
+body.mase-template-gaming #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid #0ff;
+ --mase-menu-shadow: 2px 0 20px rgba(0, 255, 255, 0.3);
+ --mase-menu-text: #0ff;
+ --mase-menu-text-hover: #fff;
+ --mase-menu-icon: rgba(0, 255, 255, 0.8);
+ --mase-menu-icon-hover: #fff;
+ --mase-submenu-bg: rgba(0, 0, 0, 0.3);
+ --mase-submenu-text: rgba(0, 255, 255, 0.9);
+ --mase-submenu-text-hover: #fff;
+ --mase-submenu-hover-bg: rgba(0, 255, 255, 0.1)}
+
+body.mase-template-floral #adminmenuback {
+ --mase-menu-bg: linear-gradient(180deg, #ffecd2 0%, #fcb69f 100%);
+ --mase-menu-glassmorphism: none;
+ --mase-menu-border: 1px solid rgba(255, 255, 255, 0.4);
+ --mase-menu-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+ --mase-menu-text: #8b4513;
+ --mase-menu-text-hover: #654321;
+ --mase-menu-icon: rgba(139, 69, 19, 0.8);
+ --mase-menu-icon-hover: #654321;
+ --mase-submenu-bg: rgba(255, 255, 255, 0.2);
+ --mase-submenu-text: rgba(139, 69, 19, 0.9);
+ --mase-submenu-text-hover: #654321;
+ --mase-submenu-hover-bg: rgba(255, 255, 255, 0.3)}
+
+body.mase-active #adminmenu li.menu-top {
+ border: none !important;
+ transition: all 0.2s ease !important}
+
+body.mase-active #adminmenu li.menu-top:hover,
+body.mase-active #adminmenu li.menu-top.current {
+ background: rgba(255, 255, 255, 0.1) !important}
+
+body.mase-active #adminmenu a {
+ transition: all 0.2s ease !important;
+ color: var(--mase-menu-text, #fff) !important}
+
+body.mase-active #adminmenu a:hover,
+body.mase-active #adminmenu li.current a {
+ color: var(--mase-menu-text-hover, #fff) !important}
+
+body.mase-active #adminmenu .wp-menu-name {
+ color: var(--mase-menu-text, #fff) !important}
+
+body.mase-active #adminmenu .wp-menu-image,
+body.mase-active #adminmenu .wp-menu-image:before {
+ color: var(--mase-menu-icon, rgba(255, 255, 255, 0.8)) !important}
+
+body.mase-active #adminmenu li:hover .wp-menu-image,
+body.mase-active #adminmenu li:hover .wp-menu-image:before,
+body.mase-active #adminmenu li.current .wp-menu-image,
+body.mase-active #adminmenu li.current .wp-menu-image:before {
+ color: var(--mase-menu-icon-hover, #fff) !important}
+
+body.mase-active #adminmenu .wp-submenu {
+ background: var(--mase-submenu-bg, rgba(0, 0, 0, 0.2)) !important}
+
+body.mase-active #adminmenu .wp-submenu a {
+ color: var(--mase-submenu-text, rgba(255, 255, 255, 0.9)) !important}
+
+body.mase-active #adminmenu .wp-submenu a:hover {
+ color: var(--mase-submenu-text-hover, #fff) !important;
+ background: var(--mase-submenu-hover-bg, rgba(255, 255, 255, 0.1)) !important}
+
+@media (max-width: 782px) {
+ body.mase-active #adminmenuwrap {
+ top: 46px !important;
+ height: calc(100vh - 46px) !important}
+}
+
+@media (prefers-reduced-motion: reduce) {
+ body.mase-active #adminmenuback,
+ body.mase-active #adminmenu li.menu-top,
+ body.mase-active #adminmenu a {
+ transition: none !important}
+}
+
+@media (prefers-contrast: high) {
+ body.mase-active #adminmenuback {
+ border-right-width: 2px !important}
+}
+
+[dir="rtl"] body.mase-active #adminmenuwrap {
+ left: auto !important;
+ right: 0 !important}
+
+[dir="rtl"] body.mase-active #adminmenuback {
+ border-right: none !important;
+ border-left: var(--mase-menu-border, 1px solid rgba(255, 255, 255, 0.1)) !important;
+ box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important}
+
+body.mase-active #adminmenuback {
+ will-change: background, backdrop-filter}
+
+body.mase-active #adminmenu li.menu-top {
+ transform: translateZ(0);
+ backface-visibility: hidden}

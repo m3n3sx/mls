@@ -1,0 +1,559 @@
+/**
+ * Material Design 3 Button System
+ * Sophisticated button variants with state layers and interactions
+ */
+
+/* ============================================
+   Button Base Styles
+   ============================================ */
+
+.mase-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-space-s);
+    padding: var(--md-space-m) var(--md-space-xl);
+    font-family: inherit;
+    font-size: var(--md-label-large);
+    font-weight: var(--md-weight-medium);
+    line-height: 1;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    overflow: hidden;
+    transition: all var(--md-duration-medium-2) var(--md-easing-emphasized);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mase-button:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.mase-button:disabled::before {
+    display: none; /* No state layers on disabled buttons */
+}
+
+/* ============================================
+   Filled Button Variant
+   ============================================ */
+
+.mase-button-filled {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+    border-radius: var(--md-corner-full);
+    box-shadow: var(--md-elevation-1);
+}
+
+.mase-button-filled:hover {
+    box-shadow: var(--md-elevation-2);
+    transform: translateY(-1px);
+}
+
+.mase-button-filled:active {
+    transform: translateY(0);
+    box-shadow: var(--md-elevation-1);
+}
+
+/* State layer for filled buttons */
+.mase-button-filled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-on-primary);
+    opacity: 0;
+    transition: opacity var(--md-duration-short-4) var(--md-easing-standard);
+    pointer-events: none;
+}
+
+.mase-button-filled:hover::before {
+    opacity: 0.08;
+}
+
+.mase-button-filled:focus-visible::before {
+    opacity: 0.12;
+}
+
+.mase-button-filled:active::before {
+    opacity: 0.12;
+}
+
+/* ============================================
+   Outlined Button Variant
+   ============================================ */
+
+.mase-button-outlined {
+    background: transparent;
+    color: var(--md-primary);
+    border: 1px solid var(--md-outline);
+    border-radius: var(--md-corner-full);
+    box-shadow: none;
+}
+
+.mase-button-outlined:hover {
+    border-color: var(--md-primary);
+}
+
+.mase-button-outlined:active {
+    border-color: var(--md-primary);
+}
+
+/* State layer for outlined buttons */
+.mase-button-outlined::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-primary);
+    opacity: 0;
+    transition: opacity var(--md-duration-short-4) var(--md-easing-standard);
+    pointer-events: none;
+}
+
+.mase-button-outlined:hover::before {
+    opacity: 0.08;
+}
+
+.mase-button-outlined:focus-visible::before {
+    opacity: 0.12;
+}
+
+.mase-button-outlined:active::before {
+    opacity: 0.12;
+}
+
+/* ============================================
+   Text Button Variant
+   ============================================ */
+
+.mase-button-text {
+    background: transparent;
+    color: var(--md-primary);
+    border: none;
+    border-radius: var(--md-corner-s);
+    box-shadow: none;
+    padding: var(--md-space-m) var(--md-space-l);
+}
+
+.mase-button-text:hover {
+    /* No elevation change for text buttons */
+}
+
+.mase-button-text:active {
+    /* No elevation change for text buttons */
+}
+
+/* State layer for text buttons */
+.mase-button-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-primary);
+    opacity: 0;
+    transition: opacity var(--md-duration-short-4) var(--md-easing-standard);
+    pointer-events: none;
+}
+
+.mase-button-text:hover::before {
+    opacity: 0.08;
+}
+
+.mase-button-text:focus-visible::before {
+    opacity: 0.12;
+}
+
+.mase-button-text:active::before {
+    opacity: 0.12;
+}
+
+/* ============================================
+   Button Icon Support
+   ============================================ */
+
+.mase-button-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.mase-button-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+/* ============================================
+   Focus Indicators
+   ============================================ */
+
+.mase-button:focus-visible {
+    outline: 3px solid var(--md-primary);
+    outline-offset: 2px;
+}
+
+.mase-button-filled:focus-visible {
+    outline-color: var(--md-on-surface);
+}
+
+/* ============================================
+   Button Sizes
+   ============================================ */
+
+.mase-button-small {
+    padding: var(--md-space-s) var(--md-space-l);
+    font-size: var(--md-label-medium);
+}
+
+.mase-button-large {
+    padding: var(--md-space-l) var(--md-space-2xl);
+    font-size: var(--md-label-large);
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+    .mase-button {
+        min-height: 48px; /* Minimum touch target */
+        padding: var(--md-space-m) var(--md-space-l);
+    }
+    
+    .mase-button-small {
+        min-height: 40px;
+    }
+    
+    .mase-button-large {
+        min-height: 56px;
+    }
+}
+
+/* ============================================
+   Ripple Effect
+   ============================================ */
+
+.mase-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.mase-ripple-active {
+    animation: mase-ripple-animation var(--md-duration-long-2) ease-out;
+}
+
+@keyframes mase-ripple-animation {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* Ripple color adjustments for different button types */
+.mase-button-outlined .mase-ripple,
+.mase-button-text .mase-ripple {
+    background: var(--md-primary);
+    opacity: 0.2;
+}
+
+@keyframes mase-ripple-animation-outlined {
+    0% {
+        transform: scale(0);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+.mase-button-outlined .mase-ripple-active,
+.mase-button-text .mase-ripple-active {
+    animation: mase-ripple-animation-outlined var(--md-duration-long-2) ease-out;
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .mase-button,
+    .mase-button::before {
+        transition-duration: 0.01ms !important;
+    }
+    
+    .mase-button-filled:hover {
+        transform: none;
+    }
+    
+    .mase-ripple-active {
+        animation: none !important;
+        display: none;
+    }
+}
+
+/* ============================================
+   Floating Action Button (FAB)
+   Requirements: 25.1, 25.2, 25.3, 25.4
+   ============================================ */
+
+.mase-fab {
+    position: fixed;
+    bottom: var(--md-space-l);
+    right: var(--md-space-l);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-space-s);
+    min-width: 56px;
+    height: 56px;
+    padding: 0;
+    background: var(--md-primary-container);
+    color: var(--md-on-primary-container);
+    border: none;
+    border-radius: var(--md-corner-l);
+    box-shadow: var(--md-elevation-3);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: var(--md-label-large);
+    font-weight: var(--md-weight-medium);
+    line-height: 1;
+    text-decoration: none;
+    user-select: none;
+    overflow: hidden;
+    transition: all var(--md-duration-medium-2) var(--md-easing-emphasized);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* FAB Icon */
+.mase-fab-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.mase-fab-icon.dashicons {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+}
+
+/* FAB Label (hidden by default, shown in extended FAB) */
+.mase-fab-label {
+    display: none;
+    white-space: nowrap;
+}
+
+/* Extended FAB - Shows label */
+.mase-fab-extended {
+    width: auto;
+    padding: 0 var(--md-space-l);
+}
+
+.mase-fab-extended .mase-fab-label {
+    display: inline-block;
+}
+
+/* Hover State - Requirement 25.4 */
+.mase-fab:hover {
+    transform: scale(1.05);
+    box-shadow: var(--md-elevation-4);
+}
+
+/* Active/Pressed State */
+.mase-fab:active {
+    transform: scale(0.95);
+    box-shadow: var(--md-elevation-3);
+}
+
+/* Focus State */
+.mase-fab:focus-visible {
+    outline: 3px solid var(--md-primary);
+    outline-offset: 2px;
+}
+
+/* State Layer for FAB */
+.mase-fab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-on-primary-container);
+    opacity: 0;
+    transition: opacity var(--md-duration-short-4) var(--md-easing-standard);
+    pointer-events: none;
+}
+
+.mase-fab:hover::before {
+    opacity: 0.08;
+}
+
+.mase-fab:focus-visible::before {
+    opacity: 0.12;
+}
+
+.mase-fab:active::before {
+    opacity: 0.12;
+}
+
+/* Disabled State */
+.mase-fab:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: none;
+}
+
+.mase-fab:disabled::before {
+    display: none;
+}
+
+/* Loading State */
+.mase-fab.loading {
+    pointer-events: none;
+}
+
+.mase-fab.loading .mase-fab-icon {
+    animation: mase-fab-spin 1s linear infinite;
+}
+
+@keyframes mase-fab-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success State */
+.mase-fab.success {
+    background: var(--md-primary);
+    color: var(--md-on-primary);
+}
+
+.mase-fab.success .mase-fab-icon {
+    animation: mase-fab-success var(--md-duration-medium-4) var(--md-easing-emphasized);
+}
+
+@keyframes mase-fab-success {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Error State */
+.mase-fab.error {
+    background: var(--md-error-container);
+    color: var(--md-on-error-container);
+}
+
+/* Hide FAB on scroll up (optional enhancement) */
+.mase-fab.hidden {
+    transform: translateY(calc(100% + var(--md-space-l)));
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+    .mase-fab {
+        bottom: var(--md-space-m);
+        right: var(--md-space-m);
+        min-width: 48px;
+        height: 48px;
+    }
+    
+    .mase-fab-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+    }
+    
+    .mase-fab-icon.dashicons {
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+    }
+    
+    /* On mobile, always show as compact FAB */
+    .mase-fab-extended {
+        padding: 0;
+    }
+    
+    .mase-fab-extended .mase-fab-label {
+        display: none;
+    }
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .mase-fab,
+    .mase-fab::before {
+        transition-duration: 0.01ms !important;
+    }
+    
+    .mase-fab:hover {
+        transform: none;
+    }
+    
+    .mase-fab.loading .mase-fab-icon,
+    .mase-fab.success .mase-fab-icon {
+        animation: none !important;
+    }
+}
+
+/* ============================================
+   Dark Mode Adjustments
+   ============================================ */
+
+:root[data-theme="dark"] .mase-fab {
+    /* Dark mode uses same tokens, but they're already adjusted in md3-tokens.css */
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+    .mase-fab {
+        display: none !important;
+    }
+}

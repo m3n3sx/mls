@@ -1,401 +1,376 @@
-/**
- * Modern Admin Styler Enterprise (MASE) - Palette Styles
- * 
- * Styles for color palette cards, grid layout, and interactive states.
- * Implements responsive design, accessibility features, and RTL support.
- * 
- * @package     Modern Admin Styler Enterprise
- * @version     1.2.0
- * @author      Modern Admin Styler Team
- * @license     GPL-2.0+
- */
-
-/* ============================================================================
-   PALETTE GRID LAYOUT
-   ============================================================================ */
-
 .mase-palettes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--mase-spacing-lg, 24px);
-    margin-bottom: var(--mase-spacing-xl, 32px);
-}
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+ gap: var(--mase-space-lg);
+ margin-bottom: var(--mase-space-xl)}
 
-/* Responsive breakpoints */
 @media (max-width: 767px) {
-    .mase-palettes-grid {
-        grid-template-columns: 1fr;
-        gap: var(--mase-spacing-md, 16px);
-    }
+ .mase-palettes-grid {
+ grid-template-columns: 1fr;
+ gap: var(--mase-space-md)}
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .mase-palettes-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+ .mase-palettes-grid {
+ grid-template-columns: repeat(2, 1fr);
+ gap: var(--mase-space-lg)}
 }
 
 @media (min-width: 1025px) {
-    .mase-palettes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    }
+ .mase-palettes-grid {
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))}
 }
-
-/* ============================================================================
-   PALETTE CARD COMPONENT
-   ============================================================================ */
 
 .mase-palette-card {
-    position: relative;
-    background: var(--mase-surface, #ffffff);
-    border: 1px solid var(--mase-border, #e2e8f0);
-    border-radius: var(--mase-radius-lg, 12px);
-    padding: var(--mase-spacing-lg, 24px);
-    cursor: pointer;
-    transition: all var(--mase-transition-normal, 0.2s) var(--mase-timing-ease, ease);
-    overflow: hidden;
-}
+ position: relative;
+ background: var(--mase-surface, #fff);
+ border: 2px solid var(--mase-border, #e2e8f0);
+ border-radius: var(--mase-radius-lg, 12px);
+ padding: var(--mase-space-lg);
+ cursor: pointer;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ overflow: visible}
 
-/* Hover state */
 .mase-palette-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--mase-shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
-    border-color: var(--mase-primary, #4A90E2);
-}
+ transform: translateY(-3px);
+ box-shadow: var(--mase-shadow-lg, 0 8px 16px rgba(0, 0, 0, 0.12));
+ border-color: var(--mase-primary, #4A90E2)}
 
-/* Focus state for keyboard navigation */
 .mase-palette-card:focus,
 .mase-palette-card:focus-visible {
-    outline: 2px solid var(--mase-primary, #4A90E2);
-    outline-offset: 2px;
-    border-color: var(--mase-primary, #4A90E2);
-}
+ outline: 2px solid var(--mase-primary, #4A90E2);
+ outline-offset: 2px;
+ border-color: var(--mase-primary, #4A90E2)}
 
-/* Active/Selected state */
 .mase-palette-card.active,
 .mase-palette-card.is-active {
-    border: 2px solid var(--mase-primary, #4A90E2);
-    box-shadow: var(--mase-shadow-lg, 0 8px 16px rgba(0, 0, 0, 0.12));
-}
+ border-color: var(--mase-primary, #4A90E2);
+ background: var(--mase-primary-light, rgba(74, 144, 226, 0.05));
+ box-shadow: var(--mase-shadow-xl, 0 12px 24px rgba(0, 0, 0, 0.15))}
 
-/* Disabled state */
 .mase-palette-card.disabled,
 .mase-palette-card:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-/* ============================================================================
-   PALETTE CARD HEADER
-   ============================================================================ */
+ opacity: 0.5;
+ cursor: not-allowed;
+ pointer-events: none}
 
 .mase-palette-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--mase-spacing-md, 16px);
-}
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: var(--mase-space-md)}
 
 .mase-palette-name {
-    font-size: var(--mase-font-md, 16px);
-    font-weight: var(--mase-font-semibold, 600);
-    color: var(--mase-text-primary, #1e293b);
-    margin: 0;
-}
+ font-size: 18px;
+ font-weight: var(--mase-font-semibold, 600);
+ color: var(--mase-text-primary, #1e293b);
+ margin: 0;
+ margin-bottom: 8px}
 
-/* Active badge */
 .mase-palette-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px;
-    background: var(--mase-primary, #4A90E2);
-    color: #ffffff;
-    font-size: var(--mase-font-xs, 12px);
-    font-weight: var(--mase-font-medium, 500);
-    border-radius: var(--mase-radius-full, 9999px);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* ============================================================================
-   COLOR SWATCHES
-   ============================================================================ */
+ display: inline-flex;
+ align-items: center;
+ padding: 6px 16px;
+ background: var(--mase-primary, #4A90E2);
+ color: #fff;
+ font-size: var(--mase-font-xs, 12px);
+ font-weight: 600;
+ border-radius: 20px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3)}
 
 .mase-palette-colors {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--mase-spacing-sm, 8px);
-    margin-bottom: var(--mase-spacing-md, 16px);
-}
+ display: flex;
+ gap: var(--mase-space-sm);
+ margin-bottom: var(--mase-space-lg);
+ height: 80px;
+ border-radius: var(--mase-radius-md, 8px);
+ overflow: hidden}
 
 .mase-color-swatch {
-    aspect-ratio: 1;
-    border-radius: var(--mase-radius-md, 8px);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    transition: transform var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
-    position: relative;
-}
+ flex: 1;
+ border-radius: 0;
+ border: none;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ position: relative}
 
-.mase-color-swatch:hover {
-    transform: scale(1.05);
-    box-shadow: var(--mase-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
-}
+.mase-color-swatch:first-child {
+ border-radius: var(--mase-radius-md, 8px) 0 0 var(--mase-radius-md, 8px)}
 
-/* Color labels */
+.mase-color-swatch:last-child {
+ border-radius: 0 var(--mase-radius-md, 8px) var(--mase-radius-md, 8px) 0}
+
+.mase-palette-card:hover .mase-color-swatch {
+ transform: scale(1.05)}
+
+.mase-color-swatch::after {
+ content: attr(data-color-name);
+ position: absolute;
+ bottom: 8px;
+ left: 8px;
+ right: 8px;
+ font-size: 11px;
+ color: rgba(255, 255, 255, 0.9);
+ text-align: center;
+ text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+ font-weight: 600;
+ opacity: 0;
+ transition: opacity 0.3s ease;
+ pointer-events: none}
+
+.mase-palette-card:hover .mase-color-swatch::after {
+ opacity: 1}
+
 .mase-color-label {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.9);
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    font-weight: var(--mase-font-medium, 500);
-}
-
-/* ============================================================================
-   PALETTE ACTIONS
-   ============================================================================ */
+ position: absolute;
+ bottom: 4px;
+ left: 4px;
+ right: 4px;
+ font-size: 10px;
+ color: rgba(255, 255, 255, 0.9);
+ text-align: center;
+ text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+ font-weight: var(--mase-font-medium, 500)}
 
 .mase-palette-actions {
-    display: flex;
-    gap: var(--mase-spacing-sm, 8px);
-    margin-top: var(--mase-spacing-md, 16px);
-}
+ display: flex;
+ gap: var(--mase-space-sm);
+ margin-top: var(--mase-space-md)}
 
 .mase-palette-btn {
-    flex: 1;
-    padding: 10px 16px;
-    border: 1px solid var(--mase-border, #e2e8f0);
-    border-radius: var(--mase-radius-md, 8px);
-    background: var(--mase-surface, #ffffff);
-    color: var(--mase-text-primary, #1e293b);
-    font-size: var(--mase-font-sm, 14px);
-    font-weight: var(--mase-font-medium, 500);
-    cursor: pointer;
-    transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
-    text-align: center;
-}
+ flex: 1;
+ padding: 10px 16px;
+ border: 1px solid var(--mase-border, #e2e8f0);
+ border-radius: var(--mase-radius-md, 8px);
+ background: var(--mase-surface, #fff);
+ color: var(--mase-text-primary, #1e293b);
+ font-size: var(--mase-font-sm, 14px);
+ font-weight: var(--mase-font-medium, 500);
+ cursor: pointer;
+ transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
+ text-align: center}
 
 .mase-palette-btn:hover {
-    background: var(--mase-gray-50, #f8fafc);
-    border-color: var(--mase-primary, #4A90E2);
-    color: var(--mase-primary, #4A90E2);
-}
+ background: var(--mase-gray-50, #f8fafc);
+ border-color: var(--mase-primary, #4A90E2);
+ color: var(--mase-primary, #4A90E2)}
 
 .mase-palette-btn:focus,
 .mase-palette-btn:focus-visible {
-    outline: 2px solid var(--mase-primary, #4A90E2);
-    outline-offset: 2px;
-}
+ outline: 2px solid var(--mase-primary, #4A90E2);
+ outline-offset: 2px}
 
 .mase-palette-btn:active {
-    transform: scale(0.98);
-}
+ transform: scale(0.98)}
 
 .mase-palette-btn-primary {
-    background: var(--mase-primary, #4A90E2);
-    color: #ffffff;
-    border-color: var(--mase-primary, #4A90E2);
-}
+ background: var(--mase-primary, #4A90E2);
+ color: #fff;
+ border-color: var(--mase-primary, #4A90E2)}
 
 .mase-palette-btn-primary:hover {
-    background: var(--mase-primary-dark, #3a7bc8);
-    border-color: var(--mase-primary-dark, #3a7bc8);
-    color: #ffffff;
-}
-
-/* ============================================================================
-   CUSTOM PALETTE SECTION
-   ============================================================================ */
+ background: var(--mase-primary-dark, #3a7bc8);
+ border-color: var(--mase-primary-dark, #3a7bc8);
+ color: #fff}
 
 .mase-custom-palette-section {
-    margin-top: var(--mase-spacing-xl, 32px);
-    padding-top: var(--mase-spacing-xl, 32px);
-    border-top: 1px solid var(--mase-border, #e2e8f0);
-}
+ margin-top: var(--mase-space-2xl);
+ padding-top: var(--mase-space-xl);
+ border-top: 1px solid var(--mase-border, #e2e8f0)}
 
 .mase-custom-palette-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--mase-spacing-lg, 24px);
-}
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: var(--mase-space-lg)}
 
 .mase-custom-palette-title {
-    font-size: var(--mase-font-lg, 18px);
-    font-weight: var(--mase-font-semibold, 600);
-    color: var(--mase-text-primary, #1e293b);
-    margin: 0;
-}
+ font-size: var(--mase-font-lg, 18px);
+ font-weight: var(--mase-font-semibold, 600);
+ color: var(--mase-text-primary, #1e293b);
+ margin: 0}
 
 .mase-add-palette-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mase-spacing-xs, 4px);
-    padding: 8px 16px;
-    background: var(--mase-primary, #4A90E2);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--mase-radius-md, 8px);
-    font-size: var(--mase-font-sm, 14px);
-    font-weight: var(--mase-font-medium, 500);
-    cursor: pointer;
-    transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease);
-}
+ display: inline-flex;
+ align-items: center;
+ gap: var(--mase-spacing-xs, 4px);
+ padding: 8px 16px;
+ background: var(--mase-primary, #4A90E2);
+ color: #fff;
+ border: none;
+ border-radius: var(--mase-radius-md, 8px);
+ font-size: var(--mase-font-sm, 14px);
+ font-weight: var(--mase-font-medium, 500);
+ cursor: pointer;
+ transition: all var(--mase-transition-fast, 0.15s) var(--mase-timing-ease, ease)}
 
 .mase-add-palette-btn:hover {
-    background: var(--mase-primary-dark, #3a7bc8);
-    transform: translateY(-1px);
-    box-shadow: var(--mase-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08));
-}
+ background: var(--mase-primary-dark, #3a7bc8);
+ transform: translateY(-1px);
+ box-shadow: var(--mase-shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.08))}
 
 .mase-add-palette-btn:focus,
 .mase-add-palette-btn:focus-visible {
-    outline: 2px solid var(--mase-primary, #4A90E2);
-    outline-offset: 2px;
-}
+ outline: 2px solid var(--mase-primary, #4A90E2);
+ outline-offset: 2px}
 
-/* ============================================================================
-   ACCESSIBILITY FEATURES
-   ============================================================================ */
-
-/* High contrast mode */
 @media (prefers-contrast: high) {
-    .mase-palette-card {
-        border-width: 2px;
-    }
-    
-    .mase-palette-card.active,
-    .mase-palette-card.is-active {
-        border-width: 3px;
-    }
-    
-    .mase-color-swatch {
-        border-width: 2px;
-    }
+ .mase-palette-card {
+ border-width: 2px}
+
+ .mase-palette-card.active,
+ .mase-palette-card.is-active {
+ border-width: 3px}
+
+ .mase-color-swatch {
+ border-width: 2px}
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .mase-palette-card,
-    .mase-palette-btn,
-    .mase-color-swatch,
-    .mase-add-palette-btn {
-        transition: none;
-    }
-    
-    .mase-palette-card:hover,
-    .mase-color-swatch:hover {
-        transform: none;
-    }
+ .mase-palette-card,
+ .mase-palette-btn,
+ .mase-color-swatch,
+ .mase-add-palette-btn {
+ transition: none}
+
+ .mase-palette-card:hover,
+ .mase-palette-card:hover .mase-color-swatch {
+ transform: none}
+
+ .mase-color-swatch::after {
+ transition: none}
 }
 
-/* Focus indicators for keyboard navigation */
 .mase-palette-card:focus-visible,
 .mase-palette-btn:focus-visible,
 .mase-add-palette-btn:focus-visible {
-    outline: 2px solid var(--mase-primary, #4A90E2);
-    outline-offset: 2px;
-}
+ outline: 2px solid var(--mase-primary, #4A90E2);
+ outline-offset: 2px}
 
-/* Screen reader only text */
 .mase-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-/* ============================================================================
-   RTL SUPPORT
-   ============================================================================ */
+ position: absolute;
+ width: 1px;
+ height: 1px;
+ padding: 0;
+ margin: -1px;
+ overflow: hidden;
+ clip: rect(0, 0, 0, 0);
+ white-space: nowrap;
+ border-width: 0}
 
 [dir="rtl"] .mase-palette-header {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-palette-actions {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-custom-palette-header {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-add-palette-btn {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-color-label {
-    left: auto;
-    right: 4px;
-}
-
-/* ============================================================================
-   LOADING & EMPTY STATES
-   ============================================================================ */
+ left: auto;
+ right: 4px}
 
 .mase-palettes-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
-    color: var(--mase-text-secondary, #64748b);
-}
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ min-height: 200px;
+ color: var(--mase-text-secondary, #64748b)}
 
 .mase-palettes-empty {
-    text-align: center;
-    padding: var(--mase-spacing-2xl, 48px);
-    color: var(--mase-text-secondary, #64748b);
-}
+ text-align: center;
+ padding: var(--mase-spacing-2xl, 48px);
+ color: var(--mase-text-secondary, #64748b)}
 
 .mase-palettes-empty-icon {
-    font-size: 48px;
-    margin-bottom: var(--mase-spacing-md, 16px);
-    opacity: 0.5;
-}
+ font-size: 48px;
+ margin-bottom: var(--mase-spacing-md, 16px);
+ opacity: 0.5}
 
 .mase-palettes-empty-text {
-    font-size: var(--mase-font-md, 16px);
-    margin-bottom: var(--mase-spacing-sm, 8px);
-}
-
-/* ============================================================================
-   MOBILE OPTIMIZATIONS
-   ============================================================================ */
+ font-size: var(--mase-font-md, 16px);
+ margin-bottom: var(--mase-spacing-sm, 8px)}
 
 @media (max-width: 767px) {
-    .mase-palette-card {
-        padding: var(--mase-spacing-md, 16px);
-    }
-    
-    .mase-palette-colors {
-        gap: var(--mase-spacing-xs, 4px);
-    }
-    
-    .mase-palette-btn {
-        padding: 8px 12px;
-        font-size: var(--mase-font-xs, 12px);
-        min-height: 44px; /* Touch target size */
-    }
-    
-    .mase-add-palette-btn {
-        width: 100%;
-        justify-content: center;
-        min-height: 44px; /* Touch target size */
-    }
-    
-    .mase-custom-palette-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: var(--mase-spacing-md, 16px);
-    }
+ .mase-palette-card {
+ padding: var(--mase-space-md)}
+
+ .mase-palette-colors {
+ gap: var(--mase-space-xs);
+ height: 60px}
+
+ .mase-palette-name {
+ font-size: 16px}
+
+ .mase-palette-btn {
+ padding: 8px 12px;
+ font-size: var(--mase-font-xs, 12px);
+ min-height: 44px}
+
+ .mase-add-palette-btn {
+ width: 100%;
+ justify-content: center;
+ min-height: 44px}
+
+ .mase-custom-palette-header {
+ flex-direction: column;
+ align-items: stretch;
+ gap: var(--mase-space-md)}
 }
+
+:root[data-theme="dark"] .mase-palette-card,
+body.mase-dark-mode .mase-palette-card {
+
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6),
+ 0 1px 4px rgba(0, 0, 0, 0.5)}
+
+:root[data-theme="dark"] .mase-palette-card:hover,
+body.mase-dark-mode .mase-palette-card:hover {
+
+ box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8),
+ 0 6px 16px rgba(0, 0, 0, 0.7),
+ 0 3px 8px rgba(0, 0, 0, 0.6)}
+
+:root[data-theme="dark"] .mase-palette-preview,
+body.mase-dark-mode .mase-palette-preview {
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5),
+ inset 0 0 0 1px rgba(255, 255, 255, 0.1)}
+
+:root[data-theme="dark"] .mase-palette-color,
+body.mase-dark-mode .mase-palette-color {
+ box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15)}
+
+:root[data-theme="dark"] .mase-palette-card:hover .mase-palette-color,
+body.mase-dark-mode .mase-palette-card:hover .mase-palette-color {
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5),
+ inset 0 0 0 1px rgba(255, 255, 255, 0.2)}
+
+:root[data-theme="dark"] .mase-active-badge,
+body.mase-dark-mode .mase-active-badge {
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6),
+ 0 1px 4px rgba(0, 0, 0, 0.5)}
+
+:root[data-theme="dark"] .mase-palette-btn-primary,
+body.mase-dark-mode .mase-palette-btn-primary {
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5),
+ 0 1px 3px rgba(0, 0, 0, 0.4)}
+
+:root[data-theme="dark"] .mase-palette-btn-primary:hover,
+body.mase-dark-mode .mase-palette-btn-primary:hover {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6),
+ 0 2px 6px rgba(0, 0, 0, 0.5)}
+
+:root[data-theme="dark"] .mase-add-palette-btn,
+body.mase-dark-mode .mase-add-palette-btn {
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5),
+ 0 1px 3px rgba(0, 0, 0, 0.4)}
+
+:root[data-theme="dark"] .mase-add-palette-btn:hover,
+body.mase-dark-mode .mase-add-palette-btn:hover {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6),
+ 0 2px 6px rgba(0, 0, 0, 0.5)}

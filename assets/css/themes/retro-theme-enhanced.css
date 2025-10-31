@@ -1,0 +1,474 @@
+/**
+ * Enhanced Retro Theme Effects
+ * Authentic 80s VHS and CRT effects
+ */
+
+/* ============================================
+   12.1 VHS Distortion Effect
+   ============================================ */
+
+@keyframes vhsDistortion {
+    0%, 100% {
+        transform: translateX(0) skewX(0deg);
+        filter: hue-rotate(0deg);
+    }
+    10% {
+        transform: translateX(-2px) skewX(0.5deg);
+    }
+    20% {
+        transform: translateX(2px) skewX(-0.5deg);
+    }
+    30% {
+        transform: translateX(-1px) skewX(0.3deg);
+        filter: hue-rotate(5deg);
+    }
+    40% {
+        transform: translateX(1px) skewX(-0.3deg);
+    }
+    50% {
+        transform: translateX(0) skewX(0deg);
+        filter: hue-rotate(-5deg);
+    }
+    60% {
+        transform: translateX(-1px) skewX(0.2deg);
+    }
+    70% {
+        transform: translateX(1px) skewX(-0.2deg);
+    }
+    80% {
+        transform: translateX(0) skewX(0deg);
+        filter: hue-rotate(3deg);
+    }
+}
+
+/* Random glitch timing with multiple animations */
+@keyframes vhsGlitch {
+    0%, 90%, 100% {
+        clip-path: inset(0 0 0 0);
+    }
+    91% {
+        clip-path: inset(10% 0 85% 0);
+        transform: translateX(10px);
+    }
+    92% {
+        clip-path: inset(50% 0 30% 0);
+        transform: translateX(-10px);
+    }
+    93% {
+        clip-path: inset(80% 0 10% 0);
+        transform: translateX(5px);
+    }
+}
+
+@keyframes colorDistortion {
+    0%, 100% {
+        filter: hue-rotate(0deg) saturate(1);
+    }
+    25% {
+        filter: hue-rotate(5deg) saturate(1.2);
+    }
+    50% {
+        filter: hue-rotate(-5deg) saturate(0.8);
+    }
+    75% {
+        filter: hue-rotate(3deg) saturate(1.1);
+    }
+}
+
+.mase-template-retro.vhs-enhanced {
+    animation: 
+        vhsDistortion 0.3s infinite,
+        colorDistortion 2s ease-in-out infinite;
+}
+
+/* Apply VHS distortion to main content areas */
+.mase-template-retro.vhs-enhanced .wrap {
+    animation: vhsGlitch 5s infinite;
+    animation-timing-function: steps(1);
+}
+
+/* Horizontal tracking lines */
+.mase-template-retro.vhs-enhanced::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 999997;
+    animation: vhsTracking 0.1s infinite;
+}
+
+@keyframes vhsTracking {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(2px); }
+}
+
+/* ============================================
+   12.2 Chromatic Aberration
+   ============================================ */
+
+.mase-template-retro h1,
+.mase-template-retro h2,
+.mase-template-retro h3 {
+    position: relative;
+}
+
+/* Red channel offset */
+.mase-template-retro h1::before,
+.mase-template-retro h2::before,
+.mase-template-retro h3::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    top: 0;
+    color: #ff0000;
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    z-index: -1;
+}
+
+/* Cyan channel offset */
+.mase-template-retro h1::after,
+.mase-template-retro h2::after,
+.mase-template-retro h3::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    top: 0;
+    color: #00ffff;
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    z-index: -1;
+}
+
+/* Animated chromatic aberration on hover */
+@keyframes chromaticShift {
+    0%, 100% {
+        left: -2px;
+    }
+    50% {
+        left: -3px;
+    }
+}
+
+@keyframes chromaticShiftCyan {
+    0%, 100% {
+        left: 2px;
+    }
+    50% {
+        left: 3px;
+    }
+}
+
+.mase-template-retro h1:hover::before,
+.mase-template-retro h2:hover::before,
+.mase-template-retro h3:hover::before {
+    animation: chromaticShift 0.3s ease-in-out infinite;
+}
+
+.mase-template-retro h1:hover::after,
+.mase-template-retro h2:hover::after,
+.mase-template-retro h3:hover::after {
+    animation: chromaticShiftCyan 0.3s ease-in-out infinite;
+}
+
+/* Apply to important text elements */
+.mase-template-retro #wpadminbar .ab-item,
+.mase-template-retro #adminmenu a {
+    position: relative;
+}
+
+/* ============================================
+   12.3 Scan Line Animation
+   ============================================ */
+
+/* Horizontal scan lines */
+.mase-template-retro .retro-scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.15) 1px,
+        rgba(0, 0, 0, 0.15) 2px
+    );
+    pointer-events: none;
+    z-index: 999998;
+}
+
+/* Moving scan line */
+.mase-template-retro .retro-scanline-moving {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 48%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 52%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 999999;
+    animation: scanlineMove 8s linear infinite;
+    opacity: 0.3;
+}
+
+@keyframes scanlineMove {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+/* CRT flicker effect */
+@keyframes crtFlicker {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.97;
+    }
+}
+
+.mase-template-retro .retro-scanlines {
+    animation: crtFlicker 0.15s infinite;
+}
+
+/* ============================================
+   12.4 Color Bleeding Effect
+   ============================================ */
+
+/* Glow on bright elements */
+.mase-template-retro .button,
+.mase-template-retro .button-primary,
+.mase-template-retro #wpadminbar .ab-item:hover,
+.mase-template-retro #adminmenu a:hover {
+    position: relative;
+}
+
+/* Color bleeding overlay */
+.mase-template-retro .button::before,
+.mase-template-retro .button-primary::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: inherit;
+    filter: blur(8px) brightness(1.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    border-radius: inherit;
+}
+
+.mase-template-retro .button:hover::before,
+.mase-template-retro .button-primary:hover::before {
+    opacity: 0.6;
+}
+
+/* Intense glow for active elements */
+@keyframes colorBleed {
+    0%, 100% {
+        filter: blur(8px) brightness(1.5);
+        opacity: 0.6;
+    }
+    50% {
+        filter: blur(12px) brightness(1.8);
+        opacity: 0.8;
+    }
+}
+
+.mase-template-retro .button:active::before,
+.mase-template-retro .button-primary:active::before {
+    animation: colorBleed 0.3s ease-in-out;
+}
+
+/* Color overflow on bright text */
+.mase-template-retro h1,
+.mase-template-retro h2 {
+    filter: brightness(1.2);
+}
+
+.mase-template-retro h1:hover,
+.mase-template-retro h2:hover {
+    filter: brightness(1.4) drop-shadow(0 0 10px currentColor);
+}
+
+/* ============================================
+   12.5 Film Grain Overlay
+   ============================================ */
+
+/* Noise pattern using SVG */
+.mase-template-retro .retro-film-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=');
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 999996;
+    opacity: 0.05;
+    animation: grainMove 0.5s steps(10) infinite;
+}
+
+@keyframes grainMove {
+    0%, 100% { 
+        transform: translate(0, 0); 
+    }
+    10% { 
+        transform: translate(-5%, -5%); 
+    }
+    20% { 
+        transform: translate(5%, 5%); 
+    }
+    30% { 
+        transform: translate(-5%, 5%); 
+    }
+    40% { 
+        transform: translate(5%, -5%); 
+    }
+    50% { 
+        transform: translate(-3%, 3%); 
+    }
+    60% { 
+        transform: translate(3%, -3%); 
+    }
+    70% { 
+        transform: translate(-2%, -2%); 
+    }
+    80% { 
+        transform: translate(2%, 2%); 
+    }
+    90% { 
+        transform: translate(-1%, 1%); 
+    }
+}
+
+/* Vignette effect for authentic film look */
+.mase-template-retro .retro-vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+    pointer-events: none;
+    z-index: 999995;
+}
+
+/* ============================================
+   Performance Optimizations
+   ============================================ */
+
+/* Reduce effects on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+    .mase-template-retro.vhs-enhanced {
+        animation: none;
+    }
+    
+    .mase-template-retro.vhs-enhanced .wrap {
+        animation: none;
+    }
+    
+    .mase-template-retro .retro-scanline-moving {
+        animation: none;
+    }
+    
+    .mase-template-retro .retro-film-grain {
+        animation: none;
+    }
+    
+    .mase-template-retro h1:hover::before,
+    .mase-template-retro h2:hover::before,
+    .mase-template-retro h3:hover::before,
+    .mase-template-retro h1:hover::after,
+    .mase-template-retro h2:hover::after,
+    .mase-template-retro h3:hover::after {
+        animation: none;
+    }
+}
+
+/* Performance mode - disable expensive effects */
+:root[data-performance-mode="true"] .mase-template-retro.vhs-enhanced {
+    animation: none;
+}
+
+:root[data-performance-mode="true"] .mase-template-retro .retro-film-grain,
+:root[data-performance-mode="true"] .mase-template-retro .retro-scanline-moving {
+    display: none;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+    .mase-template-retro .retro-film-grain {
+        opacity: 0.03;
+    }
+    
+    .mase-template-retro.vhs-enhanced {
+        animation-duration: 0.5s;
+    }
+    
+    .mase-template-retro .retro-scanline-moving {
+        animation-duration: 12s;
+    }
+}
+
+/* ============================================
+   Intensity Controls
+   ============================================ */
+
+/* Low intensity */
+:root[data-intensity="low"] .mase-template-retro.vhs-enhanced {
+    animation-duration: 0.6s;
+}
+
+:root[data-intensity="low"] .mase-template-retro .retro-film-grain {
+    opacity: 0.02;
+}
+
+:root[data-intensity="low"] .mase-template-retro .retro-scanline-moving {
+    opacity: 0.15;
+}
+
+/* High intensity */
+:root[data-intensity="high"] .mase-template-retro.vhs-enhanced {
+    animation-duration: 0.2s;
+}
+
+:root[data-intensity="high"] .mase-template-retro .retro-film-grain {
+    opacity: 0.08;
+}
+
+:root[data-intensity="high"] .mase-template-retro .retro-scanline-moving {
+    opacity: 0.5;
+}
+
+:root[data-intensity="high"] .mase-template-retro .button::before,
+:root[data-intensity="high"] .mase-template-retro .button-primary::before {
+    filter: blur(12px) brightness(2);
+}

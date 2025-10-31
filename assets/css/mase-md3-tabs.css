@@ -1,0 +1,270 @@
+/**
+ * Material Design 3 Navigation Tabs
+ * 
+ * Implements MD3 pill-style navigation tabs with:
+ * - Surface-variant background container
+ * - 4px padding container
+ * - Pill-shaped individual tabs
+ * - Primary-container active state
+ * - Smooth transitions for all states
+ * 
+ * Requirements: 6.1, 6.2, 6.4, 6.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.2.0
+ */
+
+/* ============================================
+   Tab Navigation Container
+   ============================================ */
+
+.mase-tab-nav-container {
+	margin: var(--md-space-xl) 0;
+	padding: 0 var(--md-space-xl);
+}
+
+/* Tab Container with Surface-Variant Background (Requirement 6.1, 6.2) */
+.mase-md3-tabs {
+	display: flex;
+	gap: var(--md-space-xs);
+	padding: var(--md-space-xs);
+	background: var(--md-surface-variant);
+	border-radius: var(--md-corner-l);
+	overflow-x: auto;
+	scrollbar-width: thin;
+	scrollbar-color: var(--md-outline-variant) transparent;
+	position: relative;
+	/* Remove old border */
+	border: none;
+}
+
+/* Webkit Scrollbar Styling */
+.mase-md3-tabs::-webkit-scrollbar {
+	height: 6px;
+}
+
+.mase-md3-tabs::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.mase-md3-tabs::-webkit-scrollbar-thumb {
+	background: var(--md-outline-variant);
+	border-radius: var(--md-corner-full);
+}
+
+.mase-md3-tabs::-webkit-scrollbar-thumb:hover {
+	background: var(--md-outline);
+}
+
+/* ============================================
+   Individual Tab Buttons
+   ============================================ */
+
+/* Base Tab Button - Pill Shape (Requirement 6.1, 6.2) */
+.mase-md3-tab {
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-s);
+	padding: var(--md-space-m) var(--md-space-l);
+	border: none;
+	background: transparent;
+	color: var(--md-on-surface-variant);
+	font-size: var(--md-label-large);
+	font-weight: var(--md-weight-medium);
+	border-radius: var(--md-corner-s);
+	cursor: pointer;
+	position: relative;
+	white-space: nowrap;
+	/* Smooth transitions for all states (Requirement 6.2, 6.5) */
+	transition: 
+		background-color var(--md-duration-short-4) var(--md-easing-emphasized),
+		color var(--md-duration-short-4) var(--md-easing-emphasized),
+		transform var(--md-duration-short-4) var(--md-easing-emphasized);
+	overflow: hidden;
+}
+
+/* Tab Icon */
+.mase-md3-tab .mase-tab-icon {
+	font-size: 18px;
+	transition: transform var(--md-duration-short-4) var(--md-easing-emphasized);
+}
+
+/* Tab Label */
+.mase-md3-tab .mase-tab-label {
+	line-height: 1;
+}
+
+/* Tab Active State Indicator (hidden by default) */
+.mase-md3-tab .mase-tab-indicator {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 0;
+	background: transparent;
+	transition: height var(--md-duration-short-4) var(--md-easing-emphasized);
+}
+
+/* ============================================
+   Active Tab State
+   ============================================ */
+
+/* Active Tab - Primary Container Background (Requirement 6.2) */
+.mase-md3-tab.active {
+	background: var(--md-primary-container);
+	color: var(--md-on-primary-container);
+	font-weight: var(--md-weight-medium);
+	/* Add subtle elevation */
+	box-shadow: var(--md-elevation-1);
+}
+
+/* Active Tab Icon */
+.mase-md3-tab.active .mase-tab-icon {
+	color: var(--md-on-primary-container);
+}
+
+/* ============================================
+   State Layers (Requirements 6.3, 6.5)
+   ============================================ */
+
+/* State Layer Base - Pseudo-element for hover/focus effects */
+.mase-md3-tab::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: currentColor;
+	opacity: 0;
+	border-radius: var(--md-corner-s);
+	pointer-events: none;
+	/* Smooth opacity transitions with emphasized easing (Requirement 6.3, 6.5) */
+	transition: opacity var(--md-duration-short-4) var(--md-easing-emphasized);
+}
+
+/* Hover State Layer - 8% Opacity (Requirement 6.3) */
+.mase-md3-tab:hover::before {
+	opacity: 0.08;
+}
+
+/* Focus State Layer - 12% Opacity (Requirement 6.3) */
+.mase-md3-tab:focus::before {
+	opacity: 0.12;
+}
+
+/* Active Tab - No state layer on hover/focus */
+.mase-md3-tab.active::before {
+	display: none;
+}
+
+/* ============================================
+   Focus State
+   ============================================ */
+
+/* Focus Visible Outline (Accessibility) */
+.mase-md3-tab:focus-visible {
+	outline: 3px solid var(--md-primary);
+	outline-offset: 2px;
+	border-radius: var(--md-corner-s);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* Mobile: Stack tabs vertically */
+@media (max-width: 768px) {
+	.mase-md3-tabs {
+		flex-direction: column;
+		gap: var(--md-space-xs);
+	}
+	
+	.mase-md3-tab {
+		width: 100%;
+		justify-content: flex-start;
+		padding: var(--md-space-l);
+		/* Increase touch target size */
+		min-height: 48px;
+	}
+	
+	.mase-tab-nav-container {
+		padding: 0 var(--md-space-l);
+	}
+}
+
+/* Tablet: Wrap tabs if needed */
+@media (min-width: 769px) and (max-width: 1024px) {
+	.mase-md3-tabs {
+		flex-wrap: wrap;
+	}
+}
+
+/* ============================================
+   Dark Mode Adjustments
+   ============================================ */
+
+:root[data-theme="dark"] .mase-md3-tabs {
+	background: var(--md-surface-variant);
+}
+
+:root[data-theme="dark"] .mase-md3-tab {
+	color: var(--md-on-surface-variant);
+}
+
+:root[data-theme="dark"] .mase-md3-tab.active {
+	background: var(--md-primary-container);
+	color: var(--md-on-primary-container);
+	/* Increase elevation tint in dark mode */
+	box-shadow: var(--md-elevation-2);
+}
+
+/* ============================================
+   Tab Content Transitions (Requirement 6.4, 6.5)
+   ============================================ */
+
+/* Tab Content Base */
+.mase-tab-content {
+	opacity: 0;
+	transform: translateY(8px);
+	transition: 
+		opacity var(--md-duration-medium-2) var(--md-easing-emphasized),
+		transform var(--md-duration-medium-2) var(--md-easing-emphasized);
+	pointer-events: none;
+}
+
+/* Active Tab Content - Fade In with Slide Up (Requirement 6.4) */
+.mase-tab-content.active {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+/* Smooth Active State Changes (Requirement 6.4) */
+.mase-md3-tab {
+	/* Transform for subtle scale effect on activation */
+	transform-origin: center;
+}
+
+.mase-md3-tab.active {
+	/* Subtle scale effect when becoming active */
+	transform: scale(1.02);
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	.mase-md3-tab,
+	.mase-md3-tab .mase-tab-icon,
+	.mase-md3-tab .mase-tab-indicator,
+	.mase-tab-content {
+		transition-duration: 0.01ms !important;
+		transform: none !important;
+	}
+	
+	.mase-md3-tab.active {
+		transform: none !important;
+	}
+}

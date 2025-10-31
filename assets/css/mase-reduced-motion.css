@@ -1,0 +1,399 @@
+/**
+ * Reduced Motion Support
+ * Modern Admin Styler - Accessibility Enhancement
+ * 
+ * Ensures all functionality works without animations
+ * Respects prefers-reduced-motion system preference
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ * Requirements: 17.5, 13.3
+ */
+
+/* ============================================
+   PREFERS REDUCED MOTION
+   ============================================ */
+
+/**
+ * Disable all animations and transitions when user prefers reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+	
+	/* Disable transforms that create motion */
+	.mase-card:hover {
+		transform: none !important;
+	}
+	
+	/* Disable particle systems */
+	.mase-particles,
+	.mase-particle-system {
+		display: none !important;
+	}
+	
+	/* Disable floating animations */
+	.mase-floating,
+	.mase-petal-float {
+		animation: none !important;
+	}
+	
+	/* Disable shimmer effects */
+	.mase-shimmer,
+	.mase-holographic {
+		animation: none !important;
+	}
+	
+	/* Disable pulse effects */
+	.mase-pulse,
+	.mase-glow-pulse {
+		animation: none !important;
+	}
+	
+	/* Disable rotation animations */
+	.mase-rotate,
+	.mase-spin {
+		animation: none !important;
+	}
+	
+	/* Disable gradient animations */
+	.mase-gradient-morph {
+		animation: none !important;
+	}
+	
+	/* Keep focus indicators visible */
+	*:focus-visible {
+		transition: none !important;
+		outline: 3px solid var(--mase-focus-color) !important;
+	}
+}
+
+/* ============================================
+   PERFORMANCE MODE
+   ============================================ */
+
+/**
+ * Disable animations in performance mode
+ */
+:root[data-performance-mode="true"] *,
+:root[data-performance-mode="true"] *::before,
+:root[data-performance-mode="true"] *::after,
+body[data-performance-mode="true"] *,
+body[data-performance-mode="true"] *::before,
+body[data-performance-mode="true"] *::after {
+	animation: none !important;
+	transition: none !important;
+	transform: none !important;
+}
+
+:root[data-performance-mode="true"],
+body[data-performance-mode="true"] {
+	/* Disable blur effects */
+	--mase-blur-amount: 0px !important;
+	
+	/* Disable backdrop filters */
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+}
+
+/* Disable expensive effects in performance mode */
+:root[data-performance-mode="true"] .mase-particles,
+:root[data-performance-mode="true"] .mase-particle-system,
+body[data-performance-mode="true"] .mase-particles,
+body[data-performance-mode="true"] .mase-particle-system {
+	display: none !important;
+}
+
+:root[data-performance-mode="true"] .mase-glassmorphism,
+body[data-performance-mode="true"] .mase-glassmorphism {
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	background: var(--mase-surface) !important;
+}
+
+/* Keep focus indicators in performance mode */
+:root[data-performance-mode="true"] *:focus-visible,
+body[data-performance-mode="true"] *:focus-visible {
+	outline: 3px solid var(--mase-focus-color) !important;
+	outline-offset: 2px !important;
+}
+
+/* ============================================
+   ENSURE CONTENT VISIBILITY
+   ============================================ */
+
+/**
+ * Ensure no content is hidden when animations are disabled
+ */
+@media (prefers-reduced-motion: reduce) {
+	/* Ensure modals are visible */
+	.mase-modal.active {
+		opacity: 1 !important;
+		display: flex !important;
+	}
+	
+	/* Ensure tabs are visible */
+	.mase-tab-content.active {
+		opacity: 1 !important;
+		display: block !important;
+	}
+	
+	/* Ensure cards are visible */
+	.mase-card {
+		opacity: 1 !important;
+		visibility: visible !important;
+	}
+	
+	/* Ensure notifications are visible */
+	.mase-notification {
+		opacity: 1 !important;
+		display: block !important;
+	}
+	
+	/* Ensure tooltips are visible on focus */
+	.mase-tooltip:focus-visible::after,
+	.mase-tooltip:hover::after {
+		opacity: 1 !important;
+		display: block !important;
+	}
+}
+
+/* ============================================
+   INSTANT STATE CHANGES
+   ============================================ */
+
+/**
+ * Make state changes instant when animations are disabled
+ */
+@media (prefers-reduced-motion: reduce) {
+	/* Instant tab switching */
+	.mase-tab.active {
+		border-bottom-color: var(--mase-primary) !important;
+	}
+	
+	/* Instant button states */
+	.button:hover,
+	.button:active {
+		background-color: var(--mase-primary-hover) !important;
+	}
+	
+	/* Instant toggle states */
+	.mase-toggle input:checked + .mase-toggle-slider {
+		background-color: var(--mase-primary) !important;
+	}
+	
+	/* Instant accordion states */
+	.mase-accordion.open .mase-accordion-content {
+		max-height: none !important;
+		display: block !important;
+	}
+}
+
+/* ============================================
+   ALTERNATIVE FEEDBACK
+   ============================================ */
+
+/**
+ * Provide alternative feedback when animations are disabled
+ */
+@media (prefers-reduced-motion: reduce) {
+	/* Use border changes instead of transforms */
+	.mase-card:hover {
+		border-color: var(--mase-primary) !important;
+		border-width: 2px !important;
+	}
+	
+	/* Use background changes instead of shadows */
+	.button:hover {
+		background-color: var(--mase-primary-hover) !important;
+	}
+	
+	/* Use text decoration instead of underline animation */
+	a:hover {
+		text-decoration: underline !important;
+		text-decoration-thickness: 2px !important;
+	}
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+/**
+ * Ensure loading states are visible without animations
+ */
+@media (prefers-reduced-motion: reduce) {
+	.mase-loading {
+		/* Show static loading indicator */
+		background-image: none !important;
+		background-color: var(--mase-surface-elevated) !important;
+	}
+	
+	.mase-loading::after {
+		content: 'Loading...' !important;
+		display: block !important;
+		text-align: center !important;
+		padding: 20px !important;
+	}
+	
+	/* Disable spinner animations */
+	.mase-spinner {
+		animation: none !important;
+		border: 3px solid var(--mase-border) !important;
+		border-top-color: var(--mase-primary) !important;
+	}
+}
+
+/* ============================================
+   PROGRESS INDICATORS
+   ============================================ */
+
+/**
+ * Ensure progress is visible without animations
+ */
+@media (prefers-reduced-motion: reduce) {
+	.mase-progress-bar {
+		transition: none !important;
+	}
+	
+	.mase-progress-bar::after {
+		animation: none !important;
+	}
+	
+	/* Show percentage text */
+	.mase-progress-bar[data-progress]::before {
+		content: attr(data-progress) '%' !important;
+		display: block !important;
+		text-align: center !important;
+		line-height: 30px !important;
+	}
+}
+
+/* ============================================
+   SCROLL BEHAVIOR
+   ============================================ */
+
+/**
+ * Disable smooth scrolling
+ */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto !important;
+	}
+	
+	* {
+		scroll-behavior: auto !important;
+	}
+}
+
+/* ============================================
+   PARALLAX EFFECTS
+   ============================================ */
+
+/**
+ * Disable parallax scrolling effects
+ */
+@media (prefers-reduced-motion: reduce) {
+	.mase-parallax {
+		transform: none !important;
+		background-attachment: scroll !important;
+	}
+}
+
+/* ============================================
+   VIDEO AND GIF CONTROLS
+   ============================================ */
+
+/**
+ * Pause autoplay videos and GIFs
+ */
+@media (prefers-reduced-motion: reduce) {
+	video {
+		animation-play-state: paused !important;
+	}
+	
+	/* Note: GIFs cannot be paused with CSS alone */
+	/* Consider replacing with static images via JavaScript */
+}
+
+/* ============================================
+   TESTING UTILITIES
+   ============================================ */
+
+/**
+ * Class to force reduced motion for testing
+ */
+.mase-force-reduced-motion,
+.mase-force-reduced-motion *,
+.mase-force-reduced-motion *::before,
+.mase-force-reduced-motion *::after {
+	animation-duration: 0.01ms !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0.01ms !important;
+	scroll-behavior: auto !important;
+}
+
+/**
+ * Class to test animation presence
+ */
+.mase-test-animation {
+	animation: mase-test-pulse 1s infinite;
+}
+
+@keyframes mase-test-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+/* ============================================
+   ACCESSIBILITY ANNOUNCEMENTS
+   ============================================ */
+
+/**
+ * Screen reader announcements for state changes
+ */
+.mase-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+/* Announce state changes when animations are disabled */
+@media (prefers-reduced-motion: reduce) {
+	.mase-tab.active::after {
+		content: 'Active' !important;
+		position: absolute !important;
+		width: 1px !important;
+		height: 1px !important;
+		padding: 0 !important;
+		margin: -1px !important;
+		overflow: hidden !important;
+		clip: rect(0, 0, 0, 0) !important;
+		white-space: nowrap !important;
+		border-width: 0 !important;
+	}
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+	* {
+		animation: none !important;
+		transition: none !important;
+		transform: none !important;
+	}
+}

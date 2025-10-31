@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Theme Enhanced Effects Test</title>
+    <link rel="stylesheet" href="../../assets/css/themes/glass-theme.css">
+    <style>
+        :root {
+            --mase-blur-amount: 20px;
+            --mase-intensity-multiplier: 1;
+            --mase-shadow-depth: 1;
+            --mase-transition-duration: 300ms;
+            --glass-tint: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .mase-card {
+            padding: 30px;
+            border-radius: 20px;
+            min-height: 200px;
+        }
+        
+        .effect-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .effect-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+        }
+        
+        .control-group button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .control-group button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .postbox {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .button {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body class="mase-template-glass">
+    <div class="test-container">
+        <h1>🔮 Glass Theme Enhanced Effects Test</h1>
+        
+        <div class="controls">
+            <h2 style="margin-top: 0;">Effect Controls</h2>
+            
+            <div class="control-group">
+                <label for="intensity">Intensity Multiplier: <span id="intensity-value">1.0</span></label>
+                <input type="range" id="intensity" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            
+            <div class="control-group">
+                <label>Theme Mode:</label>
+                <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+                <button onclick="togglePerformanceMode()">Toggle Performance Mode</button>
+            </div>
+        </div>
+        
+        <div class="effect-grid">
+            <div class="mase-card">
+                <div class="effect-title">✨ Prismatic Edge Effect</div>
+                <div class="effect-description">
+                    Rainbow gradient borders that shift and animate around the edges. 
+                    The colors cycle through the spectrum creating a prismatic effect.
+                    Hover to see the full animation.
+                </div>
+            </div>
+            
+            <div class="mase-card">
+                <div class="effect-title">🌈 Iridescent Hover</div>
+                <div class="effect-description">
+                    Hover over this card to see the iridescent effect. 
+                    The hue rotates through 360 degrees creating a rainbow shimmer.
+                    The effect loops continuously while hovering.
+                </div>
+            </div>
+            
+            <div class="mase-card">
+                <div class="effect-title">❄️ Frost Pattern Overlay</div>
+                <div class="effect-description">
+                    A subtle frost pattern is overlaid across the entire interface.
+                    Look closely at the background to see the crystalline texture.
+                    The pattern uses SVG filters for authentic frost appearance.
+                </div>
+            </div>
+            
+            <div class="mase-card">
+                <div class="effect-title">🔍 Depth-of-Field Blur</div>
+                <div class="effect-description">
+                    Different elements have varying blur amounts based on their z-index.
+                    This creates a depth hierarchy with foreground elements sharper.
+                    The blur intensity adjusts with the intensity multiplier.
+                </div>
+            </div>
+            
+            <div class="mase-card">
+                <div class="effect-title">💡 Caustic Light Patterns</div>
+                <div class="effect-description">
+                    Subtle light patterns that simulate caustics (light refraction through water).
+                    Only visible in light mode for realistic glass effect.
+                    The patterns flow and animate slowly across the surface.
+                </div>
+            </div>
+            
+            <div class="mase-card">
+                <div class="effect-title">🎨 Combined Effects</div>
+                <div class="effect-description">
+                    All effects work together to create a premium glass aesthetic.
+                    Try adjusting the intensity slider to see how effects scale.
+                    Performance mode disables expensive effects for better FPS.
+                </div>
+            </div>
+        </div>
+        
+        <div class="postbox">
+            <h3>Interactive Elements</h3>
+            <p>Test the effects on interactive elements:</p>
+            <button class="button">Hover Me</button>
+            <button class="button">Click Me</button>
+            <button class="button">Try Me</button>
+        </div>
+        
+        <div class="postbox">
+            <h3>Effect Details</h3>
+            <ul>
+                <li><strong>Prismatic Edges:</strong> 8-color gradient border with animation</li>
+                <li><strong>Iridescent Hover:</strong> 3-second hue rotation on hover</li>
+                <li><strong>Frost Pattern:</strong> SVG-based fractal noise overlay</li>
+                <li><strong>Depth Blur:</strong> Layered blur based on z-index hierarchy</li>
+                <li><strong>Caustic Lights:</strong> Animated light refraction patterns (light mode only)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Intensity control
+        const intensitySlider = document.getElementById('intensity');
+        const intensityValue = document.getElementById('intensity-value');
+        
+        intensitySlider.addEventListener('input', (e) => {
+            const value = e.target.value;
+            intensityValue.textContent = value;
+            document.documentElement.style.setProperty('--mase-intensity-multiplier', value);
+        });
+        
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.documentElement.toggleAttribute('data-theme');
+            if (document.documentElement.hasAttribute('data-theme')) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.classList.add('mase-dark-mode');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                document.body.classList.remove('mase-dark-mode');
+            }
+        }
+        
+        // Performance mode toggle
+        function togglePerformanceMode() {
+            const current = document.documentElement.getAttribute('data-performance-mode');
+            if (current === 'true') {
+                document.documentElement.removeAttribute('data-performance-mode');
+            } else {
+                document.documentElement.setAttribute('data-performance-mode', 'true');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+/**
+ * Material Design 3 Admin Interface Styles
+ * 
+ * Artistic admin header with gradient background and floating orb animation
+ * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.2.0
+ */
+
+/* ============================================
+   MD3 ARTISTIC ADMIN HEADER
+   Requirements: 5.1, 5.2, 5.3, 5.4, 5.5
+   ============================================ */
+
+.mase-md3-header {
+	position: relative;
+	background: linear-gradient(
+		135deg,
+		var(--md-primary, #6750a4) 0%,
+		var(--md-tertiary, #7d5260) 100%
+	);
+	color: var(--md-on-primary, #ffffff);
+	padding: var(--md-space-xl, 24px) var(--md-space-2xl, 32px);
+	border-radius: var(--md-corner-xl, 24px) var(--md-corner-xl, 24px) 0 0;
+	overflow: hidden;
+	margin-bottom: var(--md-space-l, 16px);
+}
+
+/* Header Content Container */
+.mase-header-content {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--md-space-xl, 24px);
+}
+
+/* Header Left Section */
+.mase-header-left {
+	flex: 1;
+}
+
+/* Main Title - Requirement 5.3, 5.4 */
+.mase-admin-title {
+	font-size: var(--md-headline-medium, 28px);
+	font-weight: var(--md-weight-bold, 700);
+	line-height: var(--md-line-height-tight, 1.2);
+	margin: 0;
+	color: var(--md-on-primary, #ffffff);
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-m, 12px);
+}
+
+/* Version Badge */
+.mase-version-badge {
+	font-size: var(--md-label-small, 11px);
+	font-weight: var(--md-weight-medium, 500);
+	padding: var(--md-space-xs, 4px) var(--md-space-s, 8px);
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: var(--md-corner-full, 50px);
+	text-shadow: none;
+}
+
+/* Subtitle - Requirement 5.5 */
+.mase-admin-subtitle {
+	font-size: var(--md-body-large, 16px);
+	font-weight: var(--md-weight-regular, 400);
+	line-height: var(--md-line-height-normal, 1.5);
+	margin: var(--md-space-s, 8px) 0 0 0;
+	color: var(--md-on-primary, #ffffff);
+	opacity: 0.8;
+}
+
+/* Header Right Section */
+.mase-header-right {
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-m, 12px);
+	flex-shrink: 0;
+}
+
+/* Header Toggles */
+.mase-header-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-xs, 4px);
+	padding: var(--md-space-s, 8px) var(--md-space-m, 12px);
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: var(--md-corner-s, 8px);
+	cursor: pointer;
+	transition: background var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+	color: var(--md-on-primary, #ffffff);
+	font-size: var(--md-label-large, 14px);
+}
+
+.mase-header-toggle:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.mase-header-toggle input[type="checkbox"] {
+	margin: 0;
+}
+
+/* Header Buttons */
+.mase-header-right .button {
+	border-radius: var(--md-corner-s, 8px);
+	padding: var(--md-space-s, 8px) var(--md-space-l, 16px);
+	display: flex;
+	align-items: center;
+	gap: var(--md-space-xs, 4px);
+	font-weight: var(--md-weight-medium, 500);
+	transition: all var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+.mase-header-right .button-secondary {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.2);
+	color: var(--md-on-primary, #ffffff);
+}
+
+.mase-header-right .button-secondary:hover {
+	background: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.mase-header-right .button-primary {
+	background: var(--md-on-primary, #ffffff);
+	border-color: var(--md-on-primary, #ffffff);
+	color: var(--md-primary, #6750a4);
+}
+
+.mase-header-right .button-primary:hover {
+	background: rgba(255, 255, 255, 0.9);
+	border-color: rgba(255, 255, 255, 0.9);
+	transform: translateY(-1px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   FLOATING ORB ANIMATION
+   Requirement: 5.2
+   ============================================ */
+
+.mase-header-orb {
+	position: absolute;
+	top: -50%;
+	right: -10%;
+	width: 200px;
+	height: 200px;
+	background: radial-gradient(
+		circle,
+		rgba(255, 255, 255, 0.15) 0%,
+		rgba(255, 255, 255, 0.05) 50%,
+		transparent 70%
+	);
+	border-radius: 50%;
+	pointer-events: none;
+	z-index: 1;
+	animation: mase-float 6s ease-in-out infinite;
+}
+
+@keyframes mase-float {
+	0%, 100% {
+		transform: translate(0, 0);
+	}
+	50% {
+		transform: translate(-20px, 20px);
+	}
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+	.mase-header-content {
+		flex-wrap: wrap;
+	}
+	
+	.mase-header-right {
+		width: 100%;
+		justify-content: flex-end;
+	}
+}
+
+@media (max-width: 768px) {
+	.mase-md3-header {
+		padding: var(--md-space-l, 16px);
+		border-radius: var(--md-corner-l, 16px) var(--md-corner-l, 16px) 0 0;
+	}
+	
+	.mase-admin-title {
+		font-size: var(--md-headline-small, 24px);
+	}
+	
+	.mase-admin-subtitle {
+		font-size: var(--md-body-medium, 14px);
+	}
+	
+	.mase-header-content {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	
+	.mase-header-right {
+		width: 100%;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+	}
+	
+	.mase-header-toggle span:not(.dashicons) {
+		display: none;
+	}
+	
+	.mase-header-orb {
+		width: 150px;
+		height: 150px;
+	}
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+:root[data-theme="dark"] .mase-md3-header {
+	background: linear-gradient(
+		135deg,
+		var(--md-primary, #cfbcff) 0%,
+		var(--md-tertiary, #efb8c8) 100%
+	);
+}
+
+:root[data-theme="dark"] .mase-header-orb {
+	background: radial-gradient(
+		circle,
+		rgba(255, 255, 255, 0.1) 0%,
+		rgba(255, 255, 255, 0.03) 50%,
+		transparent 70%
+	);
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+	.mase-header-orb {
+		animation: none;
+	}
+	
+	.mase-header-right .button,
+	.mase-header-toggle {
+		transition: none;
+	}
+}

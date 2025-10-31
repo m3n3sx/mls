@@ -210,4 +210,64 @@ class MASE_Template_Manager {
             'minimal'  => 'Minimal',
         );
     }
+    
+    /**
+     * Get CSS file size for a template
+     * Requirement 18.3: Calculate total CSS size per theme
+     *
+     * @param string $template_id Template ID
+     * @return array Size information (bytes, kb, formatted)
+     */
+    public function get_template_css_size( $template_id ) {
+        $template = $this->get_template( $template_id );
+        
+        if ( ! $template || ! isset( $template['css_file'] ) ) {
+            return array(
+                'bytes'     => 0,
+                'kb'        => 0,
+                'formatted' => '0 KB',
+                'warning'   => false,
+            );
+        }
+        
+        $css_file = MASE_PLUGIN_DIR . 'assets/css/themes/' . $template['css_file'];
+        
+        if ( ! file_exists( $css_file ) ) {
+            return array(
+                'bytes'     => 0,
+                'kb'        => 0,
+                'formatted' => '0 KB',
+                'warning'   => false,
+            );
+        }
+        
+        $size_bytes = filesize( $css_file );
+        $size_kb    = round( $size_bytes / 1024, 2 );
+        
+        // Requirement 18.3: Warn if size exceeds threshold (100KB)
+        $warning = $size_kb > 100;
+        
+        return array(
+            'bytes'     => $size_bytes,
+            'kb'        => $size_kb,
+            'formatted' => $size_kb . ' KB',
+            'warning'   => $warning,
+        );
+    }
+    
+    /**
+     * Get CSS file sizes for all templates
+     * Requirement 18.3: Display in theme info
+     *
+     * @return array Template sizes indexed by template ID
+     */
+    public function get_all_template_sizes() {
+        $sizes = array();
+        
+        foreach ( $this->templates as $template_id => $template ) {
+            $sizes[ $template_id ] = $this->get_template_css_size( $template_id );
+        }
+        
+        return $sizes;
+    }
 }

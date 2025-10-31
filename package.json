@@ -23,6 +23,15 @@
     "test:visual:headless": "node tests/visual-interactive/runner.cjs --mode headless",
     "test:visual:debug": "node tests/visual-interactive/runner.cjs --mode debug",
     "test:visual:tab": "node tests/visual-interactive/runner.cjs --mode interactive --tab",
+    "test:qa": "bash tests/e2e/run-all-qa-tests.sh",
+    "test:qa:visual": "playwright test tests/e2e/visual-regression-comprehensive.spec.js",
+    "test:qa:cross-browser": "playwright test tests/e2e/cross-browser-comprehensive.spec.js",
+    "test:qa:mobile": "playwright test tests/e2e/mobile-device-comprehensive.spec.js",
+    "test:qa:performance": "playwright test tests/e2e/performance-comprehensive.spec.js",
+    "test:qa:accessibility": "playwright test tests/e2e/accessibility-comprehensive.spec.js",
+    "test:qa:chrome": "playwright test tests/e2e/cross-browser-comprehensive.spec.js --project=chromium",
+    "test:qa:firefox": "playwright test tests/e2e/cross-browser-comprehensive.spec.js --project=firefox",
+    "test:qa:safari": "playwright test tests/e2e/cross-browser-comprehensive.spec.js --project=webkit",
     "lint": "eslint assets/js/**/*.js",
     "lint:fix": "eslint assets/js/**/*.js --fix",
     "validate:wpcs": "bash scripts/validate-wpcs.sh",
@@ -49,7 +58,14 @@
     "prepare": "husky install",
     "build:legacy": "npm run build:css && npm run build:js",
     "build:css": "for file in assets/css/*.css; do [ -f \"$file\" ] && [ \"${file%.min.css}\" = \"$file\" ] && echo \"/* Minified for production v1.2.1 */\" > \"${file%.css}.min.css\" && cat \"$file\" >> \"${file%.css}.min.css\"; done",
-    "build:js": "for file in assets/js/*.js; do [ -f \"$file\" ] && [ \"${file%.min.js}\" = \"$file\" ] && echo \"/* Minified for production v1.2.1 */\" > \"${file%.js}.min.js\" && cat \"$file\" >> \"${file%.js}.min.js\"; done"
+    "build:js": "for file in assets/js/*.js; do [ -f \"$file\" ] && [ \"${file%.min.js}\" = \"$file\" ] && echo \"/* Minified for production v1.2.1 */\" > \"${file%.js}.min.js\" && cat \"$file\" >> \"${file%.js}.min.js\"; done",
+    "minify:md3": "node scripts/minify-md3-assets.cjs",
+    "test:minified": "node scripts/test-minified-assets.cjs",
+    "minify:all": "npm run minify:md3 && npm run test:minified",
+    "backup:md3": "bash scripts/create-md3-backup.sh",
+    "backup:list": "ls -lh backups/",
+    "deploy:md3": "bash scripts/deploy-md3-production.sh",
+    "deploy:prepare": "npm run minify:md3 && npm run test:minified && npm run backup:md3"
   },
   "dependencies": {
     "zustand": "^4.4.7"

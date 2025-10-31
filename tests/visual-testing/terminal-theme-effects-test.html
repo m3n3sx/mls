@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" data-intensity="medium">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Theme Effects Test</title>
+    <link rel="stylesheet" href="../../assets/css/themes/terminal-theme.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .demo-area {
+            padding: 20px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        /* Terminal theme wrapper */
+        .mase-template-terminal {
+            min-height: 400px;
+        }
+        
+        .wrap {
+            padding: 20px;
+        }
+        
+        #adminmenu {
+            width: 200px;
+            float: left;
+            margin-right: 20px;
+        }
+        
+        #adminmenu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        
+        .content-area {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Terminal Theme Effects Test</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label>Intensity:</label>
+                <button onclick="setIntensity('low')">Low</button>
+                <button onclick="setIntensity('medium')">Medium</button>
+                <button onclick="setIntensity('high')">High</button>
+            </div>
+            
+            <div class="control-group">
+                <label>VHS Noise:</label>
+                <button onclick="toggleVHSNoise(true)">Enable</button>
+                <button onclick="toggleVHSNoise(false)">Disable</button>
+            </div>
+            
+            <div class="control-group">
+                <label>Variant:</label>
+                <button onclick="setVariant('green')">Green</button>
+                <button onclick="setVariant('blue')">Blue</button>
+                <button onclick="setVariant('amber')">Amber</button>
+                <button onclick="setVariant('red')">Red</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Effect 7.1: Scanline Effect</h2>
+            <p>You should see horizontal scanlines moving across the terminal area (2s loop animation).</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Effect 7.2: CRT Curvature</h2>
+            <p>The content area should have a subtle perspective transform creating a CRT screen effect.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Effect 7.3: Phosphor Persistence</h2>
+            <p>Text should have multi-layer glow creating a phosphor trail effect.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Effect 7.4: VHS Noise Overlay (Optional)</h2>
+            <p>When enabled, you should see subtle animated noise overlay.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Effect 7.5: Enhanced Cursor Animation</h2>
+            <p>Hover over menu items to see blinking cursor. Headings also have cursor animation.</p>
+        </div>
+        
+        <div class="demo-area mase-template-terminal" data-variant="green" data-vhs-noise="false">
+            <div id="wpwrap">
+                <div class="wrap">
+                    <h1>Terminal Theme Demo</h1>
+                    <h2>Subtitle with Cursor</h2>
+                    
+                    <div id="adminmenu">
+                        <a href="#">Dashboard</a>
+                        <a href="#">Posts</a>
+                        <a href="#">Media</a>
+                        <a href="#">Pages</a>
+                        <a href="#">Comments</a>
+                        <a href="#">Appearance</a>
+                        <a href="#">Plugins</a>
+                        <a href="#">Users</a>
+                        <a href="#">Tools</a>
+                        <a href="#">Settings</a>
+                    </div>
+                    
+                    <div class="content-area">
+                        <p>This is a demonstration of the enhanced terminal theme effects.</p>
+                        <p>All effects should be visible and working correctly.</p>
+                        
+                        <h3>Features:</h3>
+                        <ul>
+                            <li>Scanline animation overlay</li>
+                            <li>CRT screen curvature</li>
+                            <li>Phosphor persistence glow</li>
+                            <li>Optional VHS noise</li>
+                            <li>Blinking cursor animations</li>
+                        </ul>
+                        
+                        <button class="button">Test Button</button>
+                        <button class="button-primary">Primary Button</button>
+                        
+                        <div style="margin-top: 20px;">
+                            <input type="text" placeholder="Test input field" style="width: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function setIntensity(intensity) {
+            document.documentElement.setAttribute('data-intensity', intensity);
+            document.querySelector('.mase-template-terminal').setAttribute('data-intensity', intensity);
+            console.log('Intensity set to:', intensity);
+        }
+        
+        function toggleVHSNoise(enabled) {
+            document.querySelector('.mase-template-terminal').setAttribute('data-vhs-noise', enabled);
+            console.log('VHS noise:', enabled ? 'enabled' : 'disabled');
+        }
+        
+        function setVariant(variant) {
+            document.querySelector('.mase-template-terminal').setAttribute('data-variant', variant);
+            console.log('Variant set to:', variant);
+        }
+        
+        // Log initial state
+        console.log('Terminal theme effects test loaded');
+        console.log('Initial intensity:', document.documentElement.getAttribute('data-intensity'));
+    </script>
+</body>
+</html>

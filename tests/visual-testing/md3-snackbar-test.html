@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Snackbar System Test - MASE</title>
+    
+    <!-- MD3 Foundation CSS -->
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-typography.css">
+    
+    <!-- MD3 Snackbar CSS -->
+    <link rel="stylesheet" href="../../assets/css/mase-md3-snackbar.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--md-background, #fffbfe);
+            color: var(--md-on-background, #1c1b1f);
+            padding: 40px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: var(--md-headline-large, 32px);
+            font-weight: var(--md-weight-bold, 700);
+            margin-bottom: 16px;
+        }
+        
+        .test-section {
+            background: var(--md-surface, #fffbfe);
+            border-radius: var(--md-corner-l, 16px);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--md-elevation-1);
+        }
+        
+        h2 {
+            font-size: var(--md-title-large, 22px);
+            font-weight: var(--md-weight-medium, 500);
+            margin-bottom: 16px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        
+        button {
+            background: var(--md-primary, #6750a4);
+            color: var(--md-on-primary, #ffffff);
+            border: none;
+            border-radius: var(--md-corner-full, 50px);
+            padding: 12px 24px;
+            font-size: var(--md-label-large, 14px);
+            font-weight: var(--md-weight-medium, 500);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        
+        button:hover {
+            box-shadow: var(--md-elevation-2);
+            transform: translateY(-1px);
+        }
+        
+        button.outlined {
+            background: transparent;
+            color: var(--md-primary, #6750a4);
+            border: 1px solid var(--md-outline, #79747e);
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        :root[data-theme="dark"] {
+            --md-background: #1c1b1f;
+            --md-on-background: #e6e1e5;
+            --md-surface: #1c1b1f;
+        }
+    </style>
+</head>
+<body>
+    <button class="dark-mode-toggle outlined" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    
+    <div class="test-container">
+        <h1>MD3 Snackbar System Test</h1>
+        
+        <div class="test-section">
+            <h2>Basic Snackbar Variants</h2>
+            <div class="button-group">
+                <button onclick="showSuccess()">Show Success</button>
+                <button onclick="showError()">Show Error</button>
+                <button onclick="showInfo()">Show Info</button>
+                <button onclick="showDefault()">Show Default</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Snackbar with Action Button</h2>
+            <div class="button-group">
+                <button onclick="showWithAction()">Show with Action</button>
+                <button onclick="showWithUndo()">Show with Undo</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Queue Management</h2>
+            <div class="button-group">
+                <button onclick="showMultiple()">Show Multiple (Queue)</button>
+                <button onclick="showRapid()">Rapid Fire (5 notifications)</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Custom Duration</h2>
+            <div class="button-group">
+                <button onclick="showShort()">Short (2s)</button>
+                <button onclick="showLong()">Long (8s)</button>
+                <button onclick="showPersistent()">Persistent (no auto-dismiss)</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Snackbar Container -->
+    <div id="mase-snackbar" class="mase-snackbar" role="status" aria-live="polite" aria-atomic="true" style="display: none;">
+        <div class="mase-snackbar-content">
+            <span class="mase-snackbar-icon dashicons" aria-hidden="true"></span>
+            <span class="mase-snackbar-message"></span>
+        </div>
+        <div class="mase-snackbar-actions">
+            <button type="button" class="mase-snackbar-action" style="display: none;"></button>
+            <button type="button" class="mase-snackbar-close" aria-label="Close notification">
+                <span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- WordPress Dashicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dashicons/0.9.0/dashicons.min.css">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- MD3 Snackbar JS -->
+    <script src="../../assets/js/mase-md3-snackbar.js"></script>
+    
+    <script>
+        // Test functions
+        function showSuccess() {
+            MASESnackbar.success('Settings saved successfully!');
+        }
+        
+        function showError() {
+            MASESnackbar.error('Failed to save settings. Please try again.');
+        }
+        
+        function showInfo() {
+            MASESnackbar.info('Your changes will take effect after page reload.');
+        }
+        
+        function showDefault() {
+            MASESnackbar.show({
+                message: 'This is a default notification',
+                type: 'default'
+            });
+        }
+        
+        function showWithAction() {
+            MASESnackbar.show({
+                message: 'Template applied successfully',
+                type: 'success',
+                actionText: 'View',
+                actionCallback: function() {
+                    alert('Action button clicked!');
+                }
+            });
+        }
+        
+        function showWithUndo() {
+            MASESnackbar.show({
+                message: 'Item deleted',
+                type: 'info',
+                actionText: 'Undo',
+                actionCallback: function() {
+                    MASESnackbar.success('Item restored!');
+                }
+            });
+        }
+        
+        function showMultiple() {
+            MASESnackbar.success('First notification');
+            setTimeout(() => MASESnackbar.info('Second notification'), 500);
+            setTimeout(() => MASESnackbar.error('Third notification'), 1000);
+        }
+        
+        function showRapid() {
+            for (let i = 1; i <= 5; i++) {
+                MASESnackbar.info('Notification #' + i);
+            }
+        }
+        
+        function showShort() {
+            MASESnackbar.show({
+                message: 'This will disappear quickly',
+                type: 'info',
+                duration: 2000
+            });
+        }
+        
+        function showLong() {
+            MASESnackbar.show({
+                message: 'This will stay for 8 seconds',
+                type: 'success',
+                duration: 8000
+            });
+        }
+        
+        function showPersistent() {
+            MASESnackbar.show({
+                message: 'This will stay until you close it',
+                type: 'info',
+                duration: 0
+            });
+        }
+        
+        function toggleDarkMode() {
+            const root = document.documentElement;
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+    </script>
+</body>
+</html>

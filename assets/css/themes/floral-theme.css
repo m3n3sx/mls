@@ -1,134 +1,198 @@
-/**
- * Floral Natural Theme
- * Organic shapes with pastel colors
- */
-
 .mase-template-floral {
-    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 25%, #fd79a8 50%, #e84393 75%, #a29bfe 100%);
-    color: #2d3436;
-    border-radius: 25px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 10px 40px rgba(253, 121, 168, 0.3);
-}
+ background: linear-gradient(135deg, #ffeaa7 0%, var(--floral-accent, #fab1a0) 25%, var(--floral-secondary, #fd79a8) 50%, var(--floral-primary, #e84393) 75%, #a29bfe 100%);
+ color: #2d3436;
+ border-radius: 28px;
+ border: 3px solid rgba(255, 255, 255, 0.5);
+ box-shadow:
+ 0 12px 48px rgba(253, 121, 168, 0.4),
+ 0 6px 24px rgba(232, 67, 147, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.6);
+ transition: all 0.3s ease}
 
-/* Floral Animations */
 @keyframes floatFlower {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    33% {
-        transform: translateY(-10px) rotate(120deg);
-    }
-    66% {
-        transform: translateY(-5px) rotate(240deg);
-    }
+ 0%, 100% {
+ transform: translateY(0) rotate(0deg)}
+ 33% {
+ transform: translateY(-10px) rotate(120deg)}
+ 66% {
+ transform: translateY(-5px) rotate(240deg)}
 }
 
 @keyframes petalGlow {
-    0%, 100% {
-        box-shadow: 0 10px 40px rgba(253, 121, 168, 0.3);
-    }
-    50% {
-        box-shadow: 0 15px 60px rgba(253, 121, 168, 0.5);
-    }
+ 0%, 100% {
+ box-shadow: 0 10px 40px rgba(253, 121, 168, 0.3)}
+ 50% {
+ box-shadow: 0 15px 60px rgba(253, 121, 168, 0.5)}
 }
 
 .mase-template-floral {
-    animation: petalGlow 4s ease-in-out infinite;
-}
+ animation: petalGlow 4s ease-in-out infinite}
 
-/* Admin Bar Floral Style */
 .mase-template-floral #wpadminbar {
-    background: linear-gradient(90deg, #ffeaa7, #fab1a0, #fd79a8);
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 0 0 15px 15px;
-    box-shadow: 0 5px 20px rgba(253, 121, 168, 0.3);
-}
+ background: linear-gradient(90deg, #ffeaa7, var(--floral-accent, #fab1a0), var(--floral-secondary, #fd79a8));
+ border-bottom: 3px solid rgba(255, 255, 255, 0.6);
+ border-radius: 0 0 18px 18px;
+ box-shadow:
+ 0 6px 24px rgba(253, 121, 168, 0.4),
+ 0 3px 12px rgba(232, 67, 147, 0.3)}
 
 .mase-template-floral #wpadminbar .ab-item,
 .mase-template-floral #wpadminbar a.ab-item {
-    color: #2d3436;
-    font-weight: 500;
-}
+ color: #2d3436;
+ font-weight: 600;
+ letter-spacing: 0.3px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-floral #wpadminbar .ab-item:hover {
-    background: rgba(255, 255, 255, 0.3);
-    color: #e84393;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
+ background: rgba(255, 255, 255, 0.4);
+ color: var(--floral-primary, #e84393);
+ border-radius: 14px;
+ box-shadow: 0 4px 12px rgba(232, 67, 147, 0.3)}
 
-/* Admin Menu Floral Style */
 .mase-template-floral #adminmenu {
-    background: linear-gradient(180deg, #ffeaa7 0%, #fab1a0 50%, #fd79a8 100%);
-    border-right: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 0 20px 20px 0;
-    box-shadow: 5px 0 30px rgba(253, 121, 168, 0.2);
-}
+ background: linear-gradient(180deg, #ffeaa7 0%, var(--floral-accent, #fab1a0) 50%, var(--floral-secondary, #fd79a8) 100%);
+ border-right: 3px solid rgba(255, 255, 255, 0.5);
+ border-radius: 0 24px 24px 0;
+ box-shadow:
+ 6px 0 36px rgba(253, 121, 168, 0.3),
+ 3px 0 18px rgba(232, 67, 147, 0.2)}
 
 .mase-template-floral #adminmenu .wp-submenu {
-    background: linear-gradient(180deg, #fab1a0, #fd79a8);
-    border-radius: 0 15px 15px 0;
-}
+ background: linear-gradient(180deg, var(--floral-accent, #fab1a0), var(--floral-secondary, #fd79a8));
+ border-left: 2px solid rgba(255, 255, 255, 0.4);
+ border-radius: 0 18px 18px 0;
+ box-shadow: 2px 0 16px rgba(253, 121, 168, 0.3)}
 
 .mase-template-floral #adminmenu a {
-    color: #2d3436;
-    border-radius: 15px;
-    margin: 3px 5px;
-    transition: all 0.3s ease;
-}
+ color: #2d3436;
+ font-weight: 600;
+ border-radius: 18px;
+ margin: 4px 8px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-floral #adminmenu a:hover,
 .mase-template-floral #adminmenu li.menu-top:hover {
-    background: rgba(255, 255, 255, 0.4);
-    color: #e84393;
-    border-radius: 15px;
-    transform: translateX(5px);
-    box-shadow: 0 5px 15px rgba(232, 67, 147, 0.3);
-}
+ background: rgba(255, 255, 255, 0.5);
+ color: var(--floral-primary, #e84393);
+ border-radius: 18px;
+ transform: translateX(6px);
+ box-shadow:
+ 0 6px 18px rgba(232, 67, 147, 0.4),
+ inset 0 1px 0 rgba(255, 255, 255, 0.6)}
 
 .mase-template-floral #adminmenu li.current a.menu-top {
-    background: rgba(255, 255, 255, 0.5);
-    color: #e84393;
-    border-radius: 15px;
-    border-left: 4px solid #e84393;
-    font-weight: 600;
-}
+ background: rgba(255, 255, 255, 0.6);
+ color: var(--floral-primary, #e84393);
+ border-radius: 18px;
+ border-left: 4px solid var(--floral-primary, #e84393);
+ font-weight: 700;
+ box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4)}
 
-/* Flower Icon Animations */
 .mase-template-floral #adminmenu .wp-menu-image::before {
-    animation: floatFlower 6s ease-in-out infinite;
-}
+ animation: floatFlower 6s ease-in-out infinite}
 
-/* Content Area */
 .mase-template-floral .wrap {
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 25px;
-    padding: 30px;
-    box-shadow: 0 10px 40px rgba(253, 121, 168, 0.2);
-    backdrop-filter: blur(10px);
-}
+ background: rgba(255, 255, 255, 0.85);
+ border: 2px solid rgba(255, 255, 255, 0.6);
+ border-radius: 28px;
+ padding: 36px;
+ box-shadow:
+ 0 12px 48px rgba(253, 121, 168, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.8);
+ backdrop-filter: blur(12px);
+ -webkit-backdrop-filter: blur(12px)}
 
 .mase-template-floral h1,
 .mase-template-floral h2 {
-    color: #e84393;
-    font-weight: 600;
-}
+ color: var(--floral-primary, #e84393);
+ font-weight: 700;
+ letter-spacing: -0.01em;
+ line-height: 1.3}
 
-/* Organic Buttons */
+.mase-template-floral h1 {
+ font-size: 30px}
+
+.mase-template-floral h2 {
+ font-size: 24px}
+
+.mase-template-floral p,
+.mase-template-floral label {
+ color: #2d3436;
+ line-height: 1.7}
+
 .mase-template-floral .button,
 .mase-template-floral .button-primary {
-    background: linear-gradient(135deg, #fd79a8, #e84393);
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    color: #ffffff;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
+ background: linear-gradient(135deg, var(--floral-secondary, #fd79a8), var(--floral-primary, #e84393));
+ border: 3px solid rgba(255, 255, 255, 0.6);
+ border-radius: 24px;
+ padding: 12px 28px;
+ color: #fff;
+ font-weight: 600;
+ letter-spacing: 0.3px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 6px 20px rgba(232, 67, 147, 0.3)}
 
 .mase-template-floral .button:hover,
 .mase-template-floral .button-primary:hover {
-    background: linear-gradient(135deg, #e84393, #a29bfe);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(232, 67, 147, 0.4);
+ background: linear-gradient(135deg, var(--floral-primary, #e84393), #a29bfe);
+ transform: translateY(-4px);
+ box-shadow:
+ 0 12px 32px rgba(232, 67, 147, 0.5),
+ 0 6px 16px rgba(162, 155, 254, 0.3);
+ border-color: rgba(255, 255, 255, 0.8)}
+
+.mase-template-floral .button:active,
+.mase-template-floral .button-primary:active {
+ transform: translateY(-1px);
+ box-shadow: 0 6px 20px rgba(232, 67, 147, 0.4)}
+
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-floral {
+ animation: none}
+
+ .mase-template-floral #adminmenu .wp-menu-image::before {
+ animation: none}
+
+ .mase-template-floral #adminmenu a:hover,
+ .mase-template-floral #adminmenu li.menu-top:hover,
+ .mase-template-floral .button:hover,
+ .mase-template-floral .button-primary:hover {
+ transform: none}
+}
+
+.mase-template-floral input[type="text"],
+.mase-template-floral input[type="password"],
+.mase-template-floral input[type="email"],
+.mase-template-floral input[type="number"],
+.mase-template-floral textarea,
+.mase-template-floral select {
+ background: rgba(255, 255, 255, 0.9);
+ border: 2px solid rgba(232, 67, 147, 0.3);
+ border-radius: 16px;
+ color: #2d3436;
+ padding: 10px 16px;
+ transition: all 0.3s ease}
+
+.mase-template-floral input[type="text"]:focus,
+.mase-template-floral input[type="password"]:focus,
+.mase-template-floral input[type="email"]:focus,
+.mase-template-floral input[type="number"]:focus,
+.mase-template-floral textarea:focus,
+.mase-template-floral select:focus {
+ outline: none;
+ border-color: var(--floral-primary, #e84393);
+ box-shadow:
+ 0 0 0 3px rgba(232, 67, 147, 0.2),
+ 0 4px 16px rgba(232, 67, 147, 0.3);
+ background: rgba(255, 255, 255, 1)}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(10px)) and not (-webkit-backdrop-filter: blur(10px)) {
+ .mase-template-floral {
+ background: rgba(255, 250, 252, 0.98);
+ }
+ 
+ :root[data-theme="dark"] .mase-template-floral {
+ background: rgba(45, 30, 40, 0.98);
+ }
 }

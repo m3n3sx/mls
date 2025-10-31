@@ -1,0 +1,846 @@
+/**
+ * Enhanced Gradient Theme Effects
+ * Implements mesh gradients, morphing, color harmonies, and interactive effects
+ */
+
+/* ============================================
+   10.1 Mesh Gradient Implementation
+   ============================================ */
+
+/* Mesh gradient with multiple radial gradient layers */
+.mase-template-gradient.mase-enhanced {
+    background: 
+        radial-gradient(at 20% 30%, #ee7752 0%, transparent 50%),
+        radial-gradient(at 80% 70%, #e73c7e 0%, transparent 50%),
+        radial-gradient(at 50% 50%, #23a6d5 0%, transparent 50%),
+        radial-gradient(at 30% 80%, #23d5ab 0%, transparent 50%),
+        radial-gradient(at 70% 20%, #ff6b6b 0%, transparent 50%),
+        radial-gradient(at 40% 60%, #4ecdc4 0%, transparent 50%),
+        #1a1a2e;
+    background-size: 200% 200%;
+    animation: meshGradient 15s ease-in-out infinite;
+}
+
+@keyframes meshGradient {
+    0%, 100% { 
+        background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%, 100% 0%, 50% 50%;
+    }
+    25% {
+        background-position: 50% 25%, 75% 75%, 25% 75%, 75% 25%, 25% 50%, 75% 50%;
+    }
+    50% { 
+        background-position: 100% 50%, 0% 50%, 50% 0%, 50% 100%, 0% 0%, 100% 100%;
+    }
+    75% {
+        background-position: 75% 75%, 25% 25%, 75% 25%, 25% 75%, 50% 25%, 50% 75%;
+    }
+}
+
+/* Admin bar with mesh gradient */
+.mase-template-gradient.mase-enhanced #wpadminbar {
+    background: 
+        radial-gradient(at 10% 50%, #ee7752 0%, transparent 40%),
+        radial-gradient(at 50% 50%, #23a6d5 0%, transparent 40%),
+        radial-gradient(at 90% 50%, #23d5ab 0%, transparent 40%),
+        #1a1a2e;
+    background-size: 300% 100%;
+    animation: meshGradientHorizontal 15s ease-in-out infinite;
+}
+
+@keyframes meshGradientHorizontal {
+    0%, 100% { 
+        background-position: 0% 50%, 50% 50%, 100% 50%;
+    }
+    33% {
+        background-position: 33% 50%, 66% 50%, 0% 50%;
+    }
+    66% { 
+        background-position: 66% 50%, 0% 50%, 33% 50%;
+    }
+}
+
+/* Admin menu with mesh gradient */
+.mase-template-gradient.mase-enhanced #adminmenu {
+    background: 
+        radial-gradient(at 50% 20%, #ee7752 0%, transparent 40%),
+        radial-gradient(at 50% 50%, #e73c7e 0%, transparent 40%),
+        radial-gradient(at 50% 80%, #23a6d5 0%, transparent 40%),
+        #1a1a2e;
+    background-size: 100% 300%;
+    animation: meshGradientVertical 15s ease-in-out infinite;
+}
+
+@keyframes meshGradientVertical {
+    0%, 100% { 
+        background-position: 50% 0%, 50% 50%, 50% 100%;
+    }
+    33% {
+        background-position: 50% 33%, 50% 66%, 50% 0%;
+    }
+    66% { 
+        background-position: 50% 66%, 50% 0%, 50% 33%;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .mase-template-gradient.mase-enhanced,
+    .mase-template-gradient.mase-enhanced #wpadminbar,
+    .mase-template-gradient.mase-enhanced #adminmenu {
+        animation: none;
+        background-size: 100% 100%;
+    }
+}
+
+/* Performance mode - disable mesh gradient */
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    animation: none;
+}
+
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced #wpadminbar {
+    background: linear-gradient(90deg, #ee7752, #23a6d5, #23d5ab);
+    animation: none;
+}
+
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced #adminmenu {
+    background: linear-gradient(180deg, #ee7752, #e73c7e, #23a6d5);
+    animation: none;
+}
+
+
+/* ============================================
+   10.2 Gradient Morphing Implementation
+   ============================================ */
+
+/* Smooth color transitions with morphing effect */
+.mase-template-gradient.mase-enhanced.mase-morphing {
+    background: 
+        linear-gradient(
+            var(--gradient-angle, 45deg),
+            var(--color-1, #ee7752) 0%,
+            var(--color-2, #e73c7e) 20%,
+            var(--color-3, #23a6d5) 40%,
+            var(--color-4, #23d5ab) 60%,
+            var(--color-5, #ff6b6b) 80%,
+            var(--color-6, #4ecdc4) 100%
+        );
+    background-size: 400% 400%;
+    animation: gradientMorph 15s ease-in-out infinite;
+}
+
+@keyframes gradientMorph {
+    0% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg) saturate(1);
+    }
+    25% {
+        background-position: 50% 100%;
+        filter: hue-rotate(15deg) saturate(1.2);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: hue-rotate(30deg) saturate(1);
+    }
+    75% {
+        background-position: 50% 0%;
+        filter: hue-rotate(15deg) saturate(1.2);
+    }
+    100% {
+        background-position: 0% 50%;
+        filter: hue-rotate(0deg) saturate(1);
+    }
+}
+
+/* Morphing effect for cards and containers */
+.mase-template-gradient.mase-enhanced .wrap,
+.mase-template-gradient.mase-enhanced .postbox,
+.mase-template-gradient.mase-enhanced .card {
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-gradient.mase-enhanced .wrap::before,
+.mase-template-gradient.mase-enhanced .postbox::before,
+.mase-template-gradient.mase-enhanced .card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 70%
+    );
+    animation: morphingShimmer 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes morphingShimmer {
+    0%, 100% {
+        transform: translate(0%, 0%) rotate(0deg);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(25%, 25%) rotate(90deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(50%, 50%) rotate(180deg);
+        opacity: 0.3;
+    }
+    75% {
+        transform: translate(25%, 25%) rotate(270deg);
+        opacity: 0.5;
+    }
+}
+
+/* Button morphing effect */
+.mase-template-gradient.mase-enhanced .button,
+.mase-template-gradient.mase-enhanced .button-primary {
+    background: linear-gradient(
+        135deg,
+        #ff6b6b 0%,
+        #4ecdc4 50%,
+        #ee7752 100%
+    );
+    background-size: 300% 300%;
+    animation: buttonMorph 15s ease-in-out infinite;
+}
+
+@keyframes buttonMorph {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    33% {
+        background-position: 50% 100%;
+    }
+    66% {
+        background-position: 100% 50%;
+    }
+}
+
+.mase-template-gradient.mase-enhanced .button:hover,
+.mase-template-gradient.mase-enhanced .button-primary:hover {
+    animation: buttonMorphHover 2s ease-in-out infinite;
+}
+
+@keyframes buttonMorphHover {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: brightness(1.1);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(1.3);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .mase-template-gradient.mase-enhanced.mase-morphing,
+    .mase-template-gradient.mase-enhanced .wrap::before,
+    .mase-template-gradient.mase-enhanced .postbox::before,
+    .mase-template-gradient.mase-enhanced .card::before,
+    .mase-template-gradient.mase-enhanced .button,
+    .mase-template-gradient.mase-enhanced .button-primary {
+        animation: none;
+    }
+}
+
+
+/* ============================================
+   10.3 Color Harmony Presets
+   ============================================ */
+
+/* Complementary color scheme (opposite on color wheel) */
+.mase-template-gradient[data-harmony="complementary"] {
+    --color-1: #ff6b6b; /* Red */
+    --color-2: #ff8787;
+    --color-3: #ffa5a5;
+    --color-4: #6bffb4; /* Cyan-Green (complement) */
+    --color-5: #87ffbe;
+    --color-6: #a5ffc9;
+}
+
+.mase-template-gradient[data-harmony="complementary"].mase-enhanced {
+    background: 
+        radial-gradient(at 20% 30%, var(--color-1) 0%, transparent 50%),
+        radial-gradient(at 80% 70%, var(--color-4) 0%, transparent 50%),
+        radial-gradient(at 50% 50%, var(--color-2) 0%, transparent 50%),
+        radial-gradient(at 30% 80%, var(--color-5) 0%, transparent 50%),
+        radial-gradient(at 70% 20%, var(--color-3) 0%, transparent 50%),
+        radial-gradient(at 40% 60%, var(--color-6) 0%, transparent 50%),
+        #1a1a2e;
+}
+
+/* Triadic color scheme (three colors equally spaced on color wheel) */
+.mase-template-gradient[data-harmony="triadic"] {
+    --color-1: #ff6b6b; /* Red */
+    --color-2: #ff8787;
+    --color-3: #6bff6b; /* Green */
+    --color-4: #87ff87;
+    --color-5: #6b6bff; /* Blue */
+    --color-6: #8787ff;
+}
+
+.mase-template-gradient[data-harmony="triadic"].mase-enhanced {
+    background: 
+        radial-gradient(at 20% 30%, var(--color-1) 0%, transparent 50%),
+        radial-gradient(at 80% 70%, var(--color-3) 0%, transparent 50%),
+        radial-gradient(at 50% 50%, var(--color-5) 0%, transparent 50%),
+        radial-gradient(at 30% 80%, var(--color-2) 0%, transparent 50%),
+        radial-gradient(at 70% 20%, var(--color-4) 0%, transparent 50%),
+        radial-gradient(at 40% 60%, var(--color-6) 0%, transparent 50%),
+        #1a1a2e;
+}
+
+/* Analogous color scheme (adjacent colors on color wheel) */
+.mase-template-gradient[data-harmony="analogous"] {
+    --color-1: #ff6b6b; /* Red */
+    --color-2: #ff6b9d; /* Red-Magenta */
+    --color-3: #ff6bcf; /* Magenta */
+    --color-4: #d96bff; /* Magenta-Purple */
+    --color-5: #a76bff; /* Purple */
+    --color-6: #756bff; /* Purple-Blue */
+}
+
+.mase-template-gradient[data-harmony="analogous"].mase-enhanced {
+    background: 
+        radial-gradient(at 20% 30%, var(--color-1) 0%, transparent 50%),
+        radial-gradient(at 80% 70%, var(--color-3) 0%, transparent 50%),
+        radial-gradient(at 50% 50%, var(--color-5) 0%, transparent 50%),
+        radial-gradient(at 30% 80%, var(--color-2) 0%, transparent 50%),
+        radial-gradient(at 70% 20%, var(--color-4) 0%, transparent 50%),
+        radial-gradient(at 40% 60%, var(--color-6) 0%, transparent 50%),
+        #1a1a2e;
+}
+
+/* Apply harmony colors to admin bar */
+.mase-template-gradient[data-harmony] #wpadminbar {
+    background: 
+        radial-gradient(at 10% 50%, var(--color-1) 0%, transparent 40%),
+        radial-gradient(at 50% 50%, var(--color-3) 0%, transparent 40%),
+        radial-gradient(at 90% 50%, var(--color-5) 0%, transparent 40%),
+        #1a1a2e;
+}
+
+/* Apply harmony colors to admin menu */
+.mase-template-gradient[data-harmony] #adminmenu {
+    background: 
+        radial-gradient(at 50% 20%, var(--color-1) 0%, transparent 40%),
+        radial-gradient(at 50% 50%, var(--color-3) 0%, transparent 40%),
+        radial-gradient(at 50% 80%, var(--color-5) 0%, transparent 40%),
+        #1a1a2e;
+}
+
+/* Apply harmony colors to buttons */
+.mase-template-gradient[data-harmony] .button,
+.mase-template-gradient[data-harmony] .button-primary {
+    background: linear-gradient(
+        135deg,
+        var(--color-1) 0%,
+        var(--color-3) 50%,
+        var(--color-5) 100%
+    );
+}
+
+.mase-template-gradient[data-harmony] .button:hover,
+.mase-template-gradient[data-harmony] .button-primary:hover {
+    background: linear-gradient(
+        135deg,
+        var(--color-5) 0%,
+        var(--color-3) 50%,
+        var(--color-1) 100%
+    );
+}
+
+/* Harmony preset selector styles */
+.mase-harmony-selector {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.mase-harmony-option {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.mase-harmony-option:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mase-harmony-option.active {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mase-harmony-preview {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    justify-content: center;
+}
+
+.mase-harmony-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Complementary preview colors */
+.mase-harmony-option[data-harmony="complementary"] .mase-harmony-color:nth-child(1) {
+    background: #ff6b6b;
+}
+.mase-harmony-option[data-harmony="complementary"] .mase-harmony-color:nth-child(2) {
+    background: #6bffb4;
+}
+
+/* Triadic preview colors */
+.mase-harmony-option[data-harmony="triadic"] .mase-harmony-color:nth-child(1) {
+    background: #ff6b6b;
+}
+.mase-harmony-option[data-harmony="triadic"] .mase-harmony-color:nth-child(2) {
+    background: #6bff6b;
+}
+.mase-harmony-option[data-harmony="triadic"] .mase-harmony-color:nth-child(3) {
+    background: #6b6bff;
+}
+
+/* Analogous preview colors */
+.mase-harmony-option[data-harmony="analogous"] .mase-harmony-color:nth-child(1) {
+    background: #ff6b6b;
+}
+.mase-harmony-option[data-harmony="analogous"] .mase-harmony-color:nth-child(2) {
+    background: #ff6bcf;
+}
+.mase-harmony-option[data-harmony="analogous"] .mase-harmony-color:nth-child(3) {
+    background: #756bff;
+}
+
+
+/* ============================================
+   10.4 Gradient Angle Rotation on Scroll
+   ============================================ */
+
+/* Base gradient with CSS custom property for angle */
+.mase-template-gradient.mase-scroll-rotate {
+    --scroll-angle: 45deg;
+    background: linear-gradient(
+        var(--scroll-angle),
+        #ee7752 0%,
+        #e73c7e 20%,
+        #23a6d5 40%,
+        #23d5ab 60%,
+        #ff6b6b 80%,
+        #4ecdc4 100%
+    );
+    background-size: 400% 400%;
+    transition: --scroll-angle 0.3s ease-out;
+}
+
+/* Smooth interpolation for angle changes */
+@property --scroll-angle {
+    syntax: '<angle>';
+    initial-value: 45deg;
+    inherits: false;
+}
+
+/* Content containers with scroll-based rotation */
+.mase-template-gradient.mase-scroll-rotate .wrap {
+    --scroll-angle: 45deg;
+    position: relative;
+}
+
+.mase-template-gradient.mase-scroll-rotate .wrap::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(
+        var(--scroll-angle),
+        rgba(238, 119, 82, 0.1) 0%,
+        rgba(231, 60, 126, 0.1) 50%,
+        rgba(35, 166, 213, 0.1) 100%
+    );
+    border-radius: 20px;
+    z-index: -1;
+    pointer-events: none;
+    transition: transform 0.3s ease-out;
+}
+
+/* Cards with scroll-based gradient rotation */
+.mase-template-gradient.mase-scroll-rotate .postbox,
+.mase-template-gradient.mase-scroll-rotate .card {
+    --scroll-angle: 45deg;
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-gradient.mase-scroll-rotate .postbox::before,
+.mase-template-gradient.mase-scroll-rotate .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        var(--scroll-angle),
+        rgba(255, 255, 255, 0.05) 0%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.mase-template-gradient.mase-scroll-rotate .postbox:hover::before,
+.mase-template-gradient.mase-scroll-rotate .card:hover::before {
+    opacity: 1;
+}
+
+/* Buttons with scroll-based gradient rotation */
+.mase-template-gradient.mase-scroll-rotate .button,
+.mase-template-gradient.mase-scroll-rotate .button-primary {
+    --scroll-angle: 135deg;
+    background: linear-gradient(
+        var(--scroll-angle),
+        #ff6b6b 0%,
+        #4ecdc4 100%
+    );
+    transition: --scroll-angle 0.3s ease-out, transform 0.3s ease;
+}
+
+/* Scroll indicator */
+.mase-scroll-indicator {
+    position: fixed;
+    top: 32px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mase-scroll-indicator.visible {
+    opacity: 1;
+}
+
+.mase-scroll-indicator-inner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #fff;
+    transform: rotate(var(--scroll-angle, 0deg));
+    transition: transform 0.3s ease-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .mase-template-gradient.mase-scroll-rotate,
+    .mase-template-gradient.mase-scroll-rotate .wrap::after,
+    .mase-template-gradient.mase-scroll-rotate .postbox::before,
+    .mase-template-gradient.mase-scroll-rotate .card::before,
+    .mase-template-gradient.mase-scroll-rotate .button,
+    .mase-template-gradient.mase-scroll-rotate .button-primary {
+        transition: none;
+    }
+    
+    .mase-scroll-indicator {
+        display: none;
+    }
+}
+
+/* Performance mode - disable scroll rotation */
+:root[data-performance-mode="true"] .mase-template-gradient.mase-scroll-rotate {
+    --scroll-angle: 45deg;
+}
+
+:root[data-performance-mode="true"] .mase-scroll-indicator {
+    display: none;
+}
+
+
+/* ============================================
+   10.5 Hover Gradient Distortion
+   ============================================ */
+
+/* Mouse position tracking variables */
+.mase-template-gradient .wrap,
+.mase-template-gradient .postbox,
+.mase-template-gradient .card {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+}
+
+/* Localized gradient effect on hover */
+.mase-template-gradient.mase-enhanced .wrap::after,
+.mase-template-gradient.mase-enhanced .postbox::after,
+.mase-template-gradient.mase-enhanced .card::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(
+        circle 200px at var(--mouse-x) var(--mouse-y),
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.08) 30%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.mase-template-gradient.mase-enhanced .wrap:hover::after,
+.mase-template-gradient.mase-enhanced .postbox:hover::after,
+.mase-template-gradient.mase-enhanced .card:hover::after {
+    opacity: 1;
+}
+
+/* Distortion effect with multiple layers */
+.mase-template-gradient.mase-distortion .wrap,
+.mase-template-gradient.mase-distortion .postbox,
+.mase-template-gradient.mase-distortion .card {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Primary distortion layer */
+.mase-template-gradient.mase-distortion .wrap::before,
+.mase-template-gradient.mase-distortion .postbox::before,
+.mase-template-gradient.mase-distortion .card::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(
+        circle 300px at var(--mouse-x) var(--mouse-y),
+        rgba(238, 119, 82, 0.3) 0%,
+        rgba(231, 60, 126, 0.2) 25%,
+        rgba(35, 166, 213, 0.2) 50%,
+        transparent 75%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: screen;
+}
+
+.mase-template-gradient.mase-distortion .wrap:hover::before,
+.mase-template-gradient.mase-distortion .postbox:hover::before,
+.mase-template-gradient.mase-distortion .card:hover::before {
+    opacity: 1;
+}
+
+/* Button hover distortion */
+.mase-template-gradient .button,
+.mase-template-gradient .button-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-gradient .button::before,
+.mase-template-gradient .button-primary::before {
+    content: '';
+    position: absolute;
+    inset: -100%;
+    background: radial-gradient(
+        circle 100px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.3) 0%,
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.mase-template-gradient .button:hover::before,
+.mase-template-gradient .button-primary:hover::before {
+    opacity: 1;
+}
+
+/* Interactive gradient trail effect */
+.mase-gradient-trail {
+    position: fixed;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(238, 119, 82, 0.4) 0%,
+        rgba(231, 60, 126, 0.3) 30%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 999997;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.1s ease;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+}
+
+.mase-gradient-trail.active {
+    opacity: 1;
+}
+
+/* Menu item hover distortion */
+.mase-template-gradient #adminmenu a {
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-gradient #adminmenu a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.mase-template-gradient #adminmenu a:hover::before {
+    opacity: 1;
+}
+
+/* Admin bar item hover distortion */
+.mase-template-gradient #wpadminbar .ab-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.mase-template-gradient #wpadminbar .ab-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.mase-template-gradient #wpadminbar .ab-item:hover::before {
+    opacity: 1;
+}
+
+/* Ripple effect on click */
+.mase-gradient-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0.3) 30%,
+        transparent 70%
+    );
+    transform: translate(-50%, -50%) scale(0);
+    animation: gradientRipple 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes gradientRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .mase-template-gradient.mase-enhanced .wrap::after,
+    .mase-template-gradient.mase-enhanced .postbox::after,
+    .mase-template-gradient.mase-enhanced .card::after,
+    .mase-template-gradient.mase-distortion .wrap::before,
+    .mase-template-gradient.mase-distortion .postbox::before,
+    .mase-template-gradient.mase-distortion .card::before,
+    .mase-template-gradient .button::before,
+    .mase-template-gradient .button-primary::before,
+    .mase-template-gradient #adminmenu a::before,
+    .mase-template-gradient #wpadminbar .ab-item::before {
+        display: none;
+    }
+    
+    .mase-gradient-trail {
+        display: none;
+    }
+    
+    .mase-gradient-ripple {
+        animation: none;
+    }
+}
+
+/* Performance mode - disable distortion effects */
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced .wrap::after,
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced .postbox::after,
+:root[data-performance-mode="true"] .mase-template-gradient.mase-enhanced .card::after,
+:root[data-performance-mode="true"] .mase-template-gradient.mase-distortion .wrap::before,
+:root[data-performance-mode="true"] .mase-template-gradient.mase-distortion .postbox::before,
+:root[data-performance-mode="true"] .mase-template-gradient.mase-distortion .card::before,
+:root[data-performance-mode="true"] .mase-gradient-trail {
+    display: none;
+}
+
+/* Mobile optimization - simplified distortion */
+@media (max-width: 768px) {
+    .mase-template-gradient.mase-enhanced .wrap::after,
+    .mase-template-gradient.mase-enhanced .postbox::after,
+    .mase-template-gradient.mase-enhanced .card::after {
+        inset: -10px;
+        background: radial-gradient(
+            circle 100px at var(--mouse-x) var(--mouse-y),
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 60%
+        );
+    }
+    
+    .mase-gradient-trail {
+        display: none;
+    }
+}

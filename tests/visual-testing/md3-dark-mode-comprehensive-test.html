@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Dark Mode Comprehensive Test - MASE</title>
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-typography.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-admin.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-templates.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-forms.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-tabs.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-buttons.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-loading.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-snackbar.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-dark-mode.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--md-background);
+            color: var(--md-on-background);
+            padding: 32px;
+            line-height: 1.6;
+            transition: background-color 300ms, color 300ms;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .mode-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: var(--md-surface);
+            padding: 12px;
+            border-radius: 50px;
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--md-outline);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 200ms;
+        }
+
+        .mode-btn.active {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border-color: var(--md-primary);
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--md-on-surface);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .demo-card {
+            background: var(--md-surface);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .demo-card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--md-on-surface);
+        }
+
+        /* Template card styles */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* Button demos */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Form demos */
+        .form-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Loading demos */
+        .loading-demo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            background: var(--md-surface-variant);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="mode-controls">
+        <button class="mode-btn active" id="lightBtn">☀️ Light</button>
+        <button class="mode-btn" id="darkBtn">🌙 Dark</button>
+    </div>
+
+    <div class="test-container">
+        <!-- Header Section -->
+        <section class="section">
+            <div class="mase-md3-header">
+                <div class="mase-header-orb"></div>
+                <div class="mase-header-content">
+                    <div class="mase-header-left">
+                        <h1 class="mase-admin-title">
+                            Dark Mode Excellence Test
+                            <span class="mase-version-badge">v1.3.0</span>
+                        </h1>
+                        <p class="mase-admin-subtitle">
+                            Comprehensive testing of all MD3 components in dark mode
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Template Cards Section -->
+        <section class="section">
+            <h2 class="section-title">Template Cards with Gradients</h2>
+            <div class="template-grid">
+                <div class="mase-template-card" style="--template-primary: #6750a4; --template-secondary: #7d5260;">
+                    <div class="mase-template-header">
+                        <div class="mase-template-preview">
+                            <div class="mase-template-minibar"></div>
+                            <div class="mase-template-minimenu">
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mase-template-content">
+                        <h3 class="mase-template-name">Purple Theme</h3>
+                        <p class="mase-template-description">Elegant purple gradient with smooth animations</p>
+                        <span class="mase-active-badge">Active</span>
+                    </div>
+                </div>
+
+                <div class="mase-template-card" style="--template-primary: #0061a4; --template-secondary: #6b5778;">
+                    <div class="mase-template-header">
+                        <div class="mase-template-preview">
+                            <div class="mase-template-minibar"></div>
+                            <div class="mase-template-minimenu">
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mase-template-content">
+                        <h3 class="mase-template-name">Blue Theme</h3>
+                        <p class="mase-template-description">Professional blue gradient design</p>
+                    </div>
+                </div>
+
+                <div class="mase-template-card" style="--template-primary: #006e1c; --template-secondary: #39656b;">
+                    <div class="mase-template-header">
+                        <div class="mase-template-preview">
+                            <div class="mase-template-minibar"></div>
+                            <div class="mase-template-minimenu">
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                                <div class="mase-template-menuitem"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mase-template-content">
+                        <h3 class="mase-template-name">Green Theme</h3>
+                        <p class="mase-template-description">Fresh green gradient with nature vibes</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Buttons Section -->
+        <section class="section">
+            <h2 class="section-title">Button System with Glow Effects</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Filled Buttons</h3>
+                    <div class="button-group">
+                        <button class="mase-button-filled">Primary Action</button>
+                        <button class="mase-button-filled" disabled>Disabled</button>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Outlined Buttons</h3>
+                    <div class="button-group">
+                        <button class="mase-button-outlined">Secondary Action</button>
+                        <button class="mase-button-outlined" disabled>Disabled</button>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Text Buttons</h3>
+                    <div class="button-group">
+                        <button class="mase-button-text">Tertiary Action</button>
+                        <button class="mase-button-text" disabled>Disabled</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Controls Section -->
+        <section class="section">
+            <h2 class="section-title">Form Controls</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Color Picker</h3>
+                    <div class="mase-color-picker"></div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Toggle Switches</h3>
+                    <div class="form-demo">
+                        <div class="mase-toggle"></div>
+                        <div class="mase-toggle active"></div>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Text Fields</h3>
+                    <div class="mase-text-field">
+                        <input type="text" placeholder=" " id="test-input">
+                        <label for="test-input">Label Text</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading States Section -->
+        <section class="section">
+            <h2 class="section-title">Loading States</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>Shimmer Effect</h3>
+                    <div class="loading-demo">
+                        <div class="mase-loading-shimmer" style="width: 100%; height: 20px;"></div>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Circular Progress</h3>
+                    <div class="loading-demo">
+                        <div class="mase-progress-circular"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs Section -->
+        <section class="section">
+            <h2 class="section-title">Navigation Tabs</h2>
+            <div class="demo-card">
+                <div class="mase-nav-tabs">
+                    <button class="mase-nav-tab active">General</button>
+                    <button class="mase-nav-tab">Colors</button>
+                    <button class="mase-nav-tab">Typography</button>
+                    <button class="mase-nav-tab">Advanced</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Elevation Section -->
+        <section class="section">
+            <h2 class="section-title">Elevation System</h2>
+            <div class="demo-grid">
+                <div class="demo-card md-elevation-1">
+                    <h3>Elevation 1</h3>
+                    <p>Subtle elevation for cards</p>
+                </div>
+
+                <div class="demo-card md-elevation-2">
+                    <h3>Elevation 2</h3>
+                    <p>Medium elevation for raised elements</p>
+                </div>
+
+                <div class="demo-card md-elevation-3">
+                    <h3>Elevation 3</h3>
+                    <p>High elevation for dialogs</p>
+                </div>
+
+                <div class="demo-card md-elevation-4">
+                    <h3>Elevation 4</h3>
+                    <p>Highest elevation for modals</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Snackbar Demo -->
+        <section class="section">
+            <h2 class="section-title">Snackbar Notifications</h2>
+            <div class="demo-card">
+                <div class="button-group">
+                    <button class="mase-button-filled" onclick="showSnackbar('success')">Show Success</button>
+                    <button class="mase-button-filled" onclick="showSnackbar('error')">Show Error</button>
+                    <button class="mase-button-filled" onclick="showSnackbar('info')">Show Info</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Mode toggle
+        const lightBtn = document.getElementById('lightBtn');
+        const darkBtn = document.getElementById('darkBtn');
+        const html = document.documentElement;
+
+        lightBtn.addEventListener('click', () => {
+            html.removeAttribute('data-theme');
+            html.classList.remove('mase-dark-mode');
+            lightBtn.classList.add('active');
+            darkBtn.classList.remove('active');
+        });
+
+        darkBtn.addEventListener('click', () => {
+            html.setAttribute('data-theme', 'dark');
+            html.classList.add('mase-dark-mode');
+            darkBtn.classList.add('active');
+            lightBtn.classList.remove('active');
+        });
+
+        // Snackbar demo
+        function showSnackbar(type) {
+            const snackbar = document.createElement('div');
+            snackbar.className = `mase-snackbar ${type}`;
+            snackbar.textContent = `This is a ${type} message`;
+            document.body.appendChild(snackbar);
+
+            setTimeout(() => {
+                snackbar.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                snackbar.classList.remove('show');
+                setTimeout(() => {
+                    snackbar.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Template card hover effects
+        document.querySelectorAll('.mase-template-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

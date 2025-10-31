@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Template Thumbnails Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+        
+        .info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .info h2 {
+            color: #2271b1;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        
+        .info ul {
+            margin-left: 20px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        
+        .template-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .thumbnail-container {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .thumbnail-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .template-info {
+            padding: 20px;
+        }
+        
+        .template-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .template-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        
+        .template-meta {
+            font-size: 12px;
+            color: #999;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+        
+        .success {
+            color: #46b450;
+            font-weight: 600;
+        }
+        
+        .error {
+            color: #dc3232;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 MASE Template Thumbnails Test</h1>
+        
+        <div class="info">
+            <h2>✅ Implementation Complete</h2>
+            <ul>
+                <li><strong>Task 21.1:</strong> Glass theme thumbnail with glassmorphism effects (blur, transparency, borders)</li>
+                <li><strong>Task 21.2:</strong> Gradient theme thumbnail with multi-stop gradients</li>
+                <li><strong>Task 21.3:</strong> Minimal theme thumbnail with clean, simple aesthetic</li>
+                <li><strong>Task 21.4:</strong> Thumbnails for professional, dark mode, nature, ocean, rose, golden themes</li>
+                <li><strong>Dimensions:</strong> 300x200px SVG (scalable, optimized)</li>
+                <li><strong>Format:</strong> Base64-encoded SVG data URIs (no external files needed)</li>
+                <li><strong>File Size:</strong> Optimized inline SVG (~2-4KB per thumbnail)</li>
+            </ul>
+        </div>
+        
+        <div class="gallery" id="gallery">
+            <!-- Templates will be loaded here -->
+        </div>
+    </div>
+    
+    <script>
+        // Sample template data matching MASE structure
+        const templates = [
+            {
+                id: 'glassmorphic',
+                name: 'Glassmorphic',
+                description: 'Modern glass effect with blur and transparency',
+                color: '#4A90E2'
+            },
+            {
+                id: 'gradient',
+                name: 'Gradient Theme',
+                description: 'Multi-stop gradients with smooth transitions',
+                color: '#ee7752'
+            },
+            {
+                id: 'modern-minimal',
+                name: 'Modern Minimal',
+                description: 'Clean and minimal design with subtle effects',
+                color: '#4A90E2'
+            },
+            {
+                id: 'dark-mode',
+                name: 'Dark Mode',
+                description: 'Elegant dark theme for reduced eye strain',
+                color: '#2d2d2d'
+            },
+            {
+                id: 'corporate-pro',
+                name: 'Corporate Pro',
+                description: 'Professional corporate design with clean lines',
+                color: '#1e3a8a'
+            },
+            {
+                id: 'nature-inspired',
+                name: 'Nature Inspired',
+                description: 'Calming green tones inspired by nature',
+                color: '#4ade80'
+            },
+            {
+                id: 'sunset-vibes',
+                name: 'Sunset Vibes',
+                description: 'Warm sunset colors for evening work sessions',
+                color: '#f97316'
+            },
+            {
+                id: 'ocean-depth',
+                name: 'Ocean Depth',
+                description: 'Cool ocean blues for a refreshing workspace',
+                color: '#0ea5e9'
+            },
+            {
+                id: 'elegant-rose',
+                name: 'Elegant Rose',
+                description: 'Sophisticated rose tones for a refined look',
+                color: '#ec4899'
+            },
+            {
+                id: 'golden-luxury',
+                name: 'Golden Luxury',
+                description: 'Luxurious golden tones for premium feel',
+                color: '#f59e0b'
+            }
+        ];
+        
+        // Generate thumbnail SVG (matching PHP implementation)
+        function generateThumbnail(name, color) {
+            const colorClean = color.replace('#', '');
+            let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">';
+            
+            if (name.toLowerCase().includes('glass')) {
+                // Glassmorphism effect
+                svg += '<defs>';
+                svg += '<linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+                svg += '<stop offset="0%" style="stop-color:rgba(255,255,255,0.3);stop-opacity:1" />';
+                svg += '<stop offset="100%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />';
+                svg += '</linearGradient>';
+                svg += '<filter id="blur"><feGaussianBlur in="SourceGraphic" stdDeviation="2" /></filter>';
+                svg += '</defs>';
+                svg += `<rect fill="#${colorClean}" width="300" height="200"/>`;
+                svg += '<rect fill="url(#glassGrad)" width="280" height="180" x="10" y="10" rx="12" filter="url(#blur)" opacity="0.9"/>';
+                svg += '<rect fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" width="280" height="180" x="10" y="10" rx="12"/>';
+                
+            } else if (name.toLowerCase().includes('gradient') || name.toLowerCase().includes('sunset') || name.toLowerCase().includes('creative')) {
+                // Multi-stop gradient
+                svg += '<defs>';
+                svg += '<linearGradient id="multiGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+                svg += `<stop offset="0%" style="stop-color:#${colorClean};stop-opacity:1" />`;
+                svg += '<stop offset="33%" style="stop-color:#e73c7e;stop-opacity:1" />';
+                svg += '<stop offset="66%" style="stop-color:#23a6d5;stop-opacity:1" />';
+                svg += '<stop offset="100%" style="stop-color:#23d5ab;stop-opacity:1" />';
+                svg += '</linearGradient>';
+                svg += '</defs>';
+                svg += '<rect fill="url(#multiGrad)" width="300" height="200"/>';
+                svg += '<rect fill="rgba(0,0,0,0.2)" width="280" height="60" x="10" y="70" rx="8"/>';
+                
+            } else if (name.toLowerCase().includes('minimal') || name.toLowerCase().includes('modern')) {
+                // Minimal theme
+                svg += '<rect fill="#f8f9fa" width="300" height="200"/>';
+                svg += `<rect fill="#${colorClean}" width="300" height="40"/>`;
+                svg += '<rect fill="white" width="280" height="140" x="10" y="50" rx="8"/>';
+                svg += '<rect fill="#e9ecef" width="260" height="20" x="20" y="70" rx="4"/>';
+                svg += '<rect fill="#e9ecef" width="200" height="20" x="20" y="100" rx="4"/>';
+                svg += '<rect fill="#e9ecef" width="180" height="20" x="20" y="130" rx="4"/>';
+                
+            } else if (name.toLowerCase().includes('dark') || name.toLowerCase().includes('midnight')) {
+                // Dark mode
+                svg += '<rect fill="#1a1a1a" width="300" height="200"/>';
+                svg += '<rect fill="#2d2d2d" width="300" height="40"/>';
+                svg += '<rect fill="#252525" width="280" height="140" x="10" y="50" rx="8"/>';
+                svg += '<rect fill="#3a3a3a" width="260" height="20" x="20" y="70" rx="4"/>';
+                svg += '<rect fill="#3a3a3a" width="200" height="20" x="20" y="100" rx="4"/>';
+                
+            } else if (name.toLowerCase().includes('corporate') || name.toLowerCase().includes('professional')) {
+                // Professional/Corporate
+                svg += '<rect fill="#ffffff" width="300" height="200"/>';
+                svg += `<rect fill="#${colorClean}" width="300" height="40"/>`;
+                svg += '<rect fill="white" width="60" height="140" x="10" y="50" stroke="#e0e0e0" stroke-width="1"/>';
+                svg += '<rect fill="white" width="210" height="140" x="80" y="50" stroke="#e0e0e0" stroke-width="1"/>';
+                svg += '<rect fill="#f5f5f5" width="190" height="20" x="90" y="70" rx="2"/>';
+                svg += '<rect fill="#f5f5f5" width="190" height="20" x="90" y="100" rx="2"/>';
+                
+            } else if (name.toLowerCase().includes('nature') || name.toLowerCase().includes('forest')) {
+                // Nature theme
+                svg += '<defs>';
+                svg += '<linearGradient id="natureGrad" x1="0%" y1="0%" x2="0%" y2="100%">';
+                svg += '<stop offset="0%" style="stop-color:#a8e6cf;stop-opacity:1" />';
+                svg += `<stop offset="100%" style="stop-color:#${colorClean};stop-opacity:1" />`;
+                svg += '</linearGradient>';
+                svg += '</defs>';
+                svg += '<rect fill="url(#natureGrad)" width="300" height="200"/>';
+                svg += '<circle fill="rgba(255,255,255,0.3)" cx="50" cy="50" r="30"/>';
+                svg += '<circle fill="rgba(255,255,255,0.2)" cx="250" cy="150" r="40"/>';
+                
+            } else if (name.toLowerCase().includes('ocean')) {
+                // Ocean theme
+                svg += '<defs>';
+                svg += '<linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">';
+                svg += '<stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />';
+                svg += '<stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />';
+                svg += '</linearGradient>';
+                svg += '</defs>';
+                svg += '<rect fill="url(#oceanGrad)" width="300" height="200"/>';
+                svg += '<path d="M0,120 Q75,100 150,120 T300,120 L300,200 L0,200 Z" fill="rgba(255,255,255,0.2)"/>';
+                
+            } else if (name.toLowerCase().includes('rose') || name.toLowerCase().includes('elegant')) {
+                // Rose/Elegant theme
+                svg += '<defs>';
+                svg += '<linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+                svg += '<stop offset="0%" style="stop-color:#ffeef8;stop-opacity:1" />';
+                svg += `<stop offset="100%" style="stop-color:#${colorClean};stop-opacity:1" />`;
+                svg += '</linearGradient>';
+                svg += '</defs>';
+                svg += '<rect fill="url(#roseGrad)" width="300" height="200"/>';
+                svg += '<circle fill="rgba(255,255,255,0.4)" cx="150" cy="100" r="60"/>';
+                svg += '<circle fill="rgba(255,255,255,0.3)" cx="150" cy="100" r="40"/>';
+                
+            } else if (name.toLowerCase().includes('golden') || name.toLowerCase().includes('luxury')) {
+                // Golden/Luxury theme
+                svg += '<defs>';
+                svg += '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+                svg += '<stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />';
+                svg += `<stop offset="50%" style="stop-color:#${colorClean};stop-opacity:1" />`;
+                svg += '<stop offset="100%" style="stop-color:#b8860b;stop-opacity:1" />';
+                svg += '</linearGradient>';
+                svg += '</defs>';
+                svg += '<rect fill="url(#goldGrad)" width="300" height="200"/>';
+                svg += '<rect fill="rgba(255,255,255,0.2)" width="280" height="180" x="10" y="10" rx="8" stroke="rgba(255,215,0,0.5)" stroke-width="2"/>';
+                
+            } else {
+                // Default
+                svg += `<rect fill="#${colorClean}" width="300" height="200"/>`;
+            }
+            
+            // Add text
+            svg += '<text x="150" y="100" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5)">';
+            svg += name;
+            svg += '</text>';
+            svg += '</svg>';
+            
+            return 'data:image/svg+xml;base64,' + btoa(svg);
+        }
+        
+        // Render templates
+        const gallery = document.getElementById('gallery');
+        templates.forEach(template => {
+            const thumbnail = generateThumbnail(template.name, template.color);
+            const thumbnailSize = thumbnail.length;
+            
+            const card = document.createElement('div');
+            card.className = 'template-card';
+            card.innerHTML = `
+                <div class="thumbnail-container">
+                    <img src="${thumbnail}" alt="${template.name}">
+                </div>
+                <div class="template-info">
+                    <div class="template-name">${template.name}</div>
+                    <div class="template-description">${template.description}</div>
+                    <div class="template-meta">
+                        <div>ID: ${template.id}</div>
+                        <div>Size: ${(thumbnailSize / 1024).toFixed(2)} KB</div>
+                        <div class="success">✓ Thumbnail Generated</div>
+                    </div>
+                </div>
+            `;
+            gallery.appendChild(card);
+        });
+    </script>
+</body>
+</html>

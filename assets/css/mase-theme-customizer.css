@@ -1,0 +1,748 @@
+/**
+ * Theme Customization Panel Styles
+ * 
+ * Provides UI for customizing theme colors, effects, and spacing in real-time.
+ * Requirements: 14.1, 14.2, 14.3, 14.4
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   Customization Panel Container
+   ============================================ */
+
+.mase-customizer-panel {
+	position: fixed;
+	top: 0;
+	right: -420px;
+	width: 420px;
+	height: 100vh;
+	background: var(--mase-surface, #ffffff);
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+	z-index: 999998;
+	transition: right 400ms cubic-bezier(0.4, 0, 0.2, 1);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.mase-customizer-panel.active {
+	right: 0;
+}
+
+/* Dark mode support */
+body.mase-dark-mode .mase-customizer-panel {
+	background: var(--mase-surface-dark, #1e1e1e);
+	box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   Panel Header
+   ============================================ */
+
+.mase-customizer-header {
+	padding: 24px;
+	border-bottom: 1px solid var(--mase-border, #e0e0e0);
+	background: var(--mase-surface-elevated, #f5f5f5);
+	flex-shrink: 0;
+}
+
+body.mase-dark-mode .mase-customizer-header {
+	background: var(--mase-surface-elevated-dark, #2a2a2a);
+	border-bottom-color: var(--mase-border-dark, #3a3a3a);
+}
+
+.mase-customizer-title {
+	margin: 0 0 8px 0;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--mase-text-primary, #1e1e1e);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+body.mase-dark-mode .mase-customizer-title {
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+.mase-customizer-subtitle {
+	margin: 0;
+	font-size: 13px;
+	color: var(--mase-text-secondary, #666666);
+	line-height: 1.5;
+}
+
+body.mase-dark-mode .mase-customizer-subtitle {
+	color: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+.mase-customizer-close {
+	background: transparent;
+	border: none;
+	padding: 8px;
+	cursor: pointer;
+	color: var(--mase-text-secondary, #666666);
+	transition: color 200ms, transform 200ms;
+	border-radius: 4px;
+}
+
+.mase-customizer-close:hover {
+	color: var(--mase-text-primary, #1e1e1e);
+	background: rgba(0, 0, 0, 0.05);
+	transform: rotate(90deg);
+}
+
+body.mase-dark-mode .mase-customizer-close:hover {
+	color: var(--mase-text-primary-dark, #ffffff);
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.mase-customizer-close .dashicons {
+	font-size: 20px;
+	width: 20px;
+	height: 20px;
+}
+
+/* ============================================
+   Panel Content
+   ============================================ */
+
+.mase-customizer-content {
+	flex: 1;
+	overflow-y: auto;
+	padding: 24px;
+}
+
+/* Custom scrollbar */
+.mase-customizer-content::-webkit-scrollbar {
+	width: 8px;
+}
+
+.mase-customizer-content::-webkit-scrollbar-track {
+	background: var(--mase-surface, #ffffff);
+}
+
+.mase-customizer-content::-webkit-scrollbar-thumb {
+	background: var(--mase-border, #e0e0e0);
+	border-radius: 4px;
+}
+
+.mase-customizer-content::-webkit-scrollbar-thumb:hover {
+	background: var(--mase-text-secondary, #666666);
+}
+
+body.mase-dark-mode .mase-customizer-content::-webkit-scrollbar-track {
+	background: var(--mase-surface-dark, #1e1e1e);
+}
+
+body.mase-dark-mode .mase-customizer-content::-webkit-scrollbar-thumb {
+	background: var(--mase-border-dark, #3a3a3a);
+}
+
+body.mase-dark-mode .mase-customizer-content::-webkit-scrollbar-thumb:hover {
+	background: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+/* ============================================
+   Control Groups
+   ============================================ */
+
+.mase-customizer-group {
+	margin-bottom: 32px;
+}
+
+.mase-customizer-group:last-child {
+	margin-bottom: 0;
+}
+
+.mase-customizer-group-title {
+	margin: 0 0 16px 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--mase-text-primary, #1e1e1e);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+body.mase-dark-mode .mase-customizer-group-title {
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+.mase-customizer-group-description {
+	margin: 0 0 16px 0;
+	font-size: 13px;
+	color: var(--mase-text-secondary, #666666);
+	line-height: 1.5;
+}
+
+body.mase-dark-mode .mase-customizer-group-description {
+	color: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+/* ============================================
+   Color Picker Controls
+   ============================================ */
+
+.mase-customizer-control {
+	margin-bottom: 20px;
+}
+
+.mase-customizer-control:last-child {
+	margin-bottom: 0;
+}
+
+.mase-customizer-control-label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--mase-text-primary, #1e1e1e);
+}
+
+body.mase-dark-mode .mase-customizer-control-label {
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+.mase-customizer-color-input {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	position: relative;
+}
+
+.mase-customizer-color-preview {
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	border: 2px solid var(--mase-border, #e0e0e0);
+	cursor: pointer;
+	transition: transform 200ms, box-shadow 200ms;
+	position: relative;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.mase-customizer-color-preview:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.mase-dark-mode .mase-customizer-color-preview {
+	border-color: var(--mase-border-dark, #3a3a3a);
+}
+
+.mase-customizer-color-preview::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: 
+		linear-gradient(45deg, #ccc 25%, transparent 25%),
+		linear-gradient(-45deg, #ccc 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #ccc 75%),
+		linear-gradient(-45deg, transparent 75%, #ccc 75%);
+	background-size: 8px 8px;
+	background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
+	z-index: -1;
+}
+
+/* WordPress Color Picker Integration */
+.mase-customizer-color-input .wp-picker-container {
+	flex: 1;
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-color-result {
+	display: none; /* Hide default color preview, we use our custom one */
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap label {
+	display: none; /* Hide default label */
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap input.wp-color-picker {
+	flex: 1;
+	padding: 10px 12px;
+	border: 1px solid var(--mase-border, #e0e0e0);
+	border-radius: 6px;
+	font-size: 13px;
+	font-family: 'Courier New', monospace;
+	color: var(--mase-text-primary, #1e1e1e);
+	background: var(--mase-surface, #ffffff);
+	transition: border-color 200ms, box-shadow 200ms;
+	height: auto;
+	line-height: normal;
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap input.wp-color-picker:focus {
+	outline: none;
+	border-color: var(--mase-accent, #0073aa);
+	box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+}
+
+body.mase-dark-mode .mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap input.wp-color-picker {
+	background: var(--mase-surface-dark, #1e1e1e);
+	border-color: var(--mase-border-dark, #3a3a3a);
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+body.mase-dark-mode .mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap input.wp-color-picker:focus {
+	border-color: var(--mase-accent-dark, #00a0d2);
+	box-shadow: 0 0 0 3px rgba(0, 160, 210, 0.2);
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap .button {
+	height: 40px;
+	padding: 0 16px;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	transition: all 200ms;
+}
+
+.mase-customizer-color-input .wp-picker-container .wp-picker-input-wrap .button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Color Picker Popup Positioning */
+.mase-customizer-panel .wp-picker-container .wp-picker-holder {
+	position: absolute;
+	z-index: 100;
+	background: var(--mase-surface, #ffffff);
+	border: 1px solid var(--mase-border, #e0e0e0);
+	border-radius: 8px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+	padding: 12px;
+	margin-top: 8px;
+}
+
+body.mase-dark-mode .mase-customizer-panel .wp-picker-container .wp-picker-holder {
+	background: var(--mase-surface-dark, #1e1e1e);
+	border-color: var(--mase-border-dark, #3a3a3a);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Fallback for non-initialized color inputs */
+.mase-customizer-color-value {
+	flex: 1;
+	padding: 10px 12px;
+	border: 1px solid var(--mase-border, #e0e0e0);
+	border-radius: 6px;
+	font-size: 13px;
+	font-family: 'Courier New', monospace;
+	color: var(--mase-text-primary, #1e1e1e);
+	background: var(--mase-surface, #ffffff);
+	transition: border-color 200ms, box-shadow 200ms;
+}
+
+.mase-customizer-color-value:focus {
+	outline: none;
+	border-color: var(--mase-accent, #0073aa);
+	box-shadow: 0 0 0 3px rgba(0, 115, 170, 0.1);
+}
+
+body.mase-dark-mode .mase-customizer-color-value {
+	background: var(--mase-surface-dark, #1e1e1e);
+	border-color: var(--mase-border-dark, #3a3a3a);
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+body.mase-dark-mode .mase-customizer-color-value:focus {
+	border-color: var(--mase-accent-dark, #00a0d2);
+	box-shadow: 0 0 0 3px rgba(0, 160, 210, 0.2);
+}
+
+/* ============================================
+   Slider Controls
+   ============================================ */
+
+.mase-customizer-slider {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.mase-customizer-slider-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.mase-customizer-slider-value {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--mase-accent, #0073aa);
+	padding: 4px 8px;
+	background: rgba(0, 115, 170, 0.1);
+	border-radius: 4px;
+	min-width: 50px;
+	text-align: center;
+}
+
+body.mase-dark-mode .mase-customizer-slider-value {
+	color: var(--mase-accent-dark, #00a0d2);
+	background: rgba(0, 160, 210, 0.2);
+}
+
+.mase-customizer-range {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--mase-border, #e0e0e0);
+	outline: none;
+	transition: background 200ms;
+}
+
+.mase-customizer-range:hover {
+	background: var(--mase-text-secondary, #666666);
+}
+
+body.mase-dark-mode .mase-customizer-range {
+	background: var(--mase-border-dark, #3a3a3a);
+}
+
+body.mase-dark-mode .mase-customizer-range:hover {
+	background: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+.mase-customizer-range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--mase-accent, #0073aa);
+	cursor: pointer;
+	transition: transform 200ms, box-shadow 200ms;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mase-customizer-range::-webkit-slider-thumb:hover {
+	transform: scale(1.2);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mase-customizer-range::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--mase-accent, #0073aa);
+	cursor: pointer;
+	border: none;
+	transition: transform 200ms, box-shadow 200ms;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mase-customizer-range::-moz-range-thumb:hover {
+	transform: scale(1.2);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.mase-dark-mode .mase-customizer-range::-webkit-slider-thumb {
+	background: var(--mase-accent-dark, #00a0d2);
+}
+
+body.mase-dark-mode .mase-customizer-range::-moz-range-thumb {
+	background: var(--mase-accent-dark, #00a0d2);
+}
+
+.mase-customizer-slider-labels {
+	display: flex;
+	justify-content: space-between;
+	font-size: 11px;
+	color: var(--mase-text-secondary, #666666);
+	margin-top: 4px;
+}
+
+body.mase-dark-mode .mase-customizer-slider-labels {
+	color: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+/* ============================================
+   Live Preview Area
+   ============================================ */
+
+.mase-customizer-preview {
+	margin-bottom: 24px;
+	border: 1px solid var(--mase-border, #e0e0e0);
+	border-radius: 8px;
+	overflow: hidden;
+	background: var(--mase-surface, #ffffff);
+}
+
+body.mase-dark-mode .mase-customizer-preview {
+	border-color: var(--mase-border-dark, #3a3a3a);
+	background: var(--mase-surface-dark, #1e1e1e);
+}
+
+.mase-customizer-preview-header {
+	padding: 12px 16px;
+	background: var(--mase-surface-elevated, #f5f5f5);
+	border-bottom: 1px solid var(--mase-border, #e0e0e0);
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--mase-text-secondary, #666666);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+body.mase-dark-mode .mase-customizer-preview-header {
+	background: var(--mase-surface-elevated-dark, #2a2a2a);
+	border-bottom-color: var(--mase-border-dark, #3a3a3a);
+	color: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+.mase-customizer-preview-content {
+	padding: 20px;
+	min-height: 150px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.mase-customizer-preview-element {
+	padding: 12px 16px;
+	border-radius: 6px;
+	font-size: 13px;
+	transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mase-customizer-preview-button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mase-customizer-preview-text {
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--mase-text-primary, #1e1e1e);
+}
+
+body.mase-dark-mode .mase-customizer-preview-text {
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+/* ============================================
+   Panel Footer
+   ============================================ */
+
+.mase-customizer-footer {
+	padding: 20px 24px;
+	border-top: 1px solid var(--mase-border, #e0e0e0);
+	background: var(--mase-surface-elevated, #f5f5f5);
+	display: flex;
+	gap: 12px;
+	flex-shrink: 0;
+}
+
+body.mase-dark-mode .mase-customizer-footer {
+	background: var(--mase-surface-elevated-dark, #2a2a2a);
+	border-top-color: var(--mase-border-dark, #3a3a3a);
+}
+
+.mase-customizer-footer .button {
+	flex: 1;
+	justify-content: center;
+	height: 40px;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.mase-customizer-reset,
+.mase-customizer-export,
+.mase-customizer-import {
+	background: transparent;
+	border: 1px solid var(--mase-border, #e0e0e0);
+	color: var(--mase-text-secondary, #666666);
+}
+
+.mase-customizer-reset:hover,
+.mase-customizer-export:hover,
+.mase-customizer-import:hover {
+	background: rgba(0, 0, 0, 0.05);
+	border-color: var(--mase-text-secondary, #666666);
+	color: var(--mase-text-primary, #1e1e1e);
+}
+
+body.mase-dark-mode .mase-customizer-reset,
+body.mase-dark-mode .mase-customizer-export,
+body.mase-dark-mode .mase-customizer-import {
+	border-color: var(--mase-border-dark, #3a3a3a);
+	color: var(--mase-text-secondary-dark, #aaaaaa);
+}
+
+body.mase-dark-mode .mase-customizer-reset:hover,
+body.mase-dark-mode .mase-customizer-export:hover,
+body.mase-dark-mode .mase-customizer-import:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: var(--mase-text-secondary-dark, #aaaaaa);
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+.mase-customizer-save {
+	background: var(--mase-accent, #0073aa);
+	border: none;
+	color: #ffffff;
+}
+
+.mase-customizer-save:hover {
+	background: var(--mase-accent-hover, #005a87);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
+}
+
+body.mase-dark-mode .mase-customizer-save {
+	background: var(--mase-accent-dark, #00a0d2);
+}
+
+body.mase-dark-mode .mase-customizer-save:hover {
+	background: var(--mase-accent-hover-dark, #0087b8);
+	box-shadow: 0 4px 12px rgba(0, 160, 210, 0.4);
+}
+
+/* ============================================
+   Customize Button on Template Cards
+   ============================================ */
+
+.mase-template-customize-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	background: transparent;
+	border: 1px solid var(--mase-border, #e0e0e0);
+	border-radius: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--mase-text-primary, #1e1e1e);
+	cursor: pointer;
+	transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mase-template-customize-btn:hover {
+	background: var(--mase-surface-elevated, #f5f5f5);
+	border-color: var(--mase-accent, #0073aa);
+	color: var(--mase-accent, #0073aa);
+	transform: translateY(-1px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mase-template-customize-btn .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+body.mase-dark-mode .mase-template-customize-btn {
+	border-color: var(--mase-border-dark, #3a3a3a);
+	color: var(--mase-text-primary-dark, #ffffff);
+}
+
+body.mase-dark-mode .mase-template-customize-btn:hover {
+	background: var(--mase-surface-elevated-dark, #2a2a2a);
+	border-color: var(--mase-accent-dark, #00a0d2);
+	color: var(--mase-accent-dark, #00a0d2);
+}
+
+/* ============================================
+   Backdrop Overlay
+   ============================================ */
+
+.mase-customizer-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(4px);
+	z-index: 999997;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mase-customizer-backdrop.active {
+	opacity: 1;
+	pointer-events: all;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-customizer-panel {
+		width: 100%;
+		right: -100%;
+	}
+	
+	.mase-customizer-panel.active {
+		right: 0;
+	}
+	
+	.mase-customizer-header {
+		padding: 20px;
+	}
+	
+	.mase-customizer-content {
+		padding: 20px;
+	}
+	
+	.mase-customizer-footer {
+		padding: 16px 20px;
+		flex-direction: column;
+	}
+	
+	.mase-customizer-footer .button {
+		width: 100%;
+	}
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+.mase-customizer-panel:focus-within {
+	outline: 2px solid var(--mase-accent, #0073aa);
+	outline-offset: -2px;
+}
+
+.mase-customizer-close:focus,
+.mase-customizer-reset:focus,
+.mase-customizer-export:focus,
+.mase-customizer-import:focus,
+.mase-customizer-save:focus,
+.mase-template-customize-btn:focus {
+	outline: 2px solid var(--mase-accent, #0073aa);
+	outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	.mase-customizer-panel,
+	.mase-customizer-backdrop,
+	.mase-customizer-close,
+	.mase-customizer-color-preview,
+	.mase-customizer-range::-webkit-slider-thumb,
+	.mase-customizer-range::-moz-range-thumb,
+	.mase-customizer-preview-element,
+	.mase-customizer-preview-button,
+	.mase-template-customize-btn {
+		transition: none;
+	}
+}

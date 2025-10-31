@@ -1,139 +1,358 @@
-/**
- * Gaming Cyberpunk Theme
- * RGB neon effects for gamers
- */
-
 :root {
-    --cyber-cyan: #00f5ff;
-    --cyber-magenta: #ff0080;
-    --cyber-purple: #8000ff;
-    --cyber-blue: #0080ff;
-}
+ --cyber-cyan: #00f5ff;
+ --cyber-magenta: #ff0080;
+ --cyber-purple: #8000ff;
+ --cyber-blue: #0080ff;
+ --cyber-yellow: #ff0}
 
 .mase-template-gaming {
-    background: linear-gradient(135deg, #0c0c0c 0%, #1a0033 50%, #000000 100%),
-                radial-gradient(circle at 20% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%);
-    color: #ffffff;
-    border: 2px solid transparent;
-    border-image: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)) 1;
-    box-shadow: 0 0 30px rgba(0, 245, 255, 0.3),
-                0 0 60px rgba(255, 0, 128, 0.2);
+ background: linear-gradient(135deg, #0c0c0c 0%, #1a0033 50%, #000 100%),
+ radial-gradient(circle at 20% 80%, rgba(0, 245, 255, 0.15) 0%, transparent 50%),
+ radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.15) 0%, transparent 50%);
+ color: #fff;
+ border: 3px solid transparent;
+ border-image: linear-gradient(45deg, var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta)), var(--gaming-accent, var(--cyber-purple))) 1;
+ border-radius: 8px;
+ box-shadow:
+ 0 0 calc(40px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.4)),
+ 0 0 calc(80px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.3)),
+ inset 0 0 calc(30px * var(--mase-blur-amount, 20px) / 20) rgba(128, 0, 255, 0.1);
+ transition: all var(--mase-transition-duration, 300ms) ease;
+ position: relative}
+
+/* Particle System - 20-30 particles with varied sizes */
+.mase-template-gaming::after {
+ content: '';
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-image: 
+ radial-gradient(circle, var(--gaming-primary, var(--cyber-cyan)) 1px, transparent 1px),
+ radial-gradient(circle, var(--gaming-secondary, var(--cyber-magenta)) 1.5px, transparent 1.5px),
+ radial-gradient(circle, var(--gaming-accent, var(--cyber-purple)) 2px, transparent 2px),
+ radial-gradient(circle, var(--gaming-primary, var(--cyber-cyan)) 1px, transparent 1px),
+ radial-gradient(circle, var(--gaming-secondary, var(--cyber-magenta)) 1.5px, transparent 1.5px),
+ radial-gradient(circle, var(--gaming-accent, var(--cyber-purple)) 1px, transparent 1px);
+ background-size: 
+ 80px 80px,
+ 120px 120px,
+ 100px 100px,
+ 150px 150px,
+ 90px 90px,
+ 110px 110px;
+ background-position: 
+ 0 0,
+ 40px 60px,
+ 20px 30px,
+ 70px 10px,
+ 10px 80px,
+ 50px 50px;
+ animation: particleFloat calc(20s / var(--mase-intensity-multiplier, 1)) linear infinite;
+ pointer-events: none;
+ z-index: 1;
+ opacity: 0.6}
+
+@keyframes particleFloat {
+ 0% { 
+ transform: translate(0, 0);
+ opacity: 0.6}
+ 50% {
+ opacity: 0.8}
+ 100% { 
+ transform: translate(50px, 100px);
+ opacity: 0.6}
 }
 
-/* Neon Glow Animations */
+/* Neon Glow Pulse - intensity-based pulsing animation */
 @keyframes neonPulse {
-    0%, 100% {
-        box-shadow: 0 0 20px rgba(0, 245, 255, 0.4),
-                    0 0 40px rgba(255, 0, 128, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(0, 245, 255, 0.6),
-                    0 0 80px rgba(255, 0, 128, 0.5);
-    }
+ 0%, 100% {
+ box-shadow: 
+ 0 0 calc(20px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.4)),
+ 0 0 calc(40px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.3)),
+ inset 0 0 calc(10px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.2))}
+ 50% {
+ box-shadow: 
+ 0 0 calc(40px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.6)),
+ 0 0 calc(80px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.5)),
+ inset 0 0 calc(20px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.4))}
 }
 
-@keyframes rgbBorder {
-    0% { border-image-source: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)); }
-    33% { border-image-source: linear-gradient(45deg, var(--cyber-magenta), var(--cyber-purple), var(--cyber-cyan)); }
-    66% { border-image-source: linear-gradient(45deg, var(--cyber-purple), var(--cyber-cyan), var(--cyber-magenta)); }
-    100% { border-image-source: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-magenta), var(--cyber-purple)); }
+/* Enhanced neon glow pulse for active elements */
+@keyframes neonGlowPulse {
+ 0%, 100% {
+ box-shadow: 
+ 0 0 calc(15px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.5)),
+ 0 0 calc(30px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.4)),
+ 0 0 calc(45px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(128, 0, 255, 0.3));
+ text-shadow: 
+ 0 0 calc(10px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.9)),
+ 0 0 calc(20px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.5))}
+ 50% {
+ box-shadow: 
+ 0 0 calc(25px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.7)),
+ 0 0 calc(50px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.6)),
+ 0 0 calc(75px * var(--mase-glow-intensity, 1)) var(--gaming-glow-secondary, rgba(128, 0, 255, 0.5));
+ text-shadow: 
+ 0 0 calc(15px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 1)),
+ 0 0 calc(30px * var(--mase-glow-intensity, 1)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.7))}
 }
+
+/* Apply neon glow pulse to active/focused elements */
+.mase-template-gaming .button:active,
+.mase-template-gaming .button-primary:active,
+.mase-template-gaming input:focus,
+.mase-template-gaming textarea:focus,
+.mase-template-gaming select:focus,
+.mase-template-gaming #adminmenu li.current a.menu-top,
+.mase-template-gaming #wpadminbar .menupop.hover > .ab-item {
+ animation: neonGlowPulse calc(2s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite}
+
+/* RGB Border Cycling - 5s loop with smooth color transitions */
+@keyframes rgbBorder {
+ 0% { 
+ border-image-source: linear-gradient(45deg, var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta)), var(--gaming-accent, var(--cyber-purple)));
+ filter: hue-rotate(0deg)}
+ 33% { 
+ border-image-source: linear-gradient(45deg, var(--gaming-secondary, var(--cyber-magenta)), var(--gaming-accent, var(--cyber-purple)), var(--gaming-primary, var(--cyber-cyan)));
+ filter: hue-rotate(120deg)}
+ 66% { 
+ border-image-source: linear-gradient(45deg, var(--gaming-accent, var(--cyber-purple)), var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta)));
+ filter: hue-rotate(240deg)}
+ 100% { 
+ border-image-source: linear-gradient(45deg, var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta)), var(--gaming-accent, var(--cyber-purple)));
+ filter: hue-rotate(360deg)}
+}
+
+/* Apply RGB border cycling to cards and panels */
+.mase-template-gaming .mase-card,
+.mase-template-gaming .postbox,
+.mase-template-gaming .notice {
+ border: 3px solid transparent;
+ border-image: linear-gradient(45deg, var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta)), var(--gaming-accent, var(--cyber-purple))) 1;
+ animation: rgbBorder calc(5s / var(--mase-intensity-multiplier, 1)) linear infinite;
+ transition: all 0.3s ease;
+ position: relative;
+ overflow: hidden}
+
+/* Holographic Shimmer Effect - hover-triggered */
+.mase-template-gaming .mase-card::before,
+.mase-template-gaming .postbox::before,
+.mase-template-gaming .notice::before,
+.mase-template-gaming .button::before {
+ content: '';
+ position: absolute;
+ top: -50%;
+ left: -50%;
+ width: 200%;
+ height: 200%;
+ background: linear-gradient(
+ 45deg,
+ transparent 30%,
+ rgba(255, 255, 255, 0.1) 40%,
+ rgba(0, 245, 255, 0.2) 50%,
+ rgba(255, 0, 128, 0.2) 60%,
+ transparent 70%
+ );
+ transform: translateX(-100%) translateY(-100%) rotate(45deg);
+ transition: transform calc(600ms / var(--mase-intensity-multiplier, 1)) cubic-bezier(0.4, 0, 0.2, 1);
+ pointer-events: none;
+ z-index: 1}
+
+.mase-template-gaming .mase-card:hover::before,
+.mase-template-gaming .postbox:hover::before,
+.mase-template-gaming .notice:hover::before,
+.mase-template-gaming .button:hover::before {
+ transform: translateX(100%) translateY(100%) rotate(45deg)}
+
+/* Ensure content is above shimmer effect */
+.mase-template-gaming .mase-card > *,
+.mase-template-gaming .postbox > *,
+.mase-template-gaming .notice > *,
+.mase-template-gaming .button > * {
+ position: relative;
+ z-index: 2}
 
 .mase-template-gaming {
-    animation: neonPulse 3s ease-in-out infinite;
-}
+ animation: neonPulse calc(3s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite}
 
-/* Admin Bar Gaming Style */
 .mase-template-gaming #wpadminbar {
-    background: linear-gradient(90deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
-    border-bottom: 2px solid var(--cyber-cyan);
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.4);
-}
+ background: linear-gradient(90deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
+ border-bottom: 3px solid var(--gaming-primary, var(--cyber-cyan));
+ box-shadow:
+ 0 0 30px var(--gaming-glow-primary, rgba(0, 245, 255, 0.5)),
+ 0 4px 20px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.3))}
 
 .mase-template-gaming #wpadminbar .ab-item,
 .mase-template-gaming #wpadminbar a.ab-item {
-    color: var(--cyber-cyan);
-    text-shadow: 0 0 10px rgba(0, 245, 255, 0.8);
-    font-weight: 600;
-}
+ color: var(--gaming-primary, var(--cyber-cyan));
+ text-shadow:
+ 0 0 12px var(--gaming-glow-primary, rgba(0, 245, 255, 0.9)),
+ 0 0 24px var(--gaming-glow-primary, rgba(0, 245, 255, 0.5));
+ font-weight: 700;
+ letter-spacing: 0.5px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-gaming #wpadminbar .ab-item:hover {
-    background: rgba(0, 245, 255, 0.1);
-    color: var(--cyber-magenta);
-    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
-    transition: all 0.3s ease;
-}
+ background: var(--gaming-glow-primary, rgba(0, 245, 255, 0.15));
+ color: var(--gaming-secondary, var(--cyber-magenta));
+ text-shadow:
+ 0 0 20px var(--gaming-glow-secondary, rgba(255, 0, 128, 1)),
+ 0 0 40px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.6));
+ border-radius: 6px;
+ box-shadow: 0 0 15px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.5))}
 
-/* Admin Menu Gaming Style */
 .mase-template-gaming #adminmenu {
-    background: linear-gradient(180deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
-    border-right: 2px solid var(--cyber-purple);
-    box-shadow: 0 0 30px rgba(128, 0, 255, 0.3);
-}
+ background: linear-gradient(180deg, #0c0c0c 0%, #1a0033 50%, #0c0c0c 100%);
+ border-right: 3px solid var(--gaming-accent, var(--cyber-purple));
+ box-shadow:
+ 0 0 40px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.4)),
+ 4px 0 20px rgba(0, 0, 0, 0.8)}
+
+.mase-template-gaming #adminmenu .wp-submenu {
+ background: linear-gradient(180deg, #0c0c0c, #1a0033);
+ border-left: 3px solid var(--gaming-glow-secondary, rgba(128, 0, 255, 0.5));
+ border-radius: 0 8px 8px 0;
+ box-shadow: 2px 0 20px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.4))}
 
 .mase-template-gaming #adminmenu a {
-    color: var(--cyber-cyan);
-    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
-    transition: all 0.3s ease;
-}
+ color: var(--gaming-primary, var(--cyber-cyan));
+ text-shadow:
+ 0 0 10px var(--gaming-glow-primary, rgba(0, 245, 255, 0.7)),
+ 0 0 20px var(--gaming-glow-primary, rgba(0, 245, 255, 0.4));
+ font-weight: 600;
+ letter-spacing: 0.5px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ border-radius: 8px;
+ margin: 2px 8px}
 
 .mase-template-gaming #adminmenu a:hover,
 .mase-template-gaming #adminmenu li.menu-top:hover {
-    background: linear-gradient(90deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 128, 0.1));
-    color: var(--cyber-magenta);
-    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
-    border-left: 3px solid var(--cyber-magenta);
-    box-shadow: inset 0 0 20px rgba(255, 0, 128, 0.2);
-}
+ background: linear-gradient(90deg, var(--gaming-glow-primary, rgba(0, 245, 255, 0.15)), var(--gaming-glow-secondary, rgba(255, 0, 128, 0.15)));
+ color: var(--gaming-secondary, var(--cyber-magenta));
+ text-shadow:
+ 0 0 20px var(--gaming-glow-secondary, rgba(255, 0, 128, 1)),
+ 0 0 40px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.6));
+ border-left: 3px solid var(--gaming-secondary, var(--cyber-magenta));
+ box-shadow:
+ inset 0 0 25px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.3)),
+ 0 0 20px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.4));
+ transform: translateX(4px)}
 
 .mase-template-gaming #adminmenu li.current a.menu-top {
-    background: linear-gradient(90deg, rgba(128, 0, 255, 0.2), rgba(0, 245, 255, 0.2));
-    color: var(--cyber-purple);
-    text-shadow: 0 0 15px rgba(128, 0, 255, 1);
-    border-left: 4px solid var(--cyber-purple);
-}
+ background: linear-gradient(90deg, var(--gaming-glow-secondary, rgba(128, 0, 255, 0.25)), var(--gaming-glow-primary, rgba(0, 245, 255, 0.25)));
+ color: var(--gaming-accent, var(--cyber-purple));
+ text-shadow:
+ 0 0 20px var(--gaming-glow-secondary, rgba(128, 0, 255, 1)),
+ 0 0 40px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.6));
+ border-left: 4px solid var(--gaming-accent, var(--cyber-purple));
+ font-weight: 700;
+ box-shadow: 0 0 30px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.5))}
 
-/* Neon Menu Indicators */
 .mase-template-gaming #adminmenu .wp-menu-arrow {
-    border-right-color: var(--cyber-cyan);
-    filter: drop-shadow(0 0 5px var(--cyber-cyan));
-}
+ border-right-color: var(--gaming-primary, var(--cyber-cyan));
+ filter: drop-shadow(0 0 5px var(--gaming-primary, var(--cyber-cyan)))}
 
-/* Content Area */
 .mase-template-gaming .wrap {
-    background: rgba(12, 12, 12, 0.9);
-    border: 2px solid transparent;
-    border-image: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-magenta)) 1;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 0 40px rgba(0, 245, 255, 0.2);
-}
+ background: rgba(12, 12, 12, 0.95);
+ border: 3px solid transparent;
+ border-image: linear-gradient(135deg, var(--gaming-primary, var(--cyber-cyan)), var(--gaming-secondary, var(--cyber-magenta))) 1;
+ border-radius: 12px;
+ padding: 32px;
+ box-shadow:
+ 0 0 50px var(--gaming-glow-primary, rgba(0, 245, 255, 0.3)),
+ inset 0 0 30px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.1))}
 
 .mase-template-gaming h1,
 .mase-template-gaming h2 {
-    color: var(--cyber-cyan);
-    text-shadow: 0 0 15px rgba(0, 245, 255, 0.8);
-    font-weight: 700;
-}
+ color: var(--gaming-primary, var(--cyber-cyan));
+ text-shadow:
+ 0 0 20px var(--gaming-glow-primary, rgba(0, 245, 255, 0.9)),
+ 0 0 40px var(--gaming-glow-primary, rgba(0, 245, 255, 0.5));
+ font-weight: 800;
+ letter-spacing: 1px;
+ line-height: 1.25}
 
-/* Glowing Buttons */
+.mase-template-gaming h1 {
+ font-size: 30px}
+
+.mase-template-gaming h2 {
+ font-size: 24px}
+
+.mase-template-gaming p,
+.mase-template-gaming label {
+ line-height: 1.6;
+ text-shadow: 0 0 5px rgba(255, 255, 255, 0.3)}
+
 .mase-template-gaming .button,
 .mase-template-gaming .button-primary {
-    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 128, 0.1));
-    border: 2px solid var(--cyber-cyan);
-    color: var(--cyber-cyan);
-    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
+ background: linear-gradient(135deg, var(--gaming-glow-primary, rgba(0, 245, 255, 0.15)), var(--gaming-glow-secondary, rgba(255, 0, 128, 0.15)));
+ border: 3px solid var(--gaming-primary, var(--cyber-cyan));
+ border-radius: 8px;
+ padding: 12px 28px;
+ color: var(--gaming-primary, var(--cyber-cyan));
+ text-shadow:
+ 0 0 10px var(--gaming-glow-primary, rgba(0, 245, 255, 0.7)),
+ 0 0 20px var(--gaming-glow-primary, rgba(0, 245, 255, 0.4));
+ font-weight: 700;
+ letter-spacing: 0.5px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 0 15px var(--gaming-glow-primary, rgba(0, 245, 255, 0.3))}
 
 .mase-template-gaming .button:hover,
 .mase-template-gaming .button-primary:hover {
-    background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(128, 0, 255, 0.2));
-    border-color: var(--cyber-magenta);
-    color: var(--cyber-magenta);
-    text-shadow: 0 0 15px rgba(255, 0, 128, 1);
-    box-shadow: 0 0 25px rgba(255, 0, 128, 0.5);
-    transform: translateY(-2px);
+ background: linear-gradient(135deg, var(--gaming-glow-secondary, rgba(255, 0, 128, 0.25)), var(--gaming-glow-secondary, rgba(128, 0, 255, 0.25)));
+ border-color: var(--gaming-secondary, var(--cyber-magenta));
+ color: var(--gaming-secondary, var(--cyber-magenta));
+ text-shadow:
+ 0 0 20px var(--gaming-glow-secondary, rgba(255, 0, 128, 1)),
+ 0 0 40px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.6));
+ box-shadow:
+ 0 0 35px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.6)),
+ 0 6px 20px rgba(0, 0, 0, 0.5);
+ transform: translateY(-3px)}
+
+.mase-template-gaming .button:active,
+.mase-template-gaming .button-primary:active {
+ transform: translateY(-1px);
+ box-shadow: 0 0 20px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.5))}
+
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-gaming {
+ animation: none}
+
+ .mase-template-gaming #adminmenu a:hover,
+ .mase-template-gaming #adminmenu li.menu-top:hover,
+ .mase-template-gaming .button:hover,
+ .mase-template-gaming .button-primary:hover {
+ transform: none}
 }
+
+.mase-template-gaming input[type="text"],
+.mase-template-gaming input[type="password"],
+.mase-template-gaming input[type="email"],
+.mase-template-gaming input[type="number"],
+.mase-template-gaming textarea,
+.mase-template-gaming select {
+ background: rgba(12, 12, 12, 0.8);
+ border: 2px solid var(--gaming-glow-primary, rgba(0, 245, 255, 0.4));
+ border-radius: 8px;
+ color: var(--gaming-primary, var(--cyber-cyan));
+ padding: 10px 16px;
+ text-shadow: 0 0 5px var(--gaming-glow-primary, rgba(0, 245, 255, 0.5));
+ transition: all 0.3s ease}
+
+.mase-template-gaming input[type="text"]:focus,
+.mase-template-gaming input[type="password"]:focus,
+.mase-template-gaming input[type="email"]:focus,
+.mase-template-gaming input[type="number"]:focus,
+.mase-template-gaming textarea:focus,
+.mase-template-gaming select:focus {
+ outline: none;
+ border-color: var(--gaming-primary, var(--cyber-cyan));
+ box-shadow:
+ 0 0 0 3px var(--gaming-glow-primary, rgba(0, 245, 255, 0.2)),
+ 0 0 30px var(--gaming-glow-primary, rgba(0, 245, 255, 0.4));
+ background: rgba(12, 12, 12, 0.95);
+ text-shadow: 0 0 8px var(--gaming-glow-primary, rgba(0, 245, 255, 0.7))}

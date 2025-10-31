@@ -1,0 +1,356 @@
+/**
+ * Material Design 3 Template Cards
+ * 
+ * Artistic template card redesign with MD3 elevation, organic shapes,
+ * and animated mini-preview elements.
+ * 
+ * Requirements: 3.1, 3.2, 3.4, 3.5, 23.2, 23.3, 23.4
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   Template Gallery Grid
+   ============================================ */
+
+.mase-template-gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: var(--md-space-xl, 24px);
+	margin-top: var(--md-space-l, 16px);
+}
+
+/* ============================================
+   Template Card Base (Requirements 3.1, 3.2)
+   ============================================ */
+
+.mase-template-card {
+	background: var(--md-surface, #fffbfe);
+	border-radius: var(--md-corner-l, 16px);
+	box-shadow: var(--md-elevation-1);
+	overflow: hidden;
+	position: relative;
+	transition: 
+		transform var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0)),
+		box-shadow var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+}
+
+/* ============================================
+   Artistic Header with Gradient (Requirement 3.2)
+   ============================================ */
+
+.mase-template-header {
+	position: relative;
+	height: 120px;
+	background: linear-gradient(
+		135deg,
+		var(--template-primary, var(--md-primary, #6750a4)),
+		var(--template-secondary, var(--md-tertiary, #7d5260))
+	);
+	/* Ellipse clip-path for organic shape (Requirement 3.2) */
+	clip-path: ellipse(100% 100% at 50% 0%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--md-space-l, 16px);
+}
+
+/* Set custom gradient colors from data attributes */
+.mase-template-card[data-template-primary] .mase-template-header {
+	background: linear-gradient(
+		135deg,
+		var(--template-primary),
+		var(--template-secondary)
+	);
+}
+
+/* ============================================
+   Template Content Area
+   ============================================ */
+
+.mase-template-content {
+	padding: var(--md-space-l, 16px);
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: var(--md-space-s, 8px);
+}
+
+.mase-template-name {
+	font-size: var(--md-title-medium, 16px);
+	font-weight: var(--md-weight-medium, 500);
+	color: var(--md-on-surface, #1c1b1f);
+	margin: 0;
+	line-height: var(--md-line-height-tight, 1.2);
+}
+
+.mase-template-description {
+	font-size: var(--md-body-small, 12px);
+	color: var(--md-on-surface-variant, #49454f);
+	margin: 0;
+	line-height: var(--md-line-height-normal, 1.5);
+	flex: 1;
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+
+.mase-active-badge,
+.mase-custom-badge {
+	display: inline-block;
+	padding: var(--md-space-xs, 4px) var(--md-space-s, 8px);
+	border-radius: var(--md-corner-full, 50px);
+	font-size: var(--md-label-small, 11px);
+	font-weight: var(--md-weight-medium, 500);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.mase-active-badge {
+	background: var(--md-primary-container, #e9ddff);
+	color: var(--md-on-primary-container, #22005d);
+}
+
+.mase-custom-badge {
+	background: var(--md-secondary-container, #e8def8);
+	color: var(--md-on-secondary-container, #1e192b);
+}
+
+/* ============================================
+   Active State Border (Requirement 3.5)
+   ============================================ */
+
+.mase-template-card.active {
+	outline: 3px solid var(--md-primary, #6750a4);
+	outline-offset: -3px;
+}
+
+/* ============================================
+   Template Actions
+   ============================================ */
+
+.mase-template-actions {
+	padding: 0 var(--md-space-l, 16px) var(--md-space-l, 16px);
+	display: flex;
+	gap: var(--md-space-s, 8px);
+}
+
+.mase-template-actions .button {
+	flex: 1;
+	justify-content: center;
+	border-radius: var(--md-corner-full, 50px);
+	font-weight: var(--md-weight-medium, 500);
+	transition: all var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+.mase-template-actions .button-primary {
+	background: var(--md-primary, #6750a4);
+	color: var(--md-on-primary, #ffffff);
+	border: none;
+}
+
+.mase-template-actions .button-link-delete {
+	flex: 0 0 auto;
+	color: var(--md-error, #ba1a1a);
+}
+
+/* ============================================
+   Hover Effects (Requirements 3.4, 17.1, 17.2, 17.3, 17.4, 17.5)
+   ============================================ */
+
+.mase-template-card:hover {
+	/* Add translateY transform (Requirement 17.1) */
+	/* Add scale transform for emphasis (Requirement 17.3) */
+	transform: translateY(-4px) scale(1.02);
+	
+	/* Elevate shadow from level-1 to level-3 (Requirement 17.2) */
+	box-shadow: var(--md-elevation-3,
+		0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+		0px 1px 3px 0px rgba(0, 0, 0, 0.30)
+	);
+}
+
+/* Active state for click feedback */
+.mase-template-card:active {
+	transform: translateY(-2px) scale(1.01);
+}
+
+/* Smooth transition timing with emphasized easing (Requirements 17.4, 17.5) */
+.mase-template-card {
+	transition: 
+		transform var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0)),
+		box-shadow var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+/* Return to original state smoothly when hover ends (Requirement 17.5) */
+.mase-template-card:not(:hover) {
+	transform: translateY(0) scale(1);
+	box-shadow: var(--md-elevation-1,
+		0px 1px 3px 1px rgba(0, 0, 0, 0.15),
+		0px 1px 2px 0px rgba(0, 0, 0, 0.30)
+	);
+}
+
+/* Button hover effects */
+.mase-template-actions .button-primary:hover {
+	box-shadow: var(--md-elevation-2);
+	transform: translateY(-1px);
+}
+
+.mase-template-actions .button-primary:active {
+	transform: translateY(0);
+}
+
+/* ============================================
+   Mini-Preview Elements (Requirements 23.2, 23.3, 23.4)
+   ============================================ */
+
+.mase-template-preview {
+	width: 100%;
+	max-width: 200px;
+	display: flex;
+	flex-direction: column;
+	gap: var(--md-space-s, 8px);
+}
+
+/* Mini Admin Bar with shimmer animation (Requirement 23.2) */
+.mase-template-minibar {
+	height: 3px;
+	background: rgba(255, 255, 255, 0.8);
+	border-radius: var(--md-corner-xs, 4px);
+	animation: shimmer 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+	0%, 100% { 
+		opacity: 0.8;
+		transform: scaleX(1);
+	}
+	50% { 
+		opacity: 1;
+		transform: scaleX(0.95);
+	}
+}
+
+/* Mini Menu Items container */
+.mase-template-minimenu {
+	display: flex;
+	flex-direction: column;
+	gap: var(--md-space-xs, 4px);
+}
+
+/* Mini Menu Items with pulse animation (Requirement 23.3) */
+.mase-template-menuitem {
+	height: 8px;
+	background: rgba(255, 255, 255, 0.6);
+	border-radius: var(--md-corner-xs, 4px);
+	animation: pulse 2s ease-in-out infinite;
+}
+
+/* Stagger menu item animations (Requirement 23.3) */
+.mase-template-menuitem:nth-child(1) { 
+	animation-delay: 0s;
+	width: 100%;
+}
+
+.mase-template-menuitem:nth-child(2) { 
+	animation-delay: 0.2s;
+	width: 85%;
+}
+
+.mase-template-menuitem:nth-child(3) { 
+	animation-delay: 0.4s;
+	width: 70%;
+}
+
+@keyframes pulse {
+	0%, 100% { 
+		opacity: 0.6;
+		transform: scaleX(1);
+	}
+	50% { 
+		opacity: 0.8;
+		transform: scaleX(0.95);
+	}
+}
+
+/* Theme-specific colors for previews (Requirement 23.4) */
+.mase-template-card[data-template-primary] .mase-template-minibar {
+	background: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mase-template-card[data-template-primary] .mase-template-menuitem {
+	background: rgba(255, 255, 255, 0.7);
+}
+
+/* Pause animations on hover for better visibility */
+.mase-template-card:hover .mase-template-minibar,
+.mase-template-card:hover .mase-template-menuitem {
+	animation-play-state: paused;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-template-gallery {
+		grid-template-columns: 1fr;
+		gap: var(--md-space-l, 16px);
+	}
+	
+	.mase-template-header {
+		height: 100px;
+	}
+	
+	.mase-template-actions {
+		flex-direction: column;
+	}
+	
+	.mase-template-actions .button {
+		width: 100%;
+	}
+}
+
+/* ============================================
+   Dark Mode Support
+   ============================================ */
+
+:root[data-theme="dark"] .mase-template-card {
+	background: var(--md-surface, #1c1b1f);
+}
+
+:root[data-theme="dark"] .mase-template-name {
+	color: var(--md-on-surface, #e6e1e5);
+}
+
+:root[data-theme="dark"] .mase-template-description {
+	color: var(--md-on-surface-variant, #cac4d0);
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+.mase-template-card:focus-visible {
+	outline: 3px solid var(--md-primary, #6750a4);
+	outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	.mase-template-card,
+	.mase-template-actions .button {
+		transition-duration: 0.01ms !important;
+	}
+	
+	.mase-template-card:hover {
+		transform: none;
+	}
+}

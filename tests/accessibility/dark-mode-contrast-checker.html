@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASE Dark Mode Contrast Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #2271b1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #135e96;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .test-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .contrast-test {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .contrast-test:last-child {
+            margin-bottom: 0;
+        }
+
+        .test-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .test-sample {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .contrast-result {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .ratio-value {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .pass {
+            color: #46b450;
+        }
+
+        .fail {
+            color: #dc3232;
+        }
+
+        .wcag-level {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .wcag-aaa {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .wcag-aa {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .wcag-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-card.total {
+            background: #e7f3ff;
+            border: 2px solid #2271b1;
+        }
+
+        .summary-card.passed {
+            background: #d4edda;
+            border: 2px solid #46b450;
+        }
+
+        .summary-card.failed {
+            background: #f8d7da;
+            border: 2px solid #dc3232;
+        }
+
+        .summary-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .instructions {
+            background: #e7f3ff;
+            border-left: 4px solid #2271b1;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            color: #2271b1;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .instructions p {
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            color: #444;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .color-info {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 MASE Dark Mode Contrast Checker</h1>
+        <p class="subtitle">WCAG 2.1 AA/AAA contrast ratio verification for dark mode</p>
+
+        <div class="instructions">
+            <h2>📋 WCAG Contrast Requirements</h2>
+            <p><strong>Normal Text (< 18pt or < 14pt bold):</strong></p>
+            <ul>
+                <li>WCAG AA: Minimum 4.5:1 contrast ratio</li>
+                <li>WCAG AAA: Minimum 7:1 contrast ratio</li>
+            </ul>
+            <p><strong>Large Text (≥ 18pt or ≥ 14pt bold):</strong></p>
+            <ul>
+                <li>WCAG AA: Minimum 3:1 contrast ratio</li>
+                <li>WCAG AAA: Minimum 4.5:1 contrast ratio</li>
+            </ul>
+            <p><strong>Interactive Elements (buttons, links):</strong></p>
+            <ul>
+                <li>WCAG AA: Minimum 3:1 contrast ratio</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <button onclick="runAllTests()">▶️ Run All Tests</button>
+            <button onclick="exportResults()">📥 Export Results</button>
+            <button onclick="location.reload()">🔄 Reset</button>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card total">
+                <div class="summary-number" id="totalTests">0</div>
+                <div class="summary-label">Total Tests</div>
+            </div>
+            <div class="summary-card passed">
+                <div class="summary-number" id="passedTests">0</div>
+                <div class="summary-label">Passed AA</div>
+            </div>
+            <div class="summary-card failed">
+                <div class="summary-number" id="failedTests">0</div>
+                <div class="summary-label">Failed AA</div>
+            </div>
+        </div>
+
+        <div class="test-grid" id="testGrid">
+            <!-- Tests will be dynamically generated -->
+        </div>
+    </div>
+
+    <script>
+        // MASE Dark Mode Color Palette (from CSS custom properties)
+        const darkModeColors = {
+            // Primary colors
+            primary: '#4a9eff',
+            primaryHover: '#6cb0ff',
+            primaryLight: '#1a3a52',
+            
+            // Status colors
+            success: '#46d369',
+            successLight: '#1a3a24',
+            warning: '#f5c542',
+            warningLight: '#3a3420',
+            error: '#ff6b6b',
+            errorLight: '#3a1f1f',
+            
+            // Gray scale
+            gray50: '#1a1a1a',
+            gray100: '#2d2d2d',
+            gray200: '#3a3a3a',
+            gray300: '#4a4a4a',
+            gray400: '#6b6b6b',
+            gray500: '#8a8a8a',
+            gray600: '#a0a0a0',
+            gray700: '#b8b8b8',
+            gray800: '#d0d0d0',
+            gray900: '#e8e8e8',
+            
+            // Semantic colors
+            background: '#1a1a1a',
+            surface: '#2d2d2d',
+            surfaceElevated: '#3a3a3a',
+            text: '#e4e4e7',
+            textSecondary: '#a1a1aa',
+            border: '#3f3f46'
+        };
+
+        // Test definitions
+        const contrastTests = [
+            {
+                category: 'Body Text',
+                tests: [
+                    { name: 'Body text on background', fg: 'text', bg: 'background', minRatio: 4.5 },
+                    { name: 'Body text on surface', fg: 'text', bg: 'surface', minRatio: 4.5 },
+                    { name: 'Secondary text on background', fg: 'textSecondary', bg: 'background', minRatio: 4.5 },
+                    { name: 'Secondary text on surface', fg: 'textSecondary', bg: 'surface', minRatio: 4.5 }
+                ]
+            },
+            {
+                category: 'Headings',
+                tests: [
+                    { name: 'H1 on background', fg: 'text', bg: 'background', minRatio: 4.5 },
+                    { name: 'H2 on surface', fg: 'text', bg: 'surface', minRatio: 4.5 },
+                    { name: 'H3 on elevated surface', fg: 'text', bg: 'surfaceElevated', minRatio: 4.5 }
+                ]
+            },
+            {
+                category: 'Interactive Elements',
+                tests: [
+                    { name: 'Primary button text', fg: '#ffffff', bg: 'primary', minRatio: 4.5 },
+                    { name: 'Primary button hover', fg: '#ffffff', bg: 'primaryHover', minRatio: 4.5 },
+                    { name: 'Link text', fg: 'primary', bg: 'background', minRatio: 3 },
+                    { name: 'Link on surface', fg: 'primary', bg: 'surface', minRatio: 3 }
+                ]
+            },
+            {
+                category: 'Status Colors',
+                tests: [
+                    { name: 'Success text', fg: 'success', bg: 'background', minRatio: 3 },
+                    { name: 'Success on light bg', fg: 'success', bg: 'successLight', minRatio: 4.5 },
+                    { name: 'Warning text', fg: 'warning', bg: 'background', minRatio: 3 },
+                    { name: 'Warning on light bg', fg: 'warning', bg: 'warningLight', minRatio: 4.5 },
+                    { name: 'Error text', fg: 'error', bg: 'background', minRatio: 3 },
+                    { name: 'Error on light bg', fg: 'error', bg: 'errorLight', minRatio: 4.5 }
+                ]
+            },
+            {
+                category: 'Form Controls',
+                tests: [
+                    { name: 'Input text', fg: 'text', bg: 'surface', minRatio: 4.5 },
+                    { name: 'Input border', fg: 'border', bg: 'surface', minRatio: 3 },
+                    { name: 'Placeholder text', fg: 'textSecondary', bg: 'surface', minRatio: 4.5 },
+                    { name: 'Focus ring', fg: 'primary', bg: 'surface', minRatio: 3 }
+                ]
+            },
+            {
+                category: 'Cards & Panels',
+                tests: [
+                    { name: 'Card text on surface', fg: 'text', bg: 'surface', minRatio: 4.5 },
+                    { name: 'Card text on elevated', fg: 'text', bg: 'surfaceElevated', minRatio: 4.5 },
+                    { name: 'Card border', fg: 'border', bg: 'background', minRatio: 3 }
+                ]
+            }
+        ];
+
+        // Calculate relative luminance
+        function getLuminance(r, g, b) {
+            const [rs, gs, bs] = [r, g, b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+
+        // Calculate contrast ratio
+        function getContrastRatio(color1, color2) {
+            const rgb1 = hexToRgb(color1);
+            const rgb2 = hexToRgb(color2);
+            
+            const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
+            const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+            
+            const lighter = Math.max(lum1, lum2);
+            const darker = Math.min(lum1, lum2);
+            
+            return (lighter + 0.05) / (darker + 0.05);
+        }
+
+        // Convert hex to RGB
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Get color value
+        function getColor(colorKey) {
+            return colorKey.startsWith('#') ? colorKey : darkModeColors[colorKey];
+        }
+
+        // Determine WCAG level
+        function getWCAGLevel(ratio, minRatio) {
+            if (ratio >= 7) return { level: 'AAA', class: 'wcag-aaa', pass: true };
+            if (ratio >= 4.5 && minRatio <= 4.5) return { level: 'AA', class: 'wcag-aa', pass: true };
+            if (ratio >= 3 && minRatio <= 3) return { level: 'AA Large', class: 'wcag-aa', pass: true };
+            return { level: 'Fail', class: 'wcag-fail', pass: false };
+        }
+
+        // Run all tests
+        function runAllTests() {
+            const testGrid = document.getElementById('testGrid');
+            testGrid.innerHTML = '';
+            
+            let totalTests = 0;
+            let passedTests = 0;
+            let failedTests = 0;
+
+            contrastTests.forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'test-card';
+                
+                const title = document.createElement('h3');
+                title.textContent = category.category;
+                card.appendChild(title);
+
+                category.tests.forEach(test => {
+                    totalTests++;
+                    
+                    const fgColor = getColor(test.fg);
+                    const bgColor = getColor(test.bg);
+                    const ratio = getContrastRatio(fgColor, bgColor);
+                    const wcag = getWCAGLevel(ratio, test.minRatio);
+                    
+                    if (wcag.pass) passedTests++;
+                    else failedTests++;
+
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'contrast-test';
+                    
+                    testDiv.innerHTML = `
+                        <div class="test-label">${test.name}</div>
+                        <div class="test-sample" style="background: ${bgColor}; color: ${fgColor};">
+                            Sample Text (Aa)
+                        </div>
+                        <div class="color-info">
+                            <div class="color-swatch" style="background: ${fgColor};"></div>
+                            <span>FG: ${fgColor}</span>
+                            <div class="color-swatch" style="background: ${bgColor};"></div>
+                            <span>BG: ${bgColor}</span>
+                        </div>
+                        <div class="contrast-result">
+                            <span>Contrast Ratio: <span class="ratio-value ${wcag.pass ? 'pass' : 'fail'}">${ratio.toFixed(2)}:1</span></span>
+                            <span class="wcag-level ${wcag.class}">${wcag.level}</span>
+                        </div>
+                    `;
+                    
+                    card.appendChild(testDiv);
+                });
+
+                testGrid.appendChild(card);
+            });
+
+            // Update summary
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('failedTests').textContent = failedTests;
+        }
+
+        // Export results
+        function exportResults() {
+            const results = {
+                timestamp: new Date().toISOString(),
+                summary: {
+                    total: parseInt(document.getElementById('totalTests').textContent),
+                    passed: parseInt(document.getElementById('passedTests').textContent),
+                    failed: parseInt(document.getElementById('failedTests').textContent)
+                },
+                tests: []
+            };
+
+            contrastTests.forEach(category => {
+                category.tests.forEach(test => {
+                    const fgColor = getColor(test.fg);
+                    const bgColor = getColor(test.bg);
+                    const ratio = getContrastRatio(fgColor, bgColor);
+                    const wcag = getWCAGLevel(ratio, test.minRatio);
+
+                    results.tests.push({
+                        category: category.category,
+                        name: test.name,
+                        foreground: fgColor,
+                        background: bgColor,
+                        ratio: ratio.toFixed(2),
+                        minRequired: test.minRatio,
+                        wcagLevel: wcag.level,
+                        passed: wcag.pass
+                    });
+                });
+            });
+
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mase-dark-mode-contrast-results-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', runAllTests);
+    </script>
+</body>
+</html>

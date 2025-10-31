@@ -5499,8 +5499,9 @@ class MASE_Settings {
 	/**
 	 * Generate template thumbnail.
 	 *
-	 * Creates an SVG thumbnail with template name and primary color.
+	 * Creates an enhanced SVG thumbnail showcasing template characteristics.
 	 * Uses base64 encoding for inline data URI.
+	 * Requirements: 18.1, 18.2, 18.3, 18.4
 	 *
 	 * @since 1.2.0
 	 * @param string $name  Template name.
@@ -5517,10 +5518,116 @@ class MASE_Settings {
 		// Escape template name to prevent XSS.
 		$name_escaped = esc_html( $name );
 		
-		// Generate 300x200px SVG with colored background.
+		// Generate 300x200px SVG with theme-specific styling.
 		$svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">';
-		$svg .= '<rect fill="#' . $color_clean . '" width="300" height="200"/>';
-		$svg .= '<text x="150" y="100" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="500" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3)">';
+		
+		// Add theme-specific visual effects based on template name.
+		if ( stripos( $name, 'glass' ) !== false || stripos( $name, 'glassmorphic' ) !== false ) {
+			// Glassmorphism theme - frosted glass effect.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:rgba(255,255,255,0.3);stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:rgba(255,255,255,0.1);stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '<filter id="blur"><feGaussianBlur in="SourceGraphic" stdDeviation="2" /></filter>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="#' . $color_clean . '" width="300" height="200"/>';
+			$svg .= '<rect fill="url(#glassGrad)" width="280" height="180" x="10" y="10" rx="12" filter="url(#blur)" opacity="0.9"/>';
+			$svg .= '<rect fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" width="280" height="180" x="10" y="10" rx="12"/>';
+			
+		} elseif ( stripos( $name, 'gradient' ) !== false || stripos( $name, 'sunset' ) !== false || stripos( $name, 'creative' ) !== false ) {
+			// Gradient theme - multi-stop gradient.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="multiGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:#' . $color_clean . ';stop-opacity:1" />';
+			$svg .= '<stop offset="33%" style="stop-color:#e73c7e;stop-opacity:1" />';
+			$svg .= '<stop offset="66%" style="stop-color:#23a6d5;stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:#23d5ab;stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="url(#multiGrad)" width="300" height="200"/>';
+			$svg .= '<rect fill="rgba(0,0,0,0.2)" width="280" height="60" x="10" y="70" rx="8"/>';
+			
+		} elseif ( stripos( $name, 'minimal' ) !== false || stripos( $name, 'modern' ) !== false ) {
+			// Minimal theme - clean and simple.
+			$svg .= '<rect fill="#f8f9fa" width="300" height="200"/>';
+			$svg .= '<rect fill="#' . $color_clean . '" width="300" height="40"/>';
+			$svg .= '<rect fill="white" width="280" height="140" x="10" y="50" rx="8"/>';
+			$svg .= '<rect fill="#e9ecef" width="260" height="20" x="20" y="70" rx="4"/>';
+			$svg .= '<rect fill="#e9ecef" width="200" height="20" x="20" y="100" rx="4"/>';
+			$svg .= '<rect fill="#e9ecef" width="180" height="20" x="20" y="130" rx="4"/>';
+			
+		} elseif ( stripos( $name, 'dark' ) !== false || stripos( $name, 'midnight' ) !== false ) {
+			// Dark mode theme.
+			$svg .= '<rect fill="#1a1a1a" width="300" height="200"/>';
+			$svg .= '<rect fill="#2d2d2d" width="300" height="40"/>';
+			$svg .= '<rect fill="#252525" width="280" height="140" x="10" y="50" rx="8"/>';
+			$svg .= '<rect fill="#3a3a3a" width="260" height="20" x="20" y="70" rx="4"/>';
+			$svg .= '<rect fill="#3a3a3a" width="200" height="20" x="20" y="100" rx="4"/>';
+			
+		} elseif ( stripos( $name, 'corporate' ) !== false || stripos( $name, 'professional' ) !== false ) {
+			// Professional/Corporate theme.
+			$svg .= '<rect fill="#ffffff" width="300" height="200"/>';
+			$svg .= '<rect fill="#' . $color_clean . '" width="300" height="40"/>';
+			$svg .= '<rect fill="white" width="60" height="140" x="10" y="50" stroke="#e0e0e0" stroke-width="1"/>';
+			$svg .= '<rect fill="white" width="210" height="140" x="80" y="50" stroke="#e0e0e0" stroke-width="1"/>';
+			$svg .= '<rect fill="#f5f5f5" width="190" height="20" x="90" y="70" rx="2"/>';
+			$svg .= '<rect fill="#f5f5f5" width="190" height="20" x="90" y="100" rx="2"/>';
+			
+		} elseif ( stripos( $name, 'nature' ) !== false || stripos( $name, 'forest' ) !== false ) {
+			// Nature/Forest theme.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="natureGrad" x1="0%" y1="0%" x2="0%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:#a8e6cf;stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:#' . $color_clean . ';stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="url(#natureGrad)" width="300" height="200"/>';
+			$svg .= '<circle fill="rgba(255,255,255,0.3)" cx="50" cy="50" r="30"/>';
+			$svg .= '<circle fill="rgba(255,255,255,0.2)" cx="250" cy="150" r="40"/>';
+			
+		} elseif ( stripos( $name, 'ocean' ) !== false ) {
+			// Ocean theme.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="oceanGrad" x1="0%" y1="0%" x2="0%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="url(#oceanGrad)" width="300" height="200"/>';
+			$svg .= '<path d="M0,120 Q75,100 150,120 T300,120 L300,200 L0,200 Z" fill="rgba(255,255,255,0.2)"/>';
+			
+		} elseif ( stripos( $name, 'rose' ) !== false || stripos( $name, 'elegant' ) !== false ) {
+			// Rose/Elegant theme.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:#ffeef8;stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:#' . $color_clean . ';stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="url(#roseGrad)" width="300" height="200"/>';
+			$svg .= '<circle fill="rgba(255,255,255,0.4)" cx="150" cy="100" r="60"/>';
+			$svg .= '<circle fill="rgba(255,255,255,0.3)" cx="150" cy="100" r="40"/>';
+			
+		} elseif ( stripos( $name, 'golden' ) !== false || stripos( $name, 'luxury' ) !== false ) {
+			// Golden/Luxury theme.
+			$svg .= '<defs>';
+			$svg .= '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">';
+			$svg .= '<stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />';
+			$svg .= '<stop offset="50%" style="stop-color:#' . $color_clean . ';stop-opacity:1" />';
+			$svg .= '<stop offset="100%" style="stop-color:#b8860b;stop-opacity:1" />';
+			$svg .= '</linearGradient>';
+			$svg .= '</defs>';
+			$svg .= '<rect fill="url(#goldGrad)" width="300" height="200"/>';
+			$svg .= '<rect fill="rgba(255,255,255,0.2)" width="280" height="180" x="10" y="10" rx="8" stroke="rgba(255,215,0,0.5)" stroke-width="2"/>';
+			
+		} else {
+			// Default theme - simple colored background.
+			$svg .= '<rect fill="#' . $color_clean . '" width="300" height="200"/>';
+		}
+		
+		// Add template name text with shadow.
+		$svg .= '<text x="150" y="100" text-anchor="middle" dominant-baseline="middle" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" style="text-shadow: 0 2px 8px rgba(0,0,0,0.5)">';
 		$svg .= $name_escaped;
 		$svg .= '</text>';
 		$svg .= '</svg>';
@@ -5973,6 +6080,300 @@ class MASE_Settings {
 							'floating' => false,
 							'border_radius' => 6,
 							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'terminal' => array(
+				'id'          => 'terminal',
+				'name'        => 'Terminal Linux',
+				'description' => 'Hacker/Developer theme with matrix effects',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'dark-elegance' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 0,
+							'shadow' => 'subtle',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 0,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'gaming' => array(
+				'id'          => 'gaming',
+				'name'        => 'Gaming Cyberpunk',
+				'description' => 'Epic gaming theme with RGB neon effects',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'dark-elegance' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 14,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => true,
+							'floating_margin' => 8,
+							'border_radius' => 8,
+							'shadow' => 'elevated',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 4,
+							'shadow' => 'elevated',
+						),
+					),
+				),
+			),
+			'retro' => array(
+				'id'          => 'retro',
+				'name'        => 'Retro 80s Synthwave',
+				'description' => 'Nostalgic 80s theme with vaporwave aesthetics',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'sunset' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 14,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => true,
+							'floating_margin' => 10,
+							'border_radius' => 10,
+							'shadow' => 'elevated',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 6,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'floral' => array(
+				'id'          => 'floral',
+				'name'        => 'Floral Natural',
+				'description' => 'Organic theme with pastel colors',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'rose-garden' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.6,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 8,
+							'shadow' => 'subtle',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 6,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'professional' => array(
+				'id'          => 'professional',
+				'name'        => 'Professional Dark',
+				'description' => 'Corporate elegance with gold accents',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'midnight-blue' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 13,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 4,
+							'shadow' => 'subtle',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 4,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'glass' => array(
+				'id'          => 'glass',
+				'name'        => 'Glass Material',
+				'description' => 'Premium glassmorphism with prismatic effects',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'professional-blue' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 14,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => true,
+							'blur_intensity' => 20,
+							'floating' => true,
+							'floating_margin' => 8,
+							'border_radius' => 12,
+							'shadow' => 'elevated',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => true,
+							'blur_intensity' => 15,
+							'floating' => false,
+							'border_radius' => 8,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'gradient' => array(
+				'id'          => 'gradient',
+				'name'        => 'Gradient Flow',
+				'description' => 'Dynamic theme with flowing gradients',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'creative-purple' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 14,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 500,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => true,
+							'floating_margin' => 10,
+							'border_radius' => 8,
+							'shadow' => 'elevated',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 6,
+							'shadow' => 'subtle',
+						),
+					),
+				),
+			),
+			'minimal' => array(
+				'id'          => 'minimal',
+				'name'        => 'Minimalist Modern',
+				'description' => 'Clean design with focus on typography',
+				'thumbnail'   => '',
+				'is_custom'   => false,
+				'settings'    => array(
+					'palettes' => array( 'current' => 'professional-blue' ),
+					'typography' => array(
+						'admin_bar' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+						'admin_menu' => array(
+							'font_size' => 13,
+							'font_weight' => 400,
+							'line_height' => 1.5,
+						),
+					),
+					'visual_effects' => array(
+						'admin_bar' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 0,
+							'shadow' => 'none',
+						),
+						'admin_menu' => array(
+							'glassmorphism' => false,
+							'floating' => false,
+							'border_radius' => 0,
+							'shadow' => 'none',
 						),
 					),
 				),

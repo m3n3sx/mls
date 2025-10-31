@@ -1,831 +1,531 @@
-/**
- * Modern Admin Styler Enterprise (MASE) - Template Styles
- * 
- * Styles for template cards, gallery layout, and thumbnail display.
- * Implements responsive design, accessibility features, and RTL support.
- * 
- * @package     Modern Admin Styler Enterprise
- * @version     1.2.0
- * @author      Modern Admin Styler Team
- * @license     GPL-2.0+
- */
-
-/* ============================================================================
-   TEMPLATE GALLERY LAYOUT
-   ============================================================================ */
-
-/**
- * Template Gallery Grid
- * 
- * Responsive grid layout for template cards with consistent spacing.
- * Uses auto-fill to create flexible columns based on minimum card width.
- * Aligns with palette grid for visual consistency.
- * 
- * Requirements: 3.3
- */
 .mase-templates-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Consistent with palette grid */
-    gap: var(--mase-space-lg); /* 24px gap spacing */
-    margin-top: var(--mase-space-lg); /* 24px top margin */
-    margin-bottom: var(--mase-space-xl); /* 32px bottom margin */
-}
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+ gap: var(--mase-space-lg);
+ margin-top: var(--mase-space-lg);
+ margin-bottom: var(--mase-space-xl)}
 
-/* Responsive breakpoints */
 @media (max-width: 767px) {
-    .mase-templates-gallery {
-        grid-template-columns: 1fr; /* Single column on mobile */
-        gap: var(--mase-space-md); /* 16px gap on mobile */
-    }
+ .mase-templates-gallery {
+ grid-template-columns: 1fr;
+ gap: var(--mase-space-md)}
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .mase-templates-gallery {
-        grid-template-columns: repeat(2, 1fr); /* Two columns on tablet */
-        gap: var(--mase-space-lg); /* 24px gap on tablet */
-    }
+ .mase-templates-gallery {
+ grid-template-columns: repeat(2, 1fr);
+ gap: var(--mase-space-lg)}
 }
 
 @media (min-width: 1025px) {
-    .mase-templates-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Flexible columns on desktop */
-    }
+ .mase-templates-gallery {
+ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))}
 }
 
-/**
- * Compact Template Gallery
- * 
- * Used in Templates tab for a more compact presentation.
- * Maintains consistent dimensions and spacing with main gallery.
- * 
- * Requirements: 3.3
- */
 .mase-template-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Three columns by default */
-    gap: var(--mase-space-lg); /* 24px gap spacing */
-    margin-top: var(--mase-space-lg); /* 24px top margin */
-    margin-bottom: var(--mase-space-xl); /* 32px bottom margin */
-}
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: var(--mase-space-lg);
+ margin-top: var(--mase-space-lg);
+ margin-bottom: var(--mase-space-xl)}
 
-/* Responsive breakpoints for compact gallery */
 @media (max-width: 1400px) {
-    .mase-template-gallery {
-        grid-template-columns: repeat(2, 1fr); /* Two columns on smaller desktops */
-    }
+ .mase-template-gallery {
+ grid-template-columns: repeat(2, 1fr);
+ gap: var(--mase-space-lg)}
 }
 
 @media (max-width: 900px) {
-    .mase-template-gallery {
-        grid-template-columns: 1fr; /* Single column on mobile */
-    }
+ .mase-template-gallery {
+ grid-template-columns: 1fr;
+ gap: var(--mase-space-md)}
 }
 
-/* ============================================================================
-   TEMPLATE CARD COMPONENT
-   ============================================================================ */
-
-/**
- * Template Card Base Styles
- * 
- * Modern card design with refined borders, shadows, and transitions.
- * Matches the palette card design for visual consistency.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-card {
-    /* Layout */
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    max-height: 420px;
-    
-    /* Visual - Refined border and background */
-    background: var(--mase-surface); /* Surface color from design tokens */
-    border: 2px solid var(--mase-border); /* 2px border for consistency with palette cards */
-    border-radius: var(--mase-radius-lg); /* 8px border radius */
-    overflow: hidden;
-    box-shadow: var(--mase-shadow-xs); /* Subtle shadow for elevation */
-    
-    /* Interaction */
-    cursor: pointer;
-    transition: all var(--mase-transition-base); /* 200ms smooth transition */
-}
 
-/**
- * Template Card Hover State
- * 
- * Provides clear visual feedback with elevation and transform.
- * Matches palette card hover behavior.
- * 
- * Requirements: 8.1, 8.2
- */
+ position: relative;
+ display: flex;
+ flex-direction: column;
+ max-height: 420px;
+
+ background: var(--mase-surface);
+ border: 2px solid var(--mase-border);
+ border-radius: var(--mase-radius-lg);
+ overflow: hidden;
+ box-shadow: var(--mase-shadow-xs);
+
+ cursor: pointer;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
+
 .mase-template-card:hover {
-    transform: translateY(-2px); /* Subtle lift on hover */
-    box-shadow: var(--mase-shadow-md); /* Increased shadow for elevation */
-    border-color: var(--mase-primary); /* Primary color border on hover */
-}
+ transform: translateY(-4px);
+ box-shadow: var(--mase-shadow-lg);
+ border-color: var(--mase-primary)}
 
-/**
- * Template Card Focus State
- * 
- * Clear focus indicator for keyboard navigation accessibility.
- * 
- * Requirements: 8.1, 8.2
- * A11Y: Visible focus indicator for keyboard users
- */
 .mase-template-card:focus,
 .mase-template-card:focus-visible {
-    outline: 2px solid var(--mase-primary);
-    outline-offset: 2px;
-    border-color: var(--mase-primary);
-}
+ outline: 2px solid var(--mase-primary);
+ outline-offset: 2px;
+ border-color: var(--mase-primary)}
 
-/**
- * Template Card Active State
- * 
- * Clear visual indicator for the currently active/selected template.
- * Uses primary color border and enhanced shadow.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-card.active,
 .mase-template-card.is-active {
-    border-color: var(--mase-primary); /* Primary color border */
-    background: var(--mase-primary-light); /* Light primary background */
-    box-shadow: var(--mase-shadow-lg); /* Enhanced shadow for active state */
-}
+ border-color: var(--mase-primary);
+ background: var(--mase-primary-light);
+ box-shadow: var(--mase-shadow-lg)}
 
-/**
- * Template Card Disabled State
- * 
- * Reduced opacity and disabled cursor for inactive templates.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-card.disabled,
 .mase-template-card:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
+ opacity: 0.5;
+ cursor: not-allowed;
+ pointer-events: none}
 
-/* ============================================================================
-   TEMPLATE THUMBNAIL
-   ============================================================================ */
-
-/**
- * Template Thumbnail Container
- * 
- * Container for template preview images with refined styling.
- * Uses border-radius for modern appearance.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-thumbnail {
-    position: relative;
-    width: 100%;
-    height: 150px;
-    overflow: hidden;
-    background: var(--mase-gray-100); /* Light gray background */
-    border-radius: var(--mase-radius-lg) var(--mase-radius-lg) 0 0; /* Rounded top corners only */
-}
+ position: relative;
+ width: 100%;
+ height: 200px;
+ overflow: hidden;
+ background: var(--mase-gray-100);
+ border-radius: var(--mase-radius-lg) var(--mase-radius-lg) 0 0}
 
-/**
- * Template Thumbnail Image
- * 
- * Responsive image with smooth scale transition on hover.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-thumbnail img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform var(--mase-transition-base); /* 200ms smooth transition */
-}
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)}
 
-/**
- * Template Thumbnail Hover Effect
- * 
- * Subtle scale effect on hover for visual interest.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-card:hover .mase-template-thumbnail img {
-    transform: scale(1.05); /* Slight zoom on hover */
-}
+ transform: scale(1.08)}
 
-/**
- * Template Thumbnail Overlay
- * 
- * Dark gradient overlay that appears on hover to highlight preview button.
- * Uses smooth opacity transition.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
-    opacity: 0;
-    transition: opacity var(--mase-transition-base); /* 200ms smooth transition */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+ opacity: 0;
+ transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ display: flex;
+ align-items: center;
+ justify-content: center}
 
 .mase-template-card:hover .mase-template-overlay {
-    opacity: 1;
-}
+ opacity: 1}
 
-/**
- * Template Preview Button
- * 
- * Button that appears in overlay on hover.
- * Uses refined button styling with smooth transitions.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-preview-btn {
-    padding: var(--mase-space-sm) var(--mase-space-lg); /* 8px 24px */
-    background: rgba(255, 255, 255, 0.95);
-    color: var(--mase-primary);
-    border: none;
-    border-radius: var(--mase-radius-md); /* 6px border radius */
-    font-size: var(--mase-font-size-sm); /* 13px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    cursor: pointer;
-    transform: translateY(10px);
-    transition: all var(--mase-transition-fast); /* 150ms smooth transition */
-    box-shadow: var(--mase-shadow-sm); /* Subtle shadow */
-}
+ padding: 12px 24px;
+ background: rgba(255, 255, 255, 0.95);
+ color: var(--mase-primary);
+ border: none;
+ border-radius: 8px;
+ font-size: 14px;
+ font-weight: var(--mase-font-weight-semibold);
+ cursor: pointer;
+ transform: translateY(10px);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2)}
 
 .mase-template-card:hover .mase-template-preview-btn {
-    transform: translateY(0);
-}
+ transform: translateY(0)}
 
 .mase-template-preview-btn:hover {
-    background: #ffffff;
-    box-shadow: var(--mase-shadow-md); /* Enhanced shadow on hover */
-}
+ background: #fff;
+ box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+ transform: translateY(-2px)}
 
-/**
- * Template Active Badge
- * 
- * Badge displayed on active template thumbnails.
- * Uses pill shape with primary color background.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-badge {
-    position: absolute;
-    top: var(--mase-space-md); /* 16px from top */
-    right: var(--mase-space-md); /* 16px from right */
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 12px; /* Refined padding */
-    background: var(--mase-primary);
-    color: #ffffff;
-    font-size: var(--mase-font-size-xs); /* 12px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    border-radius: var(--mase-radius-full); /* Fully rounded pill shape */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: var(--mase-shadow-md); /* Shadow for elevation */
-    z-index: 10;
-}
+ position: absolute;
+ top: var(--mase-space-md);
+ right: var(--mase-space-md);
+ display: inline-flex;
+ align-items: center;
+ padding: 6px 16px;
+ background: var(--mase-primary);
+ color: #fff;
+ font-size: 12px;
+ font-weight: var(--mase-font-weight-semibold);
+ border-radius: 20px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+ z-index: 10}
 
-/* ============================================================================
-   TEMPLATE CONTENT
-   ============================================================================ */
-
-/**
- * Template Content Container
- * 
- * Container for template name, description, and actions.
- * Uses consistent padding from design system.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-content {
-    padding: var(--mase-space-lg); /* 24px padding */
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+ padding: var(--mase-space-lg);
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ gap: var(--mase-space-sm)}
 
-/**
- * Template Header Section
- * 
- * Contains template name and initial metadata.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-header {
-    margin-bottom: var(--mase-space-md); /* 16px bottom margin */
-}
+ margin-bottom: var(--mase-space-md)}
 
-/**
- * Template Name
- * 
- * Primary heading for template card.
- * Uses refined typography from design system.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-name {
-    font-size: var(--mase-font-size-lg); /* 16px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    color: var(--mase-text);
-    margin: 0 0 var(--mase-space-xs) 0; /* 4px bottom margin */
-}
+ font-size: 18px;
+ font-weight: var(--mase-font-weight-semibold);
+ color: var(--mase-text);
+ margin: 0 0 var(--mase-space-xs) 0;
+ line-height: 1.4}
 
-/**
- * Template Description
- * 
- * Secondary text describing the template.
- * Uses text-secondary color and line clamping.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-description {
-    font-size: var(--mase-font-size-sm); /* 13px */
-    color: var(--mase-text-secondary);
-    line-height: var(--mase-line-height-normal); /* 1.5 */
-    margin: 0 0 var(--mase-space-md) 0; /* 16px bottom margin */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
+ font-size: 14px;
+ color: var(--mase-text-secondary);
+ line-height: 1.6;
+ margin: 0 0 var(--mase-space-lg) 0;
+ display: -webkit-box;
+ -webkit-line-clamp: 2;
+ -webkit-box-orient: vertical;
+ overflow: hidden}
 
-/**
- * Template Details Section
- * 
- * Alternative content layout used in Templates tab.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-details {
-    padding: var(--mase-space-lg); /* 24px padding */
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+ padding: var(--mase-space-lg);
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ gap: var(--mase-space-sm)}
 
 .mase-template-details h3 {
-    font-size: var(--mase-font-size-lg); /* 16px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    color: var(--mase-text);
-    margin: 0 0 var(--mase-space-xs) 0; /* 4px bottom margin */
-}
+ font-size: 18px;
+ font-weight: var(--mase-font-weight-semibold);
+ color: var(--mase-text);
+ margin: 0 0 var(--mase-space-xs) 0;
+ line-height: 1.4}
 
 .mase-template-details .description {
-    font-size: var(--mase-font-size-sm); /* 13px */
-    color: var(--mase-text-secondary);
-    line-height: var(--mase-line-height-normal); /* 1.5 */
-    margin: 0 0 var(--mase-space-md) 0; /* 16px bottom margin */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* ============================================================================
-   TEMPLATE FEATURES
-   ============================================================================ */
+ font-size: 14px;
+ color: var(--mase-text-secondary);
+ line-height: 1.6;
+ margin: 0 0 var(--mase-space-lg) 0;
+ display: -webkit-box;
+ -webkit-line-clamp: 2;
+ -webkit-box-orient: vertical;
+ overflow: hidden}
 
 .mase-template-features {
-    display: none;
-}
+ display: none}
 
 .mase-template-feature-tag {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    background: var(--mase-gray-100, #f1f5f9);
-    color: var(--mase-text-secondary, #64748b);
-    font-size: var(--mase-font-xs, 12px);
-    font-weight: var(--mase-font-medium, 500);
-    border-radius: var(--mase-radius-sm, 4px);
-}
+ display: inline-flex;
+ align-items: center;
+ padding: 4px 10px;
+ background: var(--mase-gray-100, #f1f5f9);
+ color: var(--mase-text-secondary, #64748b);
+ font-size: var(--mase-font-xs, 12px);
+ font-weight: var(--mase-font-medium, 500);
+ border-radius: var(--mase-radius-sm, 4px)}
 
-/* ============================================================================
-   TEMPLATE ACTIONS
-   ============================================================================ */
-
-/**
- * Template Actions Container
- * 
- * Container for action buttons (Preview, Apply, Delete).
- * Uses flexbox with consistent gap spacing.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-actions {
-    display: flex;
-    gap: var(--mase-space-sm); /* 8px gap between buttons */
-    margin-top: auto; /* Push to bottom of card */
-}
+ display: flex;
+ gap: var(--mase-space-sm);
+ margin-top: auto}
 
-/**
- * Template Action Button (Secondary Style)
- * 
- * Secondary button style for template actions.
- * Matches the redesigned button system.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-btn {
-    flex: 1;
-    padding: var(--mase-space-sm) var(--mase-space-md); /* 8px 16px */
-    border: 1px solid var(--mase-border);
-    border-radius: var(--mase-radius-md); /* 6px border radius */
-    background: var(--mase-surface);
-    color: var(--mase-text);
-    font-size: var(--mase-font-size-sm); /* 13px */
-    font-weight: var(--mase-font-weight-medium); /* 500 */
-    cursor: pointer;
-    transition: all var(--mase-transition-base); /* 200ms smooth transition */
-    text-align: center;
-}
+ flex: 1;
+ padding: var(--mase-space-sm) var(--mase-space-md);
+ border: 1px solid var(--mase-border);
+ border-radius: var(--mase-radius-md);
+ background: var(--mase-surface);
+ color: var(--mase-text);
+ font-size: var(--mase-font-size-sm);
+ font-weight: var(--mase-font-weight-medium);
+ cursor: pointer;
+ transition: all var(--mase-transition-base);
+ text-align: center}
 
 .mase-template-btn:hover {
-    background: var(--mase-gray-100);
-    border-color: var(--mase-gray-400);
-    transform: translateY(-1px); /* Subtle lift on hover */
-}
+ background: var(--mase-gray-100);
+ border-color: var(--mase-gray-400);
+ transform: translateY(-1px)}
 
 .mase-template-btn:focus,
 .mase-template-btn:focus-visible {
-    outline: 2px solid var(--mase-primary);
-    outline-offset: 2px;
-    box-shadow: var(--mase-shadow-focus); /* Focus ring shadow */
-}
+ outline: 2px solid var(--mase-primary);
+ outline-offset: 2px;
+ box-shadow: var(--mase-shadow-focus)}
 
 .mase-template-btn:active {
-    transform: scale(0.98);
-}
+ transform: scale(0.98)}
 
-/**
- * Template Primary Button
- * 
- * Primary button style for main actions (Apply).
- * Uses primary color background.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-btn-primary {
-    background: var(--mase-primary);
-    color: #ffffff;
-    border-color: var(--mase-primary);
-    box-shadow: var(--mase-shadow-sm); /* Subtle shadow for depth */
-}
+ background: var(--mase-primary);
+ color: #fff;
+ border-color: var(--mase-primary);
+ box-shadow: var(--mase-shadow-sm)}
 
 .mase-template-btn-primary:hover {
-    background: var(--mase-primary-hover);
-    border-color: var(--mase-primary-hover);
-    color: #ffffff;
-    box-shadow: var(--mase-shadow-md); /* Enhanced shadow on hover */
-}
+ background: var(--mase-primary-hover);
+ border-color: var(--mase-primary-hover);
+ color: #fff;
+ box-shadow: var(--mase-shadow-md)}
 
-/* ============================================================================
-   TEMPLATE PREVIEW SECTION (General Tab)
-   ============================================================================ */
-
-/**
- * Template Preview Section
- * 
- * Section container for template previews on General tab.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-preview-section {
-    margin-bottom: var(--mase-space-xl); /* 32px bottom margin */
-}
+ margin-bottom: var(--mase-space-2xl)}
 
-/**
- * Template Preview Header
- * 
- * Header with title and "View All" button.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-preview-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--mase-space-lg); /* 24px bottom margin */
-}
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: var(--mase-space-lg)}
 
 .mase-template-preview-title {
-    font-size: var(--mase-font-size-xl); /* 18px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    color: var(--mase-text);
-    margin: 0;
-}
+ font-size: var(--mase-font-size-xl);
+ font-weight: var(--mase-font-weight-semibold);
+ color: var(--mase-text);
+ margin: 0}
 
-/**
- * View All Templates Button
- * 
- * Secondary button style for navigating to Templates tab.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-view-all-templates-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mase-space-xs); /* 4px gap */
-    padding: var(--mase-space-sm) var(--mase-space-md); /* 8px 16px */
-    background: transparent;
-    color: var(--mase-primary);
-    border: 1px solid var(--mase-primary);
-    border-radius: var(--mase-radius-md); /* 6px border radius */
-    font-size: var(--mase-font-size-sm); /* 13px */
-    font-weight: var(--mase-font-weight-medium); /* 500 */
-    cursor: pointer;
-    transition: all var(--mase-transition-base); /* 200ms smooth transition */
-}
+ display: inline-flex;
+ align-items: center;
+ gap: var(--mase-space-xs);
+ padding: var(--mase-space-sm) var(--mase-space-md);
+ background: transparent;
+ color: var(--mase-primary);
+ border: 1px solid var(--mase-primary);
+ border-radius: var(--mase-radius-md);
+ font-size: var(--mase-font-size-sm);
+ font-weight: var(--mase-font-weight-medium);
+ cursor: pointer;
+ transition: all var(--mase-transition-base)}
 
 .mase-view-all-templates-btn:hover {
-    background: var(--mase-primary);
-    color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: var(--mase-shadow-sm); /* Subtle shadow on hover */
-}
+ background: var(--mase-primary);
+ color: #fff;
+ transform: translateY(-1px);
+ box-shadow: var(--mase-shadow-sm)}
 
 .mase-view-all-templates-btn:focus,
 .mase-view-all-templates-btn:focus-visible {
-    outline: 2px solid var(--mase-primary);
-    outline-offset: 2px;
-    box-shadow: var(--mase-shadow-focus); /* Focus ring shadow */
-}
+ outline: 2px solid var(--mase-primary);
+ outline-offset: 2px;
+ box-shadow: var(--mase-shadow-focus)}
 
-/**
- * Template Preview Grid
- * 
- * Responsive grid for template preview cards.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-template-preview-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--mase-space-lg); /* 24px gap */
-}
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: var(--mase-space-lg)}
 
 @media (max-width: 1024px) {
-    .mase-template-preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+ .mase-template-preview-grid {
+ grid-template-columns: repeat(2, 1fr);
+ gap: var(--mase-space-lg)}
 }
 
 @media (max-width: 767px) {
-    .mase-template-preview-grid {
-        grid-template-columns: 1fr;
-    }
+ .mase-template-preview-grid {
+ grid-template-columns: 1fr;
+ gap: var(--mase-space-md)}
 }
 
-/* ============================================================================
-   CUSTOM TEMPLATE SECTION
-   ============================================================================ */
-
-/**
- * Custom Template Section
- * 
- * Section for user-created custom templates.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-custom-template-section {
-    margin-top: var(--mase-space-xl); /* 32px top margin */
-    padding-top: var(--mase-space-xl); /* 32px top padding */
-    border-top: 1px solid var(--mase-border);
-}
+ margin-top: var(--mase-space-2xl);
+ padding-top: var(--mase-space-xl);
+ border-top: 1px solid var(--mase-border)}
 
-/**
- * Custom Template Header
- * 
- * Header with title and "Add Template" button.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-custom-template-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--mase-space-lg); /* 24px bottom margin */
-}
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: var(--mase-space-lg)}
 
 .mase-custom-template-title {
-    font-size: var(--mase-font-size-xl); /* 18px */
-    font-weight: var(--mase-font-weight-semibold); /* 600 */
-    color: var(--mase-text);
-    margin: 0;
-}
+ font-size: var(--mase-font-size-xl);
+ font-weight: var(--mase-font-weight-semibold);
+ color: var(--mase-text);
+ margin: 0}
 
-/**
- * Add Template Button
- * 
- * Primary button for creating new custom templates.
- * 
- * Requirements: 8.1, 8.2
- */
 .mase-add-template-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--mase-space-xs); /* 4px gap */
-    padding: var(--mase-space-sm) var(--mase-space-md); /* 8px 16px */
-    background: var(--mase-primary);
-    color: #ffffff;
-    border: none;
-    border-radius: var(--mase-radius-md); /* 6px border radius */
-    font-size: var(--mase-font-size-sm); /* 13px */
-    font-weight: var(--mase-font-weight-medium); /* 500 */
-    cursor: pointer;
-    transition: all var(--mase-transition-base); /* 200ms smooth transition */
-    box-shadow: var(--mase-shadow-sm); /* Subtle shadow for depth */
-}
+ display: inline-flex;
+ align-items: center;
+ gap: var(--mase-space-xs);
+ padding: var(--mase-space-sm) var(--mase-space-md);
+ background: var(--mase-primary);
+ color: #fff;
+ border: none;
+ border-radius: var(--mase-radius-md);
+ font-size: var(--mase-font-size-sm);
+ font-weight: var(--mase-font-weight-medium);
+ cursor: pointer;
+ transition: all var(--mase-transition-base);
+ box-shadow: var(--mase-shadow-sm)}
 
 .mase-add-template-btn:hover {
-    background: var(--mase-primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--mase-shadow-md); /* Enhanced shadow on hover */
-}
+ background: var(--mase-primary-hover);
+ transform: translateY(-1px);
+ box-shadow: var(--mase-shadow-md)}
 
 .mase-add-template-btn:focus,
 .mase-add-template-btn:focus-visible {
-    outline: 2px solid var(--mase-primary);
-    outline-offset: 2px;
-    box-shadow: var(--mase-shadow-focus); /* Focus ring shadow */
-}
+ outline: 2px solid var(--mase-primary);
+ outline-offset: 2px;
+ box-shadow: var(--mase-shadow-focus)}
 
-/* ============================================================================
-   ACCESSIBILITY FEATURES
-   ============================================================================ */
-
-/* High contrast mode */
 @media (prefers-contrast: high) {
-    .mase-template-card {
-        border-width: 2px;
-    }
-    
-    .mase-template-card.active,
-    .mase-template-card.is-active {
-        border-width: 3px;
-    }
-    
-    .mase-template-overlay {
-        background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
-    }
+ .mase-template-card {
+ border-width: 2px}
+
+ .mase-template-card.active,
+ .mase-template-card.is-active {
+ border-width: 3px}
+
+ .mase-template-overlay {
+ background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.8) 100%)}
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .mase-template-card,
-    .mase-template-btn,
-    .mase-template-thumbnail img,
-    .mase-template-overlay,
-    .mase-template-preview-btn,
-    .mase-view-all-templates-btn,
-    .mase-add-template-btn {
-        transition: none;
-    }
-    
-    .mase-template-card:hover,
-    .mase-template-card:hover .mase-template-thumbnail img,
-    .mase-template-card:hover .mase-template-preview-btn {
-        transform: none;
-    }
+ .mase-template-card,
+ .mase-template-btn,
+ .mase-template-thumbnail img,
+ .mase-template-overlay,
+ .mase-template-preview-btn,
+ .mase-view-all-templates-btn,
+ .mase-add-template-btn {
+ transition: none}
+
+ .mase-template-card:hover,
+ .mase-template-card:hover .mase-template-thumbnail img,
+ .mase-template-card:hover .mase-template-preview-btn {
+ transform: none}
 }
 
-/* Focus indicators for keyboard navigation */
 .mase-template-card:focus-visible,
 .mase-template-btn:focus-visible,
 .mase-template-preview-btn:focus-visible,
 .mase-view-all-templates-btn:focus-visible,
 .mase-add-template-btn:focus-visible {
-    outline: 2px solid var(--mase-primary, #4A90E2);
-    outline-offset: 2px;
-}
+ outline: 2px solid var(--mase-primary, #4A90E2);
+ outline-offset: 2px}
 
-/* Screen reader only text */
 .mase-sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-/* ============================================================================
-   RTL SUPPORT
-   ============================================================================ */
+ position: absolute;
+ width: 1px;
+ height: 1px;
+ padding: 0;
+ margin: -1px;
+ overflow: hidden;
+ clip: rect(0, 0, 0, 0);
+ white-space: nowrap;
+ border-width: 0}
 
 [dir="rtl"] .mase-template-badge {
-    right: auto;
-    left: 12px;
-}
+ right: auto;
+ left: 12px}
 
 [dir="rtl"] .mase-template-actions {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-template-preview-header {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-custom-template-header {
-    flex-direction: row-reverse;
-}
+ flex-direction: row-reverse}
 
 [dir="rtl"] .mase-view-all-templates-btn,
 [dir="rtl"] .mase-add-template-btn {
-    flex-direction: row-reverse;
-}
-
-/* ============================================================================
-   LOADING & EMPTY STATES
-   ============================================================================ */
+ flex-direction: row-reverse}
 
 .mase-templates-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
-    color: var(--mase-text-secondary, #64748b);
-}
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ min-height: 300px;
+ color: var(--mase-text-secondary, #64748b)}
 
 .mase-templates-empty {
-    text-align: center;
-    padding: var(--mase-spacing-2xl, 48px);
-    color: var(--mase-text-secondary, #64748b);
-}
+ text-align: center;
+ padding: var(--mase-spacing-2xl, 48px);
+ color: var(--mase-text-secondary, #64748b)}
 
 .mase-templates-empty-icon {
-    font-size: 64px;
-    margin-bottom: var(--mase-spacing-lg, 24px);
-    opacity: 0.5;
-}
+ font-size: 64px;
+ margin-bottom: var(--mase-spacing-lg, 24px);
+ opacity: 0.5}
 
 .mase-templates-empty-text {
-    font-size: var(--mase-font-lg, 18px);
-    margin-bottom: var(--mase-spacing-sm, 8px);
-}
-
-/* ============================================================================
-   MOBILE OPTIMIZATIONS
-   ============================================================================ */
+ font-size: var(--mase-font-lg, 18px);
+ margin-bottom: var(--mase-spacing-sm, 8px)}
 
 @media (max-width: 767px) {
-    .mase-template-card {
-        border-radius: var(--mase-radius-md, 8px);
-    }
-    
-    .mase-template-content {
-        padding: var(--mase-spacing-md, 16px);
-    }
-    
-    .mase-template-btn {
-        padding: 8px 12px;
-        font-size: var(--mase-font-xs, 12px);
-        min-height: 44px; /* Touch target size */
-    }
-    
-    .mase-template-preview-btn {
-        min-height: 44px; /* Touch target size */
-    }
-    
-    .mase-view-all-templates-btn,
-    .mase-add-template-btn {
-        width: 100%;
-        justify-content: center;
-        min-height: 44px; /* Touch target size */
-    }
-    
-    .mase-template-preview-header,
-    .mase-custom-template-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: var(--mase-spacing-md, 16px);
-    }
-    
-    .mase-template-features {
-        gap: var(--mase-spacing-xs, 4px);
-    }
+ .mase-template-card {
+ border-radius: var(--mase-radius-md, 8px)}
+
+ .mase-template-thumbnail {
+ height: 160px}
+
+ .mase-template-content {
+ padding: var(--mase-space-md)}
+
+ .mase-template-name {
+ font-size: 16px}
+
+ .mase-template-description {
+ font-size: 13px}
+
+ .mase-template-btn {
+ padding: 8px 12px;
+ font-size: 12px;
+ min-height: 44px}
+
+ .mase-template-preview-btn {
+ min-height: 44px;
+ padding: 10px 20px}
+
+ .mase-view-all-templates-btn,
+ .mase-add-template-btn {
+ width: 100%;
+ justify-content: center;
+ min-height: 44px}
+
+ .mase-template-preview-header,
+ .mase-custom-template-header {
+ flex-direction: column;
+ align-items: stretch;
+ gap: var(--mase-space-md)}
+
+ .mase-template-features {
+ gap: var(--mase-space-xs)}
 }
 
-/* Tablet optimizations */
 @media (min-width: 768px) and (max-width: 1024px) {
-    .mase-template-content {
-        padding: var(--mase-spacing-lg, 20px);
-    }
+
+ .mase-template-thumbnail {
+ height: 180px}
+
+ .mase-template-content {
+ padding: var(--mase-space-lg)}
 }
+
+:root[data-theme="dark"] .mase-template-card,
+body.mase-dark-mode .mase-template-card {
+
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6),
+ 0 1px 4px rgba(0, 0, 0, 0.5)}
+
+:root[data-theme="dark"] .mase-template-card:hover,
+body.mase-dark-mode .mase-template-card:hover {
+
+ box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8),
+ 0 6px 16px rgba(0, 0, 0, 0.7),
+ 0 3px 8px rgba(0, 0, 0, 0.6)}
+
+:root[data-theme="dark"] .mase-template-thumbnail,
+body.mase-dark-mode .mase-template-thumbnail {
+ background: var(--mase-gray-200);
+ border-bottom: 1px solid var(--mase-border)}
+
+:root[data-theme="dark"] .mase-template-preview-btn,
+body.mase-dark-mode .mase-template-preview-btn {
+ background: rgba(255, 255, 255, 0.95);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6),
+ 0 2px 8px rgba(0, 0, 0, 0.5)}
+
+:root[data-theme="dark"] .mase-template-preview-btn:hover,
+body.mase-dark-mode .mase-template-preview-btn:hover {
+ background: #fff;
+ box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7),
+ 0 3px 12px rgba(0, 0, 0, 0.6)}
+
+:root[data-theme="dark"] .mase-template-badge,
+body.mase-dark-mode .mase-template-badge {
+ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6),
+ 0 2px 6px rgba(0, 0, 0, 0.5)}

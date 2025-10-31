@@ -79,29 +79,62 @@ class MASE_CSS_Generator {
 		// Task 21: Start performance monitoring (Requirement 12.2).
 		$start_time            = microtime( true );
 		$performance_threshold = 100; // Target < 100ms for CSS generation
+		
+		// DIAGNOSTIC: Track CSS sections and their sizes
+		$section_sizes = array();
+		$section_start = microtime( true );
 
 		try {
 			// Task 21: Use string concatenation for better performance
 			// String concatenation is faster than array joins in PHP
 			$css = '';
+			
+			error_log( 'MASE DIAGNOSTIC: Starting CSS generation...' );
 
 			// NEW: Generate Google Fonts @import (Requirement 8.5).
-			$css .= $this->generate_google_fonts_import( $settings );
+			$section_css = $this->generate_google_fonts_import( $settings );
+			$css .= $section_css;
+			$section_sizes['google_fonts'] = strlen( $section_css );
 
 			// Generate palette CSS variables (Requirement 4.3).
-			$css .= $this->generate_palette_css( $settings );
+			$section_css = $this->generate_palette_css( $settings );
+			$css .= $section_css;
+			$section_sizes['palette'] = strlen( $section_css );
 
 			// Generate admin bar CSS.
-			$css .= $this->generate_admin_bar_css( $settings );
+			$section_css = $this->generate_admin_bar_css( $settings );
+			$css .= $section_css;
+			$section_sizes['admin_bar'] = strlen( $section_css );
+			if ( strlen( $section_css ) > 0 ) {
+				error_log( sprintf(
+					'MASE DIAGNOSTIC: Admin bar CSS generated (%d bytes)',
+					strlen( $section_css )
+				) );
+			}
 
 			// Generate floating layout fixes (Requirements 13.1, 13.2, 13.3).
-			$css .= $this->generate_floating_layout_fixes( $settings );
+			$section_css = $this->generate_floating_layout_fixes( $settings );
+			$css .= $section_css;
+			$section_sizes['floating_layout'] = strlen( $section_css );
 
 			// Generate admin bar submenu CSS (Requirement 6.1, 6.2, 6.3).
-			$css .= $this->generate_submenu_css( $settings );
+			$section_css = $this->generate_submenu_css( $settings );
+			$css .= $section_css;
+			$section_sizes['submenu'] = strlen( $section_css );
 
 			// Generate admin menu CSS.
-			$css .= $this->generate_admin_menu_css( $settings );
+			$section_css = $this->generate_admin_menu_css( $settings );
+			$css .= $section_css;
+			$section_sizes['admin_menu'] = strlen( $section_css );
+			if ( strlen( $section_css ) > 0 ) {
+				error_log( sprintf(
+					'MASE DIAGNOSTIC: Admin menu CSS generated (%d bytes) - Contains #adminmenu: %s',
+					strlen( $section_css ),
+					strpos( $section_css, '#adminmenu' ) !== false ? 'YES' : 'NO'
+				) );
+			} else {
+				error_log( 'MASE DIAGNOSTIC WARNING: Admin menu CSS is EMPTY!' );
+			}
 
 			// Generate typography CSS (Requirement 6.1, 6.2, 6.3, 6.4, 6.5).
 			$css .= $this->generate_typography_css( $settings );
@@ -163,22 +196,61 @@ class MASE_CSS_Generator {
 
 			// Task 21: Enhanced performance monitoring (Requirement 12.2).
 			$duration = ( microtime( true ) - $start_time ) * 1000; // Convert to milliseconds.
+			
+			// DIAGNOSTIC: Log section sizes
+			$total_size = strlen( $css );
+			$total_size_kb = round( $total_size / 1024, 2 );
+			
+			// Sort sections by size (largest first)
+			arsort( $section_sizes );
+			$top_sections = array_slice( $section_sizes, 0, 5, true );
+			
+			$section_report = array();
+			foreach ( $top_sections as $section => $size ) {
+				if ( $size > 0 ) {
+					$size_kb = round( $size / 1024, 2 );
+					$percentage = round( ( $size / $total_size ) * 100, 1 );
+					$section_report[] = sprintf( '%s: %s KB (%s%%)', $section, $size_kb, $percentage );
+				}
+			}
 
 			// Log performance metrics
 			error_log(
 				sprintf(
-					'MASE: CSS generation completed in %.2fms (threshold: %dms, within threshold: %s)',
+					'MASE DIAGNOSTIC: CSS generation completed in %.2fms (threshold: %dms, within threshold: %s)',
 					$duration,
 					$performance_threshold,
 					$duration < $performance_threshold ? 'YES' : 'NO'
 				)
 			);
+			
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Total CSS size: %s KB (%d bytes)',
+				$total_size_kb,
+				$total_size
+			) );
+			
+			if ( ! empty( $section_report ) ) {
+				error_log( sprintf(
+					'MASE DIAGNOSTIC: Top CSS sections: %s',
+					implode( ', ', $section_report )
+				) );
+			}
+			
+			// Check for admin menu styling
+			$has_adminmenu = strpos( $css, '#adminmenu' ) !== false;
+			$has_adminbar = strpos( $css, '#wpadminbar' ) !== false;
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Admin styling present - Menu: %s, Bar: %s',
+				$has_adminmenu ? 'YES' : 'NO',
+				$has_adminbar ? 'YES' : 'NO'
+			) );
 
 			// Warn if performance threshold exceeded (Requirement 12.2)
 			if ( $duration > $performance_threshold ) {
 				error_log(
 					sprintf(
-						'MASE: WARNING - CSS generation exceeded threshold: %.2fms > %dms',
+						'MASE DIAGNOSTIC WARNING: CSS generation exceeded threshold: %.2fms > %dms',
 						$duration,
 						$performance_threshold
 					)
@@ -951,7 +1023,45 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			$height_mode      = isset( $admin_menu['height_mode'] ) ? $admin_menu['height_mode'] : 'full';
 			$bg_type          = isset( $admin_menu['bg_type'] ) ? $admin_menu['bg_type'] : 'solid';
 
+			// Task 3.1: Log menu settings being used (Requirements 3.1, 3.2, 3.3).
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Starting admin menu CSS generation - Settings: bg_color=%s, text_color=%s, width=%dpx, height_mode=%s, bg_type=%s',
+				$bg_color,
+				$text_color,
+				$width,
+				$height_mode,
+				$bg_type
+			) );
+			
+			// Log padding configuration if present
+			if ( isset( $admin_menu['padding_vertical'] ) || isset( $admin_menu['padding_horizontal'] ) ) {
+				error_log( sprintf(
+					'MASE DIAGNOSTIC: Menu padding configured - vertical: %s, horizontal: %s',
+					isset( $admin_menu['padding_vertical'] ) ? $admin_menu['padding_vertical'] . 'px' : 'not set',
+					isset( $admin_menu['padding_horizontal'] ) ? $admin_menu['padding_horizontal'] . 'px' : 'not set'
+				) );
+			}
+
 			$css = '';
+
+			// CRITICAL FIX: Override problematic word-breaking and padding styles
+			// Requirements: 1.1, 1.4, 1.5, 2.1, 2.2, 2.3, 2.4
+			// These rules fix layout issues caused by external styles that break menu text
+			// and add excessive padding. Place at beginning for proper cascade.
+			// Task 3.1: Log when override CSS is applied (Requirements 3.1, 3.2, 3.3).
+			error_log( 'MASE DIAGNOSTIC: Applying admin menu override CSS for word-break and padding fixes' );
+
+			// Reset word-breaking styles on menu item text (Requirements 2.1, 2.2, 2.3, 2.4)
+			$css .= 'body.wp-admin #adminmenu div.wp-menu-name {';
+			$css .= 'word-break: normal !important;';
+			$css .= 'overflow-wrap: normal !important;';
+			$css .= 'hyphens: none !important;';
+			$css .= '-ms-word-break: normal !important;';
+			$css .= '}';
+
+			// Word-break override complete
+			// Static CSS (mase-admin-menu.css) handles default padding
+			// Dynamic CSS only applies custom padding when user explicitly configures it
 
 			// Admin menu background (solid or gradient) (Requirements 6.1, 6.2, 6.4).
 			// Skip background if glassmorphism is enabled (will be set by generate_glassmorphism_css)
@@ -1065,32 +1175,49 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			$css .= '}';
 
 			// Admin menu hover states.
+			// Use high-specificity selectors to override static CSS
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
 			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus {';
 			$css .= 'background-color: ' . $hover_bg_color . ' !important;';
 			$css .= '}';
 
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover a,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover a,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
 			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus {';
 			$css .= 'color: ' . $hover_text_color . ' !important;';
 			$css .= '}';
 
+			// Task 3.1: Log which CSS generation methods are called (Requirements 3.1, 3.2, 3.3).
+			$methods_called = array();
+
 			// Generate menu item padding CSS (Requirement 1.1, 1.4, 1.5).
+			$methods_called[] = 'generate_menu_item_padding_css';
 			$css .= $this->generate_menu_item_padding_css( $admin_menu );
 
 			// Generate icon color CSS (Requirement 2.1, 2.2).
+			$methods_called[] = 'generate_menu_icon_color_css';
 			$css .= $this->generate_menu_icon_color_css( $admin_menu );
 
 			// Generate submenu positioning CSS (Requirements 3.1, 3.2, 3.3, 3.4).
+			$methods_called[] = 'generate_submenu_positioning_css';
 			$css .= $this->generate_submenu_positioning_css( $admin_menu, $settings );
 
 			// Generate submenu CSS (Requirements 7.1, 7.3, 8.1, 10.1, 10.2, 10.3, 10.4, 10.5).
+			$methods_called[] = 'generate_menu_submenu_css';
 			$css .= $this->generate_menu_submenu_css( $settings );
 
 			// Generate logo CSS (Requirements 16.2, 16.3, 16.4, 16.8).
+			$methods_called[] = 'generate_menu_logo_css';
 			$css .= $this->generate_menu_logo_css( $admin_menu );
+
+			// Task 3.1: Log all CSS generation methods called (Requirements 3.1, 3.2, 3.3).
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Admin menu CSS generation methods called: %s',
+				implode( ', ', $methods_called )
+			) );
 
 			return $css;
 
@@ -1098,6 +1225,32 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			error_log( sprintf( 'MASE: Admin menu CSS generation failed: %s', $e->getMessage() ) );
 			return '';
 		}
+	}
+
+	/**
+	 * Validate menu padding values.
+	 * Ensures padding values are within acceptable ranges to prevent layout issues.
+	 * Requirements: 4.1, 4.5
+	 *
+	 * @param int    $value Padding value to validate.
+	 * @param int    $max Maximum allowed padding value.
+	 * @param string $type Type of padding (vertical or horizontal) for logging.
+	 * @return int Validated and capped padding value.
+	 */
+	private function validate_menu_padding( $value, $max, $type ) {
+		$value = absint( $value );
+		
+		if ( $value > $max ) {
+			error_log( sprintf(
+				'MASE DIAGNOSTIC WARNING: Menu %s padding value %dpx exceeds maximum %dpx, capping value',
+				$type,
+				$value,
+				$max
+			) );
+			return $max;
+		}
+		
+		return $value;
 	}
 
 	/**
@@ -1109,13 +1262,60 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 	 */
 	private function generate_menu_item_padding_css( $admin_menu ) {
 		try {
-			$v_padding = isset( $admin_menu['padding_vertical'] ) ? absint( $admin_menu['padding_vertical'] ) : 10;
-			$h_padding = isset( $admin_menu['padding_horizontal'] ) ? absint( $admin_menu['padding_horizontal'] ) : 15;
+			// Define default padding values (WordPress/static CSS defaults)
+			$default_v_padding = 10;
+			$default_h_padding = 15;
+			
+			// Check if padding settings are explicitly configured (Requirements 4.1, 4.2).
+			$has_vertical_padding   = isset( $admin_menu['padding_vertical'] );
+			$has_horizontal_padding = isset( $admin_menu['padding_horizontal'] );
+			
+			// Task 3.2: Log when padding CSS is skipped (Requirements 3.1, 3.2, 3.4, 3.5).
+			if ( ! $has_vertical_padding && ! $has_horizontal_padding ) {
+				error_log( 'MASE DIAGNOSTIC: Menu padding CSS skipped - no custom padding configured (using WordPress defaults)' );
+				return '';
+			}
+			
+			// Get padding values with validation (Requirements 4.1, 4.5).
+			// Vertical padding: 0-20px range, Horizontal padding: 0-40px range.
+			$v_padding = $has_vertical_padding 
+				? $this->validate_menu_padding( $admin_menu['padding_vertical'], 20, 'vertical' )
+				: $default_v_padding;
+			$h_padding = $has_horizontal_padding 
+				? $this->validate_menu_padding( $admin_menu['padding_horizontal'], 40, 'horizontal' )
+				: $default_h_padding;
+			
+			// Skip CSS generation if padding matches defaults (Opcja B - długoterminowe rozwiązanie)
+			// Only generate CSS when user sets DIFFERENT values from defaults
+			if ( $v_padding === $default_v_padding && $h_padding === $default_h_padding ) {
+				error_log( sprintf(
+					'MASE DIAGNOSTIC: Menu padding CSS skipped - values match defaults (vertical: %dpx, horizontal: %dpx)',
+					$v_padding,
+					$h_padding
+				) );
+				return '';
+			}
+			
+			// Task 3.2: Log which padding values are configured (Requirements 3.1, 3.2, 3.4, 3.5).
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Menu padding configuration detected - vertical: %s, horizontal: %s',
+				$has_vertical_padding ? $admin_menu['padding_vertical'] . 'px (custom)' : 'not set (using default)',
+				$has_horizontal_padding ? $admin_menu['padding_horizontal'] . 'px (custom)' : 'not set (using default)'
+			) );
+			
+			// Task 3.2: Log padding values being applied after validation (Requirements 3.1, 3.2, 3.4, 3.5).
+			error_log( sprintf(
+				'MASE DIAGNOSTIC: Applying validated menu padding (different from defaults) - vertical: %dpx, horizontal: %dpx',
+				$v_padding,
+				$h_padding
+			) );
 
 			$css = '';
 
 			// Apply padding to menu items (Requirement 1.1, 1.5).
-			$css .= 'body.wp-admin #adminmenu li.menu-top > a {';
+			// Use high-specificity selectors to override static CSS from mase-admin-menu.css
+			$css .= 'body.wp-admin #adminmenu li.menu-top > a,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top > a {';
 			$css .= 'padding-top: ' . $v_padding . 'px !important;';
 			$css .= 'padding-right: ' . $h_padding . 'px !important;';
 			$css .= 'padding-bottom: ' . $v_padding . 'px !important;';
@@ -1123,12 +1323,14 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			$css .= '}';
 
 			// Reduce left padding when menu is folded to prevent icon clipping.
-			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a {';
+			$css .= 'body.wp-admin.folded #adminmenu li.menu-top > a,';
+			$css .= 'body.wp-admin.mase-active.folded #adminmenu li.menu-top > a {';
 			$css .= 'padding-left: 0 !important;';
 			$css .= '}';
 
 			// Also apply to submenu items for consistency.
-			$css .= 'body.wp-admin #adminmenu .wp-submenu a {';
+			$css .= 'body.wp-admin #adminmenu .wp-submenu a,';
+			$css .= 'body.wp-admin.mase-active #adminmenu .wp-submenu a {';
 			$css .= 'padding: ' . $v_padding . 'px ' . $h_padding . 'px !important;';
 			$css .= '}';
 
@@ -1187,10 +1389,15 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 				$hover_icon_color = $icon_color;
 			}
 
+			// Use high-specificity selectors to override static CSS
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image,';
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image:before,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image:before,';
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .dashicons,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .dashicons,';
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .dashicons-before:before,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .dashicons-before:before,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image:before,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .dashicons,';
@@ -1200,9 +1407,11 @@ body.wp-admin #adminmenu { background-color: #23282d !important; }';
 			$css .= 'color: ' . $hover_icon_color . ' !important;';
 			$css .= '}';
 
-			// Hover states for SVG elements.
+			// Hover states for SVG elements - use high-specificity selectors
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image svg,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image svg,';
 			$css .= 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image img,';
+			$css .= 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image img,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image svg,';
 			$css .= 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image img,';
 			$css .= 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image svg,';

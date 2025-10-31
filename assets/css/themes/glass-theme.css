@@ -1,141 +1,728 @@
-/**
- * Glass Material Theme
- * Advanced glassmorphism with prismatic effects
- */
-
 .mase-template-glass {
-    backdrop-filter: blur(25px) saturate(200%) brightness(115%);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2)),
-                linear-gradient(45deg, rgba(0, 245, 255, 0.05), rgba(255, 0, 128, 0.05));
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    color: #333;
-}
 
-/* Prismatic Effects */
+ backdrop-filter: blur(var(--mase-blur-amount, 20px)) saturate(200%) brightness(115%);
+ -webkit-backdrop-filter: blur(var(--mase-blur-amount, 20px)) saturate(200%) brightness(115%);
+
+ background: linear-gradient(135deg, var(--glass-tint, rgba(255, 255, 255, 0.1)), rgba(255, 255, 255, 0.2)),
+ linear-gradient(45deg, rgba(0, 245, 255, 0.05), rgba(255, 0, 128, 0.05));
+
+ border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+ border-radius: 20px;
+
+ box-shadow: 0 calc(8px * var(--mase-shadow-depth, 1)) calc(32px * var(--mase-shadow-depth, 1)) var(--glass-shadow, rgba(0, 0, 0, 0.1)),
+ 0 calc(4px * var(--mase-shadow-depth, 1)) calc(16px * var(--mase-shadow-depth, 1)) rgba(0, 0, 0, 0.08),
+ 0 calc(2px * var(--mase-shadow-depth, 1)) calc(8px * var(--mase-shadow-depth, 1)) rgba(0, 0, 0, 0.06),
+ inset 0 1px 0 var(--glass-border, rgba(255, 255, 255, 0.3)),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+ color: #333;
+ transition: box-shadow var(--mase-transition-duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1)}
+
 @keyframes prismShift {
-    0%, 100% {
-        background-position: 0% 50%;
-        filter: hue-rotate(0deg);
-    }
-    50% {
-        background-position: 100% 50%;
-        filter: hue-rotate(30deg);
-    }
+ 0%, 100% {
+ background-position: 0% 50%;
+ filter: hue-rotate(0deg)}
+ 50% {
+ background-position: 100% 50%;
+ filter: hue-rotate(30deg)}
 }
 
 @keyframes glassShimmer {
-    0%, 100% {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-    50% {
-        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
+ 0%, 100% {
+ box-shadow: 0 calc(8px * var(--mase-shadow-depth, 1)) calc(32px * var(--mase-shadow-depth, 1)) var(--glass-shadow, rgba(0, 0, 0, 0.1)),
+ inset 0 1px 0 var(--glass-border, rgba(255, 255, 255, 0.3))}
+ 50% {
+ box-shadow: 0 calc(12px * var(--mase-shadow-depth, 1)) calc(48px * var(--mase-shadow-depth, 1)) rgba(0, 0, 0, 0.15),
+ inset 0 1px 0 rgba(255, 255, 255, 0.5)}
 }
 
 .mase-template-glass {
-    animation: glassShimmer 4s ease-in-out infinite;
-}
+ animation: glassShimmer calc(4s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite}
 
-/* Admin Bar Glass Style */
 .mase-template-glass #wpadminbar {
-    backdrop-filter: blur(20px) saturate(180%);
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-}
+ backdrop-filter: blur(20px) saturate(180%);
+ -webkit-backdrop-filter: blur(20px) saturate(180%);
+ background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
+ border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1),
+ 0 2px 12px rgba(0, 0, 0, 0.08),
+ inset 0 1px 0 rgba(255, 255, 255, 0.2);
+ transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass #wpadminbar .ab-item,
 .mase-template-glass #wpadminbar a.ab-item {
-    color: #333;
-    font-weight: 500;
-}
+ color: #333;
+ font-weight: 500}
 
 .mase-template-glass #wpadminbar .ab-item:hover {
-    backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.3);
+ border-radius: 8px;
 
-/* Admin Menu Glass Style */
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1),
+ 0 2px 8px rgba(0, 0, 0, 0.08),
+ inset 0 1px 0 rgba(255, 255, 255, 0.4);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
+
+.mase-template-glass #wpadminbar .ab-submenu {
+ backdrop-filter: blur(20px) saturate(180%);
+ -webkit-backdrop-filter: blur(20px) saturate(180%);
+ background: rgba(255, 255, 255, 0.95);
+ border: 1px solid rgba(255, 255, 255, 0.4);
+ border-radius: 8px;
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+ 0 4px 16px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.5);
+ margin-top: 8px}
+
+.mase-template-glass #wpadminbar .ab-submenu .ab-item {
+ border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1)}
+
+.mase-template-glass #wpadminbar .ab-submenu .ab-item:last-child {
+ border-bottom: none}
+
+.mase-template-glass #wpadminbar .ab-submenu .ab-item:hover {
+ background: rgba(255, 255, 255, 0.5);
+ backdrop-filter: blur(10px);
+ -webkit-backdrop-filter: blur(10px)}
+
 .mase-template-glass #adminmenu {
-    backdrop-filter: blur(25px) saturate(200%);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
-    border-right: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 0 15px 15px 0;
-    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.1);
-}
+ backdrop-filter: blur(25px) saturate(200%);
+ -webkit-backdrop-filter: blur(25px) saturate(200%);
+ background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.25));
+ border-right: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 0 15px 15px 0;
+
+ box-shadow: 4px 0 32px rgba(0, 0, 0, 0.1),
+ 2px 0 16px rgba(0, 0, 0, 0.08),
+ inset -1px 0 0 rgba(255, 255, 255, 0.2);
+ transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass #adminmenu .wp-submenu {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 0 12px 12px 0;
-}
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(255, 255, 255, 0.2);
+ border: 1px solid rgba(255, 255, 255, 0.25);
+ border-left: none;
+ border-radius: 0 12px 12px 0;
+ box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1),
+ inset -1px 0 0 rgba(255, 255, 255, 0.3);
+ padding: 8px 0}
+
+.mase-template-glass #adminmenu .wp-submenu a {
+ padding: 10px 16px;
+ margin: 2px 8px;
+ border-radius: 8px;
+ transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1)}
+
+.mase-template-glass #adminmenu .wp-submenu a:hover {
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.35);
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.4)}
 
 .mase-template-glass #adminmenu a {
-    color: #333;
-    border-radius: 10px;
-    margin: 2px 5px;
-    transition: all 0.3s ease;
-}
+ color: #333;
+ border-radius: 10px;
+ margin: 2px 5px;
+ padding: 8px 12px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass #adminmenu a:hover,
 .mase-template-glass #adminmenu li.menu-top:hover {
-    backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    transform: translateX(5px);
-}
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.4);
+
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+ 0 2px 10px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.5),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+ transform: translateX(5px);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass #adminmenu li.current a.menu-top {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    border-left: 4px solid rgba(0, 123, 255, 0.6);
-}
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(255, 255, 255, 0.5);
 
-/* Content Area */
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2),
+ 0 2px 12px rgba(0, 0, 0, 0.15),
+ inset 0 1px 0 rgba(255, 255, 255, 0.6),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+ border-left: 4px solid rgba(0, 123, 255, 0.6);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
+
 .mase-template-glass .wrap {
-    backdrop-filter: blur(30px) saturate(200%);
-    background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
+ backdrop-filter: blur(30px) saturate(200%);
+ -webkit-backdrop-filter: blur(30px) saturate(200%);
+ background: rgba(255, 255, 255, 0.25);
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 20px;
+ padding: 30px;
+
+ box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1),
+ 0 4px 20px rgba(0, 0, 0, 0.08),
+ 0 2px 10px rgba(0, 0, 0, 0.06),
+ inset 0 1px 0 rgba(255, 255, 255, 0.4),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+ transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass h1,
 .mase-template-glass h2 {
-    color: #222;
-    font-weight: 600;
-}
+ color: #222;
+ font-weight: 600}
 
-/* Glass Buttons */
 .mase-template-glass .button,
 .mase-template-glass .button-primary {
-    backdrop-filter: blur(15px);
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    color: #333;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.3);
+ border: 1px solid rgba(255, 255, 255, 0.4);
+ border-radius: 12px;
+ color: #333;
+ font-weight: 500;
+
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1),
+ 0 2px 8px rgba(0, 0, 0, 0.08),
+ inset 0 1px 0 rgba(255, 255, 255, 0.3);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-glass .button:hover,
 .mase-template-glass .button-primary:hover {
-    backdrop-filter: blur(20px);
-    background: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    transform: translateY(-2px);
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(255, 255, 255, 0.5);
+
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+ 0 4px 16px rgba(0, 0, 0, 0.12),
+ 0 2px 8px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.6),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+ transform: translateY(-2px);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)}
+
+@supports not (backdrop-filter: blur(20px)) {
+
+ .mase-template-glass {
+ background: rgba(255, 255, 255, 0.95);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+ 0 4px 16px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.5)}
+
+ .mase-template-glass #wpadminbar {
+ background: rgba(255, 255, 255, 0.98);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12),
+ 0 2px 12px rgba(0, 0, 0, 0.1)}
+
+ .mase-template-glass #wpadminbar .ab-item:hover {
+ background: rgba(255, 255, 255, 0.95);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12)}
+
+ .mase-template-glass #adminmenu {
+ background: rgba(255, 255, 255, 0.96);
+ box-shadow: 4px 0 32px rgba(0, 0, 0, 0.12),
+ 2px 0 16px rgba(0, 0, 0, 0.1)}
+
+ .mase-template-glass #adminmenu .wp-submenu {
+ background: rgba(255, 255, 255, 0.94)}
+
+ .mase-template-glass #adminmenu a:hover,
+ .mase-template-glass #adminmenu li.menu-top:hover {
+ background: rgba(255, 255, 255, 0.98);
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18),
+ inset 0 1px 0 rgba(255, 255, 255, 0.6)}
+
+ .mase-template-glass #adminmenu li.current a.menu-top {
+ background: rgba(255, 255, 255, 0.98);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.22),
+ inset 0 1px 0 rgba(255, 255, 255, 0.7)}
+
+ .mase-template-glass .wrap {
+ background: rgba(255, 255, 255, 0.92);
+ box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12),
+ 0 4px 20px rgba(0, 0, 0, 0.1),
+ inset 0 1px 0 rgba(255, 255, 255, 0.5)}
+
+ .mase-template-glass .button,
+ .mase-template-glass .button-primary {
+ background: rgba(255, 255, 255, 0.9);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12),
+ inset 0 1px 0 rgba(255, 255, 255, 0.4)}
+
+ .mase-template-glass .button:hover,
+ .mase-template-glass .button-primary:hover {
+ background: rgba(255, 255, 255, 0.95);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18),
+ 0 4px 16px rgba(0, 0, 0, 0.14),
+ inset 0 1px 0 rgba(255, 255, 255, 0.7)}
 }
+
+:root[data-theme="dark"] .mase-template-glass,
+body.mase-dark-mode .mase-template-glass {
+
+ backdrop-filter: blur(25px) saturate(180%) brightness(85%);
+ -webkit-backdrop-filter: blur(25px) saturate(180%) brightness(85%);
+
+ background: linear-gradient(135deg, rgba(30, 30, 30, 0.7), rgba(45, 45, 45, 0.8)),
+ linear-gradient(45deg, rgba(0, 245, 255, 0.03), rgba(255, 0, 128, 0.03));
+
+ border: 1px solid rgba(255, 255, 255, 0.1);
+
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+ 0 4px 16px rgba(0, 0, 0, 0.3),
+ 0 2px 8px rgba(0, 0, 0, 0.2),
+ inset 0 1px 0 rgba(255, 255, 255, 0.1),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar,
+body.mase-dark-mode .mase-template-glass #wpadminbar {
+ backdrop-filter: blur(20px) saturate(160%);
+ -webkit-backdrop-filter: blur(20px) saturate(160%);
+ background: linear-gradient(90deg, rgba(30, 30, 30, 0.8), rgba(45, 45, 45, 0.85));
+ border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
+ 0 2px 12px rgba(0, 0, 0, 0.4),
+ inset 0 1px 0 rgba(255, 255, 255, 0.08)}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-item,
+:root[data-theme="dark"] .mase-template-glass #wpadminbar a.ab-item,
+body.mase-dark-mode .mase-template-glass #wpadminbar .ab-item,
+body.mase-dark-mode .mase-template-glass #wpadminbar a.ab-item {
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-item:hover,
+body.mase-dark-mode .mase-template-glass #wpadminbar .ab-item:hover {
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.1);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
+ 0 2px 8px rgba(0, 0, 0, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.15)}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-submenu,
+body.mase-dark-mode .mase-template-glass #wpadminbar .ab-submenu {
+ backdrop-filter: blur(20px) saturate(160%);
+ -webkit-backdrop-filter: blur(20px) saturate(160%);
+ background: rgba(30, 30, 30, 0.95);
+ border: 1px solid rgba(255, 255, 255, 0.15);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+ 0 4px 16px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.1)}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-submenu .ab-item,
+body.mase-dark-mode .mase-template-glass #wpadminbar .ab-submenu .ab-item {
+ border-bottom: 1px solid rgba(255, 255, 255, 0.05)}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-submenu .ab-item:hover,
+body.mase-dark-mode .mase-template-glass #wpadminbar .ab-submenu .ab-item:hover {
+ background: rgba(255, 255, 255, 0.08)}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu,
+body.mase-dark-mode .mase-template-glass #adminmenu {
+ backdrop-filter: blur(25px) saturate(180%);
+ -webkit-backdrop-filter: blur(25px) saturate(180%);
+ background: linear-gradient(180deg, rgba(30, 30, 30, 0.8), rgba(45, 45, 45, 0.85));
+ border-right: 1px solid rgba(255, 255, 255, 0.1);
+ box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5),
+ 2px 0 16px rgba(0, 0, 0, 0.4),
+ inset -1px 0 0 rgba(255, 255, 255, 0.08)}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu a,
+body.mase-dark-mode .mase-template-glass #adminmenu a {
+ color: #e0e0e0}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu a:hover,
+:root[data-theme="dark"] .mase-template-glass #adminmenu li.menu-top:hover,
+body.mase-dark-mode .mase-template-glass #adminmenu a:hover,
+body.mase-dark-mode .mase-template-glass #adminmenu li.menu-top:hover {
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.12);
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+ 0 2px 10px rgba(0, 0, 0, 0.4),
+ inset 0 1px 0 rgba(255, 255, 255, 0.15),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.2)}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu li.current a.menu-top,
+body.mase-dark-mode .mase-template-glass #adminmenu li.current a.menu-top {
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(255, 255, 255, 0.15);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6),
+ 0 2px 12px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.2),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+ border-left: 4px solid rgba(100, 181, 246, 0.8)}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu .wp-submenu,
+body.mase-dark-mode .mase-template-glass #adminmenu .wp-submenu {
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(20, 20, 20, 0.85);
+ border: 1px solid rgba(255, 255, 255, 0.08);
+ box-shadow: 2px 0 16px rgba(0, 0, 0, 0.5),
+ inset -1px 0 0 rgba(255, 255, 255, 0.1)}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu .wp-submenu a:hover,
+body.mase-dark-mode .mase-template-glass #adminmenu .wp-submenu a:hover {
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.1);
+ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4),
+ inset 0 1px 0 rgba(255, 255, 255, 0.12)}
+
+:root[data-theme="dark"] .mase-template-glass .wrap,
+body.mase-dark-mode .mase-template-glass .wrap {
+ backdrop-filter: blur(30px) saturate(180%);
+ -webkit-backdrop-filter: blur(30px) saturate(180%);
+ background: rgba(30, 30, 30, 0.75);
+ border: 1px solid rgba(255, 255, 255, 0.1);
+ box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
+ 0 4px 20px rgba(0, 0, 0, 0.4),
+ 0 2px 10px rgba(0, 0, 0, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.12),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.2)}
+
+:root[data-theme="dark"] .mase-template-glass h1,
+:root[data-theme="dark"] .mase-template-glass h2,
+body.mase-dark-mode .mase-template-glass h1,
+body.mase-dark-mode .mase-template-glass h2 {
+ color: #f0f0f0}
+
+:root[data-theme="dark"] .mase-template-glass .button,
+:root[data-theme="dark"] .mase-template-glass .button-primary,
+body.mase-dark-mode .mase-template-glass .button,
+body.mase-dark-mode .mase-template-glass .button-primary {
+ backdrop-filter: blur(15px);
+ -webkit-backdrop-filter: blur(15px);
+ background: rgba(255, 255, 255, 0.1);
+ border: 1px solid rgba(255, 255, 255, 0.2);
+ color: #e0e0e0;
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
+ 0 2px 8px rgba(0, 0, 0, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.15)}
+
+:root[data-theme="dark"] .mase-template-glass .button:hover,
+:root[data-theme="dark"] .mase-template-glass .button-primary:hover,
+body.mase-dark-mode .mase-template-glass .button:hover,
+body.mase-dark-mode .mase-template-glass .button-primary:hover {
+ backdrop-filter: blur(20px);
+ -webkit-backdrop-filter: blur(20px);
+ background: rgba(255, 255, 255, 0.15);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+ 0 4px 16px rgba(0, 0, 0, 0.4),
+ 0 2px 8px rgba(0, 0, 0, 0.3),
+ inset 0 1px 0 rgba(255, 255, 255, 0.25),
+ inset 0 -1px 0 rgba(0, 0, 0, 0.2)}
+
+@supports not (backdrop-filter: blur(20px)) {
+ :root[data-theme="dark"] .mase-template-glass,
+ body.mase-dark-mode .mase-template-glass {
+ background: rgba(30, 30, 30, 0.95);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+ 0 4px 16px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.15)}
+
+ :root[data-theme="dark"] .mase-template-glass #wpadminbar,
+ body.mase-dark-mode .mase-template-glass #wpadminbar {
+ background: rgba(30, 30, 30, 0.98);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6),
+ 0 2px 12px rgba(0, 0, 0, 0.5)}
+
+ :root[data-theme="dark"] .mase-template-glass #wpadminbar .ab-item:hover,
+ body.mase-dark-mode .mase-template-glass #wpadminbar .ab-item:hover {
+ background: rgba(255, 255, 255, 0.12);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5)}
+
+ :root[data-theme="dark"] .mase-template-glass #adminmenu,
+ body.mase-dark-mode .mase-template-glass #adminmenu {
+ background: rgba(30, 30, 30, 0.96);
+ box-shadow: 4px 0 32px rgba(0, 0, 0, 0.6),
+ 2px 0 16px rgba(0, 0, 0, 0.5)}
+
+ :root[data-theme="dark"] .mase-template-glass #adminmenu .wp-submenu,
+ body.mase-dark-mode .mase-template-glass #adminmenu .wp-submenu {
+ background: rgba(20, 20, 20, 0.94)}
+
+ :root[data-theme="dark"] .mase-template-glass #adminmenu a:hover,
+ :root[data-theme="dark"] .mase-template-glass #adminmenu li.menu-top:hover,
+ body.mase-dark-mode .mase-template-glass #adminmenu a:hover,
+ body.mase-dark-mode .mase-template-glass #adminmenu li.menu-top:hover {
+ background: rgba(255, 255, 255, 0.14);
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6),
+ inset 0 1px 0 rgba(255, 255, 255, 0.2)}
+
+ :root[data-theme="dark"] .mase-template-glass #adminmenu li.current a.menu-top,
+ body.mase-dark-mode .mase-template-glass #adminmenu li.current a.menu-top {
+ background: rgba(255, 255, 255, 0.18);
+ box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7),
+ inset 0 1px 0 rgba(255, 255, 255, 0.25)}
+
+ :root[data-theme="dark"] .mase-template-glass .wrap,
+ body.mase-dark-mode .mase-template-glass .wrap {
+ background: rgba(30, 30, 30, 0.92);
+ box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+ 0 4px 20px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.15)}
+
+ :root[data-theme="dark"] .mase-template-glass .button,
+ :root[data-theme="dark"] .mase-template-glass .button-primary,
+ body.mase-dark-mode .mase-template-glass .button,
+ body.mase-dark-mode .mase-template-glass .button-primary {
+ background: rgba(255, 255, 255, 0.12);
+ box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.2)}
+
+ :root[data-theme="dark"] .mase-template-glass .button:hover,
+ :root[data-theme="dark"] .mase-template-glass .button-primary:hover,
+ body.mase-dark-mode .mase-template-glass .button:hover,
+ body.mase-dark-mode .mase-template-glass .button-primary:hover {
+ background: rgba(255, 255, 255, 0.18);
+ box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+ 0 4px 16px rgba(0, 0, 0, 0.5),
+ inset 0 1px 0 rgba(255, 255, 255, 0.3)}
+}
+
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-glass {
+ animation: none}
+}
+
+/* ============================================
+   ENHANCED GLASS THEME EFFECTS
+   ============================================ */
+
+/* 9.1 Prismatic Edge Effect */
+.mase-template-glass .mase-card,
+.mase-template-glass .postbox,
+.mase-template-glass .notice {
+ position: relative;
+ border: 2px solid transparent;
+ background: 
+ linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)) padding-box,
+ linear-gradient(45deg, 
+ rgba(255, 0, 0, 0.3) 0%,
+ rgba(255, 127, 0, 0.3) 14%,
+ rgba(255, 255, 0, 0.3) 28%,
+ rgba(0, 255, 0, 0.3) 42%,
+ rgba(0, 255, 255, 0.3) 57%,
+ rgba(0, 0, 255, 0.3) 71%,
+ rgba(139, 0, 255, 0.3) 85%,
+ rgba(255, 0, 0, 0.3) 100%
+ ) border-box;
+ background-size: 100% 100%, 200% 200%;
+ animation: prismShift calc(8s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite;
+}
+
+/* Dark mode prismatic edges */
+:root[data-theme="dark"] .mase-template-glass .mase-card,
+:root[data-theme="dark"] .mase-template-glass .postbox,
+:root[data-theme="dark"] .mase-template-glass .notice,
+body.mase-dark-mode .mase-template-glass .mase-card,
+body.mase-dark-mode .mase-template-glass .postbox,
+body.mase-dark-mode .mase-template-glass .notice {
+ background: 
+ linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)) padding-box,
+ linear-gradient(45deg, 
+ rgba(255, 0, 0, 0.4) 0%,
+ rgba(255, 127, 0, 0.4) 14%,
+ rgba(255, 255, 0, 0.4) 28%,
+ rgba(0, 255, 0, 0.4) 42%,
+ rgba(0, 255, 255, 0.4) 57%,
+ rgba(0, 0, 255, 0.4) 71%,
+ rgba(139, 0, 255, 0.4) 85%,
+ rgba(255, 0, 0, 0.4) 100%
+ ) border-box;
+ background-size: 100% 100%, 200% 200%;
+}
+
+/* 9.2 Iridescent Hover Effect */
+@keyframes iridescent {
+ 0% { filter: hue-rotate(0deg) brightness(100%); }
+ 50% { filter: hue-rotate(180deg) brightness(110%); }
+ 100% { filter: hue-rotate(360deg) brightness(100%); }
+}
+
+.mase-template-glass .mase-card:hover,
+.mase-template-glass .postbox:hover,
+.mase-template-glass #adminmenu a:hover,
+.mase-template-glass .button:hover {
+ animation: iridescent calc(3s / var(--mase-intensity-multiplier, 1)) linear infinite;
+}
+
+/* 9.3 Frost Pattern Overlay */
+.mase-template-glass::before {
+ content: '';
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><filter id="frost"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/><feColorMatrix in="noise" type="saturate" values="0"/><feComponentTransfer><feFuncA type="discrete" tableValues="0 0 0 0 0 0.05 0.1 0.15"/></feComponentTransfer></filter></defs><rect width="200" height="200" filter="url(%23frost)" fill="white"/></svg>');
+ background-size: 200px 200px;
+ opacity: calc(0.08 * var(--mase-intensity-multiplier, 1));
+ pointer-events: none;
+ z-index: 1;
+ mix-blend-mode: overlay;
+}
+
+/* Dark mode frost pattern */
+:root[data-theme="dark"] .mase-template-glass::before,
+body.mase-dark-mode .mase-template-glass::before {
+ opacity: calc(0.12 * var(--mase-intensity-multiplier, 1));
+ mix-blend-mode: soft-light;
+}
+
+/* 9.4 Depth-of-Field Blur */
+.mase-template-glass #wpadminbar {
+ z-index: 99999;
+ backdrop-filter: blur(calc(20px * var(--mase-intensity-multiplier, 1))) saturate(180%);
+ -webkit-backdrop-filter: blur(calc(20px * var(--mase-intensity-multiplier, 1))) saturate(180%);
+}
+
+.mase-template-glass #adminmenu {
+ z-index: 9999;
+ backdrop-filter: blur(calc(25px * var(--mase-intensity-multiplier, 1))) saturate(200%);
+ -webkit-backdrop-filter: blur(calc(25px * var(--mase-intensity-multiplier, 1))) saturate(200%);
+}
+
+.mase-template-glass #adminmenu .wp-submenu {
+ z-index: 10000;
+ backdrop-filter: blur(calc(20px * var(--mase-intensity-multiplier, 1)));
+ -webkit-backdrop-filter: blur(calc(20px * var(--mase-intensity-multiplier, 1)));
+}
+
+.mase-template-glass .wrap {
+ z-index: 100;
+ backdrop-filter: blur(calc(30px * var(--mase-intensity-multiplier, 1))) saturate(200%);
+ -webkit-backdrop-filter: blur(calc(30px * var(--mase-intensity-multiplier, 1))) saturate(200%);
+}
+
+.mase-template-glass .mase-card,
+.mase-template-glass .postbox {
+ z-index: 200;
+ backdrop-filter: blur(calc(15px * var(--mase-intensity-multiplier, 1)));
+ -webkit-backdrop-filter: blur(calc(15px * var(--mase-intensity-multiplier, 1)));
+}
+
+.mase-template-glass .button,
+.mase-template-glass .button-primary {
+ z-index: 300;
+ backdrop-filter: blur(calc(15px * var(--mase-intensity-multiplier, 1)));
+ -webkit-backdrop-filter: blur(calc(15px * var(--mase-intensity-multiplier, 1)));
+}
+
+/* 9.5 Caustic Light Patterns (Light Mode Only) */
+@keyframes causticFlow {
+ 0%, 100% {
+ background-position: 0% 0%, 100% 100%;
+ opacity: 0.15;
+ }
+ 50% {
+ background-position: 100% 100%, 0% 0%;
+ opacity: 0.25;
+ }
+}
+
+.mase-template-glass .wrap::after {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-image: 
+ url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><filter id="caustic"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="1"/><feDisplacementMap in="SourceGraphic" scale="50"/><feGaussianBlur stdDeviation="2"/></filter></defs><ellipse cx="200" cy="200" rx="150" ry="100" fill="rgba(100,200,255,0.3)" filter="url(%23caustic)"/></svg>'),
+ url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><filter id="caustic2"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2"/><feDisplacementMap in="SourceGraphic" scale="60"/><feGaussianBlur stdDeviation="3"/></filter></defs><ellipse cx="200" cy="200" rx="120" ry="150" fill="rgba(150,220,255,0.2)" filter="url(%23caustic2)"/></svg>');
+ background-size: 400px 400px, 500px 500px;
+ background-position: 0% 0%, 100% 100%;
+ opacity: 0;
+ pointer-events: none;
+ z-index: 1;
+ mix-blend-mode: screen;
+ border-radius: inherit;
+ animation: causticFlow calc(15s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite;
+}
+
+/* Only show caustic patterns in light mode */
+:root:not([data-theme="dark"]) .mase-template-glass .wrap::after,
+body:not(.mase-dark-mode) .mase-template-glass .wrap::after {
+ opacity: calc(0.15 * var(--mase-intensity-multiplier, 1));
+}
+
+/* Hide caustic patterns in dark mode */
+:root[data-theme="dark"] .mase-template-glass .wrap::after,
+body.mase-dark-mode .mase-template-glass .wrap::after {
+ display: none;
+}
+
+/* Performance Mode - Disable expensive effects */
+:root[data-performance-mode="true"] .mase-template-glass .mase-card,
+:root[data-performance-mode="true"] .mase-template-glass .postbox,
+:root[data-performance-mode="true"] .mase-template-glass .notice {
+ animation: none;
+ background: rgba(255, 255, 255, 0.9);
+ border: 2px solid rgba(200, 200, 200, 0.3);
+}
+
+:root[data-performance-mode="true"] .mase-template-glass .mase-card:hover,
+:root[data-performance-mode="true"] .mase-template-glass .postbox:hover,
+:root[data-performance-mode="true"] .mase-template-glass #adminmenu a:hover,
+:root[data-performance-mode="true"] .mase-template-glass .button:hover {
+ animation: none;
+ filter: none;
+}
+
+:root[data-performance-mode="true"] .mase-template-glass::before,
+:root[data-performance-mode="true"] .mase-template-glass .wrap::after {
+ display: none;
+}
+
+/* Reduced Motion - Disable animations */
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-glass .mase-card,
+ .mase-template-glass .postbox,
+ .mase-template-glass .notice {
+ animation: none;
+ }
+ 
+ .mase-template-glass .mase-card:hover,
+ .mase-template-glass .postbox:hover,
+ .mase-template-glass #adminmenu a:hover,
+ .mase-template-glass .button:hover {
+ animation: none;
+ filter: none;
+ }
+ 
+ .mase-template-glass .wrap::after {
+ animation: none;
+ opacity: 0;
+ }
+}
+
+/* Focus indicators for glass theme */
+.mase-template-glass button:focus,
+.mase-template-glass a:focus,
+.mase-template-glass input:focus,
+.mase-template-glass select:focus,
+.mase-template-glass textarea:focus,
+.mase-template-glass [tabindex]:focus {
+ outline: 2px solid rgba(0, 115, 170, 0.8);
+ outline-offset: 2px;
+ box-shadow: 0 0 0 4px rgba(0, 115, 170, 0.15);}
+
+.mase-template-glass button:focus-visible,
+.mase-template-glass a:focus-visible,
+.mase-template-glass input:focus-visible,
+.mase-template-glass select:focus-visible,
+.mase-template-glass textarea:focus-visible,
+.mase-template-glass [tabindex]:focus-visible {
+ outline: 2px solid rgba(0, 115, 170, 0.8);
+ outline-offset: 2px;
+ box-shadow: 0 0 0 4px rgba(0, 115, 170, 0.15);}

@@ -1,0 +1,393 @@
+/**
+ * Material Design 3 Form Controls
+ * Premium form control styling with artistic enhancements
+ */
+
+/* ============================================
+   ARTISTIC COLOR PICKER
+   ============================================ */
+
+.mase-color-picker-wrapper {
+    position: relative;
+    margin-bottom: var(--md-space-l, 16px);
+}
+
+.mase-color-picker {
+    position: relative;
+    width: 100%;
+    height: 64px;
+    border-radius: var(--md-corner-l, 16px);
+    background: linear-gradient(
+        45deg,
+        #ff6b6b 0%,
+        #ffd93d 16.67%,
+        #6bcf7f 33.33%,
+        #4d96ff 50%,
+        #9c88ff 66.67%,
+        #ff6b6b 100%
+    );
+    background-size: 300% 300%;
+    animation: colorFlow 8s ease-in-out infinite;
+    box-shadow: var(--md-elevation-2, 0px 2px 6px 2px rgba(0, 0, 0, 0.15));
+    cursor: pointer;
+    overflow: hidden;
+    transition: box-shadow var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+.mase-color-picker:hover {
+    box-shadow: var(--md-elevation-3, 0px 4px 8px 3px rgba(0, 0, 0, 0.15));
+}
+
+@keyframes colorFlow {
+    0%, 100% { 
+        background-position: 0% 50%; 
+    }
+    50% { 
+        background-position: 100% 50%; 
+    }
+}
+
+/* Color Picker Handle */
+.mase-color-picker::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: var(--picker-position, 20%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 
+        0 0 0 3px rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translate(-50%, -50%);
+    transition: 
+        left var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0)),
+        transform var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+    pointer-events: none;
+}
+
+.mase-color-picker:hover::after {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.mase-color-picker:active::after {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* Hidden native input */
+.mase-color-picker input[type="color"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Color value display */
+.mase-color-value {
+    display: block;
+    margin-top: var(--md-space-s, 8px);
+    font-size: var(--md-body-small, 12px);
+    color: var(--md-on-surface-variant, #49454f);
+    text-align: center;
+    font-family: monospace;
+}
+
+/* ============================================
+   MD3 TOGGLE SWITCHES
+   ============================================ */
+
+.mase-toggle-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--md-space-m, 12px);
+    margin-bottom: var(--md-space-l, 16px);
+}
+
+.mase-toggle {
+    position: relative;
+    width: 52px;
+    height: 32px;
+    border-radius: var(--md-corner-full, 50px);
+    background: var(--md-surface-variant, #e7e0ec);
+    border: 2px solid var(--md-outline, #79747e);
+    transition: all var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Toggle Track Active */
+.mase-toggle.active {
+    background: var(--md-primary, #6750a4);
+    border-color: var(--md-primary, #6750a4);
+}
+
+/* Toggle Thumb */
+.mase-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--md-outline, #79747e);
+    transform: translateY(-50%);
+    transition: all var(--md-duration-medium-2, 300ms) var(--md-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
+    box-shadow: var(--md-elevation-1, 0px 1px 3px 1px rgba(0, 0, 0, 0.15));
+}
+
+.mase-toggle.active::before {
+    left: 28px;
+    width: 24px;
+    height: 24px;
+    background: var(--md-on-primary, #ffffff);
+}
+
+/* Ripple Effect Container */
+.mase-toggle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(103, 80, 164, 0.2);
+    transform: translate(-50%, -50%);
+    transition: all var(--md-duration-medium-2, 300ms) ease-out;
+    pointer-events: none;
+}
+
+.mase-toggle:active::after {
+    width: 48px;
+    height: 48px;
+}
+
+/* State Layers */
+.mase-toggle:hover {
+    background: color-mix(in srgb, var(--md-surface-variant, #e7e0ec) 92%, var(--md-on-surface, #1c1b1f) 8%);
+}
+
+.mase-toggle.active:hover {
+    background: color-mix(in srgb, var(--md-primary, #6750a4) 92%, white 8%);
+}
+
+/* Disabled State */
+.mase-toggle.disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Hidden native checkbox */
+.mase-toggle input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Toggle Label */
+.mase-toggle-label {
+    font-size: var(--md-body-medium, 14px);
+    color: var(--md-on-surface, #1c1b1f);
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ============================================
+   OUTLINED TEXT FIELDS
+   ============================================ */
+
+.mase-text-field {
+    position: relative;
+    margin-top: var(--md-space-l, 16px);
+    margin-bottom: var(--md-space-l, 16px);
+}
+
+/* Input */
+.mase-text-field input,
+.mase-text-field textarea {
+    width: 100%;
+    padding: var(--md-space-l, 16px);
+    border: 1px solid var(--md-outline, #79747e);
+    border-radius: var(--md-corner-xs, 4px);
+    background: transparent;
+    color: var(--md-on-surface, #1c1b1f);
+    font-size: var(--md-body-large, 16px);
+    font-family: inherit;
+    transition: 
+        border-color var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0)),
+        border-width var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0)),
+        padding var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+}
+
+.mase-text-field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Focus State */
+.mase-text-field input:focus,
+.mase-text-field textarea:focus {
+    outline: none;
+    border-color: var(--md-primary, #6750a4);
+    border-width: 2px;
+    padding: calc(var(--md-space-l, 16px) - 1px);
+}
+
+/* Floating Label */
+.mase-text-field label {
+    position: absolute;
+    left: var(--md-space-l, 16px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--md-on-surface-variant, #49454f);
+    font-size: var(--md-body-large, 16px);
+    pointer-events: none;
+    transition: all var(--md-duration-short-4, 200ms) var(--md-easing-standard, cubic-bezier(0.2, 0.0, 0, 1.0));
+    background: var(--md-surface, #fffbfe);
+    padding: 0 var(--md-space-xs, 4px);
+}
+
+.mase-text-field.has-textarea label {
+    top: var(--md-space-l, 16px);
+    transform: translateY(0);
+}
+
+/* Label Float Animation */
+.mase-text-field input:focus + label,
+.mase-text-field input:not(:placeholder-shown) + label,
+.mase-text-field textarea:focus + label,
+.mase-text-field textarea:not(:placeholder-shown) + label {
+    top: 0;
+    font-size: var(--md-body-small, 12px);
+    color: var(--md-primary, #6750a4);
+}
+
+/* Helper Text */
+.mase-text-field-helper {
+    display: block;
+    margin-top: var(--md-space-xs, 4px);
+    font-size: var(--md-body-small, 12px);
+    color: var(--md-on-surface-variant, #49454f);
+    padding-left: var(--md-space-l, 16px);
+}
+
+/* Error State */
+.mase-text-field.error input,
+.mase-text-field.error textarea {
+    border-color: var(--md-error, #ba1a1a);
+}
+
+.mase-text-field.error input:focus,
+.mase-text-field.error textarea:focus {
+    border-color: var(--md-error, #ba1a1a);
+}
+
+.mase-text-field.error label {
+    color: var(--md-error, #ba1a1a);
+}
+
+.mase-text-field.error .mase-text-field-helper {
+    color: var(--md-error, #ba1a1a);
+}
+
+/* Disabled State */
+.mase-text-field input:disabled,
+.mase-text-field textarea:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   FORM CONTROL STATE LAYERS
+   ============================================ */
+
+/* Hover State Layer */
+.mase-form-control {
+    position: relative;
+}
+
+.mase-form-control::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity var(--md-duration-short-4, 200ms);
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.mase-form-control:hover::before {
+    opacity: 0.08;
+}
+
+.mase-form-control:focus-within::before {
+    opacity: 0.12;
+}
+
+/* Disabled State */
+.mase-form-control.disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.mase-form-control.disabled::before {
+    display: none;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+    .mase-color-picker {
+        height: 56px;
+    }
+    
+    .mase-toggle {
+        width: 48px;
+        height: 28px;
+    }
+    
+    .mase-toggle::before {
+        width: 14px;
+        height: 14px;
+        left: 3px;
+    }
+    
+    .mase-toggle.active::before {
+        left: 25px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ============================================
+   DARK MODE SUPPORT
+   ============================================ */
+
+:root[data-theme="dark"] .mase-color-picker {
+    box-shadow: 
+        0px 2px 6px 2px rgba(0, 0, 0, 0.3),
+        0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .mase-toggle {
+    background: var(--md-surface-variant, #49454f);
+    border-color: var(--md-outline, #948f99);
+}
+
+:root[data-theme="dark"] .mase-text-field label {
+    background: var(--md-surface, #1c1b1f);
+}

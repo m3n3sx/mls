@@ -1,0 +1,225 @@
+/**
+ * MASE Animation Controls CSS
+ * 
+ * Styles for advanced animation controls including:
+ * - Animation speed multiplier (Task 15.2)
+ * - Animation type toggles (Task 15.3)
+ * - Performance mode (Task 15.4)
+ * - Reduced motion support (Task 15.5)
+ * 
+ * Requirements: 13.1, 13.2, 13.3, 13.4, 13.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   CSS Custom Properties for Animation Control
+   ============================================ */
+
+:root {
+	/* Animation speed multiplier (Task 15.2, Requirement 13.1) */
+	--mase-animation-speed-multiplier: 1;
+	--mase-animation-duration: 300ms;
+	
+	/* Backdrop filter for glassmorphism (Task 15.4) */
+	--mase-backdrop-filter: blur(10px);
+	--mase-blur-amount: 10px;
+}
+
+/* ============================================
+   Disable Hover Animations (Task 15.3)
+   Requirement 13.2: Toggle for hover animations
+   ============================================ */
+
+body.mase-no-hover-animations *:hover {
+	transform: none !important;
+	box-shadow: inherit !important;
+}
+
+body.mase-no-hover-animations .mase-card:hover,
+body.mase-no-hover-animations .mase-palette-card:hover,
+body.mase-no-hover-animations .mase-template-card:hover {
+	transform: none !important;
+	box-shadow: var(--mase-shadow-sm) !important;
+}
+
+body.mase-no-hover-animations .button:hover,
+body.mase-no-hover-animations .button-primary:hover,
+body.mase-no-hover-animations .button-secondary:hover {
+	transform: none !important;
+}
+
+/* ============================================
+   Disable Transition Animations (Task 15.3)
+   Requirement 13.2: Toggle for transition animations
+   ============================================ */
+
+body.mase-no-transition-animations * {
+	transition: none !important;
+}
+
+body.mase-no-transition-animations .mase-tab-content {
+	transition: none !important;
+}
+
+body.mase-no-transition-animations .mase-modal {
+	transition: none !important;
+}
+
+/* ============================================
+   Disable Background Animations (Task 15.3)
+   Requirement 13.2: Toggle for background animations
+   ============================================ */
+
+body.mase-no-background-animations .mase-particle-system,
+body.mase-no-background-animations .mase-particles,
+body.mase-no-background-animations .mase-animated-background {
+	display: none !important;
+}
+
+body.mase-no-background-animations *::before,
+body.mase-no-background-animations *::after {
+	animation: none !important;
+}
+
+/* ============================================
+   Performance Mode (Task 15.4)
+   Requirements 13.4, 13.5: Disable expensive effects
+   ============================================ */
+
+body.mase-performance-mode {
+	/* Disable backdrop-filter (Requirement 13.4) */
+	--mase-backdrop-filter: none;
+	--mase-blur-amount: 0px;
+}
+
+body.mase-performance-mode * {
+	/* Disable all animations (Requirement 13.5) */
+	animation: none !important;
+	transition: none !important;
+	
+	/* Remove backdrop-filter (Requirement 13.4) */
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+}
+
+body.mase-performance-mode .mase-particle-system,
+body.mase-performance-mode .mase-particles {
+	/* Hide particle systems (Requirement 13.4) */
+	display: none !important;
+}
+
+body.mase-performance-mode .mase-header {
+	/* Remove backdrop blur from header */
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+	background: var(--mase-surface) !important;
+}
+
+body.mase-performance-mode .mase-modal,
+body.mase-performance-mode .mase-preview-modal {
+	/* Remove backdrop blur from modals */
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+}
+
+/* ============================================
+   Reduced Motion Support (Task 15.5)
+   Requirement 13.3: Respect prefers-reduced-motion
+   ============================================ */
+
+/* When user respects system preference and system has reduced motion enabled */
+body.mase-respect-reduced-motion.mase-reduced-motion * {
+	/* Disable all animations (Requirement 13.3) */
+	animation-duration: 0.01ms !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0.01ms !important;
+}
+
+body.mase-respect-reduced-motion.mase-reduced-motion .mase-particle-system,
+body.mase-respect-reduced-motion.mase-reduced-motion .mase-particles,
+body.mase-respect-reduced-motion.mase-reduced-motion .mase-animated-background {
+	/* Hide animated backgrounds */
+	display: none !important;
+}
+
+/* Native CSS support for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+	body.mase-respect-reduced-motion * {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+	
+	body.mase-respect-reduced-motion .mase-particle-system,
+	body.mase-respect-reduced-motion .mase-particles,
+	body.mase-respect-reduced-motion .mase-animated-background {
+		display: none !important;
+	}
+}
+
+/* ============================================
+   Animation Speed Multiplier Application
+   (Task 15.2, Requirement 13.1)
+   ============================================ */
+
+/* Apply speed multiplier to all animations */
+* {
+	animation-duration: calc(var(--mase-animation-duration) / var(--mase-animation-speed-multiplier)) !important;
+}
+
+/* Apply speed multiplier to transitions */
+.mase-tab-content,
+.mase-modal,
+.mase-card,
+.button,
+.mase-toggle-slider {
+	transition-duration: calc(var(--mase-animation-duration) / var(--mase-animation-speed-multiplier)) !important;
+}
+
+/* ============================================
+   Maintain Functionality Without Animations
+   (Task 15.5, Requirement 13.3)
+   ============================================ */
+
+/* Ensure all interactive elements remain functional without animations */
+body.mase-reduced-motion .mase-tab-content {
+	/* Tabs still switch, just without animation */
+	display: none;
+}
+
+body.mase-reduced-motion .mase-tab-content.active {
+	display: block;
+}
+
+body.mase-reduced-motion .mase-modal {
+	/* Modals still appear, just without fade-in */
+	opacity: 1;
+}
+
+body.mase-reduced-motion .mase-modal.hidden {
+	display: none;
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+/* Ensure focus indicators are always visible regardless of animation settings */
+body.mase-performance-mode *:focus,
+body.mase-reduced-motion *:focus {
+	outline: 2px solid var(--mase-primary) !important;
+	outline-offset: 2px !important;
+}
+
+/* Ensure toggle switches remain functional */
+body.mase-performance-mode .mase-toggle-slider::before,
+body.mase-reduced-motion .mase-toggle-slider::before {
+	transition: transform 0.01ms !important;
+}
+
+body.mase-performance-mode .mase-toggle-switch input:checked + .mase-toggle-slider::before,
+body.mase-reduced-motion .mase-toggle-switch input:checked + .mase-toggle-slider::before {
+	transform: translateX(20px) !important;
+}

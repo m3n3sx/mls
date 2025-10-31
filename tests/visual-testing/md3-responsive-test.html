@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Responsive Design Test</title>
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-typography.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-admin.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-tabs.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-buttons.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-forms.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-templates.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-snackbar.css">
+    <link rel="stylesheet" href="../../assets/css/mase-responsive.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--md-background);
+            color: var(--md-on-background);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--md-space-l);
+        }
+        
+        .test-section {
+            margin-bottom: var(--md-space-3xl);
+        }
+        
+        .test-section h2 {
+            font-size: var(--md-headline-medium);
+            margin-bottom: var(--md-space-l);
+            color: var(--md-primary);
+        }
+        
+        .test-info {
+            background: var(--md-surface-variant);
+            padding: var(--md-space-l);
+            border-radius: var(--md-corner-l);
+            margin-bottom: var(--md-space-xl);
+        }
+        
+        .viewport-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: var(--md-space-s) var(--md-space-l);
+            border-radius: var(--md-corner-full);
+            font-size: var(--md-label-medium);
+            font-weight: var(--md-weight-medium);
+            z-index: 9999;
+        }
+        
+        .mase-templates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--md-space-xl);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: var(--md-space-m);
+            flex-wrap: wrap;
+        }
+        
+        .form-group {
+            margin-bottom: var(--md-space-l);
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--md-space-s);
+            font-weight: var(--md-weight-medium);
+        }
+    </style>
+</head>
+<body>
+    <div class="viewport-indicator">
+        <span id="viewport-size"></span>
+    </div>
+
+    <div class="test-container">
+        <div class="test-info">
+            <h1>MD3 Responsive Design Test</h1>
+            <p><strong>Instructions:</strong> Resize your browser window to test responsive behavior at different breakpoints:</p>
+            <ul>
+                <li><strong>Desktop:</strong> > 768px - Full layout with horizontal navigation</li>
+                <li><strong>Tablet:</strong> 480px - 768px - Adjusted spacing and vertical navigation</li>
+                <li><strong>Mobile:</strong> < 480px - Compact layout with simplified animations</li>
+            </ul>
+            <p><strong>What to test:</strong></p>
+            <ul>
+                <li>Navigation tabs stack vertically on mobile</li>
+                <li>Touch targets increase to 48px minimum</li>
+                <li>Spacing and corner radius reduce on mobile</li>
+                <li>Animations simplify on mobile devices</li>
+                <li>Template cards adjust to single column</li>
+            </ul>
+        </div>
+
+        <!-- Header Test -->
+        <div class="test-section">
+            <h2>1. Admin Header (Requirement 19.1, 19.4)</h2>
+            <div class="mase-md3-header">
+                <div class="mase-header-orb"></div>
+                <div class="mase-header-content">
+                    <div class="mase-header-left">
+                        <h1 class="mase-admin-title">
+                            Modern Admin Styler
+                            <span class="mase-version-badge">v1.2.0</span>
+                        </h1>
+                        <p class="mase-admin-subtitle">Material Design 3 Transformation</p>
+                    </div>
+                    <div class="mase-header-right">
+                        <div class="mase-header-toggle">
+                            <input type="checkbox" id="test-toggle">
+                            <span>Dark Mode</span>
+                        </div>
+                        <button class="button button-secondary">Export</button>
+                        <button class="button button-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+            <p><em>Expected: Header padding reduces, title size decreases, layout stacks on mobile</em></p>
+        </div>
+
+        <!-- Navigation Tabs Test -->
+        <div class="test-section">
+            <h2>2. Navigation Tabs (Requirement 19.2, 19.3)</h2>
+            <div class="mase-nav-tabs">
+                <button class="mase-nav-tab active">General</button>
+                <button class="mase-nav-tab">Admin Bar</button>
+                <button class="mase-nav-tab">Menu</button>
+                <button class="mase-nav-tab">Content</button>
+                <button class="mase-nav-tab">Typography</button>
+            </div>
+            <p><em>Expected: Tabs stack vertically on mobile, min-height 48px for touch targets</em></p>
+        </div>
+
+        <!-- Buttons Test -->
+        <div class="test-section">
+            <h2>3. Buttons (Requirement 19.3)</h2>
+            <div class="button-group">
+                <button class="mase-button-filled">Filled Button</button>
+                <button class="mase-button-outlined">Outlined Button</button>
+                <button class="mase-button-text">Text Button</button>
+            </div>
+            <p><em>Expected: Buttons have min-height 48px on mobile for easy tapping</em></p>
+        </div>
+
+        <!-- Forms Test -->
+        <div class="test-section">
+            <h2>4. Form Controls (Requirement 19.3)</h2>
+            <div class="form-group">
+                <label for="test-input">Text Input</label>
+                <div class="mase-text-field">
+                    <input type="text" id="test-input" placeholder=" ">
+                    <label for="test-input">Enter text</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Toggle Switch</label>
+                <div class="mase-toggle">
+                    <input type="checkbox" id="test-switch">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Color Picker</label>
+                <div class="mase-color-picker"></div>
+            </div>
+            <p><em>Expected: Inputs have min-height 48px, toggle switch increases in size</em></p>
+        </div>
+
+        <!-- Template Cards Test -->
+        <div class="test-section">
+            <h2>5. Template Cards (Requirement 19.1, 19.4)</h2>
+            <div class="mase-templates-grid">
+                <div class="mase-template-card">
+                    <div class="mase-template-preview">
+                        <div class="mase-template-minibar"></div>
+                        <div class="mase-template-minimenu">
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                        </div>
+                        <h3 class="mase-template-name">Professional</h3>
+                        <button class="mase-template-apply mase-button-filled">Apply</button>
+                    </div>
+                </div>
+                <div class="mase-template-card">
+                    <div class="mase-template-preview">
+                        <div class="mase-template-minibar"></div>
+                        <div class="mase-template-minimenu">
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                        </div>
+                        <h3 class="mase-template-name">Creative</h3>
+                        <button class="mase-template-apply mase-button-filled">Apply</button>
+                    </div>
+                </div>
+                <div class="mase-template-card">
+                    <div class="mase-template-preview">
+                        <div class="mase-template-minibar"></div>
+                        <div class="mase-template-minimenu">
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                            <div class="mase-template-menuitem"></div>
+                        </div>
+                        <h3 class="mase-template-name">Minimal</h3>
+                        <button class="mase-template-apply mase-button-filled">Apply</button>
+                    </div>
+                </div>
+            </div>
+            <p><em>Expected: Grid changes to 2 columns on tablet, 1 column on mobile</em></p>
+        </div>
+
+        <!-- Animation Test -->
+        <div class="test-section">
+            <h2>6. Simplified Animations (Requirement 19.5)</h2>
+            <div class="test-info">
+                <p><strong>On Mobile:</strong></p>
+                <ul>
+                    <li>Gradient animations disabled</li>
+                    <li>Floating orb animation slowed down</li>
+                    <li>Hover effects use opacity instead of transform</li>
+                    <li>Card lift effects disabled</li>
+                    <li>Icon scale animations disabled</li>
+                </ul>
+                <p><em>Resize to mobile width to see simplified animations</em></p>
+            </div>
+        </div>
+
+        <!-- Spacing Test -->
+        <div class="test-section">
+            <h2>7. Spacing Adjustments (Requirement 19.1)</h2>
+            <div style="background: var(--md-surface-variant); padding: var(--md-space-l); border-radius: var(--md-corner-l);">
+                <p>This box uses --md-space-l for padding and --md-corner-l for border-radius.</p>
+                <p><strong>Desktop:</strong> 16px padding, 16px radius</p>
+                <p><strong>Tablet (< 768px):</strong> 12px padding, 12px radius</p>
+                <p><strong>Mobile (< 480px):</strong> 10px padding, 10px radius</p>
+            </div>
+        </div>
+
+        <!-- Touch Target Test -->
+        <div class="test-section">
+            <h2>8. Touch Target Verification (Requirement 19.3)</h2>
+            <div class="test-info">
+                <p><strong>Minimum Touch Target Size:</strong> 48px × 48px</p>
+                <p>All interactive elements (buttons, tabs, inputs, toggles) should meet this minimum on mobile devices.</p>
+                <p><em>Use browser DevTools to inspect element dimensions on mobile breakpoints</em></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update viewport indicator
+        function updateViewportIndicator() {
+            const width = window.innerWidth;
+            const indicator = document.getElementById('viewport-size');
+            let label = '';
+            
+            if (width > 768) {
+                label = `Desktop: ${width}px`;
+            } else if (width > 480) {
+                label = `Tablet: ${width}px`;
+            } else {
+                label = `Mobile: ${width}px`;
+            }
+            
+            indicator.textContent = label;
+        }
+        
+        updateViewportIndicator();
+        window.addEventListener('resize', updateViewportIndicator);
+        
+        // Toggle switch functionality
+        document.querySelectorAll('.mase-toggle input').forEach(input => {
+            input.addEventListener('change', function() {
+                this.parentElement.classList.toggle('active', this.checked);
+            });
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.mase-nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.mase-nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

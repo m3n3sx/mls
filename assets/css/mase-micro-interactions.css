@@ -1,0 +1,456 @@
+/**
+ * Material Design 3 Micro-interactions
+ * Delightful animations for interactive elements
+ */
+
+/* ============================================
+   9.1 Icon Hover Animations
+   ============================================ */
+
+/* Apply to all interactive icons */
+.mase-icon,
+.dashicons,
+button .dashicons,
+a .dashicons,
+.mase-template-card .dashicons,
+.mase-nav-tab .dashicons,
+.mase-button-filled .dashicons,
+.mase-button-outlined .dashicons,
+.mase-button-text .dashicons,
+[class*="icon-"]:not(.no-hover) {
+    display: inline-block;
+    transition: transform var(--md-duration-short-4) var(--md-easing-standard);
+    will-change: transform;
+}
+
+/* Scale animation on hover */
+.mase-icon:hover,
+.dashicons:hover,
+button:hover .dashicons,
+a:hover .dashicons,
+.mase-template-card:hover .dashicons,
+.mase-nav-tab:hover .dashicons,
+.mase-button-filled:hover .dashicons,
+.mase-button-outlined:hover .dashicons,
+.mase-button-text:hover .dashicons,
+[class*="icon-"]:not(.no-hover):hover {
+    transform: scale(1.1);
+}
+
+/* Remove will-change after animation */
+.mase-icon:not(:hover),
+.dashicons:not(:hover),
+button:not(:hover) .dashicons,
+a:not(:hover) .dashicons {
+    will-change: auto;
+}
+
+/* Specific icon animations for different contexts */
+.mase-help-icon {
+    transition: transform var(--md-duration-short-4) var(--md-easing-standard),
+                color var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+.mase-help-icon:hover {
+    transform: scale(1.1) rotate(15deg);
+    color: var(--md-primary);
+}
+
+.mase-close-icon {
+    transition: transform var(--md-duration-short-4) var(--md-easing-standard),
+                color var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+.mase-close-icon:hover {
+    transform: scale(1.1) rotate(90deg);
+    color: var(--md-error);
+}
+
+.mase-settings-icon {
+    transition: transform var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+.mase-settings-icon:hover {
+    transform: scale(1.1) rotate(45deg);
+}
+
+/* ============================================
+   9.2 Card Lift Effect
+   ============================================ */
+
+/* Base card styles with lift effect */
+.mase-template-card,
+.mase-palette-card,
+.mase-settings-card,
+[class*="-card"]:not(.no-lift) {
+    transition: 
+        transform var(--md-duration-medium-2) var(--md-easing-emphasized),
+        box-shadow var(--md-duration-medium-2) var(--md-easing-emphasized);
+    will-change: transform, box-shadow;
+}
+
+/* Subtle lift on hover */
+.mase-template-card:hover,
+.mase-palette-card:hover,
+.mase-settings-card:hover,
+[class*="-card"]:not(.no-lift):hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--md-elevation-3);
+}
+
+/* Active/pressed state */
+.mase-template-card:active,
+.mase-palette-card:active,
+.mase-settings-card:active,
+[class*="-card"]:not(.no-lift):active {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: var(--md-elevation-2);
+}
+
+/* Remove will-change when not hovering */
+.mase-template-card:not(:hover),
+.mase-palette-card:not(:hover),
+.mase-settings-card:not(:hover),
+[class*="-card"]:not(.no-lift):not(:hover) {
+    will-change: auto;
+}
+
+/* ============================================
+   9.3 Color Transitions
+   ============================================ */
+
+/* Apply smooth color transitions to all interactive elements */
+button,
+a,
+input,
+select,
+textarea,
+.mase-nav-tab,
+.mase-button-filled,
+.mase-button-outlined,
+.mase-button-text,
+.mase-toggle,
+.mase-template-card,
+.mase-palette-card,
+[class*="mase-"] {
+    transition: 
+        color var(--md-duration-short-4) var(--md-easing-standard),
+        background-color var(--md-duration-short-4) var(--md-easing-standard),
+        border-color var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+/* Specific color transition for links */
+a {
+    color: var(--md-primary);
+    transition: color var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+a:hover {
+    color: var(--md-tertiary);
+}
+
+/* Form control color transitions */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--md-primary);
+    transition: border-color var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+/* Button color transitions */
+.mase-button-filled {
+    background-color: var(--md-primary);
+    color: var(--md-on-primary);
+    transition: 
+        background-color var(--md-duration-short-4) var(--md-easing-standard),
+        color var(--md-duration-short-4) var(--md-easing-standard),
+        transform var(--md-duration-medium-2) var(--md-easing-emphasized),
+        box-shadow var(--md-duration-medium-2) var(--md-easing-emphasized);
+}
+
+.mase-button-filled:hover {
+    background-color: var(--md-tertiary);
+}
+
+/* ============================================
+   9.4 Notification Animations
+   ============================================ */
+
+/* Snackbar/notification base */
+.mase-notification,
+.mase-snackbar,
+.notice,
+.updated,
+.error {
+    animation: slideInFromBottom var(--md-duration-medium-2) var(--md-easing-emphasized);
+}
+
+/* Slide in from bottom */
+@keyframes slideInFromBottom {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Success notification with bounce */
+.mase-notification.success,
+.mase-snackbar.success,
+.notice.updated {
+    animation: 
+        slideInFromBottom var(--md-duration-medium-2) var(--md-easing-emphasized),
+        successBounce var(--md-duration-long-2) var(--md-easing-emphasized) var(--md-duration-medium-2);
+}
+
+@keyframes successBounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    25% {
+        transform: translateY(-8px) scale(1.02);
+    }
+    50% {
+        transform: translateY(0) scale(1);
+    }
+    75% {
+        transform: translateY(-4px) scale(1.01);
+    }
+}
+
+/* Error notification with shake */
+.mase-notification.error,
+.mase-snackbar.error,
+.notice.error {
+    animation: 
+        slideInFromBottom var(--md-duration-medium-2) var(--md-easing-emphasized),
+        errorShake var(--md-duration-medium-4) var(--md-easing-standard) var(--md-duration-medium-2);
+}
+
+@keyframes errorShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-8px);
+    }
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+/* Fade out on dismiss */
+.mase-notification.dismissing,
+.mase-snackbar.dismissing {
+    animation: fadeOut var(--md-duration-medium-2) var(--md-easing-standard) forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+/* ============================================
+   9.5 Form Submission Animation
+   ============================================ */
+
+/* Submit button base state */
+.mase-submit-button,
+button[type="submit"],
+input[type="submit"],
+.mase-button-filled[type="submit"] {
+    position: relative;
+    overflow: hidden;
+    transition: 
+        transform var(--md-duration-medium-2) var(--md-easing-emphasized),
+        box-shadow var(--md-duration-medium-2) var(--md-easing-emphasized);
+}
+
+/* Scale effect on submit */
+.mase-submit-button.submitting,
+button[type="submit"].submitting,
+input[type="submit"].submitting {
+    transform: scale(0.95);
+    pointer-events: none;
+}
+
+/* Expanding circle success animation */
+.mase-submit-button::after,
+button[type="submit"]::after,
+input[type="submit"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Success animation trigger */
+.mase-submit-button.success::after,
+button[type="submit"].success::after,
+input[type="submit"].success::after {
+    animation: expandingCircle var(--md-duration-long-2) var(--md-easing-emphasized) forwards;
+}
+
+@keyframes expandingCircle {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    50% {
+        width: 200%;
+        height: 200%;
+        opacity: 0.8;
+    }
+    100% {
+        width: 300%;
+        height: 300%;
+        opacity: 0;
+    }
+}
+
+/* Button scale animation on success */
+.mase-submit-button.success,
+button[type="submit"].success,
+input[type="submit"].success {
+    animation: successScale var(--md-duration-medium-4) var(--md-easing-emphasized);
+}
+
+@keyframes successScale {
+    0% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Coordinate with loading state */
+.mase-submit-button.loading,
+button[type="submit"].loading,
+input[type="submit"].loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.mase-submit-button.loading::before,
+button[type="submit"].loading::before,
+input[type="submit"].loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin var(--md-duration-long-2) linear infinite;
+    color: var(--md-on-primary);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   Additional Micro-interactions
+   ============================================ */
+
+/* Focus ring animation */
+*:focus-visible {
+    outline: 3px solid var(--md-primary);
+    outline-offset: 2px;
+    animation: focusRing var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+@keyframes focusRing {
+    from {
+        outline-width: 0;
+        outline-offset: 0;
+    }
+    to {
+        outline-width: 3px;
+        outline-offset: 2px;
+    }
+}
+
+/* Checkbox/radio check animation */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    animation: checkBounce var(--md-duration-medium-2) var(--md-easing-emphasized);
+}
+
+@keyframes checkBounce {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Tooltip fade in */
+.mase-tooltip,
+[data-tooltip]::after {
+    animation: tooltipFadeIn var(--md-duration-short-4) var(--md-easing-standard);
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    /* Maintain will-change removal for performance */
+    .mase-icon:not(:hover),
+    .dashicons:not(:hover),
+    .mase-template-card:not(:hover),
+    .mase-palette-card:not(:hover) {
+        will-change: auto;
+    }
+}

@@ -465,7 +465,7 @@
              * 
              * @param {string} templateId - The template ID to apply
              */
-            apply: function (templateId) {
+            apply: function (templateId, templateName) {
                 var self = MASE;
 
                 // AJAX REQUEST LOCKING: Prevent duplicate submissions
@@ -477,6 +477,12 @@
                     return;
                 }
                 self.state.isApplyingTemplate = true;
+
+                // Task 6.3: Trigger theme transition start event (Requirement 6.1, 6.4, 6.5)
+                $(document).trigger('mase:theme:apply:start', {
+                    templateId: templateId,
+                    templateName: templateName || templateId
+                });
 
                 // Create automatic backup before applying template (Requirement 16.2)
                 self.backupManager.createAutoBackupBeforeTemplate(function () {
@@ -517,11 +523,17 @@
                                 // Show success message
                                 self.showNotice('success', response.data.message || 'Template applied successfully!');
 
+                                // Task 6.3: Trigger theme transition complete event (Requirement 6.1)
+                                $(document).trigger('mase:theme:apply:complete');
+
                                 // Reload page to show new settings
                                 setTimeout(function () {
                                     location.reload();
                                 }, 1000);
                             } else {
+                                // Task 6.3: Trigger theme transition error event
+                                $(document).trigger('mase:theme:apply:error');
+                                
                                 self.showNotice('error', response.data.message || 'Failed to apply template');
                                 $('.mase-template-apply-btn').prop('disabled', false).css('opacity', '1');
                             }
@@ -532,6 +544,9 @@
                             
                             // Release lock
                             self.state.isApplyingTemplate = false;
+
+                            // Task 6.3: Trigger theme transition error event
+                            $(document).trigger('mase:theme:apply:error');
 
                             var message = 'Network error. Please try again.';
                             if (xhr.status === 403) {
@@ -601,78 +616,8 @@
                     $button.prop('disabled', true).text('Applying...');
                     $card.css('opacity', '0.6');
 
-                    // Store original button text for restoration
-                    var originalText = 'Apply';
-
-                    // Subtask 3.4: Implement AJAX request (Requirements 2.2, 2.4, 8.3)
-                    var requestData = {
-                        action: 'mase_apply_template',
-                        nonce: $('#mase_nonce').val(),
-                        template_id: templateId
-                    };
-
-                    // Send AJAX request
-
-                    $.ajax({
-                        url: self.config.ajaxUrl,
-                        type: 'POST',
-                        data: requestData,
-                        success: function (response) {
-                            if (response.success) {
-                                // Show success notification with template name
-                                self.showNotice('success', self.i18n.templateApplied || 'Template "' + templateName + '" applied successfully!');
-
-                                // Set timeout to reload page after 1 second
-                                setTimeout(function () {
-                                    location.reload();
-                                }, 1000);
-                            } else {
-                                // Handle server-side error
-                                MASE_DEBUG.error('MASE: Template application failed:', response.data.message);
-
-                                // Parse error message from response
-                                var errorMessage = response.data.message || 'Failed to apply template';
-
-                                // Show error notification
-                                self.showNotice('error', errorMessage);
-
-                                // Restore button state
-                                $button.prop('disabled', false).text(originalText);
-                                $card.css('opacity', '1');
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            // Subtask 3.6: Implement error handler (Requirements 2.5, 8.3, 10.5)
-                            MASE_DEBUG.error('MASE: AJAX error - Apply Template', {
-                                status: xhr.status,
-                                statusText: xhr.statusText,
-                                error: error,
-                                responseText: xhr.responseText
-                            });
-
-                            // Parse error message from response
-                            var errorMessage = 'Failed to apply template.';
-
-                            if (xhr.status === 403) {
-                                errorMessage = 'Insufficient permissions';
-                            } else if (xhr.status === 404) {
-                                errorMessage = 'Template not found';
-                            } else if (xhr.status === 500) {
-                                errorMessage = 'Server error. Please try again later.';
-                            } else if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-                                errorMessage = xhr.responseJSON.data.message;
-                            }
-
-                            // Show error notification with message
-                            self.showNotice('error', errorMessage);
-
-                            // Restore button state (enable, original text)
-                            $button.prop('disabled', false).text(originalText);
-
-                            // Restore card opacity to 1
-                            $card.css('opacity', '1');
-                        }
-                    });
+                    // Task 6.2, 6.3: Use templateManager.apply with theme transitions
+                    self.templateManager.apply(templateId, templateName);
 
                 } catch (error) {
                     // Comprehensive error handling
@@ -3681,8 +3626,9 @@
                     css += 'bottom:auto!important;';
                     css += '}';
 
-                    // Allow natural height for menu items
-                    css += 'body.wp-admin #adminmenu li.menu-top{';
+                    // Allow natural height for menu items - use high-specificity selectors
+                    css += 'body.wp-admin #adminmenu li.menu-top,';
+                    css += 'body.wp-admin.mase-active #adminmenu li.menu-top{';
                     css += 'height:auto!important;';
                     css += '}';
                 }
@@ -3731,10 +3677,15 @@
                     hoverIconColor = iconColor;
                 }
 
+                // Use high-specificity selectors to override static CSS
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image,';
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image:before,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image:before,';
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .dashicons,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .dashicons,';
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .dashicons-before:before,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .dashicons-before:before,';
                 css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image,';
                 css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image:before,';
                 css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .dashicons,';
@@ -3744,9 +3695,11 @@
                 css += 'color:' + hoverIconColor + '!important;';
                 css += '}';
 
-                // Hover states for SVG elements
+                // Hover states for SVG elements - use high-specificity selectors
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image svg,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image svg,';
                 css += 'body.wp-admin #adminmenu li.menu-top:hover .wp-menu-image img,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover .wp-menu-image img,';
                 css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image svg,';
                 css += 'body.wp-admin #adminmenu li.opensub > a.menu-top .wp-menu-image img,';
                 css += 'body.wp-admin #adminmenu li > a.menu-top:focus .wp-menu-image svg,';
@@ -3754,9 +3707,10 @@
                 css += 'fill:' + hoverIconColor + '!important;';
                 css += '}';
 
-                // Admin menu hover states
+                // Admin menu hover states - use high-specificity selectors
                 if (adminMenu.hover_bg_color) {
                     css += 'body.wp-admin #adminmenu li.menu-top:hover,';
+                    css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover,';
                     css += 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
                     css += 'body.wp-admin #adminmenu li > a.menu-top:focus{';
                     css += 'background-color:' + adminMenu.hover_bg_color + '!important;';
@@ -3765,6 +3719,7 @@
 
                 if (adminMenu.hover_text_color) {
                     css += 'body.wp-admin #adminmenu li.menu-top:hover a,';
+                    css += 'body.wp-admin.mase-active #adminmenu li.menu-top:hover a,';
                     css += 'body.wp-admin #adminmenu li.opensub > a.menu-top,';
                     css += 'body.wp-admin #adminmenu li > a.menu-top:focus{';
                     css += 'color:' + adminMenu.hover_text_color + '!important;';
@@ -3816,7 +3771,9 @@
                 var fontSize = adminMenu.font_size || 13;
                 var lineHeight = adminMenu.line_height || 18;
 
-                css += 'body.wp-admin #adminmenu li.menu-top{';
+                // Use high-specificity selectors to override static CSS
+                css += 'body.wp-admin #adminmenu li.menu-top,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top{';
                 css += 'padding:' + menuPadding + '!important;';
                 css += '}';
 
@@ -7023,6 +6980,7 @@
             /**
              * Update menu item padding in live preview
              * Requirements: 1.4
+             * Opcja B: Only generate CSS when values differ from defaults
              */
             updatePadding: function () {
                 if (!MASE.state.livePreviewEnabled) {
@@ -7030,12 +6988,26 @@
                 }
 
                 try {
-                    var vPadding = parseInt($('#admin-menu-padding-vertical').val()) || 10;
-                    var hPadding = parseInt($('#admin-menu-padding-horizontal').val()) || 15;
+                    // Default padding values (WordPress/static CSS defaults)
+                    var defaultVPadding = 10;
+                    var defaultHPadding = 15;
+                    
+                    var vPadding = parseInt($('#admin-menu-padding-vertical').val()) || defaultVPadding;
+                    var hPadding = parseInt($('#admin-menu-padding-horizontal').val()) || defaultHPadding;
 
-                    // Build CSS for menu item padding
+                    // Skip CSS generation if padding matches defaults (Opcja B)
+                    // Only generate CSS when user sets DIFFERENT values from defaults
+                    if (vPadding === defaultVPadding && hPadding === defaultHPadding) {
+                        // Remove any existing padding override
+                        $('#mase-menu-padding-preview').remove();
+                        console.log('MASE: Menu padding matches defaults, using static CSS');
+                        return;
+                    }
+
+                    // Build CSS for menu item padding - use high-specificity selectors
                     var css = '';
-                    css += 'body.wp-admin #adminmenu li.menu-top > a {';
+                    css += 'body.wp-admin #adminmenu li.menu-top > a,';
+                    css += 'body.wp-admin.mase-active #adminmenu li.menu-top > a {';
                     css += 'padding: ' + vPadding + 'px ' + hPadding + 'px !important;';
                     css += '}';
 
@@ -7653,9 +7625,12 @@
 
                 var css = '';
                 css += 'body.wp-admin #adminmenu,';
+                // Use high-specificity selectors to override static CSS
                 css += 'body.wp-admin #adminmenu a,';
+                css += 'body.wp-admin.mase-active #adminmenu a,';
                 css += 'body.wp-admin #adminmenu .wp-menu-name,';
-                css += 'body.wp-admin #adminmenu li.menu-top > a {';
+                css += 'body.wp-admin #adminmenu li.menu-top > a,';
+                css += 'body.wp-admin.mase-active #adminmenu li.menu-top > a {';
                 css += 'font-family: ' + fontFamily + ', sans-serif !important;';
                 css += '}';
 
@@ -11182,6 +11157,11 @@
                         // Log settings change
                         MASE_DEBUG.settings('form_save', formData);
 
+                        // Trigger form success animation (Task 9.5: Form Submission Animation)
+                        if (window.MASEMicroInteractions) {
+                            window.MASEMicroInteractions.triggerFormSuccess($button);
+                        }
+
                         // Show success notice (Requirement 11.4, 18.1)
                         self.showNotice('success', response.data.message || self.i18n.saved || 'Settings saved successfully!');
 
@@ -11202,6 +11182,12 @@
                         MASE_DEBUG.error('MASE: Save failed:', response.data);
                         MASE_DEBUG.error('MASE: Error message:', response.data.message);
                         MASE_DEBUG.error('MASE: Full response:', JSON.stringify(response));
+                        
+                        // Trigger form error animation (Task 9.5: Form Submission Animation)
+                        if (window.MASEMicroInteractions) {
+                            window.MASEMicroInteractions.triggerFormError($button);
+                        }
+                        
                         self.showNotice('error', response.data.message || 'Failed to save settings. Check browser console and WordPress debug.log for details.');
 
                         // Show retry option (Requirement 18.2)
@@ -11286,6 +11272,11 @@
                         }
                     }
 
+                    // Trigger form error animation (Task 9.5: Form Submission Animation)
+                    if (window.MASEMicroInteractions) {
+                        window.MASEMicroInteractions.triggerFormError($button);
+                    }
+                    
                     // Display user-friendly error notices (Requirement 4.4)
                     self.showNotice('error', errorMessage);
 
@@ -11676,6 +11667,20 @@
             var self = this;
             dismissible = typeof dismissible !== 'undefined' ? dismissible : true;
 
+            // Use MD3 Snackbar if available (Task 12: Notification System Redesign)
+            if (typeof window.MASESnackbar !== 'undefined') {
+                // Map type to snackbar method
+                if (type === 'success') {
+                    window.MASESnackbar.success(message);
+                } else if (type === 'error') {
+                    window.MASESnackbar.error(message);
+                } else {
+                    window.MASESnackbar.info(message);
+                }
+                return;
+            }
+
+            // Fallback to old notice system if snackbar not available
             // Create notice element with mase-notice classes (Requirement 13.1, 13.2)
             var $notice = $('<div>')
                 .addClass('mase-notice')

@@ -1,568 +1,480 @@
-/**
- * Animation Editor Styles
- * 
- * Styles for animation timeline editor and preset browser
- */
-
-/* Timeline Editor */
 .mase-timeline-editor {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-}
+ display: flex;
+ flex-direction: column;
+ height: 100%;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ overflow: hidden}
 
 .mase-timeline-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-}
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ padding: 12px;
+ background: #f5f5f5;
+ border-bottom: 1px solid #ddd}
 
 .mase-timeline-btn {
-  padding: 6px 12px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
-}
+ padding: 6px 12px;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ cursor: pointer;
+ font-size: 14px;
+ transition: all 0.2s}
 
 .mase-timeline-btn:hover {
-  background: #f0f0f0;
-  border-color: #999;
-}
+ background: #f0f0f0;
+ border-color: #999}
 
 .mase-timeline-btn:active {
-  background: #e0e0e0;
-}
+ background: #e0e0e0}
 
 .mase-timeline-play {
-  min-width: 40px;
-  font-size: 16px;
-}
+ min-width: 40px;
+ font-size: 16px}
 
 .mase-timeline-stop {
-  min-width: 40px;
-  font-size: 14px;
-}
+ min-width: 40px;
+ font-size: 14px}
 
 .mase-timeline-time {
-  margin-left: auto;
-  font-family: monospace;
-  font-size: 14px;
-  color: #666;
-}
+ margin-left: auto;
+ font-family: monospace;
+ font-size: 14px;
+ color: #666}
 
 .mase-timeline-view {
-  flex: 1;
-  position: relative;
-  overflow: auto;
-  background: #fafafa;
-}
+ flex: 1;
+ position: relative;
+ overflow: auto;
+ background: #fafafa}
 
 .mase-timeline-ruler {
-  height: 30px;
-  background: #f0f0f0;
-  border-bottom: 1px solid #ddd;
-  position: relative;
-  min-width: 100%;
-}
+ height: 30px;
+ background: #f0f0f0;
+ border-bottom: 1px solid #ddd;
+ position: relative;
+ min-width: 100%}
 
 .mase-timeline-marker {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border-left: 1px solid #ccc;
-  padding-left: 4px;
-  font-size: 11px;
-  color: #666;
-  white-space: nowrap;
-}
+ position: absolute;
+ top: 0;
+ height: 100%;
+ border-left: 1px solid #ccc;
+ padding-left: 4px;
+ font-size: 11px;
+ color: #666;
+ white-space: nowrap}
 
 .mase-timeline-tracks {
-  position: relative;
-  min-height: 200px;
-}
+ position: relative;
+ min-height: 200px}
 
 .mase-timeline-track {
-  display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  min-height: 40px;
-}
+ display: flex;
+ border-bottom: 1px solid #e0e0e0;
+ min-height: 40px}
 
 .mase-timeline-track-header {
-  width: 150px;
-  padding: 8px 12px;
-  background: #f5f5f5;
-  border-right: 1px solid #ddd;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-}
+ width: 150px;
+ padding: 8px 12px;
+ background: #f5f5f5;
+ border-right: 1px solid #ddd;
+ font-size: 13px;
+ font-weight: 500;
+ display: flex;
+ align-items: center}
 
 .mase-timeline-track-content {
-  flex: 1;
-  position: relative;
-  min-height: 40px;
-  background: #fff;
-}
+ flex: 1;
+ position: relative;
+ min-height: 40px;
+ background: #fff}
 
 .mase-timeline-keyframe {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  background: #2271b1;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
-  z-index: 10;
-}
+ position: absolute;
+ top: 50%;
+ transform: translateY(-50%);
+ width: 12px;
+ height: 12px;
+ background: #2271b1;
+ border: 2px solid #fff;
+ border-radius: 50%;
+ cursor: pointer;
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+ transition: all 0.2s;
+ z-index: 10}
 
 .mase-timeline-keyframe:hover {
-  transform: translateY(-50%) scale(1.3);
-  background: #135e96;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
+ transform: translateY(-50%) scale(1.3);
+ background: #135e96;
+ box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3)}
 
 .mase-timeline-keyframe.selected {
-  background: #d63638;
-  border-color: #fff;
-  transform: translateY(-50%) scale(1.4);
-}
+ background: #d63638;
+ border-color: #fff;
+ transform: translateY(-50%) scale(1.4)}
 
 .mase-timeline-playhead {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #d63638;
-  pointer-events: none;
-  z-index: 100;
-}
+ position: absolute;
+ top: 0;
+ bottom: 0;
+ width: 2px;
+ background: #d63638;
+ pointer-events: none;
+ z-index: 100}
 
 .mase-timeline-playhead::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid #d63638;
-}
+ content: '';
+ position: absolute;
+ top: 0;
+ left: 50%;
+ transform: translateX(-50%);
+ width: 0;
+ height: 0;
+ border-left: 6px solid transparent;
+ border-right: 6px solid transparent;
+ border-top: 8px solid #d63638}
 
 .mase-timeline-properties {
-  width: 300px;
-  padding: 16px;
-  background: #f5f5f5;
-  border-left: 1px solid #ddd;
-  overflow-y: auto;
-}
+ width: 300px;
+ padding: 16px;
+ background: #f5f5f5;
+ border-left: 1px solid #ddd;
+ overflow-y: auto}
 
 .mase-timeline-properties h3 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  color: #1d2327;
-}
+ margin: 0 0 16px 0;
+ font-size: 16px;
+ color: #1d2327}
 
 .mase-timeline-properties h4 {
-  margin: 16px 0 8px 0;
-  font-size: 14px;
-  color: #1d2327;
-}
+ margin: 16px 0 8px 0;
+ font-size: 14px;
+ color: #1d2327}
 
 .mase-timeline-properties label {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 13px;
-  color: #1d2327;
-}
+ display: block;
+ margin-bottom: 12px;
+ font-size: 13px;
+ color: #1d2327}
 
 .mase-timeline-properties input,
 .mase-timeline-properties select {
-  width: 100%;
-  padding: 6px 8px;
-  margin-top: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 13px;
-}
+ width: 100%;
+ padding: 6px 8px;
+ margin-top: 4px;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ font-size: 13px}
 
 .mase-timeline-properties-empty {
-  color: #666;
-  font-size: 13px;
-  text-align: center;
-  padding: 40px 20px;
-}
+ color: #666;
+ font-size: 13px;
+ text-align: center;
+ padding: 40px 20px}
 
 .mase-kf-properties {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+ display: flex;
+ flex-direction: column;
+ gap: 8px}
 
 .mase-kf-delete {
-  margin-top: 16px;
-  background: #d63638;
-  color: #fff;
-  border-color: #d63638;
-}
+ margin-top: 16px;
+ background: #d63638;
+ color: #fff;
+ border-color: #d63638}
 
 .mase-kf-delete:hover {
-  background: #b32d2e;
-  border-color: #b32d2e;
-}
+ background: #b32d2e;
+ border-color: #b32d2e}
 
-/* Preset Browser */
 .mase-preset-browser {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-}
+ display: flex;
+ flex-direction: column;
+ height: 100%;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ overflow: hidden}
 
 .mase-preset-browser-header {
-  padding: 16px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-}
+ padding: 16px;
+ background: #f5f5f5;
+ border-bottom: 1px solid #ddd}
 
 .mase-preset-browser-header h2 {
-  margin: 0 0 12px 0;
-  font-size: 18px;
-  color: #1d2327;
-}
+ margin: 0 0 12px 0;
+ font-size: 18px;
+ color: #1d2327}
 
 .mase-preset-search {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
+ width: 100%;
+ padding: 8px 12px;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ font-size: 14px}
 
 .mase-preset-filters {
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  background: #fafafa;
-  border-bottom: 1px solid #ddd;
-  overflow-x: auto;
-}
+ display: flex;
+ gap: 8px;
+ padding: 12px 16px;
+ background: #fafafa;
+ border-bottom: 1px solid #ddd;
+ overflow-x: auto}
 
 .mase-preset-filter-btn {
-  padding: 6px 16px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 13px;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
+ padding: 6px 16px;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 20px;
+ cursor: pointer;
+ font-size: 13px;
+ white-space: nowrap;
+ transition: all 0.2s}
 
 .mase-preset-filter-btn:hover {
-  background: #f0f0f0;
-  border-color: #999;
-}
+ background: #f0f0f0;
+ border-color: #999}
 
 .mase-preset-filter-btn.active {
-  background: #2271b1;
-  color: #fff;
-  border-color: #2271b1;
-}
+ background: #2271b1;
+ color: #fff;
+ border-color: #2271b1}
 
 .mase-preset-grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
-  overflow-y: auto;
-}
+ flex: 1;
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+ gap: 16px;
+ padding: 16px;
+ overflow-y: auto}
 
 .mase-preset-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 8px;
+ overflow: hidden;
+ cursor: pointer;
+ transition: all 0.2s}
 
 .mase-preset-card:hover {
-  border-color: #2271b1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
+ border-color: #2271b1;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+ transform: translateY(-2px)}
 
 .mase-preset-card.selected {
-  border-color: #2271b1;
-  box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2);
-}
+ border-color: #2271b1;
+ box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2)}
 
 .mase-preset-card-preview {
-  height: 100px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
+ height: 100px;
+ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ position: relative}
 
 .mase-preset-card-icon {
-  font-size: 32px;
-  color: rgba(255, 255, 255, 0.8);
-}
+ font-size: 32px;
+ color: rgba(255, 255, 255, 0.8)}
 
 .mase-preset-card-info {
-  padding: 12px;
-}
+ padding: 12px}
 
 .mase-preset-card-info h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  color: #1d2327;
-}
+ margin: 0 0 4px 0;
+ font-size: 14px;
+ color: #1d2327}
 
 .mase-preset-card-info p {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
-}
+ margin: 0 0 8px 0;
+ font-size: 12px;
+ color: #666;
+ line-height: 1.4}
 
 .mase-preset-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+ display: flex;
+ flex-wrap: wrap;
+ gap: 4px}
 
 .mase-preset-tag {
-  padding: 2px 8px;
-  background: #f0f0f0;
-  border-radius: 12px;
-  font-size: 11px;
-  color: #666;
-}
+ padding: 2px 8px;
+ background: #f0f0f0;
+ border-radius: 12px;
+ font-size: 11px;
+ color: #666}
 
 .mase-preset-empty {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 14px;
-}
+ grid-column: 1 / -1;
+ text-align: center;
+ padding: 40px;
+ color: #666;
+ font-size: 14px}
 
 .mase-preset-preview-panel {
-  width: 350px;
-  padding: 16px;
-  background: #f5f5f5;
-  border-left: 1px solid #ddd;
-  overflow-y: auto;
-}
+ width: 350px;
+ padding: 16px;
+ background: #f5f5f5;
+ border-left: 1px solid #ddd;
+ overflow-y: auto}
 
 .mase-preset-preview-panel h3 {
-  margin: 0 0 16px 0;
-  font-size: 16px;
-  color: #1d2327;
-}
+ margin: 0 0 16px 0;
+ font-size: 16px;
+ color: #1d2327}
 
 .mase-preset-preview-stage {
-  height: 200px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
+ height: 200px;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ margin-bottom: 16px;
+ overflow: hidden}
 
 .mase-preset-preview-element {
-  padding: 16px 24px;
-  background: #2271b1;
-  color: #fff;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 500;
-}
+ padding: 16px 24px;
+ background: #2271b1;
+ color: #fff;
+ border-radius: 4px;
+ font-size: 16px;
+ font-weight: 500}
 
 .mase-preset-preview-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ margin-bottom: 16px}
 
 .mase-preset-preview-btn,
 .mase-preset-apply-btn {
-  padding: 10px 16px;
-  background: #2271b1;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
+ padding: 10px 16px;
+ background: #2271b1;
+ color: #fff;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ font-size: 14px;
+ font-weight: 500;
+ transition: all 0.2s}
 
 .mase-preset-preview-btn:hover,
 .mase-preset-apply-btn:hover {
-  background: #135e96;
-}
+ background: #135e96}
 
 .mase-preset-apply-btn {
-  background: #00a32a;
-}
+ background: #00a32a}
 
 .mase-preset-apply-btn:hover {
-  background: #008a20;
-}
+ background: #008a20}
 
 .mase-preset-preview-info {
-  padding: 12px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 13px;
-}
+ padding: 12px;
+ background: #fff;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ font-size: 13px}
 
 .mase-preset-preview-info h4 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: #1d2327;
-}
+ margin: 0 0 8px 0;
+ font-size: 14px;
+ color: #1d2327}
 
 .mase-preset-preview-info p {
-  margin: 0 0 4px 0;
-  color: #666;
-  line-height: 1.5;
-}
+ margin: 0 0 4px 0;
+ color: #666;
+ line-height: 1.5}
 
 .mase-preset-preview-info p:last-child {
-  margin-bottom: 0;
-}
+ margin-bottom: 0}
 
-/* Responsive adjustments */
 @media (max-width: 1200px) {
-  .mase-timeline-properties,
-  .mase-preset-preview-panel {
-    width: 250px;
-  }
+ .mase-timeline-properties,
+ .mase-preset-preview-panel {
+ width: 250px}
 }
 
 @media (max-width: 768px) {
-  .mase-preset-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    padding: 12px;
-  }
+ .mase-preset-grid {
+ grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+ gap: 12px;
+ padding: 12px}
 
-  .mase-timeline-properties,
-  .mase-preset-preview-panel {
-    display: none;
-  }
+ .mase-timeline-properties,
+ .mase-preset-preview-panel {
+ display: none}
 }
 
-/* Dark mode support */
 @media (prefers-color-scheme: dark) {
-  .mase-timeline-editor,
-  .mase-preset-browser {
-    background: #1d2327;
-    border-color: #3c434a;
-  }
+ .mase-timeline-editor,
+ .mase-preset-browser {
+ background: #1d2327;
+ border-color: #3c434a}
 
-  .mase-timeline-toolbar,
-  .mase-preset-browser-header,
-  .mase-preset-filters {
-    background: #2c3338;
-    border-color: #3c434a;
-  }
+ .mase-timeline-toolbar,
+ .mase-preset-browser-header,
+ .mase-preset-filters {
+ background: #2c3338;
+ border-color: #3c434a}
 
-  .mase-timeline-btn,
-  .mase-preset-filter-btn {
-    background: #1d2327;
-    border-color: #3c434a;
-    color: #f0f0f1;
-  }
+ .mase-timeline-btn,
+ .mase-preset-filter-btn {
+ background: #1d2327;
+ border-color: #3c434a;
+ color: #f0f0f1}
 
-  .mase-timeline-btn:hover,
-  .mase-preset-filter-btn:hover {
-    background: #2c3338;
-    border-color: #50575e;
-  }
+ .mase-timeline-btn:hover,
+ .mase-preset-filter-btn:hover {
+ background: #2c3338;
+ border-color: #50575e}
 
-  .mase-timeline-view,
-  .mase-timeline-track-content {
-    background: #1d2327;
-  }
+ .mase-timeline-view,
+ .mase-timeline-track-content {
+ background: #1d2327}
 
-  .mase-timeline-ruler,
-  .mase-timeline-track-header,
-  .mase-timeline-properties,
-  .mase-preset-preview-panel {
-    background: #2c3338;
-    border-color: #3c434a;
-  }
+ .mase-timeline-ruler,
+ .mase-timeline-track-header,
+ .mase-timeline-properties,
+ .mase-preset-preview-panel {
+ background: #2c3338;
+ border-color: #3c434a}
 
-  .mase-timeline-properties h3,
-  .mase-timeline-properties h4,
-  .mase-preset-browser-header h2,
-  .mase-preset-preview-panel h3,
-  .mase-preset-card-info h4 {
-    color: #f0f0f1;
-  }
+ .mase-timeline-properties h3,
+ .mase-timeline-properties h4,
+ .mase-preset-browser-header h2,
+ .mase-preset-preview-panel h3,
+ .mase-preset-card-info h4 {
+ color: #f0f0f1}
 
-  .mase-timeline-properties input,
-  .mase-timeline-properties select,
-  .mase-preset-search {
-    background: #1d2327;
-    border-color: #3c434a;
-    color: #f0f0f1;
-  }
+ .mase-timeline-properties input,
+ .mase-timeline-properties select,
+ .mase-preset-search {
+ background: #1d2327;
+ border-color: #3c434a;
+ color: #f0f0f1}
 
-  .mase-preset-card {
-    background: #2c3338;
-    border-color: #3c434a;
-  }
+ .mase-preset-card {
+ background: #2c3338;
+ border-color: #3c434a}
 
-  .mase-preset-card:hover {
-    border-color: #72aee6;
-  }
+ .mase-preset-card:hover {
+ border-color: #72aee6}
 
-  .mase-preset-card.selected {
-    border-color: #72aee6;
-    box-shadow: 0 0 0 2px rgba(114, 174, 230, 0.2);
-  }
+ .mase-preset-card.selected {
+ border-color: #72aee6;
+ box-shadow: 0 0 0 2px rgba(114, 174, 230, 0.2)}
 
-  .mase-preset-preview-stage,
-  .mase-preset-preview-info {
-    background: #1d2327;
-    border-color: #3c434a;
-  }
+ .mase-preset-preview-stage,
+ .mase-preset-preview-info {
+ background: #1d2327;
+ border-color: #3c434a}
 
-  .mase-preset-tag {
-    background: #3c434a;
-    color: #f0f0f1;
-  }
+ .mase-preset-tag {
+ background: #3c434a;
+ color: #f0f0f1}
 }

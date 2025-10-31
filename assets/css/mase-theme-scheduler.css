@@ -1,0 +1,434 @@
+/**
+ * Theme Scheduler Styles
+ * Time-based theme scheduling interface
+ *
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   Scheduler Container
+   ============================================ */
+
+.mase-scheduler-container {
+    background: var(--mase-surface, #ffffff);
+    border: 1px solid var(--mase-border, #ddd);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 20px;
+}
+
+.mase-scheduler-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--mase-border, #ddd);
+}
+
+.mase-scheduler-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.mase-scheduler-title .dashicons {
+    color: var(--mase-primary, #2271b1);
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.mase-scheduler-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mase-scheduler-toggle input[type="checkbox"] {
+    margin: 0;
+}
+
+/* ============================================
+   Timeline Visualization
+   ============================================ */
+
+.mase-scheduler-timeline {
+    position: relative;
+    height: 80px;
+    background: linear-gradient(
+        to right,
+        #1e3a8a 0%,
+        #3b82f6 25%,
+        #fbbf24 50%,
+        #f59e0b 75%,
+        #1e3a8a 100%
+    );
+    border-radius: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.mase-timeline-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 16px;
+}
+
+.mase-timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.mase-timeline-marker .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.mase-timeline-current {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+    transition: left 300ms ease;
+}
+
+.mase-timeline-current::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #ef4444;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   Time Period Controls
+   ============================================ */
+
+.mase-scheduler-periods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.mase-period-card {
+    background: var(--mase-surface-elevated, #f9fafb);
+    border: 1px solid var(--mase-border, #e5e7eb);
+    border-radius: 6px;
+    padding: 16px;
+    transition: all 200ms ease;
+}
+
+.mase-period-card:hover {
+    border-color: var(--mase-primary, #2271b1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mase-period-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.mase-period-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: var(--mase-primary, #2271b1);
+    color: #ffffff;
+}
+
+.mase-period-icon .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.mase-period-info {
+    flex: 1;
+}
+
+.mase-period-name {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mase-text, #1f2937);
+}
+
+.mase-period-time {
+    margin: 0;
+    font-size: 12px;
+    color: var(--mase-text-secondary, #6b7280);
+}
+
+.mase-period-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mase-period-controls label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mase-text-secondary, #6b7280);
+    margin-bottom: 4px;
+}
+
+.mase-period-controls select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--mase-border, #d1d5db);
+    border-radius: 4px;
+    font-size: 13px;
+    background: #ffffff;
+    transition: border-color 200ms ease;
+}
+
+.mase-period-controls select:focus {
+    outline: none;
+    border-color: var(--mase-primary, #2271b1);
+    box-shadow: 0 0 0 1px var(--mase-primary, #2271b1);
+}
+
+/* ============================================
+   System Sync Controls
+   ============================================ */
+
+.mase-scheduler-sync {
+    background: var(--mase-surface-elevated, #f9fafb);
+    border: 1px solid var(--mase-border, #e5e7eb);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.mase-sync-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.mase-sync-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+}
+
+.mase-sync-icon .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.mase-sync-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mase-sync-info p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--mase-text-secondary, #6b7280);
+}
+
+.mase-sync-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid var(--mase-border, #d1d5db);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.mase-sync-toggle:hover {
+    border-color: var(--mase-primary, #2271b1);
+}
+
+.mase-sync-toggle input[type="checkbox"] {
+    margin: 0;
+}
+
+.mase-sync-toggle label {
+    margin: 0;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* ============================================
+   Schedule Indicator
+   ============================================ */
+
+.mase-schedule-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--mase-primary, #2271b1);
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.mase-schedule-indicator .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.mase-schedule-indicator.inactive {
+    background: var(--mase-text-secondary, #6b7280);
+    opacity: 0.7;
+}
+
+/* Admin Bar Indicator */
+#wp-admin-bar-mase-schedule-indicator {
+    background: transparent !important;
+}
+
+#wp-admin-bar-mase-schedule-indicator .ab-item {
+    padding: 0 12px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.mase-adminbar-schedule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.mase-adminbar-schedule .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.mase-schedule-next {
+    opacity: 0.8;
+    font-size: 11px;
+}
+
+/* ============================================
+   Quick Actions
+   ============================================ */
+
+.mase-scheduler-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--mase-border, #e5e7eb);
+}
+
+.mase-scheduler-actions .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mase-scheduler-actions .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+    .mase-scheduler-periods {
+        grid-template-columns: 1fr;
+    }
+    
+    .mase-scheduler-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .mase-timeline-overlay {
+        padding: 0 8px;
+    }
+    
+    .mase-timeline-marker {
+        font-size: 10px;
+    }
+    
+    .mase-timeline-marker .dashicons {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ============================================
+   Dark Mode Support
+   ============================================ */
+
+body.mase-dark-mode .mase-scheduler-container,
+body.mase-dark-mode .mase-period-card,
+body.mase-dark-mode .mase-scheduler-sync {
+    background: var(--mase-surface-dark, #1f2937);
+    border-color: var(--mase-border-dark, #374151);
+}
+
+body.mase-dark-mode .mase-period-controls select,
+body.mase-dark-mode .mase-sync-toggle {
+    background: var(--mase-surface-elevated-dark, #111827);
+    border-color: var(--mase-border-dark, #374151);
+    color: var(--mase-text-dark, #f9fafb);
+}
+
+body.mase-dark-mode .mase-period-name {
+    color: var(--mase-text-dark, #f9fafb);
+}
+
+body.mase-dark-mode .mase-period-time,
+body.mase-dark-mode .mase-sync-info p {
+    color: var(--mase-text-secondary-dark, #9ca3af);
+}

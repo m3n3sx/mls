@@ -1,0 +1,367 @@
+/**
+ * Material Design 3 Color Harmony Visualization
+ * 
+ * Displays color swatches with contrast verification for:
+ * - Primary, secondary, tertiary colors
+ * - Container color variants
+ * - On-color text samples
+ * - Real-time contrast ratio calculations
+ * 
+ * Requirements: 28.1, 28.2, 28.3, 28.4, 28.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.2.0
+ */
+
+/* ============================================
+   Color Harmony Container (Requirement 28.5)
+   ============================================ */
+
+.mase-color-harmony {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: var(--md-space-l, 16px);
+	margin-top: var(--md-space-xl, 24px);
+}
+
+/* Color Group Card (Requirement 28.5) */
+.mase-color-group {
+	background: var(--md-surface, #fffbfe);
+	border: 1px solid var(--md-outline-variant, #cac4d0);
+	border-radius: var(--md-corner-l, 16px);
+	padding: var(--md-space-l, 16px);
+	box-shadow: var(--md-elevation-1);
+	transition: all var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+.mase-color-group:hover {
+	box-shadow: var(--md-elevation-2);
+	transform: translateY(-2px);
+}
+
+:root[data-theme="dark"] .mase-color-group {
+	background: var(--md-surface, #1c1b1f);
+	border-color: var(--md-outline-variant, #49454f);
+}
+
+/* Color Group Header */
+.mase-color-group-header {
+	margin-bottom: var(--md-space-m, 12px);
+}
+
+.mase-color-group-title {
+	font-size: var(--md-title-medium, 16px);
+	font-weight: var(--md-weight-medium, 500);
+	color: var(--md-on-surface, #1c1b1f);
+	margin: 0 0 var(--md-space-xs, 4px) 0;
+	text-transform: capitalize;
+}
+
+:root[data-theme="dark"] .mase-color-group-title {
+	color: var(--md-on-surface, #e6e1e5);
+}
+
+.mase-color-group-subtitle {
+	font-size: var(--md-body-small, 12px);
+	color: var(--md-on-surface-variant, #49454f);
+	margin: 0;
+}
+
+:root[data-theme="dark"] .mase-color-group-subtitle {
+	color: var(--md-on-surface-variant, #cac4d0);
+}
+
+/* ============================================
+   Color Swatches (Requirements 28.1, 28.2)
+   ============================================ */
+
+.mase-color-swatches {
+	display: flex;
+	flex-direction: column;
+	gap: var(--md-space-s, 8px);
+}
+
+/* Main Color Swatch */
+.mase-color-swatch {
+	position: relative;
+	border-radius: var(--md-corner-m, 12px);
+	overflow: hidden;
+	box-shadow: 
+		0 1px 3px rgba(0, 0, 0, 0.12),
+		0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all var(--md-duration-short-4, 200ms) var(--md-easing-standard);
+}
+
+.mase-color-swatch:hover {
+	box-shadow: 
+		0 3px 6px rgba(0, 0, 0, 0.16),
+		0 3px 6px rgba(0, 0, 0, 0.23);
+	transform: scale(1.02);
+}
+
+/* Color Swatch Content */
+.mase-color-swatch-content {
+	padding: var(--md-space-l, 16px);
+	min-height: 80px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	transition: background-color var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+/* Color Label */
+.mase-color-label {
+	font-size: var(--md-label-large, 14px);
+	font-weight: var(--md-weight-medium, 500);
+	margin-bottom: var(--md-space-xs, 4px);
+	transition: color var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+/* Color Value (Hex Code) */
+.mase-color-value {
+	font-size: var(--md-body-small, 12px);
+	font-family: 'Courier New', monospace;
+	opacity: 0.9;
+	transition: color var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+/* Container Color Swatch (Requirement 28.2) */
+.mase-color-swatch-container {
+	min-height: 60px;
+}
+
+.mase-color-swatch-container .mase-color-swatch-content {
+	min-height: 60px;
+	padding: var(--md-space-m, 12px) var(--md-space-l, 16px);
+}
+
+.mase-color-swatch-container .mase-color-label {
+	font-size: var(--md-label-medium, 12px);
+}
+
+/* ============================================
+   Contrast Verification (Requirement 28.3)
+   ============================================ */
+
+.mase-contrast-info {
+	margin-top: var(--md-space-m, 12px);
+	padding: var(--md-space-m, 12px);
+	background: var(--md-surface-variant, #e7e0ec);
+	border-radius: var(--md-corner-s, 8px);
+	transition: background-color var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+:root[data-theme="dark"] .mase-contrast-info {
+	background: var(--md-surface-variant, #49454f);
+}
+
+/* Contrast Ratio Display */
+.mase-contrast-ratio {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: var(--md-space-xs, 4px);
+}
+
+.mase-contrast-ratio-label {
+	font-size: var(--md-body-small, 12px);
+	color: var(--md-on-surface-variant, #49454f);
+	font-weight: var(--md-weight-medium, 500);
+}
+
+:root[data-theme="dark"] .mase-contrast-ratio-label {
+	color: var(--md-on-surface-variant, #cac4d0);
+}
+
+.mase-contrast-ratio-value {
+	font-size: var(--md-label-large, 14px);
+	font-weight: var(--md-weight-bold, 700);
+	font-family: 'Courier New', monospace;
+	padding: 2px 8px;
+	border-radius: var(--md-corner-xs, 4px);
+	transition: all var(--md-duration-short-4, 200ms) var(--md-easing-standard);
+}
+
+/* Contrast Status Indicators */
+.mase-contrast-ratio-value.pass {
+	background: rgba(76, 175, 80, 0.15);
+	color: #2e7d32;
+}
+
+.mase-contrast-ratio-value.fail {
+	background: rgba(244, 67, 54, 0.15);
+	color: #c62828;
+}
+
+:root[data-theme="dark"] .mase-contrast-ratio-value.pass {
+	background: rgba(76, 175, 80, 0.25);
+	color: #81c784;
+}
+
+:root[data-theme="dark"] .mase-contrast-ratio-value.fail {
+	background: rgba(244, 67, 54, 0.25);
+	color: #e57373;
+}
+
+/* Contrast Badge */
+.mase-contrast-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--md-space-xs, 4px);
+	font-size: var(--md-body-small, 12px);
+	padding: 2px 8px;
+	border-radius: var(--md-corner-xs, 4px);
+	font-weight: var(--md-weight-medium, 500);
+	margin-top: var(--md-space-xs, 4px);
+}
+
+.mase-contrast-badge.wcag-aa {
+	background: rgba(76, 175, 80, 0.15);
+	color: #2e7d32;
+}
+
+.mase-contrast-badge.wcag-aaa {
+	background: rgba(33, 150, 243, 0.15);
+	color: #1565c0;
+}
+
+.mase-contrast-badge.fail {
+	background: rgba(244, 67, 54, 0.15);
+	color: #c62828;
+}
+
+:root[data-theme="dark"] .mase-contrast-badge.wcag-aa {
+	background: rgba(76, 175, 80, 0.25);
+	color: #81c784;
+}
+
+:root[data-theme="dark"] .mase-contrast-badge.wcag-aaa {
+	background: rgba(33, 150, 243, 0.25);
+	color: #64b5f6;
+}
+
+:root[data-theme="dark"] .mase-contrast-badge.fail {
+	background: rgba(244, 67, 54, 0.25);
+	color: #e57373;
+}
+
+/* Contrast Badge Icon */
+.mase-contrast-badge .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+/* ============================================
+   Text Samples (Requirement 28.3)
+   ============================================ */
+
+.mase-text-samples {
+	margin-top: var(--md-space-m, 12px);
+}
+
+.mase-text-sample {
+	padding: var(--md-space-s, 8px) var(--md-space-m, 12px);
+	border-radius: var(--md-corner-s, 8px);
+	margin-bottom: var(--md-space-xs, 4px);
+	transition: all var(--md-duration-medium-2, 300ms) var(--md-easing-standard);
+}
+
+.mase-text-sample-label {
+	font-size: var(--md-body-small, 12px);
+	opacity: 0.7;
+	margin-bottom: 2px;
+}
+
+.mase-text-sample-text {
+	font-size: var(--md-body-large, 16px);
+	font-weight: var(--md-weight-medium, 500);
+}
+
+/* ============================================
+   Real-time Update Animations (Requirement 28.4)
+   ============================================ */
+
+/* Pulse animation for color changes */
+@keyframes mase-color-pulse {
+	0% {
+		transform: scale(1);
+		box-shadow: 
+			0 1px 3px rgba(0, 0, 0, 0.12),
+			0 1px 2px rgba(0, 0, 0, 0.24);
+	}
+	50% {
+		transform: scale(1.03);
+		box-shadow: 
+			0 4px 8px rgba(0, 0, 0, 0.16),
+			0 4px 8px rgba(0, 0, 0, 0.23);
+	}
+	100% {
+		transform: scale(1);
+		box-shadow: 
+			0 1px 3px rgba(0, 0, 0, 0.12),
+			0 1px 2px rgba(0, 0, 0, 0.24);
+	}
+}
+
+.mase-color-swatch.updating {
+	animation: mase-color-pulse var(--md-duration-medium-4, 400ms) var(--md-easing-emphasized);
+}
+
+/* Fade transition for contrast info updates */
+.mase-contrast-info.updating {
+	opacity: 0.6;
+	transition: opacity var(--md-duration-short-4, 200ms) var(--md-easing-standard);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-color-harmony {
+		grid-template-columns: 1fr;
+	}
+	
+	.mase-color-swatch-content {
+		min-height: 70px;
+		padding: var(--md-space-m, 12px);
+	}
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+/* Focus indicators for interactive elements */
+.mase-color-swatch:focus-within {
+	outline: 3px solid var(--md-primary, #6750a4);
+	outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	.mase-color-swatch,
+	.mase-color-swatch-content,
+	.mase-contrast-info,
+	.mase-color-group {
+		transition: none;
+	}
+	
+	.mase-color-swatch.updating {
+		animation: none;
+	}
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	.mase-color-group {
+		border-width: 2px;
+	}
+	
+	.mase-color-swatch {
+		box-shadow: 
+			0 2px 4px rgba(0, 0, 0, 0.3),
+			0 2px 4px rgba(0, 0, 0, 0.3);
+	}
+}

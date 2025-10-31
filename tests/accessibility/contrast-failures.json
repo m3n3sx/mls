@@ -1,0 +1,20 @@
+[
+  {
+    "mode": "Light",
+    "context": "Outline variant on surface",
+    "bg": "surface",
+    "bgColor": "#fffbfe",
+    "fg": "outlineVariant",
+    "fgColor": "#cac4d0",
+    "ratio": "1.66"
+  },
+  {
+    "mode": "Dark",
+    "context": "Outline variant on surface",
+    "bg": "surface",
+    "bgColor": "#1c1b1f",
+    "fg": "outlineVariant",
+    "fgColor": "#49454f",
+    "ratio": "1.83"
+  }
+]

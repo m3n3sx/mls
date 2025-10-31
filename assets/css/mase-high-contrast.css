@@ -1,0 +1,496 @@
+/**
+ * High Contrast Mode
+ * Modern Admin Styler - Accessibility Enhancement
+ * 
+ * Provides high-contrast variants for all themes with 7:1 contrast ratio
+ * for enhanced accessibility (WCAG AAA compliance)
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ * Requirements: 17.2
+ */
+
+/* ============================================
+   HIGH CONTRAST MODE ACTIVATION
+   ============================================ */
+
+/**
+ * High contrast mode can be activated by:
+ * 1. User toggle in settings
+ * 2. System preference (prefers-contrast: high)
+ */
+:root[data-high-contrast="true"],
+body[data-high-contrast="true"],
+@media (prefers-contrast: high) {
+	/* Base high contrast variables */
+	--mase-contrast-ratio: 7;
+	--mase-text-primary: #000000;
+	--mase-text-secondary: #1a1a1a;
+	--mase-background: #ffffff;
+	--mase-surface: #ffffff;
+	--mase-border: #000000;
+	--mase-focus-outline: #0000ff;
+	--mase-focus-outline-width: 3px;
+}
+
+/* Dark mode high contrast */
+:root[data-high-contrast="true"][data-theme="dark"],
+body[data-high-contrast="true"].mase-dark-mode,
+@media (prefers-contrast: high) and (prefers-color-scheme: dark) {
+	--mase-text-primary: #ffffff;
+	--mase-text-secondary: #e0e0e0;
+	--mase-background: #000000;
+	--mase-surface: #000000;
+	--mase-border: #ffffff;
+	--mase-focus-outline: #ffff00;
+}
+
+/* ============================================
+   TERMINAL THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="terminal"],
+body[data-high-contrast="true"] .mase-template-terminal {
+	/* Green variant - high contrast */
+	--terminal-primary: #00ff00;
+	--terminal-secondary: #00cc00;
+	--terminal-background: #000000;
+	--terminal-text: #00ff00;
+	--terminal-glow: rgba(0, 255, 0, 1);
+}
+
+:root[data-high-contrast="true"][data-template="terminal"][data-variant="blue"],
+body[data-high-contrast="true"] .mase-template-terminal[data-variant="blue"] {
+	--terminal-primary: #00ffff;
+	--terminal-secondary: #00cccc;
+	--terminal-text: #00ffff;
+	--terminal-glow: rgba(0, 255, 255, 1);
+}
+
+:root[data-high-contrast="true"][data-template="terminal"][data-variant="amber"],
+body[data-high-contrast="true"] .mase-template-terminal[data-variant="amber"] {
+	--terminal-primary: #ffff00;
+	--terminal-secondary: #cccc00;
+	--terminal-text: #ffff00;
+	--terminal-glow: rgba(255, 255, 0, 1);
+}
+
+:root[data-high-contrast="true"][data-template="terminal"][data-variant="red"],
+body[data-high-contrast="true"] .mase-template-terminal[data-variant="red"] {
+	--terminal-primary: #ff0000;
+	--terminal-secondary: #cc0000;
+	--terminal-text: #ff0000;
+	--terminal-glow: rgba(255, 0, 0, 1);
+}
+
+/* ============================================
+   GAMING THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="gaming"],
+body[data-high-contrast="true"] .mase-template-gaming {
+	/* Cyberpunk variant - high contrast */
+	--gaming-primary: #00ffff;
+	--gaming-secondary: #ff00ff;
+	--gaming-accent: #ffff00;
+	--gaming-background: #000000;
+	--gaming-text: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="gaming"][data-variant="neon"],
+body[data-high-contrast="true"] .mase-template-gaming[data-variant="neon"] {
+	--gaming-primary: #ff00ff;
+	--gaming-secondary: #00ff00;
+	--gaming-accent: #ffff00;
+}
+
+:root[data-high-contrast="true"][data-template="gaming"][data-variant="matrix"],
+body[data-high-contrast="true"] .mase-template-gaming[data-variant="matrix"] {
+	--gaming-primary: #00ff00;
+	--gaming-secondary: #00cc00;
+	--gaming-accent: #00ffaa;
+}
+
+/* ============================================
+   GLASS THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="glass"],
+body[data-high-contrast="true"] .mase-template-glass {
+	/* Disable glassmorphism in high contrast mode */
+	--glass-blur: 0px;
+	--glass-opacity: 1;
+	--glass-tint: rgba(255, 255, 255, 1);
+	--glass-border: rgba(0, 0, 0, 1);
+	--glass-shadow: rgba(0, 0, 0, 0.5);
+}
+
+:root[data-high-contrast="true"][data-template="glass"][data-variant="blue"],
+body[data-high-contrast="true"] .mase-template-glass[data-variant="blue"] {
+	--glass-tint: rgba(0, 100, 255, 1);
+	--glass-border: rgba(0, 0, 0, 1);
+}
+
+:root[data-high-contrast="true"][data-template="glass"][data-variant="purple"],
+body[data-high-contrast="true"] .mase-template-glass[data-variant="purple"] {
+	--glass-tint: rgba(150, 0, 255, 1);
+	--glass-border: rgba(0, 0, 0, 1);
+}
+
+/* ============================================
+   GRADIENT THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="gradient"],
+body[data-high-contrast="true"] .mase-template-gradient {
+	/* Replace gradients with solid high-contrast colors */
+	--gradient-color-1: #0000ff;
+	--gradient-color-2: #0000cc;
+	--gradient-color-3: #000099;
+	--gradient-text: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="gradient"][data-variant="cool"],
+body[data-high-contrast="true"] .mase-template-gradient[data-variant="cool"] {
+	--gradient-color-1: #00aaff;
+	--gradient-color-2: #0088cc;
+	--gradient-color-3: #006699;
+}
+
+:root[data-high-contrast="true"][data-template="gradient"][data-variant="sunset"],
+body[data-high-contrast="true"] .mase-template-gradient[data-variant="sunset"] {
+	--gradient-color-1: #ff0000;
+	--gradient-color-2: #cc0000;
+	--gradient-color-3: #990000;
+}
+
+/* ============================================
+   FLORAL THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="floral"],
+body[data-high-contrast="true"] .mase-template-floral {
+	--floral-primary: #cc0066;
+	--floral-secondary: #990044;
+	--floral-accent: #660033;
+	--floral-text: #000000;
+	--floral-background: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="floral"][data-variant="lavender"],
+body[data-high-contrast="true"] .mase-template-floral[data-variant="lavender"] {
+	--floral-primary: #6600cc;
+	--floral-secondary: #4400aa;
+	--floral-accent: #220088;
+}
+
+:root[data-high-contrast="true"][data-template="floral"][data-variant="sakura"],
+body[data-high-contrast="true"] .mase-template-floral[data-variant="sakura"] {
+	--floral-primary: #ff0066;
+	--floral-secondary: #cc0044;
+	--floral-accent: #990033;
+}
+
+/* ============================================
+   RETRO THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="retro"],
+body[data-high-contrast="true"] .mase-template-retro {
+	--retro-primary: #ff0000;
+	--retro-secondary: #00ffff;
+	--retro-accent: #ffff00;
+	--retro-background: #000000;
+	--retro-text: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="retro"][data-variant="synthwave"],
+body[data-high-contrast="true"] .mase-template-retro[data-variant="synthwave"] {
+	--retro-primary: #ff00ff;
+	--retro-secondary: #00ffff;
+	--retro-accent: #ffff00;
+}
+
+:root[data-high-contrast="true"][data-template="retro"][data-variant="vaporwave"],
+body[data-high-contrast="true"] .mase-template-retro[data-variant="vaporwave"] {
+	--retro-primary: #ff00aa;
+	--retro-secondary: #00ffff;
+	--retro-accent: #00ff00;
+}
+
+/* ============================================
+   PROFESSIONAL THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="professional"],
+body[data-high-contrast="true"] .mase-template-professional {
+	--professional-primary: #000066;
+	--professional-secondary: #000044;
+	--professional-accent: #0066cc;
+	--professional-text: #000000;
+	--professional-background: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="professional"][data-variant="executive"],
+body[data-high-contrast="true"] .mase-template-professional[data-variant="executive"] {
+	--professional-primary: #000000;
+	--professional-secondary: #1a1a1a;
+	--professional-accent: #0000ff;
+}
+
+:root[data-high-contrast="true"][data-template="professional"][data-variant="modern"],
+body[data-high-contrast="true"] .mase-template-professional[data-variant="modern"] {
+	--professional-primary: #003300;
+	--professional-secondary: #002200;
+	--professional-accent: #00aa00;
+}
+
+/* ============================================
+   MINIMAL THEME HIGH CONTRAST
+   ============================================ */
+
+:root[data-high-contrast="true"][data-template="minimal"],
+body[data-high-contrast="true"] .mase-template-minimal {
+	--minimal-primary: #ffffff;
+	--minimal-secondary: #f0f0f0;
+	--minimal-accent: #000000;
+	--minimal-text: #000000;
+	--minimal-border: #000000;
+}
+
+:root[data-high-contrast="true"][data-template="minimal"][data-variant="dark"],
+body[data-high-contrast="true"] .mase-template-minimal[data-variant="dark"] {
+	--minimal-primary: #000000;
+	--minimal-secondary: #1a1a1a;
+	--minimal-accent: #ffffff;
+	--minimal-text: #ffffff;
+	--minimal-border: #ffffff;
+}
+
+:root[data-high-contrast="true"][data-template="minimal"][data-variant="monochrome"],
+body[data-high-contrast="true"] .mase-template-minimal[data-variant="monochrome"] {
+	--minimal-primary: #000000;
+	--minimal-secondary: #000000;
+	--minimal-accent: #ffffff;
+	--minimal-text: #ffffff;
+	--minimal-border: #ffffff;
+}
+
+/* ============================================
+   GLOBAL HIGH CONTRAST OVERRIDES
+   ============================================ */
+
+:root[data-high-contrast="true"],
+body[data-high-contrast="true"] {
+	/* Disable transparency */
+	--mase-opacity: 1;
+	
+	/* Disable blur effects */
+	--mase-blur-amount: 0px;
+	
+	/* Increase border width */
+	--mase-border-width: 2px;
+	
+	/* Increase shadow contrast */
+	--mase-shadow-color: rgba(0, 0, 0, 1);
+	
+	/* Disable subtle effects */
+	--mase-subtle-opacity: 1;
+}
+
+/* Text elements */
+:root[data-high-contrast="true"] *,
+body[data-high-contrast="true"] * {
+	/* Remove text shadows for clarity */
+	text-shadow: none !important;
+	
+	/* Ensure solid backgrounds */
+	background-blend-mode: normal !important;
+}
+
+/* Buttons */
+:root[data-high-contrast="true"] .button,
+:root[data-high-contrast="true"] button,
+body[data-high-contrast="true"] .button,
+body[data-high-contrast="true"] button {
+	border: 2px solid currentColor !important;
+	background: var(--mase-background) !important;
+	color: var(--mase-text-primary) !important;
+}
+
+:root[data-high-contrast="true"] .button-primary,
+body[data-high-contrast="true"] .button-primary {
+	background: #0000ff !important;
+	color: #ffffff !important;
+	border-color: #0000ff !important;
+}
+
+:root[data-high-contrast="true"] .button-primary:hover,
+body[data-high-contrast="true"] .button-primary:hover {
+	background: #0000cc !important;
+	border-color: #0000cc !important;
+}
+
+/* Links */
+:root[data-high-contrast="true"] a,
+body[data-high-contrast="true"] a {
+	color: #0000ff !important;
+	text-decoration: underline !important;
+}
+
+:root[data-high-contrast="true"] a:visited,
+body[data-high-contrast="true"] a:visited {
+	color: #800080 !important;
+}
+
+:root[data-high-contrast="true"] a:hover,
+:root[data-high-contrast="true"] a:focus,
+body[data-high-contrast="true"] a:hover,
+body[data-high-contrast="true"] a:focus {
+	color: #ff0000 !important;
+	text-decoration: underline !important;
+}
+
+/* Form inputs */
+:root[data-high-contrast="true"] input,
+:root[data-high-contrast="true"] select,
+:root[data-high-contrast="true"] textarea,
+body[data-high-contrast="true"] input,
+body[data-high-contrast="true"] select,
+body[data-high-contrast="true"] textarea {
+	border: 2px solid #000000 !important;
+	background: #ffffff !important;
+	color: #000000 !important;
+}
+
+/* Disable decorative effects */
+:root[data-high-contrast="true"] *::before,
+:root[data-high-contrast="true"] *::after,
+body[data-high-contrast="true"] *::before,
+body[data-high-contrast="true"] *::after {
+	/* Remove decorative pseudo-elements that might reduce contrast */
+	opacity: 1 !important;
+	mix-blend-mode: normal !important;
+}
+
+/* Disable backdrop filters */
+:root[data-high-contrast="true"] *,
+body[data-high-contrast="true"] * {
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
+}
+
+/* ============================================
+   HIGH CONTRAST TOGGLE UI
+   ============================================ */
+
+.mase-high-contrast-toggle {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 16px;
+	background: var(--mase-surface, #ffffff);
+	border: 1px solid var(--mase-border, #ddd);
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+
+.mase-high-contrast-toggle label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.mase-high-contrast-toggle input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+
+.mase-high-contrast-toggle .description {
+	font-size: 13px;
+	color: var(--mase-text-secondary, #666);
+	margin-top: 4px;
+}
+
+.mase-high-contrast-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 12px;
+	background: #0000ff;
+	color: #ffffff;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.mase-high-contrast-badge::before {
+	content: '◐';
+	font-size: 16px;
+}
+
+/* ============================================
+   DARK MODE HIGH CONTRAST ADJUSTMENTS
+   ============================================ */
+
+body.mase-dark-mode[data-high-contrast="true"] .button-primary {
+	background: #ffff00 !important;
+	color: #000000 !important;
+	border-color: #ffff00 !important;
+}
+
+body.mase-dark-mode[data-high-contrast="true"] .button-primary:hover {
+	background: #cccc00 !important;
+	border-color: #cccc00 !important;
+}
+
+body.mase-dark-mode[data-high-contrast="true"] a {
+	color: #ffff00 !important;
+}
+
+body.mase-dark-mode[data-high-contrast="true"] a:visited {
+	color: #ff00ff !important;
+}
+
+body.mase-dark-mode[data-high-contrast="true"] a:hover,
+body.mase-dark-mode[data-high-contrast="true"] a:focus {
+	color: #00ffff !important;
+}
+
+body.mase-dark-mode[data-high-contrast="true"] input,
+body.mase-dark-mode[data-high-contrast="true"] select,
+body.mase-dark-mode[data-high-contrast="true"] textarea {
+	border-color: #ffffff !important;
+	background: #000000 !important;
+	color: #ffffff !important;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-high-contrast-toggle {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+	:root[data-high-contrast="true"],
+	body[data-high-contrast="true"] {
+		/* Ensure high contrast in print */
+		--mase-text-primary: #000000;
+		--mase-background: #ffffff;
+		--mase-border: #000000;
+	}
+}

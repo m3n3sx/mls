@@ -1,0 +1,559 @@
+# Implementation Plan
+
+- [x] 1. Project Setup and Architecture
+  - Create new CSS files for enhanced theme effects
+  - Create JavaScript modules for interactivity
+  - Set up CSS custom properties system for theme variants
+  - Document file structure and naming conventions
+  - _Requirements: All_
+
+- [x] 2. Interactive Preview System
+  - [x] 2.1 Create preview modal HTML structure
+    - Design modal container with iframe for preview
+    - Add action buttons (Apply, Close, Customize)
+    - Implement backdrop with blur effect
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [x] 2.2 Implement preview modal CSS
+    - Style modal with fade-in animation (300ms)
+    - Add backdrop blur and dimming effect
+    - Style preview container with shadow and border-radius
+    - Implement responsive design for mobile
+    - _Requirements: 1.4, 1.5_
+  - [x] 2.3 Create preview modal JavaScript
+    - Implement hover delay trigger (2s)
+    - Create preview loading functionality
+    - Add keyboard shortcuts (ESC to close)
+    - Handle preview iframe content loading
+    - _Requirements: 1.1, 1.5_
+  - [x] 2.4 Generate preview content
+    - Create sample admin bar HTML
+    - Create sample menu HTML
+    - Create sample content area HTML
+    - Apply selected theme to preview
+    - _Requirements: 1.2_
+
+- [x] 3. Theme Intensity Controls
+  - [x] 3.1 Create intensity control UI
+    - Design slider control (Low, Medium, High)
+    - Add intensity indicator labels
+    - Style control with theme colors
+    - _Requirements: 2.1_
+  - [x] 3.2 Implement CSS custom properties for intensity
+    - Create --mase-intensity-multiplier variable
+    - Create --mase-animation-speed variable
+    - Create --mase-blur-amount variable
+    - Create --mase-glow-intensity variable
+    - _Requirements: 2.2, 2.3, 2.4, 2.5_
+  - [x] 3.3 Apply intensity to all themes
+    - Update terminal theme with intensity variables
+    - Update gaming theme with intensity variables
+    - Update glass theme with intensity variables
+    - Update all other themes with intensity variables
+    - _Requirements: 2.2, 2.3, 2.4, 2.5_
+  - [x] 3.4 Create intensity JavaScript controller
+    - Implement slider change handler
+    - Update CSS custom properties on change
+    - Save intensity preference to WordPress options
+    - Load saved intensity on page load
+    - _Requirements: 2.1_
+
+- [x] 4. Theme Color Variants
+  - [x] 4.1 Design color variant system
+    - Create CSS custom properties for theme colors
+    - Define variant color palettes for each theme
+    - Document color naming conventions
+    - _Requirements: 3.1, 3.2_
+  - [x] 4.2 Implement terminal theme variants
+    - Create green variant (default)
+    - Create blue variant
+    - Create amber variant
+    - Create red variant
+    - _Requirements: 3.5_
+  - [x] 4.3 Implement gaming theme variants
+    - Create cyberpunk variant (default)
+    - Create neon variant
+    - Create matrix variant
+    - _Requirements: 3.1_
+  - [x] 4.4 Implement glass theme variants
+    - Create clear variant (default)
+    - Create tinted blue variant
+    - Create tinted purple variant
+    - _Requirements: 3.1_
+  - [x] 4.5 Implement gradient theme variants
+    - Create warm variant (default)
+    - Create cool variant
+    - Create sunset variant
+    - _Requirements: 3.1_
+  - [x] 4.6 Implement remaining theme variants
+    - Create floral theme variants (3 variants)
+    - Create retro theme variants (3 variants)
+    - Create professional theme variants (3 variants)
+    - Create minimal theme variants (3 variants)
+    - _Requirements: 3.1_
+  - [x] 4.7 Create variant selector UI
+    - Design color swatch selector
+    - Add variant preview on hover
+    - Implement variant selection handler
+    - _Requirements: 3.3_
+  - [x] 4.8 Implement variant switching logic
+    - Update data-variant attribute on selection
+    - Apply variant colors using CSS custom properties
+    - Save variant preference to WordPress options
+    - _Requirements: 3.2, 3.4_
+
+- [x] 5. Advanced Micro-interactions
+  - [x] 5.1 Implement ripple effect
+    - Create ripple CSS animation
+    - Add ripple effect to buttons
+    - Implement click position tracking
+    - _Requirements: 4.1_
+  - [x] 5.2 Implement icon bounce animation
+    - Create bounce keyframe animation
+    - Apply to menu item icons on hover
+    - Add timing function for natural feel
+    - _Requirements: 4.2_
+  - [x] 5.3 Implement form input focus effects
+    - Add smooth color transition on focus
+    - Implement ring shadow animation
+    - Add label float animation
+    - _Requirements: 4.3_
+  - [x] 5.4 Implement card lift effect
+    - Add transform and shadow on hover
+    - Implement smooth transition
+    - Add subtle tilt effect on mouse position
+    - _Requirements: 4.4_
+  - [x] 5.5 Implement notification animations
+    - Create slide-in animation from edge
+    - Add bounce effect on entry
+    - Implement fade-out on dismiss
+    - _Requirements: 4.5_
+
+- [x] 6. Smooth Theme Transitions
+  - [x] 6.1 Create theme transition CSS
+    - Implement crossfade transition (500ms)
+    - Add color transition for all elements
+    - Create stagger effect for elements
+    - _Requirements: 6.1, 6.2, 6.3_
+  - [x] 6.2 Implement theme switching logic
+    - Add loading indicator during switch
+    - Prevent multiple simultaneous switches
+    - Apply new theme with transition
+    - _Requirements: 6.4, 6.5_
+  - [x] 6.3 Create transition JavaScript controller
+    - Handle theme switch request
+    - Coordinate CSS transitions
+    - Update WordPress options after switch
+    - _Requirements: 6.1, 6.5_
+
+- [x] 7. Enhanced Terminal Theme Effects
+  - [x] 7.1 Implement scanline effect
+    - Create scanline overlay with CSS
+    - Add 2s loop animation
+    - Ensure proper z-index layering
+    - _Requirements: 6.1_
+  - [x] 7.2 Implement CRT curvature
+    - Add perspective transform
+    - Apply subtle rotation
+    - Add border-radius for screen effect
+    - _Requirements: 6.2_
+  - [x] 7.3 Implement phosphor persistence
+    - Add multi-layer text-shadow
+    - Create glow trail effect
+    - Adjust intensity based on theme settings
+    - _Requirements: 6.3_
+  - [x] 7.4 Add VHS noise overlay (optional)
+    - Create noise pattern SVG
+    - Add animated overlay
+    - Implement toggle control
+    - _Requirements: 6.4_
+  - [x] 7.5 Enhance cursor animation
+    - Create blinking cursor effect
+    - Add cursor to appropriate elements
+    - Sync with typing animation
+    - _Requirements: 6.5_
+
+- [x] 8. Enhanced Gaming Theme Effects
+  - [x] 8.1 Implement particle system
+    - Create particle background with CSS
+    - Add 20-30 particles with varied sizes
+    - Implement floating animation
+    - _Requirements: 7.1_
+  - [x] 8.2 Implement RGB border cycling
+    - Create color cycling keyframe
+    - Apply to borders with 5s loop
+    - Add smooth color transitions
+    - _Requirements: 7.2_
+  - [x] 8.3 Implement holographic shimmer
+    - Create shimmer gradient overlay
+    - Add hover-triggered animation
+    - Implement smooth transition
+    - _Requirements: 7.3_
+  - [x] 8.4 Implement neon glow pulse
+    - Create pulsing glow animation
+    - Apply to active elements
+    - Adjust intensity based on settings
+    - _Requirements: 7.4_
+  - [x] 8.5 Add mouse trail effect (optional)
+    - Track mouse position with JavaScript
+    - Create light trail visual
+    - Implement fade-out effect
+    - _Requirements: 7.5_
+
+- [x] 9. Enhanced Glass Theme Effects
+  - [x] 9.1 Implement prismatic edge effect
+    - Create rainbow gradient border
+    - Use border-box background-clip
+    - Add subtle animation
+    - _Requirements: 8.1_
+  - [x] 9.2 Implement iridescent hover effect
+    - Create hue-rotate animation
+    - Apply on hover with 3s loop
+    - Add smooth transition
+    - _Requirements: 8.2_
+  - [x] 9.3 Add frost pattern overlay
+    - Create frost SVG pattern
+    - Apply as background overlay
+    - Set appropriate opacity
+    - _Requirements: 8.3_
+  - [x] 9.4 Implement depth-of-field blur
+    - Add layered blur effects
+    - Create depth hierarchy
+    - Adjust blur based on z-index
+    - _Requirements: 8.4_
+  - [x] 9.5 Add caustic light patterns (optional)
+    - Create caustic SVG pattern
+    - Add subtle animation
+    - Apply in light mode only
+    - _Requirements: 8.5_
+
+- [x] 10. Enhanced Gradient Theme Effects
+  - [x] 10.1 Implement mesh gradient
+    - Create radial gradient layers
+    - Add multiple color stops
+    - Implement smooth animation
+    - _Requirements: 9.2_
+  - [x] 10.2 Implement gradient morphing
+    - Create smooth color transitions
+    - Add position animation
+    - Implement 15s loop
+    - _Requirements: 9.1_
+  - [x] 10.3 Add color harmony presets
+    - Create complementary color scheme
+    - Create triadic color scheme
+    - Create analogous color scheme
+    - _Requirements: 9.3_
+  - [x] 10.4 Implement gradient angle rotation
+    - Track scroll position
+    - Rotate gradient based on scroll
+    - Add smooth interpolation
+    - _Requirements: 9.4_
+  - [x] 10.5 Add hover gradient distortion
+    - Track mouse position
+    - Create localized gradient effect
+    - Implement smooth transition
+    - _Requirements: 9.5_
+
+- [x] 11. Enhanced Floral Theme Effects
+  - [x] 11.1 Implement floating petal animation
+    - Create petal elements with CSS
+    - Add floating animation (10-12s)
+    - Randomize petal positions
+    - _Requirements: 10.1_
+  - [x] 11.2 Implement organic shape morphing
+    - Create shape morph animation
+    - Apply on hover
+    - Use smooth bezier curves
+    - _Requirements: 10.2_
+  - [x] 11.3 Add bloom effect on focus
+    - Create expanding ring animation
+    - Apply to focused elements
+    - Add color fade-out
+    - _Requirements: 10.3_
+  - [x] 11.4 Implement gentle sway animation
+    - Create subtle rotation animation
+    - Apply to menu items
+    - Use natural easing
+    - _Requirements: 10.4_
+  - [x] 11.5 Add flower bloom on click
+    - Create bloom keyframe animation
+    - Trigger on button click
+    - Add petal expansion effect
+    - _Requirements: 10.5_
+
+- [x] 12. Enhanced Retro Theme Effects
+  - [x] 12.1 Implement VHS distortion
+    - Create horizontal shift animation
+    - Add color distortion
+    - Implement random glitch timing
+    - _Requirements: 11.1_
+  - [x] 12.2 Implement chromatic aberration
+    - Create RGB channel separation
+    - Use pseudo-elements for effect
+    - Add to headings and important text
+    - _Requirements: 11.2_
+  - [x] 12.3 Add scan line animation
+    - Create horizontal line pattern
+    - Add vertical movement animation
+    - Adjust opacity for subtlety
+    - _Requirements: 11.3_
+  - [x] 12.4 Implement color bleeding effect
+    - Add glow to bright elements
+    - Create color overflow effect
+    - Adjust based on brightness
+    - _Requirements: 11.4_
+  - [x] 12.5 Add film grain overlay
+    - Create noise SVG pattern
+    - Add animated grain effect
+    - Set appropriate opacity
+    - _Requirements: 11.5_
+
+- [x] 13. Theme Customization Panel
+  - [x] 13.1 Create customization panel UI
+    - Design panel layout
+    - Add color picker controls
+    - Add slider controls for effects
+    - Create live preview area
+    - _Requirements: 14.1, 14.2, 14.3, 14.4_
+  - [x] 13.2 Implement color picker functionality
+    - Integrate color picker library
+    - Update CSS custom properties on change
+    - Show live preview of changes
+    - _Requirements: 14.2_
+  - [x] 13.3 Implement effect sliders
+    - Create blur intensity slider
+    - Create shadow depth slider
+    - Create border radius slider
+    - Update styles in real-time
+    - _Requirements: 14.3, 14.4_
+  - [x] 13.4 Implement save/reset functionality
+    - Save customizations to WordPress options
+    - Implement reset to defaults button
+    - Add confirmation dialog
+    - _Requirements: 14.5_
+
+- [x] 14. Theme Export/Import
+  - [x] 14.1 Implement theme export
+    - Collect all theme settings
+    - Generate JSON file
+    - Trigger download
+    - _Requirements: 15.1, 15.2_
+  - [x] 14.2 Implement theme import
+    - Create file upload interface
+    - Parse JSON file
+    - Validate theme data
+    - _Requirements: 15.3, 15.4_
+  - [x] 14.3 Apply imported theme
+    - Update CSS custom properties
+    - Apply all settings
+    - Save to WordPress options
+    - _Requirements: 15.5_
+
+- [x] 15. Animation Controls
+  - [x] 15.1 Create animation control UI
+    - Design speed control slider
+    - Add animation type toggles
+    - Create Performance Mode toggle
+    - _Requirements: 13.1, 13.2, 13.4_
+  - [x] 15.2 Implement animation speed control
+    - Create speed multiplier (0.5x - 2x)
+    - Update CSS animation durations
+    - Save preference to options
+    - _Requirements: 13.1_
+  - [x] 15.3 Implement animation type toggles
+    - Add toggle for hover animations
+    - Add toggle for transition animations
+    - Add toggle for background animations
+    - _Requirements: 13.2_
+  - [x] 15.4 Implement Performance Mode
+    - Disable expensive effects
+    - Remove backdrop-filter
+    - Disable particle systems
+    - _Requirements: 13.4, 13.5_
+  - [x] 15.5 Respect prefers-reduced-motion
+    - Detect system preference
+    - Disable animations when requested
+    - Maintain functionality without animations
+    - _Requirements: 13.3_
+
+- [x] 16. Responsive Optimization
+  - [x] 16.1 Implement mobile animation scaling
+    - Reduce animation complexity on mobile
+    - Disable particle effects on mobile
+    - Reduce blur effects on mobile
+    - _Requirements: 16.1, 16.2, 16.3_
+  - [x] 16.2 Optimize touch interactions
+    - Use simpler transitions on touch devices
+    - Increase touch target sizes
+    - Remove hover-only effects
+    - _Requirements: 16.4_
+  - [x] 16.3 Implement GPU detection
+    - Detect low-end devices
+    - Auto-enable Performance Mode
+    - Show performance recommendations
+    - _Requirements: 16.5_
+
+- [x] 17. Accessibility Enhancements
+  - [x] 17.1 Verify contrast ratios
+    - Test all theme variants
+    - Ensure 4.5:1 minimum contrast
+    - Document any issues
+    - _Requirements: 17.1_
+  - [x] 17.2 Create high-contrast variants
+    - Design high-contrast version of each theme
+    - Increase contrast ratios to 7:1
+    - Add toggle in settings
+    - _Requirements: 17.2_
+  - [x] 17.3 Enhance focus indicators
+    - Ensure 3px minimum outline
+    - Use high-contrast colors
+    - Test visibility in all themes
+    - _Requirements: 17.3_
+  - [x] 17.4 Verify keyboard navigation
+    - Test all interactive elements
+    - Ensure logical tab order
+    - Add skip links where needed
+    - _Requirements: 17.4_
+  - [x] 17.5 Test with animations disabled
+    - Verify functionality without animations
+    - Ensure no content is hidden
+    - Test all interactions
+    - _Requirements: 17.5_
+
+- [x] 18. Performance Monitoring
+  - [x] 18.1 Implement FPS counter
+    - Create FPS monitoring script
+    - Display FPS in admin bar (optional)
+    - Log performance metrics
+    - _Requirements: 18.2_
+  - [x] 18.2 Add performance ratings
+    - Calculate performance impact for each theme
+    - Display rating (Low, Medium, High)
+    - Show in template card
+    - _Requirements: 18.1_
+  - [x] 18.3 Measure CSS file sizes
+    - Calculate total CSS size per theme
+    - Display in theme info
+    - Warn if size exceeds threshold
+    - _Requirements: 18.3_
+  - [x] 18.4 Create performance recommendations
+    - Analyze system capabilities
+    - Suggest appropriate themes
+    - Recommend Performance Mode if needed
+    - _Requirements: 18.4, 18.5_
+
+- [x] 19. Dark Mode Optimization
+  - [x] 19.1 Adjust glow effects for dark mode
+    - Increase glow intensity by 30%
+    - Test visibility on dark backgrounds
+    - Adjust colors for dark mode
+    - _Requirements: 19.1_
+  - [x] 19.2 Optimize shadows for dark mode
+    - Use lighter shadow colors
+    - Increase shadow opacity
+    - Test depth perception
+    - _Requirements: 19.2_
+  - [x] 19.3 Verify glassmorphism in dark mode
+    - Test backdrop-filter on dark backgrounds
+    - Adjust opacity values
+    - Ensure proper contrast
+    - _Requirements: 19.3_
+  - [x] 19.4 Adjust gradient brightness
+    - Increase gradient brightness for dark mode
+    - Test readability
+    - Adjust color stops
+    - _Requirements: 19.4_
+  - [x] 19.5 Optimize color temperature
+    - Use warmer colors in dark mode
+    - Adjust color balance
+    - Test eye comfort
+    - _Requirements: 19.5_
+
+- [-] 20. Theme Scheduling (Optional)
+  - [x] 20.1 Create scheduling UI
+    - Design time-based schedule interface
+    - Add theme selection for each time period
+    - Create visual timeline
+    - _Requirements: 20.1, 20.2_
+  - [x] 20.2 Implement scheduling logic
+    - Check current time
+    - Apply appropriate theme
+    - Handle theme transitions
+    - _Requirements: 20.2, 20.3_
+  - [ ] 20.3 Sync with system dark mode
+    - Detect system dark mode schedule
+    - Apply matching theme schedule
+    - Add toggle for sync
+    - _Requirements: 20.4_
+  - [ ] 20.4 Add schedule indicator
+    - Show active schedule in admin bar
+    - Display next theme change time
+    - Add quick disable option
+    - _Requirements: 20.5_
+
+- [x] 21. Testing and Quality Assurance
+  - [x] 21.1 Visual regression testing
+    - Capture screenshots of all themes
+    - Test all variants
+    - Compare before/after
+    - _Requirements: All_
+  - [x] 21.2 Cross-browser testing
+    - Test in Chrome
+    - Test in Firefox
+    - Test in Safari
+    - Test in Edge
+    - _Requirements: All_
+  - [x] 21.3 Mobile device testing
+    - Test on iOS devices
+    - Test on Android devices
+    - Test various screen sizes
+    - _Requirements: 16.1, 16.2, 16.3_
+  - [x] 21.4 Performance testing
+    - Measure FPS for all themes
+    - Test memory usage
+    - Measure load times
+    - Run Lighthouse audits
+    - _Requirements: 18.1, 18.2, 18.3_
+  - [x] 21.5 Accessibility testing
+    - Run automated accessibility tests
+    - Test with screen readers
+    - Verify keyboard navigation
+    - Test with reduced motion
+    - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5_
+
+- [x] 22. Documentation
+  - [x] 22.1 Document new features
+    - Write user guide for preview system
+    - Document intensity controls
+    - Explain color variants
+    - Document customization panel
+    - _Requirements: All_
+  - [x] 22.2 Create developer documentation
+    - Document CSS custom properties
+    - Explain JavaScript APIs
+    - Provide code examples
+    - Document theme structure
+    - _Requirements: All_
+  - [x] 22.3 Update changelog
+    - List all new features
+    - Document breaking changes
+    - Provide migration guide
+    - _Requirements: All_
+
+- [x] 23. Deployment
+  - [x] 23.1 Prepare for release
+    - Minify CSS files
+    - Minify JavaScript files
+    - Optimize images
+    - Test production build
+    - _Requirements: All_
+  - [x] 23.2 Create rollback plan
+    - Document rollback procedure
+    - Create backup of current version
+    - Test rollback process
+    - _Requirements: All_
+  - [x] 23.3 Deploy to production
+    - Merge to main branch
+    - Deploy to production
+    - Monitor for issues
+    - Gather user feedback
+    - _Requirements: All_

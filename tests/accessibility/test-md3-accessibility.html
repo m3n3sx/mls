@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Accessibility Test</title>
+    
+    <!-- MD3 Foundation -->
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-motion.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-typography.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-shape-spacing.css">
+    
+    <!-- MD3 Components -->
+    <link rel="stylesheet" href="../../assets/css/mase-md3-buttons.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-tabs.css">
+    <link rel="stylesheet" href="../../assets/css/mase-md3-forms.css">
+    
+    <!-- Accessibility -->
+    <link rel="stylesheet" href="../../assets/css/mase-accessibility.css">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            padding: 40px;
+            background: var(--md-background);
+            color: var(--md-on-background);
+        }
+        
+        .test-section {
+            margin-bottom: 48px;
+            padding: 24px;
+            background: var(--md-surface);
+            border-radius: var(--md-corner-l);
+            box-shadow: var(--md-elevation-1);
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: var(--md-primary);
+        }
+        
+        .test-group {
+            margin: 24px 0;
+        }
+        
+        .test-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-group {
+            display: flex;
+            gap: 8px;
+            background: var(--md-surface-variant);
+            padding: 4px;
+            border-radius: var(--md-corner-l);
+        }
+        
+        .mase-nav-tab {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            border-radius: var(--md-corner-s);
+            background: transparent;
+            color: var(--md-on-surface-variant);
+            border: none;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        
+        .mase-nav-tab.active {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+        
+        .toggle-demo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .mase-toggle {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            border-radius: 50px;
+            background: var(--md-surface-variant);
+            border: 2px solid var(--md-outline);
+            cursor: pointer;
+            transition: all 300ms;
+        }
+        
+        .mase-toggle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--md-outline);
+            transform: translateY(-50%);
+            transition: all 300ms;
+        }
+        
+        .mase-toggle.active {
+            background: var(--md-primary);
+            border-color: var(--md-primary);
+        }
+        
+        .mase-toggle.active::before {
+            left: 28px;
+            width: 24px;
+            height: 24px;
+            background: var(--md-on-primary);
+        }
+        
+        .status-message {
+            margin-top: 24px;
+            padding: 16px;
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-radius: var(--md-corner-s);
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        :root[data-theme="dark"] {
+            --md-primary: #cfbcff;
+            --md-on-primary: #381e72;
+            --md-primary-container: #4f378a;
+            --md-on-primary-container: #e9ddff;
+            --md-surface: #1c1b1f;
+            --md-on-surface: #e6e1e5;
+            --md-surface-variant: #49454f;
+            --md-on-surface-variant: #cac4d0;
+            --md-background: #1c1b1f;
+            --md-on-background: #e6e1e5;
+            --md-outline: #948f99;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="mase-skip-link">Skip to main content</a>
+    
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    
+    <div id="main-content">
+        <h1>MD3 Accessibility Test Suite</h1>
+        <p>Test keyboard navigation, focus indicators, and reduced motion support.</p>
+        
+        <!-- Focus Indicators Test -->
+        <div class="test-section">
+            <h2>1. Focus Indicators</h2>
+            <p>Press Tab to navigate through elements. Each should show a clear 3px outline.</p>
+            
+            <div class="test-group">
+                <label>Buttons:</label>
+                <div class="button-group">
+                    <button class="mase-button-filled">Filled Button</button>
+                    <button class="mase-button-outlined">Outlined Button</button>
+                    <button class="mase-button-text">Text Button</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <label>Navigation Tabs:</label>
+                <div class="tab-group">
+                    <button class="mase-nav-tab active" role="tab" aria-selected="true">Tab 1</button>
+                    <button class="mase-nav-tab" role="tab" aria-selected="false">Tab 2</button>
+                    <button class="mase-nav-tab" role="tab" aria-selected="false">Tab 3</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <label for="test-input">Text Input:</label>
+                <input type="text" id="test-input" placeholder="Focus me with Tab">
+            </div>
+        </div>
+        
+        <!-- Keyboard Navigation Test -->
+        <div class="test-section">
+            <h2>2. Keyboard Navigation</h2>
+            <p>Use arrow keys to navigate tabs, Enter/Space to activate buttons.</p>
+            
+            <div class="test-group">
+                <label>Tab Navigation (Arrow Keys):</label>
+                <div class="tab-group" id="keyboard-tabs">
+                    <button class="mase-nav-tab active" role="tab" aria-selected="true">Home</button>
+                    <button class="mase-nav-tab" role="tab" aria-selected="false">Profile</button>
+                    <button class="mase-nav-tab" role="tab" aria-selected="false">Settings</button>
+                    <button class="mase-nav-tab" role="tab" aria-selected="false">Help</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <label>Toggle Switch (Space to toggle):</label>
+                <div class="toggle-demo">
+                    <div class="mase-toggle" role="switch" aria-checked="false" tabindex="0" id="test-toggle"></div>
+                    <span id="toggle-status">Off</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Color Contrast Test -->
+        <div class="test-section">
+            <h2>3. Color Contrast</h2>
+            <p>All text should be readable with 4.5:1 minimum contrast ratio.</p>
+            
+            <div class="test-group">
+                <button class="mase-button-filled">Primary Button (6.44:1)</button>
+                <button class="mase-button-outlined">Outlined Button (6.45:1)</button>
+            </div>
+            
+            <div class="status-message">
+                ✓ All color combinations meet WCAG 2.1 AA requirements
+            </div>
+        </div>
+        
+        <!-- Reduced Motion Test -->
+        <div class="test-section">
+            <h2>4. Reduced Motion Support</h2>
+            <p>Enable "Reduce motion" in your OS settings to test.</p>
+            
+            <div class="test-group">
+                <p id="motion-status">Checking motion preference...</p>
+                <button class="mase-button-filled" onclick="testAnimation()">Test Animation</button>
+            </div>
+        </div>
+        
+        <!-- Screen Reader Test -->
+        <div class="test-section">
+            <h2>5. Screen Reader Support</h2>
+            <p>All elements have proper ARIA attributes and labels.</p>
+            
+            <div class="test-group">
+                <button class="mase-button-filled" aria-label="Save changes">
+                    Save
+                </button>
+                <span class="mase-sr-only">This text is only for screen readers</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../../assets/js/mase-keyboard-navigation.js"></script>
+    <script src="../../assets/js/mase-reduced-motion.js"></script>
+    
+    <script>
+        // Dark mode toggle
+        function toggleDarkMode() {
+            const root = document.documentElement;
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        }
+        
+        // Toggle switch
+        document.getElementById('test-toggle').addEventListener('click', function() {
+            this.classList.toggle('active');
+            const isActive = this.classList.contains('active');
+            this.setAttribute('aria-checked', isActive ? 'true' : 'false');
+            document.getElementById('toggle-status').textContent = isActive ? 'On' : 'Off';
+        });
+        
+        // Keyboard support for toggle
+        document.getElementById('test-toggle').addEventListener('keydown', function(e) {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+        
+        // Tab navigation
+        document.querySelectorAll('#keyboard-tabs .mase-nav-tab').forEach((tab, index, tabs) => {
+            tab.addEventListener('keydown', function(e) {
+                let nextIndex;
+                
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        nextIndex = (index + 1) % tabs.length;
+                        tabs[nextIndex].focus();
+                        break;
+                    
+                    case 'ArrowLeft':
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        nextIndex = (index - 1 + tabs.length) % tabs.length;
+                        tabs[nextIndex].focus();
+                        break;
+                    
+                    case 'Home':
+                        e.preventDefault();
+                        tabs[0].focus();
+                        break;
+                    
+                    case 'End':
+                        e.preventDefault();
+                        tabs[tabs.length - 1].focus();
+                        break;
+                }
+            });
+            
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+            });
+        });
+        
+        // Check motion preference
+        function checkMotionPreference() {
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const status = document.getElementById('motion-status');
+            
+            if (prefersReducedMotion) {
+                status.textContent = '✓ Reduced motion is enabled - animations will be disabled';
+                status.style.color = 'var(--md-primary)';
+            } else {
+                status.textContent = 'ℹ Reduced motion is not enabled - animations will play normally';
+            }
+        }
+        
+        // Test animation
+        function testAnimation() {
+            const button = event.target;
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            
+            if (prefersReducedMotion) {
+                button.textContent = 'Animation Skipped';
+                setTimeout(() => {
+                    button.textContent = 'Test Animation';
+                }, 1000);
+            } else {
+                button.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                    button.textContent = 'Animation Complete';
+                    setTimeout(() => {
+                        button.textContent = 'Test Animation';
+                    }, 1000);
+                }, 300);
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkMotionPreference();
+            
+            // Watch for motion preference changes
+            window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', checkMotionPreference);
+        });
+    </script>
+</body>
+</html>

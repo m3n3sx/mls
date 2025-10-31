@@ -1,136 +1,376 @@
-/**
- * Terminal Linux Theme
- * Matrix-style hacker/developer theme
- */
-
 .mase-template-terminal {
-    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
-                linear-gradient(0deg, #000000 0%, #0a0a0a 100%);
-    color: #00ff41;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    border: 2px solid #00ff41;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
-}
+ background: radial-gradient(circle at 50% 50%, var(--terminal-glow, rgba(0, 255, 65, 0.1)) 0%, transparent 50%),
+ linear-gradient(0deg, #000 0%, #0a0a0a 100%);
+ color: var(--terminal-primary, #00ff41);
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ font-size: 14px;
+ letter-spacing: 0.5px;
+ border: 3px solid var(--terminal-primary, #00ff41);
+ border-radius: 4px;
+ box-shadow:
+ 0 0 calc(30px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 0.5)),
+ 0 0 calc(60px * var(--mase-glow-intensity, 1)) var(--terminal-shadow, rgba(0, 255, 65, 0.3)),
+ inset 0 0 calc(20px * var(--mase-blur-amount, 20px) / 20) var(--terminal-glow, rgba(0, 255, 65, 0.1));
+ text-shadow: 0 0 calc(10px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 0.8));
+ transition: all var(--mase-transition-duration, 300ms) ease}
 
-/* Admin Bar Terminal Style */
 .mase-template-terminal #wpadminbar {
-    background: #000000;
-    border-bottom: 2px solid #00ff41;
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-}
+ background: #000;
+ border-bottom: 3px solid var(--terminal-primary, #00ff41);
+ box-shadow:
+ 0 0 calc(20px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 0.4)),
+ 0 4px calc(12px * var(--mase-shadow-depth, 1)) rgba(0, 0, 0, 0.8)}
 
 .mase-template-terminal #wpadminbar .ab-item,
 .mase-template-terminal #wpadminbar a.ab-item,
 .mase-template-terminal #wpadminbar > #wp-toolbar span.ab-label,
 .mase-template-terminal #wpadminbar > #wp-toolbar span.noticon {
-    color: #00ff41;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
-}
+ color: var(--terminal-primary, #00ff41);
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ font-size: 13px;
+ font-weight: 500;
+ letter-spacing: 0.5px;
+ text-shadow: 0 0 calc(10px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 0.7));
+ transition: all var(--mase-transition-duration, 300ms) cubic-bezier(0.4, 0, 0.2, 1)}
 
 .mase-template-terminal #wpadminbar .ab-item:hover,
 .mase-template-terminal #wpadminbar a.ab-item:hover {
-    background: rgba(0, 255, 65, 0.1);
-    color: #00ff41;
-    text-shadow: 0 0 12px rgba(0, 255, 65, 0.9);
-    animation: terminalGlow 0.3s ease;
-}
+ background: var(--terminal-glow, rgba(0, 255, 65, 0.15));
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 calc(15px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 1));
+ border-radius: 4px;
+ box-shadow: 0 0 calc(10px * var(--mase-glow-intensity, 1)) var(--terminal-glow, rgba(0, 255, 65, 0.3));
+ animation: terminalGlow var(--mase-transition-duration, 300ms) ease}
 
-/* Admin Menu Terminal Style */
 .mase-template-terminal #adminmenu {
-    background: linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%);
-    border-right: 2px solid #00ff41;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-}
+ background: linear-gradient(180deg, #000 0%, #0a0a0a 50%, #000 100%);
+ border-right: 3px solid var(--terminal-primary, #00ff41);
+ box-shadow:
+ 0 0 30px var(--terminal-shadow, rgba(0, 255, 65, 0.3)),
+ 4px 0 12px rgba(0, 0, 0, 0.8)}
 
 .mase-template-terminal #adminmenu .wp-submenu,
 .mase-template-terminal #adminmenu .wp-has-current-submenu .wp-submenu {
-    background: #000000;
-    border-left: 2px solid rgba(0, 255, 65, 0.3);
-}
+ background: #000;
+ border-left: 3px solid var(--terminal-glow, rgba(0, 255, 65, 0.4));
+ border-radius: 0 4px 4px 0;
+ box-shadow: 2px 0 12px var(--terminal-shadow, rgba(0, 255, 65, 0.2))}
 
 .mase-template-terminal #adminmenu a {
-    color: #00ff41;
-    font-family: 'Fira Code', 'Courier New', monospace;
-    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-}
+ color: var(--terminal-primary, #00ff41);
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ font-size: 13px;
+ font-weight: 500;
+ letter-spacing: 0.5px;
+ text-shadow: 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 0.6));
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ border-radius: 4px;
+ margin: 2px 6px}
 
 .mase-template-terminal #adminmenu a:hover,
 .mase-template-terminal #adminmenu li.menu-top:hover,
 .mase-template-terminal #adminmenu li.opensub > a.menu-top,
 .mase-template-terminal #adminmenu li > a.menu-top:focus {
-    background: rgba(0, 255, 65, 0.15);
-    color: #00ff41;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
-    border-left: 3px solid #00ff41;
-}
+ background: var(--terminal-glow, rgba(0, 255, 65, 0.2));
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 12px var(--terminal-glow, rgba(0, 255, 65, 1));
+ border-left: 3px solid var(--terminal-primary, #00ff41);
+ box-shadow:
+ 0 0 15px var(--terminal-shadow, rgba(0, 255, 65, 0.3)),
+ inset 0 0 10px var(--terminal-glow, rgba(0, 255, 65, 0.1));
+ transform: translateX(4px)}
 
 .mase-template-terminal #adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head,
 .mase-template-terminal #adminmenu .wp-menu-arrow,
 .mase-template-terminal #adminmenu .wp-menu-arrow div,
 .mase-template-terminal #adminmenu li.current a.menu-top,
 .mase-template-terminal #adminmenu li.wp-has-current-submenu a.wp-has-current-submenu {
-    background: rgba(0, 255, 65, 0.2);
-    color: #00ff41;
-    border-left: 4px solid #00ff41;
-}
+ background: var(--terminal-glow, rgba(0, 255, 65, 0.25));
+ color: var(--terminal-primary, #00ff41);
+ border-left: 4px solid var(--terminal-primary, #00ff41);
+ font-weight: 700;
+ box-shadow: 0 0 20px var(--terminal-shadow, rgba(0, 255, 65, 0.4))}
 
-/* Blinking Cursor Animation */
 .mase-template-terminal #adminmenu a::after {
-    content: '▮';
-    margin-left: 5px;
-    animation: terminalBlink 1s infinite;
-    opacity: 0;
-}
+ content: '▮';
+ margin-left: 5px;
+ animation: terminalBlink 1s infinite;
+ opacity: 0}
 
 .mase-template-terminal #adminmenu a:hover::after {
-    opacity: 1;
-}
+ opacity: 1}
 
 @keyframes terminalBlink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
+ 0%, 49% { opacity: 1}
+ 50%, 100% { opacity: 0}
 }
 
 @keyframes terminalGlow {
-    0% { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
-    50% { text-shadow: 0 0 20px rgba(0, 255, 65, 1); }
-    100% { text-shadow: 0 0 8px rgba(0, 255, 65, 0.6); }
+ 0% { text-shadow: 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 0.6))}
+ 50% { text-shadow: 0 0 20px var(--terminal-glow, rgba(0, 255, 65, 1))}
+ 100% { text-shadow: 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 0.6))}
 }
 
-/* Content Area */
 .mase-template-terminal .wrap {
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(0, 255, 65, 0.3);
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+ background: rgba(0, 0, 0, 0.9);
+ border: 2px solid var(--terminal-glow, rgba(0, 255, 65, 0.4));
+ border-radius: 4px;
+ padding: 24px;
+ box-shadow:
+ 0 0 40px var(--terminal-shadow, rgba(0, 255, 65, 0.3)),
+ inset 0 0 20px var(--terminal-glow, rgba(0, 255, 65, 0.05))}
+
+.mase-template-terminal h1,
+.mase-template-terminal h2,
+.mase-template-terminal h3 {
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 12px var(--terminal-glow, rgba(0, 255, 65, 0.8));
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ font-weight: 700;
+ letter-spacing: 1px;
+ line-height: 1.3}
+
+.mase-template-terminal h1 {
+ font-size: 26px}
+
+.mase-template-terminal h2 {
+ font-size: 20px}
+
+.mase-template-terminal p,
+.mase-template-terminal label {
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ line-height: 1.6}
+
+.mase-template-terminal .button,
+.mase-template-terminal .button-primary {
+ background: #000;
+ border: 2px solid var(--terminal-primary, #00ff41);
+ border-radius: 4px;
+ padding: 10px 20px;
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 0.6));
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ font-size: 13px;
+ font-weight: 600;
+ letter-spacing: 0.5px;
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ box-shadow: 0 0 10px var(--terminal-shadow, rgba(0, 255, 65, 0.3))}
+
+.mase-template-terminal .button:hover,
+.mase-template-terminal .button-primary:hover {
+ background: var(--terminal-glow, rgba(0, 255, 65, 0.15));
+ border-color: var(--terminal-primary, #00ff41);
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 15px var(--terminal-glow, rgba(0, 255, 65, 1));
+ box-shadow:
+ 0 0 25px var(--terminal-shadow, rgba(0, 255, 65, 0.5)),
+ 0 4px 12px rgba(0, 0, 0, 0.5);
+ transform: translateY(-2px)}
+
+.mase-template-terminal .button:active,
+.mase-template-terminal .button-primary:active {
+ transform: translateY(0);
+ box-shadow: 0 0 15px var(--terminal-shadow, rgba(0, 255, 65, 0.4))}
+
+.mase-template-terminal input[type="text"],
+.mase-template-terminal input[type="password"],
+.mase-template-terminal input[type="email"],
+.mase-template-terminal input[type="number"],
+.mase-template-terminal textarea,
+.mase-template-terminal select {
+ background: #000;
+ border: 2px solid var(--terminal-glow, rgba(0, 255, 65, 0.4));
+ border-radius: 4px;
+ color: var(--terminal-primary, #00ff41);
+ font-family: 'Fira Code', 'Courier New', 'Consolas', monospace;
+ padding: 8px 12px;
+ text-shadow: 0 0 5px var(--terminal-glow, rgba(0, 255, 65, 0.5));
+ transition: all 0.3s ease}
+
+.mase-template-terminal input[type="text"]:focus,
+.mase-template-terminal input[type="password"]:focus,
+.mase-template-terminal input[type="email"]:focus,
+.mase-template-terminal input[type="number"]:focus,
+.mase-template-terminal textarea:focus,
+.mase-template-terminal select:focus {
+ outline: none;
+ border-color: var(--terminal-primary, #00ff41);
+ box-shadow:
+ 0 0 0 3px var(--terminal-glow, rgba(0, 255, 65, 0.2)),
+ 0 0 20px var(--terminal-shadow, rgba(0, 255, 65, 0.4));
+ text-shadow: 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 0.7))}
+
+
+/* Enhanced Terminal Effects */
+
+/* 7.1 Scanline Effect */
+.mase-template-terminal::before {
+ content: '';
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: linear-gradient(
+ to bottom,
+ transparent 50%,
+ rgba(0, 255, 65, 0.05) 50%
+ );
+ background-size: 100% 4px;
+ animation: scanline 2s linear infinite;
+ pointer-events: none;
+ z-index: 999998;
+ opacity: 0.6;
+}
+
+@keyframes scanline {
+ 0% { transform: translateY(0); }
+ 100% { transform: translateY(4px); }
+}
+
+/* 7.2 CRT Curvature */
+.mase-template-terminal .wrap {
+ transform: perspective(1000px) rotateX(0.5deg);
+ transform-style: preserve-3d;
+}
+
+.mase-template-terminal #wpwrap {
+ perspective: 1000px;
+ perspective-origin: 50% 50%;
+}
+
+/* 7.3 Phosphor Persistence - Enhanced multi-layer glow */
+.mase-template-terminal * {
+ text-shadow: 
+ 0 0 5px var(--terminal-glow, rgba(0, 255, 65, 0.8)),
+ 0 0 10px var(--terminal-glow, rgba(0, 255, 65, 0.6)),
+ 0 0 15px var(--terminal-glow, rgba(0, 255, 65, 0.4)),
+ 0 0 20px var(--terminal-glow, rgba(0, 255, 65, 0.2));
 }
 
 .mase-template-terminal h1,
 .mase-template-terminal h2,
 .mase-template-terminal h3 {
-    color: #00ff41;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
-    font-family: 'Fira Code', 'Courier New', monospace;
+ text-shadow: 
+ 0 0 8px var(--terminal-glow, rgba(0, 255, 65, 1)),
+ 0 0 16px var(--terminal-glow, rgba(0, 255, 65, 0.8)),
+ 0 0 24px var(--terminal-glow, rgba(0, 255, 65, 0.6)),
+ 0 0 32px var(--terminal-glow, rgba(0, 255, 65, 0.4)),
+ 0 0 40px var(--terminal-glow, rgba(0, 255, 65, 0.2));
 }
 
-/* Buttons */
-.mase-template-terminal .button,
-.mase-template-terminal .button-primary {
-    background: #000000;
-    border: 2px solid #00ff41;
-    color: #00ff41;
-    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
-    font-family: 'Fira Code', 'Courier New', monospace;
+/* 7.4 VHS Noise Overlay (Optional - controlled by data attribute) */
+.mase-template-terminal[data-vhs-noise="true"]::after {
+ content: '';
+ position: fixed;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMzAwdjMwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=');
+ background-size: 100px 100px;
+ animation: vhsNoise 0.2s steps(10) infinite;
+ pointer-events: none;
+ z-index: 999999;
+ opacity: 0.15;
+ mix-blend-mode: overlay;
 }
 
-.mase-template-terminal .button:hover,
-.mase-template-terminal .button-primary:hover {
-    background: rgba(0, 255, 65, 0.1);
-    border-color: #00ff41;
-    color: #00ff41;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+@keyframes vhsNoise {
+ 0%, 100% { transform: translate(0, 0); }
+ 10% { transform: translate(-5%, -5%); }
+ 20% { transform: translate(5%, 5%); }
+ 30% { transform: translate(-5%, 5%); }
+ 40% { transform: translate(5%, -5%); }
+ 50% { transform: translate(-2%, 2%); }
+ 60% { transform: translate(2%, -2%); }
+ 70% { transform: translate(-3%, -3%); }
+ 80% { transform: translate(3%, 3%); }
+ 90% { transform: translate(-1%, 1%); }
+}
+
+/* 7.5 Enhanced Cursor Animation */
+.mase-template-terminal #adminmenu a::after {
+ content: '▮';
+ margin-left: 5px;
+ animation: terminalCursorBlink 1s infinite;
+ opacity: 0;
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 10px var(--terminal-glow, rgba(0, 255, 65, 1));
+}
+
+.mase-template-terminal #adminmenu a:hover::after {
+ opacity: 1;
+}
+
+@keyframes terminalCursorBlink {
+ 0%, 49% { 
+ opacity: 1;
+ text-shadow: 0 0 10px var(--terminal-glow, rgba(0, 255, 65, 1));
+ }
+ 50%, 100% { 
+ opacity: 0;
+ text-shadow: none;
+ }
+}
+
+/* Add cursor to input fields */
+.mase-template-terminal input[type="text"]:focus,
+.mase-template-terminal input[type="password"]:focus,
+.mase-template-terminal input[type="email"]:focus,
+.mase-template-terminal input[type="number"]:focus,
+.mase-template-terminal textarea:focus {
+ caret-color: var(--terminal-primary, #00ff41);
+ caret-shape: block;
+}
+
+/* Typing animation for headings */
+.mase-template-terminal h1::after,
+.mase-template-terminal h2::after {
+ content: '▮';
+ margin-left: 8px;
+ animation: terminalCursorBlink 1s infinite;
+ font-size: 0.9em;
+ color: var(--terminal-primary, #00ff41);
+ text-shadow: 0 0 12px var(--terminal-glow, rgba(0, 255, 65, 1));
+}
+
+/* Intensity-based adjustments for effects */
+.mase-template-terminal[data-intensity="low"]::before {
+ opacity: 0.3;
+}
+
+.mase-template-terminal[data-intensity="high"]::before {
+ opacity: 0.9;
+}
+
+.mase-template-terminal[data-intensity="low"][data-vhs-noise="true"]::after {
+ opacity: 0.08;
+}
+
+.mase-template-terminal[data-intensity="high"][data-vhs-noise="true"]::after {
+ opacity: 0.25;
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+ .mase-template-terminal #wpadminbar .ab-item:hover,
+ .mase-template-terminal #wpadminbar a.ab-item:hover {
+ animation: none;
+ }
+ 
+ .mase-template-terminal::before {
+ animation: none;
+ }
+ 
+ .mase-template-terminal[data-vhs-noise="true"]::after {
+ animation: none;
+ }
+ 
+ .mase-template-terminal #adminmenu a::after,
+ .mase-template-terminal h1::after,
+ .mase-template-terminal h2::after {
+ animation: none;
+ opacity: 1;
+ }
 }

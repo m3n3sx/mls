@@ -1,0 +1,403 @@
+/**
+ * Modern Admin Styler - Responsive Optimization Styles
+ * 
+ * Mobile animation scaling, touch interactions, and performance optimizations
+ * Requirements: 16.1, 16.2, 16.3, 16.4, 16.5
+ * 
+ * @package MASE
+ * @since 1.3.0
+ */
+
+/* ============================================================================
+   CSS Custom Properties for Responsive Optimization
+   ============================================================================ */
+
+:root {
+    /* Mobile animation speed multiplier (Requirement 16.1) */
+    --mase-mobile-animation-speed: 1;
+    --mase-mobile-animation-iterations: infinite;
+    
+    /* Particle effects control (Requirement 16.2) */
+    --mase-particles-enabled: 1;
+    
+    /* Blur reduction for mobile (Requirement 16.3) */
+    --mase-mobile-blur-reduction: 1;
+    --mase-mobile-shadow-blur: 1;
+    
+    /* Touch device transitions (Requirement 16.4) */
+    --mase-touch-transition-duration: 300ms;
+    --mase-touch-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================================
+   Mobile Device Optimizations (< 768px)
+   Requirements: 16.1, 16.2, 16.3
+   ============================================================================ */
+
+/* Reduce animation complexity on mobile (Requirement 16.1) */
+.mase-mobile-device * {
+    /* Reduce animation duration by 50% */
+    animation-duration: calc(var(--mase-animation-speed, 1s) * var(--mase-mobile-animation-speed, 0.5)) !important;
+    
+    /* Limit animation iterations */
+    animation-iteration-count: var(--mase-mobile-animation-iterations, 1) !important;
+}
+
+/* Disable expensive animations on mobile */
+.mase-mobile-device .mase-animated-complex,
+.mase-mobile-device [class*="morph"],
+.mase-mobile-device [class*="shimmer"],
+.mase-mobile-device [class*="distortion"] {
+    animation: none !important;
+}
+
+/* Disable particle effects on mobile (Requirement 16.2) */
+.mase-mobile-device .mase-particles,
+.mase-mobile-device .mase-particle-system,
+.mase-mobile-device [class*="particle"] {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+/* Reduce blur effects on mobile (Requirement 16.3) */
+.mase-mobile-device [class*="glass"],
+.mase-mobile-device [class*="blur"],
+.mase-mobile-device .mase-glassmorphism {
+    /* Reduce backdrop-filter blur by 70% */
+    backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * var(--mase-mobile-blur-reduction, 0.3))) !important;
+    -webkit-backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * var(--mase-mobile-blur-reduction, 0.3))) !important;
+}
+
+/* Reduce box-shadow blur on mobile */
+.mase-mobile-device * {
+    box-shadow: 0 0 calc(10px * var(--mase-mobile-shadow-blur, 0.5)) rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Disable expensive visual effects on mobile */
+.mase-mobile-device .mase-scanline,
+.mase-mobile-device .mase-vhs-noise,
+.mase-mobile-device .mase-film-grain,
+.mase-mobile-device .mase-frost-pattern,
+.mase-mobile-device .mase-caustic-light {
+    display: none !important;
+}
+
+/* Simplify gradients on mobile */
+.mase-mobile-device [class*="gradient"] {
+    background-size: 100% 100% !important;
+    animation: none !important;
+}
+
+/* ============================================================================
+   Touch Device Optimizations
+   Requirement 16.4
+   ============================================================================ */
+
+/* Increase touch target sizes (Requirement 16.4) */
+.mase-touch-device button,
+.mase-touch-device .button,
+.mase-touch-device a.button,
+.mase-touch-device input[type="button"],
+.mase-touch-device input[type="submit"],
+.mase-touch-device .mase-palette-apply-btn,
+.mase-touch-device .mase-template-apply-btn {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    padding: 12px 16px !important;
+}
+
+/* Increase touch target sizes for interactive elements */
+.mase-touch-device .mase-tab-button,
+.mase-touch-device .mase-toggle-switch,
+.mase-touch-device input[type="checkbox"],
+.mase-touch-device input[type="radio"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+}
+
+/* Use simpler transitions on touch devices (Requirement 16.4) */
+.mase-touch-device * {
+    transition-duration: var(--mase-touch-transition-duration, 150ms) !important;
+    transition-timing-function: var(--mase-touch-transition-timing, ease-out) !important;
+}
+
+/* Remove hover-only effects on touch devices (Requirement 16.4) */
+.mase-no-hover *:hover {
+    transform: none !important;
+}
+
+.mase-no-hover .mase-card:hover,
+.mase-no-hover .mase-palette-card:hover,
+.mase-no-hover .mase-template-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Disable hover animations on touch devices */
+.mase-no-hover [class*="hover-"],
+.mase-no-hover .mase-hover-effect {
+    animation: none !important;
+}
+
+/* Simplify card interactions on touch */
+.mase-touch-device .mase-card,
+.mase-touch-device .mase-palette-card,
+.mase-touch-device .mase-template-card {
+    transition: box-shadow 150ms ease-out !important;
+}
+
+/* Add active state for touch feedback */
+.mase-touch-device button:active,
+.mase-touch-device .button:active,
+.mase-touch-device .mase-card:active {
+    transform: scale(0.98) !important;
+    opacity: 0.9 !important;
+}
+
+/* ============================================================================
+   Performance Mode
+   Requirement 16.5
+   ============================================================================ */
+
+/* Disable all expensive effects in Performance Mode */
+[data-performance-mode="true"] * {
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+/* Keep essential transitions for usability */
+[data-performance-mode="true"] button,
+[data-performance-mode="true"] .button,
+[data-performance-mode="true"] a {
+    transition: opacity 100ms ease-out !important;
+}
+
+/* Disable particle systems in Performance Mode */
+[data-performance-mode="true"] .mase-particles,
+[data-performance-mode="true"] .mase-particle-system,
+[data-performance-mode="true"] [class*="particle"] {
+    display: none !important;
+}
+
+/* Disable complex visual effects in Performance Mode */
+[data-performance-mode="true"] .mase-scanline,
+[data-performance-mode="true"] .mase-vhs-noise,
+[data-performance-mode="true"] .mase-film-grain,
+[data-performance-mode="true"] .mase-frost-pattern,
+[data-performance-mode="true"] .mase-caustic-light,
+[data-performance-mode="true"] [class*="glow"],
+[data-performance-mode="true"] [class*="shimmer"],
+[data-performance-mode="true"] [class*="morph"] {
+    display: none !important;
+}
+
+/* Simplify backgrounds in Performance Mode */
+[data-performance-mode="true"] [class*="gradient"] {
+    background: var(--mase-surface, #ffffff) !important;
+}
+
+/* Use solid colors instead of glassmorphism */
+[data-performance-mode="true"] [class*="glass"] {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* ============================================================================
+   Tablet Optimizations (768px - 1024px)
+   ============================================================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Slightly reduce animation complexity on tablets */
+    .mase-animated-complex {
+        animation-duration: calc(var(--mase-animation-speed, 1s) * 0.75) !important;
+    }
+    
+    /* Reduce particle count on tablets */
+    .mase-particle-system {
+        opacity: 0.7 !important;
+    }
+}
+
+/* ============================================================================
+   Low-End Device Detection
+   ============================================================================ */
+
+/* Additional optimizations for detected low-end devices */
+.mase-low-end-device * {
+    animation: none !important;
+    transition-duration: 100ms !important;
+}
+
+.mase-low-end-device .mase-particles,
+.mase-low-end-device .mase-particle-system {
+    display: none !important;
+}
+
+.mase-low-end-device [class*="glass"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ============================================================================
+   Reduced Motion Preference
+   ============================================================================ */
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .mase-particles,
+    .mase-particle-system,
+    [class*="particle"] {
+        display: none !important;
+    }
+}
+
+/* ============================================================================
+   GPU Acceleration Hints
+   ============================================================================ */
+
+/* Force GPU acceleration for critical animations only */
+.mase-gpu-accelerated {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Remove will-change after animation completes */
+.mase-gpu-accelerated:not(:hover):not(:active):not(.animating) {
+    will-change: auto;
+}
+
+/* ============================================================================
+   Connection-Based Optimizations
+   ============================================================================ */
+
+/* Reduce effects on slow connections */
+@media (prefers-reduced-data: reduce) {
+    .mase-particles,
+    .mase-particle-system,
+    [class*="particle"] {
+        display: none !important;
+    }
+    
+    [class*="glass"] {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    
+    * {
+        animation: none !important;
+    }
+}
+
+/* ============================================================================
+   Performance Recommendation Notice
+   ============================================================================ */
+
+.mase-performance-recommendation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 300px;
+    padding: 16px;
+    background: #fff;
+    border-left: 4px solid #f59e0b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    z-index: 999999;
+    animation: slideInRight 300ms ease-out;
+}
+
+.mase-performance-recommendation-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f59e0b;
+}
+
+.mase-performance-recommendation-message {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+.mase-performance-recommendation-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.mase-performance-recommendation-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 150ms ease-out;
+}
+
+.mase-performance-recommendation-btn:hover {
+    opacity: 0.8;
+}
+
+.mase-performance-recommendation-btn-primary {
+    background: #f59e0b;
+    color: #fff;
+}
+
+.mase-performance-recommendation-btn-secondary {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================================================
+   Mobile-Specific Layout Adjustments
+   ============================================================================ */
+
+@media (max-width: 767px) {
+    /* Ensure touch targets are large enough */
+    .mase-palette-card,
+    .mase-template-card {
+        min-height: 120px;
+    }
+    
+    /* Simplify card layouts on mobile */
+    .mase-card-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    /* Stack buttons vertically on mobile */
+    .mase-card-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .mase-card-actions button,
+    .mase-card-actions .button {
+        width: 100%;
+    }
+}

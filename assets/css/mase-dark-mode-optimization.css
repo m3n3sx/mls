@@ -1,0 +1,817 @@
+/**
+ * Dark Mode Optimization
+ * Modern Admin Styler - Template Visual Enhancements v2
+ * 
+ * This file contains dark mode optimizations for all theme effects:
+ * - Adjusted glow effects (30% increase in intensity) - Requirement 19.1
+ * - Optimized shadows (lighter colors, increased opacity) - Requirement 19.2
+ * - Glassmorphism adjustments for dark backgrounds - Requirement 19.3
+ * - Gradient brightness adjustments - Requirement 19.4
+ * - Color temperature optimization (warmer colors) - Requirement 19.5
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   19.1 GLOW EFFECTS FOR DARK MODE
+   Increase glow intensity by 30%
+   ============================================ */
+
+/**
+ * Terminal Theme - Enhanced glow for dark mode
+ * Requirement 19.1
+ */
+:root[data-theme="dark"] .mase-template-terminal,
+body.mase-dark-mode .mase-template-terminal {
+	/* Increase glow intensity by 30% */
+	--mase-glow-intensity: calc(1.3 * var(--mase-intensity-multiplier, 1));
+}
+
+:root[data-theme="dark"] .mase-template-terminal *,
+body.mase-dark-mode .mase-template-terminal * {
+	text-shadow: 
+		0 0 calc(6.5px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.9)),
+		0 0 calc(13px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.7)),
+		0 0 calc(19.5px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.5)),
+		0 0 calc(26px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.3));
+}
+
+:root[data-theme="dark"] .mase-template-terminal h1,
+:root[data-theme="dark"] .mase-template-terminal h2,
+:root[data-theme="dark"] .mase-template-terminal h3,
+body.mase-dark-mode .mase-template-terminal h1,
+body.mase-dark-mode .mase-template-terminal h2,
+body.mase-dark-mode .mase-template-terminal h3 {
+	text-shadow: 
+		0 0 calc(10.4px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 1)),
+		0 0 calc(20.8px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.9)),
+		0 0 calc(31.2px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.7)),
+		0 0 calc(41.6px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.5)),
+		0 0 calc(52px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.3));
+}
+
+
+:root[data-theme="dark"] .mase-template-terminal,
+body.mase-dark-mode .mase-template-terminal {
+	box-shadow:
+		0 0 calc(39px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.6)),
+		0 0 calc(78px * var(--mase-glow-intensity, 1.3)) var(--terminal-shadow, rgba(0, 255, 65, 0.4)),
+		inset 0 0 calc(26px * var(--mase-blur-amount, 20px) / 20) var(--terminal-glow, rgba(0, 255, 65, 0.15));
+}
+
+/**
+ * Gaming Theme - Enhanced neon glow for dark mode
+ * Requirement 19.1
+ */
+:root[data-theme="dark"] .mase-template-gaming,
+body.mase-dark-mode .mase-template-gaming {
+	--mase-glow-intensity: calc(1.3 * var(--mase-intensity-multiplier, 1));
+	
+	box-shadow:
+		0 0 calc(52px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.5)),
+		0 0 calc(104px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.4)),
+		inset 0 0 calc(39px * var(--mase-blur-amount, 20px) / 20) rgba(128, 0, 255, 0.15);
+}
+
+:root[data-theme="dark"] .mase-template-gaming h1,
+:root[data-theme="dark"] .mase-template-gaming h2,
+body.mase-dark-mode .mase-template-gaming h1,
+body.mase-dark-mode .mase-template-gaming h2 {
+	text-shadow:
+		0 0 calc(26px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 1)),
+		0 0 calc(52px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.6));
+}
+
+/* Enhanced neon glow pulse for active elements in dark mode */
+@keyframes neonGlowPulseDark {
+	0%, 100% {
+		box-shadow: 
+			0 0 calc(19.5px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.6)),
+			0 0 calc(39px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.5)),
+			0 0 calc(58.5px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-secondary, rgba(128, 0, 255, 0.4));
+		text-shadow: 
+			0 0 calc(13px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 1)),
+			0 0 calc(26px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.6));
+	}
+	50% {
+		box-shadow: 
+			0 0 calc(32.5px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.8)),
+			0 0 calc(65px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-secondary, rgba(255, 0, 128, 0.7)),
+			0 0 calc(97.5px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-secondary, rgba(128, 0, 255, 0.6));
+		text-shadow: 
+			0 0 calc(19.5px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 1)),
+			0 0 calc(39px * var(--mase-glow-intensity, 1.3)) var(--gaming-glow-primary, rgba(0, 245, 255, 0.8));
+	}
+}
+
+:root[data-theme="dark"] .mase-template-gaming .button:active,
+:root[data-theme="dark"] .mase-template-gaming .button-primary:active,
+:root[data-theme="dark"] .mase-template-gaming input:focus,
+:root[data-theme="dark"] .mase-template-gaming textarea:focus,
+:root[data-theme="dark"] .mase-template-gaming select:focus,
+body.mase-dark-mode .mase-template-gaming .button:active,
+body.mase-dark-mode .mase-template-gaming .button-primary:active,
+body.mase-dark-mode .mase-template-gaming input:focus,
+body.mase-dark-mode .mase-template-gaming textarea:focus,
+body.mase-dark-mode .mase-template-gaming select:focus {
+	animation: neonGlowPulseDark calc(2s / var(--mase-intensity-multiplier, 1)) ease-in-out infinite;
+}
+
+
+/**
+ * Gradient Theme - Enhanced glow for dark mode
+ * Requirement 19.1
+ */
+:root[data-theme="dark"] .mase-template-gradient,
+body.mase-dark-mode .mase-template-gradient {
+	--mase-glow-intensity: calc(1.3 * var(--mase-intensity-multiplier, 1));
+}
+
+/**
+ * Floral Theme - Enhanced bloom glow for dark mode
+ * Requirement 19.1
+ */
+:root[data-theme="dark"] .mase-template-floral,
+body.mase-dark-mode .mase-template-floral {
+	--mase-glow-intensity: calc(1.3 * var(--mase-intensity-multiplier, 1));
+}
+
+@keyframes bloomDark {
+	0% {
+		box-shadow: 0 0 0 0 rgba(232, 67, 147, 0.9);
+		transform: scale(1);
+	}
+	100% {
+		box-shadow: 0 0 0 calc(26px * var(--mase-glow-intensity, 1.3)) rgba(232, 67, 147, 0);
+		transform: scale(1.05);
+	}
+}
+
+:root[data-theme="dark"] .mase-template-floral .button:active,
+body.mase-dark-mode .mase-template-floral .button:active {
+	animation: bloomDark 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/**
+ * Retro Theme - Enhanced color bleeding for dark mode
+ * Requirement 19.1
+ */
+:root[data-theme="dark"] .mase-template-retro,
+body.mase-dark-mode .mase-template-retro {
+	--mase-glow-intensity: calc(1.3 * var(--mase-intensity-multiplier, 1));
+}
+
+/* ============================================
+   19.2 SHADOW OPTIMIZATION FOR DARK MODE
+   Use lighter shadow colors and increase opacity
+   ============================================ */
+
+/**
+ * Terminal Theme - Lighter shadows for dark mode
+ * Requirement 19.2
+ */
+:root[data-theme="dark"] .mase-template-terminal #wpadminbar,
+body.mase-dark-mode .mase-template-terminal #wpadminbar {
+	box-shadow:
+		0 0 calc(26px * var(--mase-glow-intensity, 1.3)) var(--terminal-glow, rgba(0, 255, 65, 0.5)),
+		0 4px calc(15.6px * var(--mase-shadow-depth, 1)) rgba(0, 255, 65, 0.3);
+}
+
+:root[data-theme="dark"] .mase-template-terminal #adminmenu,
+body.mase-dark-mode .mase-template-terminal #adminmenu {
+	box-shadow:
+		0 0 39px var(--terminal-shadow, rgba(0, 255, 65, 0.4)),
+		4px 0 15.6px rgba(0, 255, 65, 0.3);
+}
+
+:root[data-theme="dark"] .mase-template-terminal .wrap,
+body.mase-dark-mode .mase-template-terminal .wrap {
+	box-shadow:
+		0 0 52px var(--terminal-shadow, rgba(0, 255, 65, 0.4)),
+		inset 0 0 26px var(--terminal-glow, rgba(0, 255, 65, 0.08));
+}
+
+
+/**
+ * Gaming Theme - Lighter shadows for dark mode
+ * Requirement 19.2
+ */
+:root[data-theme="dark"] .mase-template-gaming #wpadminbar,
+body.mase-dark-mode .mase-template-gaming #wpadminbar {
+	box-shadow:
+		0 0 39px var(--gaming-glow-primary, rgba(0, 245, 255, 0.6)),
+		0 4px 26px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.4));
+}
+
+:root[data-theme="dark"] .mase-template-gaming #adminmenu,
+body.mase-dark-mode .mase-template-gaming #adminmenu {
+	box-shadow:
+		0 0 52px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.5)),
+		4px 0 26px rgba(128, 0, 255, 0.3);
+}
+
+:root[data-theme="dark"] .mase-template-gaming .wrap,
+body.mase-dark-mode .mase-template-gaming .wrap {
+	box-shadow:
+		0 0 65px var(--gaming-glow-primary, rgba(0, 245, 255, 0.4)),
+		inset 0 0 39px var(--gaming-glow-secondary, rgba(128, 0, 255, 0.15));
+}
+
+:root[data-theme="dark"] .mase-template-gaming .button,
+:root[data-theme="dark"] .mase-template-gaming .button-primary,
+body.mase-dark-mode .mase-template-gaming .button,
+body.mase-dark-mode .mase-template-gaming .button-primary {
+	box-shadow: 0 0 19.5px var(--gaming-glow-primary, rgba(0, 245, 255, 0.4));
+}
+
+:root[data-theme="dark"] .mase-template-gaming .button:hover,
+:root[data-theme="dark"] .mase-template-gaming .button-primary:hover,
+body.mase-dark-mode .mase-template-gaming .button:hover,
+body.mase-dark-mode .mase-template-gaming .button-primary:hover {
+	box-shadow:
+		0 0 45.5px var(--gaming-glow-secondary, rgba(255, 0, 128, 0.7)),
+		0 6px 26px rgba(255, 0, 128, 0.4);
+}
+
+/**
+ * Glass Theme - Already optimized in glass-theme.css
+ * Shadows are handled in the main glass theme file
+ * Requirement 19.2
+ */
+
+/**
+ * Gradient Theme - Lighter shadows for dark mode
+ * Requirement 19.2
+ */
+:root[data-theme="dark"] .mase-template-gradient .wrap,
+body.mase-dark-mode .mase-template-gradient .wrap {
+	box-shadow:
+		0 8px 40px rgba(255, 255, 255, 0.1),
+		0 4px 20px rgba(255, 255, 255, 0.08),
+		0 2px 10px rgba(255, 255, 255, 0.06);
+}
+
+:root[data-theme="dark"] .mase-template-gradient .button:hover,
+:root[data-theme="dark"] .mase-template-gradient .button-primary:hover,
+body.mase-dark-mode .mase-template-gradient .button:hover,
+body.mase-dark-mode .mase-template-gradient .button-primary:hover {
+	box-shadow:
+		0 8px 32px rgba(255, 255, 255, 0.15),
+		0 4px 16px rgba(255, 255, 255, 0.12);
+}
+
+
+/**
+ * Floral Theme - Lighter shadows for dark mode
+ * Requirement 19.2
+ */
+:root[data-theme="dark"] .mase-template-floral .wrap,
+body.mase-dark-mode .mase-template-floral .wrap {
+	box-shadow:
+		0 8px 40px rgba(232, 67, 147, 0.2),
+		0 4px 20px rgba(232, 67, 147, 0.15),
+		0 2px 10px rgba(232, 67, 147, 0.1);
+}
+
+/**
+ * Retro Theme - Lighter shadows for dark mode
+ * Requirement 19.2
+ */
+:root[data-theme="dark"] .mase-template-retro .wrap,
+body.mase-dark-mode .mase-template-retro .wrap {
+	box-shadow:
+		0 8px 40px rgba(255, 107, 107, 0.2),
+		0 4px 20px rgba(255, 107, 107, 0.15),
+		0 2px 10px rgba(255, 107, 107, 0.1);
+}
+
+/* ============================================
+   19.3 GLASSMORPHISM OPTIMIZATION FOR DARK MODE
+   Ensure proper contrast and backdrop-filter adjustments
+   ============================================ */
+
+/**
+ * Glass Theme - Dark mode glassmorphism adjustments
+ * Already implemented in glass-theme.css with proper dark mode support
+ * This section adds additional optimizations
+ * Requirement 19.3
+ */
+
+/* Increase backdrop-filter blur for better depth perception in dark mode */
+:root[data-theme="dark"] .mase-template-glass,
+body.mase-dark-mode .mase-template-glass {
+	backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.25)) saturate(180%) brightness(85%);
+	-webkit-backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.25)) saturate(180%) brightness(85%);
+}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar,
+body.mase-dark-mode .mase-template-glass #wpadminbar {
+	backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1)) saturate(160%);
+	-webkit-backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1)) saturate(160%);
+}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu,
+body.mase-dark-mode .mase-template-glass #adminmenu {
+	backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.25)) saturate(180%);
+	-webkit-backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.25)) saturate(180%);
+}
+
+:root[data-theme="dark"] .mase-template-glass .wrap,
+body.mase-dark-mode .mase-template-glass .wrap {
+	backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.5)) saturate(180%);
+	-webkit-backdrop-filter: blur(calc(var(--mase-blur-amount, 20px) * 1.5)) saturate(180%);
+}
+
+/* Ensure proper contrast for text in dark mode glass */
+:root[data-theme="dark"] .mase-template-glass,
+:root[data-theme="dark"] .mase-template-glass p,
+:root[data-theme="dark"] .mase-template-glass label,
+body.mase-dark-mode .mase-template-glass,
+body.mase-dark-mode .mase-template-glass p,
+body.mase-dark-mode .mase-template-glass label {
+	color: #e0e0e0;
+}
+
+
+/* Adjust glass border visibility in dark mode */
+:root[data-theme="dark"] .mase-template-glass,
+body.mase-dark-mode .mase-template-glass {
+	border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+:root[data-theme="dark"] .mase-template-glass #wpadminbar,
+body.mase-dark-mode .mase-template-glass #wpadminbar {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+:root[data-theme="dark"] .mase-template-glass #adminmenu,
+body.mase-dark-mode .mase-template-glass #adminmenu {
+	border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================
+   19.4 GRADIENT BRIGHTNESS ADJUSTMENT
+   Increase gradient brightness for dark mode visibility
+   ============================================ */
+
+/**
+ * Gradient Theme - Brightness adjustments for dark mode
+ * Requirement 19.4
+ */
+:root[data-theme="dark"] .mase-template-gradient,
+body.mase-dark-mode .mase-template-gradient {
+	/* Increase brightness of gradient colors by 20% */
+	background: 
+		radial-gradient(at 20% 30%, rgba(238, 119, 82, 0.35) 0%, transparent 50%),
+		radial-gradient(at 80% 70%, rgba(231, 60, 126, 0.35) 0%, transparent 50%),
+		radial-gradient(at 50% 50%, rgba(35, 166, 213, 0.35) 0%, transparent 50%),
+		radial-gradient(at 30% 80%, rgba(35, 213, 171, 0.35) 0%, transparent 50%),
+		#0a0a0a;
+	background-size: 200% 200%;
+	animation: meshGradient 15s ease infinite;
+}
+
+/* Adjust gradient color stops for better visibility */
+:root[data-theme="dark"] .mase-template-gradient[data-variant="warm"],
+body.mase-dark-mode .mase-template-gradient[data-variant="warm"] {
+	--gradient-color-1: #ff9977; /* Brighter warm colors */
+	--gradient-color-2: #ff5599;
+	--gradient-color-3: #ff8888;
+}
+
+:root[data-theme="dark"] .mase-template-gradient[data-variant="cool"],
+body.mase-dark-mode .mase-template-gradient[data-variant="cool"] {
+	--gradient-color-1: #44c8ff; /* Brighter cool colors */
+	--gradient-color-2: #44ffcc;
+	--gradient-color-3: #66ccff;
+}
+
+:root[data-theme="dark"] .mase-template-gradient[data-variant="sunset"],
+body.mase-dark-mode .mase-template-gradient[data-variant="sunset"] {
+	--gradient-color-1: #ff8888; /* Brighter sunset colors */
+	--gradient-color-2: #ffdd77;
+	--gradient-color-3: #ffbbff;
+}
+
+/* Increase gradient overlay brightness */
+:root[data-theme="dark"] .mase-template-gradient .wrap,
+body.mase-dark-mode .mase-template-gradient .wrap {
+	background: rgba(20, 20, 20, 0.85);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* Ensure gradient text is readable */
+:root[data-theme="dark"] .mase-template-gradient h1,
+:root[data-theme="dark"] .mase-template-gradient h2,
+:root[data-theme="dark"] .mase-template-gradient h3,
+body.mase-dark-mode .mase-template-gradient h1,
+body.mase-dark-mode .mase-template-gradient h2,
+body.mase-dark-mode .mase-template-gradient h3 {
+	color: #f5f5f5;
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme="dark"] .mase-template-gradient p,
+:root[data-theme="dark"] .mase-template-gradient label,
+body.mase-dark-mode .mase-template-gradient p,
+body.mase-dark-mode .mase-template-gradient label {
+	color: #e0e0e0;
+}
+
+/* ============================================
+   19.5 COLOR TEMPERATURE OPTIMIZATION
+   Use warmer colors in dark mode for eye comfort
+   ============================================ */
+
+/**
+ * Terminal Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-terminal[data-variant="green"],
+body.mase-dark-mode .mase-template-terminal[data-variant="green"] {
+	/* Shift green towards warmer yellow-green */
+	--terminal-primary: #33ff55;
+	--terminal-glow: rgba(51, 255, 85, 0.8);
+}
+
+:root[data-theme="dark"] .mase-template-terminal[data-variant="blue"],
+body.mase-dark-mode .mase-template-terminal[data-variant="blue"] {
+	/* Shift blue towards warmer cyan */
+	--terminal-primary: #22ddff;
+	--terminal-glow: rgba(34, 221, 255, 0.8);
+}
+
+:root[data-theme="dark"] .mase-template-terminal[data-variant="amber"],
+body.mase-dark-mode .mase-template-terminal[data-variant="amber"] {
+	/* Already warm, slightly increase warmth */
+	--terminal-primary: #ffbb22;
+	--terminal-glow: rgba(255, 187, 34, 0.8);
+}
+
+/**
+ * Gaming Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-gaming[data-variant="cyberpunk"],
+body.mase-dark-mode .mase-template-gaming[data-variant="cyberpunk"] {
+	/* Shift cyan towards warmer tones */
+	--gaming-primary: #22ffff;
+	--gaming-secondary: #ff2299;
+	--gaming-accent: #9922ff;
+	--gaming-glow-primary: rgba(34, 255, 255, 0.8);
+	--gaming-glow-secondary: rgba(255, 34, 153, 0.8);
+}
+
+:root[data-theme="dark"] .mase-template-gaming[data-variant="neon"],
+body.mase-dark-mode .mase-template-gaming[data-variant="neon"] {
+	/* Shift towards warmer neon colors */
+	--gaming-primary: #ff33ff;
+	--gaming-secondary: #33ff33;
+	--gaming-accent: #ffff33;
+	--gaming-glow-primary: rgba(255, 51, 255, 0.8);
+	--gaming-glow-secondary: rgba(51, 255, 51, 0.8);
+}
+
+
+/**
+ * Glass Theme - Warmer tints for dark mode
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-glass[data-variant="blue"],
+body.mase-dark-mode .mase-template-glass[data-variant="blue"] {
+	/* Shift blue tint towards warmer cyan */
+	--glass-tint: rgba(64, 181, 246, 0.15);
+	--glass-border: rgba(64, 181, 246, 0.25);
+	--glass-shadow: rgba(64, 181, 246, 0.2);
+}
+
+:root[data-theme="dark"] .mase-template-glass[data-variant="purple"],
+body.mase-dark-mode .mase-template-glass[data-variant="purple"] {
+	/* Shift purple towards warmer magenta */
+	--glass-tint: rgba(186, 85, 211, 0.15);
+	--glass-border: rgba(186, 85, 211, 0.25);
+	--glass-shadow: rgba(186, 85, 211, 0.2);
+}
+
+/**
+ * Floral Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-floral[data-variant="rose"],
+body.mase-dark-mode .mase-template-floral[data-variant="rose"] {
+	/* Shift towards warmer rose tones */
+	--floral-primary: #ff5599;
+	--floral-secondary: #ff88bb;
+	--floral-accent: #ffbb99;
+}
+
+:root[data-theme="dark"] .mase-template-floral[data-variant="lavender"],
+body.mase-dark-mode .mase-template-floral[data-variant="lavender"] {
+	/* Shift lavender towards warmer purple */
+	--floral-primary: #bb99ff;
+	--floral-secondary: #8866ff;
+	--floral-accent: #eeddff;
+}
+
+:root[data-theme="dark"] .mase-template-floral[data-variant="sakura"],
+body.mase-dark-mode .mase-template-floral[data-variant="sakura"] {
+	/* Enhance warmth of sakura colors */
+	--floral-primary: #ffccdd;
+	--floral-secondary: #ffeecc;
+	--floral-accent: #ffffcc;
+}
+
+/**
+ * Retro Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-retro[data-variant="classic"],
+body.mase-dark-mode .mase-template-retro[data-variant="classic"] {
+	/* Shift towards warmer retro colors */
+	--retro-primary: #ff8888;
+	--retro-secondary: #66ddcc;
+	--retro-accent: #ffee88;
+}
+
+:root[data-theme="dark"] .mase-template-retro[data-variant="synthwave"],
+body.mase-dark-mode .mase-template-retro[data-variant="synthwave"] {
+	/* Enhance warmth of synthwave colors */
+	--retro-primary: #ff2288;
+	--retro-secondary: #9955ff;
+	--retro-accent: #5599ff;
+}
+
+
+/**
+ * Professional Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-professional[data-variant="corporate"],
+body.mase-dark-mode .mase-template-professional[data-variant="corporate"] {
+	/* Shift towards warmer grays */
+	--professional-primary: #3a4a5a;
+	--professional-secondary: #445566;
+	--professional-accent: #5599dd;
+}
+
+:root[data-theme="dark"] .mase-template-professional[data-variant="executive"],
+body.mase-dark-mode .mase-template-professional[data-variant="executive"] {
+	/* Warmer dark tones */
+	--professional-primary: #2a2a3e;
+	--professional-secondary: #26314e;
+	--professional-accent: #2a5580;
+}
+
+/**
+ * Minimal Theme - Warmer color temperature
+ * Requirement 19.5
+ */
+:root[data-theme="dark"] .mase-template-minimal[data-variant="dark"],
+body.mase-dark-mode .mase-template-minimal[data-variant="dark"] {
+	/* Shift towards warmer dark grays */
+	--minimal-primary: #2a2a2a;
+	--minimal-secondary: #3a3a3a;
+	--minimal-accent: #f5f5f5;
+	--minimal-text: #e8e8e8;
+}
+
+/* ============================================
+   ADDITIONAL DARK MODE OPTIMIZATIONS
+   ============================================ */
+
+/**
+ * Ensure all themes have proper text contrast in dark mode
+ */
+:root[data-theme="dark"] .mase-template-terminal,
+:root[data-theme="dark"] .mase-template-gaming,
+:root[data-theme="dark"] .mase-template-glass,
+:root[data-theme="dark"] .mase-template-gradient,
+:root[data-theme="dark"] .mase-template-floral,
+:root[data-theme="dark"] .mase-template-retro,
+:root[data-theme="dark"] .mase-template-professional,
+:root[data-theme="dark"] .mase-template-minimal,
+body.mase-dark-mode .mase-template-terminal,
+body.mase-dark-mode .mase-template-gaming,
+body.mase-dark-mode .mase-template-glass,
+body.mase-dark-mode .mase-template-gradient,
+body.mase-dark-mode .mase-template-floral,
+body.mase-dark-mode .mase-template-retro,
+body.mase-dark-mode .mase-template-professional,
+body.mase-dark-mode .mase-template-minimal {
+	/* Ensure minimum contrast ratio of 4.5:1 */
+	color: #e0e0e0;
+}
+
+/**
+ * Input fields optimization for dark mode
+ */
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] input[type="password"],
+:root[data-theme="dark"] input[type="email"],
+:root[data-theme="dark"] input[type="number"],
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] select,
+body.mase-dark-mode input[type="text"],
+body.mase-dark-mode input[type="password"],
+body.mase-dark-mode input[type="email"],
+body.mase-dark-mode input[type="number"],
+body.mase-dark-mode textarea,
+body.mase-dark-mode select {
+	background: rgba(30, 30, 30, 0.8);
+	border-color: rgba(255, 255, 255, 0.2);
+	color: #e0e0e0;
+}
+
+
+:root[data-theme="dark"] input[type="text"]:focus,
+:root[data-theme="dark"] input[type="password"]:focus,
+:root[data-theme="dark"] input[type="email"]:focus,
+:root[data-theme="dark"] input[type="number"]:focus,
+:root[data-theme="dark"] textarea:focus,
+:root[data-theme="dark"] select:focus,
+body.mase-dark-mode input[type="text"]:focus,
+body.mase-dark-mode input[type="password"]:focus,
+body.mase-dark-mode input[type="email"]:focus,
+body.mase-dark-mode input[type="number"]:focus,
+body.mase-dark-mode textarea:focus,
+body.mase-dark-mode select:focus {
+	background: rgba(40, 40, 40, 0.9);
+	border-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/**
+ * Button optimization for dark mode
+ */
+:root[data-theme="dark"] .button,
+:root[data-theme="dark"] .button-primary,
+body.mase-dark-mode .button,
+body.mase-dark-mode .button-primary {
+	background: rgba(60, 60, 60, 0.8);
+	border-color: rgba(255, 255, 255, 0.2);
+	color: #e0e0e0;
+}
+
+:root[data-theme="dark"] .button:hover,
+:root[data-theme="dark"] .button-primary:hover,
+body.mase-dark-mode .button:hover,
+body.mase-dark-mode .button-primary:hover {
+	background: rgba(80, 80, 80, 0.9);
+	border-color: rgba(255, 255, 255, 0.3);
+	color: #f0f0f0;
+}
+
+/**
+ * Card and panel optimization for dark mode
+ */
+:root[data-theme="dark"] .postbox,
+:root[data-theme="dark"] .notice,
+:root[data-theme="dark"] .mase-card,
+body.mase-dark-mode .postbox,
+body.mase-dark-mode .notice,
+body.mase-dark-mode .mase-card {
+	background: rgba(30, 30, 30, 0.8);
+	border-color: rgba(255, 255, 255, 0.1);
+	color: #e0e0e0;
+}
+
+/**
+ * Performance Mode - Reduce effects in dark mode
+ */
+:root[data-theme="dark"][data-performance-mode="true"],
+body.mase-dark-mode[data-performance-mode="true"] {
+	--mase-glow-intensity: 0.8;
+	--mase-blur-amount: 10px;
+}
+
+:root[data-theme="dark"][data-performance-mode="true"] *,
+body.mase-dark-mode[data-performance-mode="true"] * {
+	text-shadow: none !important;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/**
+ * Accessibility - High contrast mode for dark mode
+ */
+:root[data-theme="dark"][data-high-contrast="true"],
+body.mase-dark-mode[data-high-contrast="true"] {
+	--mase-glow-intensity: 1.5;
+}
+
+:root[data-theme="dark"][data-high-contrast="true"] *,
+body.mase-dark-mode[data-high-contrast="true"] * {
+	color: #ffffff !important;
+}
+
+:root[data-theme="dark"][data-high-contrast="true"] h1,
+:root[data-theme="dark"][data-high-contrast="true"] h2,
+:root[data-theme="dark"][data-high-contrast="true"] h3,
+body.mase-dark-mode[data-high-contrast="true"] h1,
+body.mase-dark-mode[data-high-contrast="true"] h2,
+body.mase-dark-mode[data-high-contrast="true"] h3 {
+	color: #ffffff !important;
+	font-weight: 700 !important;
+}
+
+
+/**
+ * Reduced Motion - Disable animations in dark mode
+ */
+@media (prefers-reduced-motion: reduce) {
+	:root[data-theme="dark"] *,
+	body.mase-dark-mode * {
+		animation: none !important;
+		transition: none !important;
+	}
+}
+
+/**
+ * Mobile optimization for dark mode
+ */
+@media (max-width: 768px) {
+	:root[data-theme="dark"],
+	body.mase-dark-mode {
+		--mase-glow-intensity: 1.1; /* Reduce glow on mobile */
+		--mase-blur-amount: 15px; /* Reduce blur on mobile */
+	}
+	
+	:root[data-theme="dark"] .mase-template-glass,
+	body.mase-dark-mode .mase-template-glass {
+		backdrop-filter: blur(15px) saturate(160%);
+		-webkit-backdrop-filter: blur(15px) saturate(160%);
+	}
+}
+
+/**
+ * Print styles - Disable dark mode for printing
+ */
+@media print {
+	:root[data-theme="dark"],
+	body.mase-dark-mode {
+		background: #ffffff !important;
+		color: #000000 !important;
+	}
+	
+	:root[data-theme="dark"] *,
+	body.mase-dark-mode * {
+		background: transparent !important;
+		color: #000000 !important;
+		text-shadow: none !important;
+		box-shadow: none !important;
+	}
+}
+
+/* ============================================
+   THEME-SPECIFIC DARK MODE ENHANCEMENTS
+   ============================================ */
+
+/**
+ * Terminal Theme - Enhanced scanline visibility in dark mode
+ */
+:root[data-theme="dark"] .mase-template-terminal::before,
+body.mase-dark-mode .mase-template-terminal::before {
+	background: linear-gradient(
+		to bottom,
+		transparent 50%,
+		rgba(0, 255, 65, 0.08) 50%
+	);
+	opacity: 0.8;
+}
+
+/**
+ * Gaming Theme - Enhanced particle visibility in dark mode
+ */
+:root[data-theme="dark"] .mase-template-gaming::after,
+body.mase-dark-mode .mase-template-gaming::after {
+	opacity: 0.8;
+}
+
+/**
+ * Glass Theme - Enhanced frost pattern in dark mode
+ */
+:root[data-theme="dark"] .mase-template-glass::before,
+body.mase-dark-mode .mase-template-glass::before {
+	opacity: calc(0.15 * var(--mase-intensity-multiplier, 1));
+	mix-blend-mode: soft-light;
+}
+
+/**
+ * Retro Theme - Enhanced VHS noise in dark mode
+ */
+:root[data-theme="dark"] .mase-template-retro::before,
+body.mase-dark-mode .mase-template-retro::before {
+	opacity: 0.08;
+}
+
+/**
+ * Floral Theme - Enhanced petal visibility in dark mode
+ */
+:root[data-theme="dark"] .mase-template-floral::after,
+:root[data-theme="dark"] .mase-template-floral::before,
+body.mase-dark-mode .mase-template-floral::after,
+body.mase-dark-mode .mase-template-floral::before {
+	filter: brightness(1.3) saturate(1.2);
+}
+

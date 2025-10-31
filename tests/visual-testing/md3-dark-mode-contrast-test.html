@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD3 Dark Mode Contrast Test - MASE</title>
+    <link rel="stylesheet" href="../../assets/css/md3/md3-tokens.css">
+    <link rel="stylesheet" href="../../assets/css/md3/md3-elevation.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--md-background);
+            color: var(--md-on-background);
+            padding: 32px;
+            line-height: 1.6;
+        }
+
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--md-primary), var(--md-tertiary));
+            color: var(--md-on-primary);
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 16px;
+            background: var(--md-surface);
+            border-radius: 12px;
+        }
+
+        .mode-toggle button {
+            padding: 12px 24px;
+            border: 2px solid var(--md-outline);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 200ms;
+        }
+
+        .mode-toggle button.active {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            border-color: var(--md-primary);
+        }
+
+        .palette-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 16px;
+            background: var(--md-surface);
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+
+        .palette-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--md-outline);
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 200ms;
+        }
+
+        .palette-btn.active {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            border-color: var(--md-primary);
+        }
+
+        .test-section {
+            background: var(--md-surface);
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .test-section h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: var(--md-on-surface);
+        }
+
+        .contrast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .contrast-card {
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--md-outline-variant);
+        }
+
+        .contrast-card h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .contrast-sample {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .contrast-ratio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .ratio-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .ratio-badge.pass {
+            background: #4caf50;
+            color: white;
+        }
+
+        .ratio-badge.fail {
+            background: #f44336;
+            color: white;
+        }
+
+        .ratio-badge.aa {
+            background: #2196f3;
+            color: white;
+        }
+
+        .ratio-badge.aaa {
+            background: #9c27b0;
+            color: white;
+        }
+
+        /* Primary Color Tests */
+        .bg-primary {
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+
+        .bg-primary-container {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+        }
+
+        /* Secondary Color Tests */
+        .bg-secondary {
+            background: var(--md-secondary);
+            color: var(--md-on-secondary);
+        }
+
+        .bg-secondary-container {
+            background: var(--md-secondary-container);
+            color: var(--md-on-secondary-container);
+        }
+
+        /* Tertiary Color Tests */
+        .bg-tertiary {
+            background: var(--md-tertiary);
+            color: var(--md-on-tertiary);
+        }
+
+        .bg-tertiary-container {
+            background: var(--md-tertiary-container);
+            color: var(--md-on-tertiary-container);
+        }
+
+        /* Error Color Tests */
+        .bg-error {
+            background: var(--md-error);
+            color: var(--md-on-error);
+        }
+
+        .bg-error-container {
+            background: var(--md-error-container);
+            color: var(--md-on-error-container);
+        }
+
+        /* Surface Tests */
+        .bg-surface {
+            background: var(--md-surface);
+            color: var(--md-on-surface);
+        }
+
+        .bg-surface-variant {
+            background: var(--md-surface-variant);
+            color: var(--md-on-surface-variant);
+        }
+
+        /* Inverse Tests */
+        .bg-inverse-surface {
+            background: var(--md-inverse-surface);
+            color: var(--md-inverse-on-surface);
+        }
+
+        .summary {
+            background: var(--md-primary-container);
+            color: var(--md-on-primary-container);
+            padding: 24px;
+            border-radius: 16px;
+            margin-top: 32px;
+        }
+
+        .summary h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>MD3 Dark Mode Contrast Test</h1>
+            <p>Comprehensive WCAG 2.1 AA contrast ratio verification for all color combinations</p>
+        </div>
+
+        <div class="mode-toggle">
+            <button id="lightMode" class="active">Light Mode</button>
+            <button id="darkMode">Dark Mode</button>
+        </div>
+
+        <div class="palette-selector">
+            <button class="palette-btn active" data-palette="purple">Purple</button>
+            <button class="palette-btn" data-palette="blue">Blue</button>
+            <button class="palette-btn" data-palette="green">Green</button>
+            <button class="palette-btn" data-palette="orange">Orange</button>
+            <button class="palette-btn" data-palette="pink">Pink</button>
+        </div>
+
+        <!-- Primary Colors -->
+        <div class="test-section">
+            <h2>Primary Colors</h2>
+            <div class="contrast-grid">
+                <div class="contrast-card">
+                    <h3>Primary</h3>
+                    <div class="contrast-sample bg-primary">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="primary"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Primary Container</h3>
+                    <div class="contrast-sample bg-primary-container">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="primary-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Colors -->
+        <div class="test-section">
+            <h2>Secondary Colors</h2>
+            <div class="contrast-grid">
+                <div class="contrast-card">
+                    <h3>Secondary</h3>
+                    <div class="contrast-sample bg-secondary">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="secondary"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Secondary Container</h3>
+                    <div class="contrast-sample bg-secondary-container">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="secondary-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tertiary Colors -->
+        <div class="test-section">
+            <h2>Tertiary Colors</h2>
+            <div class="contrast-grid">
+                <div class="contrast-card">
+                    <h3>Tertiary</h3>
+                    <div class="contrast-sample bg-tertiary">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="tertiary"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Tertiary Container</h3>
+                    <div class="contrast-sample bg-tertiary-container">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="tertiary-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Colors -->
+        <div class="test-section">
+            <h2>Error Colors</h2>
+            <div class="contrast-grid">
+                <div class="contrast-card">
+                    <h3>Error</h3>
+                    <div class="contrast-sample bg-error">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="error"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Error Container</h3>
+                    <div class="contrast-sample bg-error-container">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="error-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Surface Colors -->
+        <div class="test-section">
+            <h2>Surface Colors</h2>
+            <div class="contrast-grid">
+                <div class="contrast-card">
+                    <h3>Surface</h3>
+                    <div class="contrast-sample bg-surface">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="surface"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Surface Variant</h3>
+                    <div class="contrast-sample bg-surface-variant">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="surface-variant"></div>
+                </div>
+
+                <div class="contrast-card">
+                    <h3>Inverse Surface</h3>
+                    <div class="contrast-sample bg-inverse-surface">
+                        <p>The quick brown fox jumps over the lazy dog</p>
+                        <p style="font-size: 18px; font-weight: 700;">Large Bold Text</p>
+                    </div>
+                    <div class="contrast-ratio" data-test="inverse-surface"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h2>Test Summary</h2>
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="passedTests">0</div>
+                    <div class="stat-label">Passed (≥4.5:1)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="aaTests">0</div>
+                    <div class="stat-label">AA Compliant</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="aaaTests">0</div>
+                    <div class="stat-label">AAA Compliant (≥7:1)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contrast ratio calculation
+        function getLuminance(r, g, b) {
+            const [rs, gs, bs] = [r, g, b].map(c => {
+                c = c / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+        }
+
+        function getContrastRatio(rgb1, rgb2) {
+            const lum1 = getLuminance(rgb1[0], rgb1[1], rgb1[2]);
+            const lum2 = getLuminance(rgb2[0], rgb2[1], rgb2[2]);
+            const lighter = Math.max(lum1, lum2);
+            const darker = Math.min(lum1, lum2);
+            return (lighter + 0.05) / (darker + 0.05);
+        }
+
+        function parseRgb(rgbString) {
+            const match = rgbString.match(/\d+/g);
+            return match ? match.map(Number) : [0, 0, 0];
+        }
+
+        function testContrast(bgColor, textColor, testName) {
+            const bgRgb = parseRgb(bgColor);
+            const textRgb = parseRgb(textColor);
+            const ratio = getContrastRatio(bgRgb, textRgb);
+            
+            const container = document.querySelector(`[data-test="${testName}"]`);
+            if (!container) return null;
+            
+            const passAA = ratio >= 4.5;
+            const passAAA = ratio >= 7.0;
+            
+            let badge = '';
+            if (passAAA) {
+                badge = '<span class="ratio-badge aaa">AAA</span>';
+            } else if (passAA) {
+                badge = '<span class="ratio-badge aa">AA</span>';
+            } else {
+                badge = '<span class="ratio-badge fail">FAIL</span>';
+            }
+            
+            container.innerHTML = `
+                <span>Contrast Ratio: <strong>${ratio.toFixed(2)}:1</strong></span>
+                ${badge}
+            `;
+            
+            return { ratio, passAA, passAAA };
+        }
+
+        function runAllTests() {
+            const tests = [
+                { bg: '--md-primary', text: '--md-on-primary', name: 'primary' },
+                { bg: '--md-primary-container', text: '--md-on-primary-container', name: 'primary-container' },
+                { bg: '--md-secondary', text: '--md-on-secondary', name: 'secondary' },
+                { bg: '--md-secondary-container', text: '--md-on-secondary-container', name: 'secondary-container' },
+                { bg: '--md-tertiary', text: '--md-on-tertiary', name: 'tertiary' },
+                { bg: '--md-tertiary-container', text: '--md-on-tertiary-container', name: 'tertiary-container' },
+                { bg: '--md-error', text: '--md-on-error', name: 'error' },
+                { bg: '--md-error-container', text: '--md-on-error-container', name: 'error-container' },
+                { bg: '--md-surface', text: '--md-on-surface', name: 'surface' },
+                { bg: '--md-surface-variant', text: '--md-on-surface-variant', name: 'surface-variant' },
+                { bg: '--md-inverse-surface', text: '--md-inverse-on-surface', name: 'inverse-surface' }
+            ];
+
+            let totalTests = 0;
+            let passedTests = 0;
+            let aaTests = 0;
+            let aaaTests = 0;
+
+            tests.forEach(test => {
+                const bgColor = getComputedStyle(document.documentElement).getPropertyValue(test.bg);
+                const textColor = getComputedStyle(document.documentElement).getPropertyValue(test.text);
+                
+                const result = testContrast(bgColor, textColor, test.name);
+                if (result) {
+                    totalTests++;
+                    if (result.passAA) passedTests++;
+                    if (result.passAA) aaTests++;
+                    if (result.passAAA) aaaTests++;
+                }
+            });
+
+            document.getElementById('totalTests').textContent = totalTests;
+            document.getElementById('passedTests').textContent = passedTests;
+            document.getElementById('aaTests').textContent = aaTests;
+            document.getElementById('aaaTests').textContent = aaaTests;
+        }
+
+        // Mode toggle
+        document.getElementById('lightMode').addEventListener('click', function() {
+            document.documentElement.removeAttribute('data-theme');
+            document.documentElement.classList.remove('mase-dark-mode');
+            this.classList.add('active');
+            document.getElementById('darkMode').classList.remove('active');
+            setTimeout(runAllTests, 100);
+        });
+
+        document.getElementById('darkMode').addEventListener('click', function() {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.classList.add('mase-dark-mode');
+            this.classList.add('active');
+            document.getElementById('lightMode').classList.remove('active');
+            setTimeout(runAllTests, 100);
+        });
+
+        // Palette selector
+        document.querySelectorAll('.palette-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.documentElement.setAttribute('data-palette', this.dataset.palette);
+                setTimeout(runAllTests, 100);
+            });
+        });
+
+        // Run tests on load
+        setTimeout(runAllTests, 100);
+    </script>
+</body>
+</html>

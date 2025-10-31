@@ -1,0 +1,256 @@
+/**
+ * Theme Variant Selector Styles
+ * Modern Admin Styler - Template Visual Enhancements v2
+ * 
+ * Styles for color variant selection UI
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   VARIANT SELECTOR CONTAINER
+   ============================================ */
+
+.mase-variant-selector {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 0;
+	margin-top: 12px;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mase-variant-label {
+	font-size: 13px;
+	font-weight: 600;
+	color: #555;
+	white-space: nowrap;
+}
+
+.mase-variant-swatches {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+/* ============================================
+   VARIANT SWATCHES
+   ============================================ */
+
+.mase-variant-swatch {
+	position: relative;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	cursor: pointer;
+	transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	box-shadow: 
+		0 2px 4px rgba(0, 0, 0, 0.1),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	overflow: hidden;
+	padding: 0;
+	background-clip: padding-box;
+}
+
+.mase-variant-swatch:hover {
+	transform: scale(1.15);
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.2),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	border-color: rgba(0, 0, 0, 0.2);
+}
+
+.mase-variant-swatch:active {
+	transform: scale(1.05);
+}
+
+.mase-variant-swatch:focus {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+	box-shadow: 
+		0 0 0 4px rgba(34, 113, 177, 0.1),
+		0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Active variant */
+.mase-variant-swatch.active {
+	border-color: #2271b1;
+	box-shadow: 
+		0 0 0 3px rgba(34, 113, 177, 0.2),
+		0 4px 12px rgba(0, 0, 0, 0.2),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.mase-variant-swatch.active:hover {
+	border-color: #135e96;
+	box-shadow: 
+		0 0 0 3px rgba(19, 94, 150, 0.3),
+		0 6px 16px rgba(0, 0, 0, 0.25),
+		inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Checkmark icon for active variant */
+.mase-variant-swatch .dashicons {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #fff;
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+	pointer-events: none;
+}
+
+/* ============================================
+   VARIANT TOOLTIP
+   ============================================ */
+
+.mase-variant-tooltip {
+	position: absolute;
+	z-index: 999999;
+	background: rgba(0, 0, 0, 0.9);
+	color: #fff;
+	padding: 6px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 500;
+	white-space: nowrap;
+	pointer-events: none;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+	display: none;
+}
+
+.mase-variant-tooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 5px solid transparent;
+	border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-variant-selector {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+	}
+
+	.mase-variant-swatch {
+		width: 36px;
+		height: 36px;
+	}
+
+	.mase-variant-swatches {
+		gap: 10px;
+	}
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+body.mase-dark-mode .mase-variant-selector {
+	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+body.mase-dark-mode .mase-variant-label {
+	color: #e0e0e0;
+}
+
+body.mase-dark-mode .mase-variant-swatch {
+	box-shadow: 
+		0 2px 4px rgba(0, 0, 0, 0.3),
+		inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+body.mase-dark-mode .mase-variant-swatch:hover {
+	box-shadow: 
+		0 4px 12px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.mase-dark-mode .mase-variant-swatch.active {
+	border-color: #64b5f6;
+	box-shadow: 
+		0 0 0 3px rgba(100, 181, 246, 0.2),
+		0 4px 12px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+body.mase-dark-mode .mase-variant-swatch.active:hover {
+	border-color: #90caf9;
+	box-shadow: 
+		0 0 0 3px rgba(144, 202, 249, 0.3),
+		0 6px 16px rgba(0, 0, 0, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+body.mase-dark-mode .mase-variant-swatch:focus {
+	outline-color: #64b5f6;
+	box-shadow: 
+		0 0 0 4px rgba(100, 181, 246, 0.2),
+		0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   TEMPLATE CARD INTEGRATION
+   ============================================ */
+
+.mase-template-card .mase-variant-selector,
+.mase-template-preview-card .mase-variant-selector {
+	margin-top: 16px;
+	padding-top: 16px;
+}
+
+/* Ensure variant selector doesn't interfere with card hover */
+.mase-template-card:hover .mase-variant-selector,
+.mase-template-preview-card:hover .mase-variant-selector {
+	border-top-color: rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.mase-variant-swatch:focus-visible {
+	outline: 2px solid #2271b1;
+	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mase-variant-swatch,
+	.mase-variant-tooltip {
+		transition: none;
+	}
+
+	.mase-variant-swatch:hover,
+	.mase-variant-swatch:active {
+		transform: none;
+	}
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+	.mase-variant-swatch {
+		border-width: 3px;
+	}
+
+	.mase-variant-swatch.active {
+		border-width: 4px;
+	}
+
+	.mase-variant-swatch:focus {
+		outline-width: 3px;
+	}
+}

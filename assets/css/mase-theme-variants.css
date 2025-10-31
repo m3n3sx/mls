@@ -1,0 +1,509 @@
+/**
+ * Theme Variants and Intensity Controls
+ * Modern Admin Styler - Template Visual Enhancements v2
+ * 
+ * This file contains:
+ * - CSS custom properties for theme intensity control
+ * - Color variants for all template themes
+ * - Intensity multipliers for animations, blur, and glow effects
+ * 
+ * @package ModernAdminStyler
+ * @since 1.3.0
+ */
+
+/* ============================================
+   INTENSITY CONTROL SYSTEM (Requirements 2.1-2.5)
+   ============================================ */
+
+/**
+ * Base intensity variables
+ * These control the global intensity multiplier for all theme effects
+ */
+:root {
+	/* Intensity multiplier - default is Medium (1.0) */
+	--mase-intensity-multiplier: 1;
+	
+	/* Animation speed multiplier */
+	--mase-animation-speed: calc(1s * var(--mase-intensity-multiplier));
+	
+	/* Blur amount multiplier (base: 20px) */
+	--mase-blur-amount: calc(20px * var(--mase-intensity-multiplier));
+	
+	/* Glow intensity multiplier */
+	--mase-glow-intensity: calc(1 * var(--mase-intensity-multiplier));
+	
+	/* Shadow depth multiplier */
+	--mase-shadow-depth: calc(1 * var(--mase-intensity-multiplier));
+	
+	/* Transition duration multiplier */
+	--mase-transition-duration: calc(300ms / var(--mase-intensity-multiplier));
+}
+
+/**
+ * Low Intensity (0.5x)
+ * Reduces animation speeds by 50% and blur effects by 30%
+ * Requirement 2.2
+ */
+:root[data-intensity="low"],
+body[data-intensity="low"] {
+	--mase-intensity-multiplier: 0.5;
+	--mase-animation-speed: calc(2s); /* Slower animations */
+	--mase-blur-amount: calc(14px); /* 30% less blur (20px * 0.7) */
+	--mase-glow-intensity: 0.7;
+	--mase-shadow-depth: 0.7;
+	--mase-transition-duration: calc(600ms); /* Slower transitions */
+}
+
+/**
+ * Medium Intensity (1.0x) - Default
+ * Uses default effect values
+ * Requirement 2.3
+ */
+:root[data-intensity="medium"],
+body[data-intensity="medium"] {
+	--mase-intensity-multiplier: 1;
+	--mase-animation-speed: calc(1s);
+	--mase-blur-amount: calc(20px);
+	--mase-glow-intensity: 1;
+	--mase-shadow-depth: 1;
+	--mase-transition-duration: calc(300ms);
+}
+
+/**
+ * High Intensity (1.5x)
+ * Increases animation speeds by 30% and enhances glow effects by 50%
+ * Requirement 2.4
+ */
+:root[data-intensity="high"],
+body[data-intensity="high"] {
+	--mase-intensity-multiplier: 1.5;
+	--mase-animation-speed: calc(0.7s); /* 30% faster animations */
+	--mase-blur-amount: calc(30px); /* 50% more blur */
+	--mase-glow-intensity: 1.5;
+	--mase-shadow-depth: 1.5;
+	--mase-transition-duration: calc(200ms); /* Faster transitions */
+}
+
+/* ============================================
+   INTENSITY CONTROL UI STYLES
+   ============================================ */
+
+.mase-intensity-control {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px;
+	background: var(--mase-surface, #ffffff);
+	border-radius: 8px;
+	border: 1px solid var(--mase-border, #ddd);
+}
+
+.mase-intensity-control input[type="range"] {
+	width: 100%;
+	height: 8px;
+	border-radius: 4px;
+	background: linear-gradient(
+		to right,
+		#4caf50 0%,
+		#2196f3 50%,
+		#ff9800 100%
+	);
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.mase-intensity-control input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 3px solid #2196f3;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.mase-intensity-control input[type="range"]::-webkit-slider-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mase-intensity-control input[type="range"]::-webkit-slider-thumb:active {
+	transform: scale(0.95);
+}
+
+.mase-intensity-control input[type="range"]::-moz-range-thumb {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #ffffff;
+	border: 3px solid #2196f3;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.mase-intensity-control input[type="range"]::-moz-range-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mase-intensity-control input[type="range"]::-moz-range-thumb:active {
+	transform: scale(0.95);
+}
+
+.mase-intensity-labels {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 8px;
+}
+
+.mase-intensity-label {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--mase-text-secondary, #666);
+	transition: color 200ms ease, transform 200ms ease;
+	cursor: pointer;
+	padding: 4px 8px;
+	border-radius: 4px;
+}
+
+.mase-intensity-label:hover {
+	color: var(--mase-primary, #2196f3);
+	background: var(--mase-surface-hover, #f5f5f5);
+}
+
+.mase-intensity-label.active {
+	color: var(--mase-primary, #2196f3);
+	font-weight: 600;
+	transform: scale(1.05);
+}
+
+.mase-intensity-preview {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 12px;
+	margin-top: 16px;
+	padding: 16px;
+	background: var(--mase-surface-elevated, #f9f9f9);
+	border-radius: 6px;
+}
+
+.mase-intensity-stat {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.mase-stat-label {
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--mase-text-secondary, #666);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.mase-stat-value {
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--mase-primary, #2196f3);
+	font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   TERMINAL THEME VARIANTS (Requirement 3.5)
+   ============================================ */
+
+/* Green variant (default) */
+.mase-template-terminal[data-variant="green"],
+:root[data-template="terminal"][data-variant="green"] {
+	--terminal-primary: #00ff41;
+	--terminal-secondary: #00cc33;
+	--terminal-glow: rgba(0, 255, 65, 0.8);
+	--terminal-shadow: rgba(0, 255, 65, 0.4);
+}
+
+/* Blue variant */
+.mase-template-terminal[data-variant="blue"],
+:root[data-template="terminal"][data-variant="blue"] {
+	--terminal-primary: #00d4ff;
+	--terminal-secondary: #0099cc;
+	--terminal-glow: rgba(0, 212, 255, 0.8);
+	--terminal-shadow: rgba(0, 212, 255, 0.4);
+}
+
+/* Amber variant */
+.mase-template-terminal[data-variant="amber"],
+:root[data-template="terminal"][data-variant="amber"] {
+	--terminal-primary: #ffb000;
+	--terminal-secondary: #cc8800;
+	--terminal-glow: rgba(255, 176, 0, 0.8);
+	--terminal-shadow: rgba(255, 176, 0, 0.4);
+}
+
+/* Red variant */
+.mase-template-terminal[data-variant="red"],
+:root[data-template="terminal"][data-variant="red"] {
+	--terminal-primary: #ff0040;
+	--terminal-secondary: #cc0033;
+	--terminal-glow: rgba(255, 0, 64, 0.8);
+	--terminal-shadow: rgba(255, 0, 64, 0.4);
+}
+
+/* ============================================
+   GAMING THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Cyberpunk variant (default) */
+.mase-template-gaming[data-variant="cyberpunk"],
+:root[data-template="gaming"][data-variant="cyberpunk"] {
+	--gaming-primary: #00f5ff;
+	--gaming-secondary: #ff0080;
+	--gaming-accent: #8000ff;
+	--gaming-glow-primary: rgba(0, 245, 255, 0.8);
+	--gaming-glow-secondary: rgba(255, 0, 128, 0.8);
+}
+
+/* Neon variant */
+.mase-template-gaming[data-variant="neon"],
+:root[data-template="gaming"][data-variant="neon"] {
+	--gaming-primary: #ff10f0;
+	--gaming-secondary: #10ff10;
+	--gaming-accent: #ffff10;
+	--gaming-glow-primary: rgba(255, 16, 240, 0.8);
+	--gaming-glow-secondary: rgba(16, 255, 16, 0.8);
+}
+
+/* Matrix variant */
+.mase-template-gaming[data-variant="matrix"],
+:root[data-template="gaming"][data-variant="matrix"] {
+	--gaming-primary: #00ff00;
+	--gaming-secondary: #00aa00;
+	--gaming-accent: #00ff88;
+	--gaming-glow-primary: rgba(0, 255, 0, 0.8);
+	--gaming-glow-secondary: rgba(0, 170, 0, 0.8);
+}
+
+/* ============================================
+   GLASS THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Clear variant (default) */
+.mase-template-glass[data-variant="clear"],
+:root[data-template="glass"][data-variant="clear"] {
+	--glass-tint: rgba(255, 255, 255, 0.1);
+	--glass-border: rgba(255, 255, 255, 0.2);
+	--glass-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Tinted blue variant */
+.mase-template-glass[data-variant="blue"],
+:root[data-template="glass"][data-variant="blue"] {
+	--glass-tint: rgba(33, 150, 243, 0.15);
+	--glass-border: rgba(33, 150, 243, 0.3);
+	--glass-shadow: rgba(33, 150, 243, 0.2);
+}
+
+/* Tinted purple variant */
+.mase-template-glass[data-variant="purple"],
+:root[data-template="glass"][data-variant="purple"] {
+	--glass-tint: rgba(156, 39, 176, 0.15);
+	--glass-border: rgba(156, 39, 176, 0.3);
+	--glass-shadow: rgba(156, 39, 176, 0.2);
+}
+
+/* ============================================
+   GRADIENT THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Warm variant (default) */
+.mase-template-gradient[data-variant="warm"],
+:root[data-template="gradient"][data-variant="warm"] {
+	--gradient-color-1: #ee7752;
+	--gradient-color-2: #e73c7e;
+	--gradient-color-3: #ff6b6b;
+}
+
+/* Cool variant */
+.mase-template-gradient[data-variant="cool"],
+:root[data-template="gradient"][data-variant="cool"] {
+	--gradient-color-1: #23a6d5;
+	--gradient-color-2: #23d5ab;
+	--gradient-color-3: #4facfe;
+}
+
+/* Sunset variant */
+.mase-template-gradient[data-variant="sunset"],
+:root[data-template="gradient"][data-variant="sunset"] {
+	--gradient-color-1: #ff6b6b;
+	--gradient-color-2: #feca57;
+	--gradient-color-3: #ff9ff3;
+}
+
+/* ============================================
+   FLORAL THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Rose variant (default) */
+.mase-template-floral[data-variant="rose"],
+:root[data-template="floral"][data-variant="rose"] {
+	--floral-primary: #e84393;
+	--floral-secondary: #fd79a8;
+	--floral-accent: #fab1a0;
+}
+
+/* Lavender variant */
+.mase-template-floral[data-variant="lavender"],
+:root[data-template="floral"][data-variant="lavender"] {
+	--floral-primary: #a29bfe;
+	--floral-secondary: #6c5ce7;
+	--floral-accent: #dfe6e9;
+}
+
+/* Sakura variant */
+.mase-template-floral[data-variant="sakura"],
+:root[data-template="floral"][data-variant="sakura"] {
+	--floral-primary: #ffb3ba;
+	--floral-secondary: #ffdfba;
+	--floral-accent: #ffffba;
+}
+
+/* ============================================
+   RETRO THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Classic variant (default) */
+.mase-template-retro[data-variant="classic"],
+:root[data-template="retro"][data-variant="classic"] {
+	--retro-primary: #ff6b6b;
+	--retro-secondary: #4ecdc4;
+	--retro-accent: #ffe66d;
+}
+
+/* Synthwave variant */
+.mase-template-retro[data-variant="synthwave"],
+:root[data-template="retro"][data-variant="synthwave"] {
+	--retro-primary: #ff006e;
+	--retro-secondary: #8338ec;
+	--retro-accent: #3a86ff;
+}
+
+/* Vaporwave variant */
+.mase-template-retro[data-variant="vaporwave"],
+:root[data-template="retro"][data-variant="vaporwave"] {
+	--retro-primary: #ff71ce;
+	--retro-secondary: #01cdfe;
+	--retro-accent: #05ffa1;
+}
+
+/* ============================================
+   PROFESSIONAL THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Corporate variant (default) */
+.mase-template-professional[data-variant="corporate"],
+:root[data-template="professional"][data-variant="corporate"] {
+	--professional-primary: #2c3e50;
+	--professional-secondary: #34495e;
+	--professional-accent: #3498db;
+}
+
+/* Executive variant */
+.mase-template-professional[data-variant="executive"],
+:root[data-template="professional"][data-variant="executive"] {
+	--professional-primary: #1a1a2e;
+	--professional-secondary: #16213e;
+	--professional-accent: #0f3460;
+}
+
+/* Modern variant */
+.mase-template-professional[data-variant="modern"],
+:root[data-template="professional"][data-variant="modern"] {
+	--professional-primary: #2d3436;
+	--professional-secondary: #636e72;
+	--professional-accent: #00b894;
+}
+
+/* ============================================
+   MINIMAL THEME VARIANTS (Requirement 3.1)
+   ============================================ */
+
+/* Light variant (default) */
+.mase-template-minimal[data-variant="light"],
+:root[data-template="minimal"][data-variant="light"] {
+	--minimal-primary: #ffffff;
+	--minimal-secondary: #f5f5f5;
+	--minimal-accent: #000000;
+	--minimal-text: #333333;
+}
+
+/* Dark variant */
+.mase-template-minimal[data-variant="dark"],
+:root[data-template="minimal"][data-variant="dark"] {
+	--minimal-primary: #1a1a1a;
+	--minimal-secondary: #2a2a2a;
+	--minimal-accent: #ffffff;
+	--minimal-text: #e0e0e0;
+}
+
+/* Monochrome variant */
+.mase-template-minimal[data-variant="monochrome"],
+:root[data-template="minimal"][data-variant="monochrome"] {
+	--minimal-primary: #000000;
+	--minimal-secondary: #808080;
+	--minimal-accent: #ffffff;
+	--minimal-text: #ffffff;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+	.mase-intensity-preview {
+		grid-template-columns: 1fr;
+	}
+	
+	.mase-intensity-control input[type="range"]::-webkit-slider-thumb {
+		width: 28px;
+		height: 28px;
+	}
+	
+	.mase-intensity-control input[type="range"]::-moz-range-thumb {
+		width: 28px;
+		height: 28px;
+	}
+}
+
+/* ============================================
+   DARK MODE ADJUSTMENTS
+   ============================================ */
+
+body.mase-dark-mode .mase-intensity-control {
+	background: var(--mase-surface-dark, #2a2a2a);
+	border-color: var(--mase-border-dark, #444);
+}
+
+body.mase-dark-mode .mase-intensity-label {
+	color: var(--mase-text-secondary-dark, #aaa);
+}
+
+body.mase-dark-mode .mase-intensity-label:hover {
+	color: var(--mase-primary-dark, #64b5f6);
+	background: var(--mase-surface-hover-dark, #333);
+}
+
+body.mase-dark-mode .mase-intensity-preview {
+	background: var(--mase-surface-elevated-dark, #1a1a1a);
+}
+
+body.mase-dark-mode .mase-stat-label {
+	color: var(--mase-text-secondary-dark, #aaa);
+}
+
+body.mase-dark-mode .mase-stat-value {
+	color: var(--mase-primary-dark, #64b5f6);
+}

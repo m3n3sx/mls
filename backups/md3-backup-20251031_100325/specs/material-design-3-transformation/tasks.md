@@ -1,0 +1,564 @@
+# Implementation Plan
+
+- [x] 1. Material Design 3 Foundation Setup
+  - [x] 1.1 Create MD3 design token system
+    - Create `assets/css/md3/md3-tokens.css` with all color, spacing, typography tokens
+    - Define light mode color palette (primary, secondary, tertiary, surface, error)
+    - Define dark mode color palette with appropriate adjustments
+    - Add CSS custom properties for all design tokens
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
+  - [x] 1.2 Implement elevation system
+    - Create `assets/css/md3/md3-elevation.css` with 5-level shadow system
+    - Define elevation shadows (0dp through 4dp)
+    - Implement surface tint overlay system
+    - Add dark mode elevation adjustments
+    - Create elevation utility classes
+    - _Requirements: 1.4, 1.5, 11.1, 11.2, 11.3, 11.4, 11.5_
+  - [x] 1.3 Create motion system
+    - Create `assets/css/md3/md3-motion.css` with easing curves
+    - Define MD3 easing functions (emphasized, standard, decelerated, accelerated)
+    - Define duration tokens (short, medium, long)
+    - Create animation utility classes
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+  - [x] 1.4 Implement typography system
+    - Create `assets/css/md3/md3-typography.css` with type scale
+    - Define display, headline, title, body, and label sizes
+    - Set font weights and line heights
+    - Create typography utility classes
+    - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5_
+  - [x] 1.5 Create shape and spacing system
+    - Define corner radius tokens (xs, s, m, l, xl, full)
+    - Define spacing scale based on 8px unit
+    - Create organic shape variants
+    - Add spacing utility classes
+    - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 14.1, 14.2, 14.3, 14.4, 14.5_
+
+- [x] 2. Dynamic Color Palette System
+  - [x] 2.1 Create color palette definitions
+    - Define 5 pre-built palettes (Purple, Blue, Green, Orange, Pink)
+    - Create color generation functions for each palette
+    - Ensure proper contrast ratios (4.5:1 minimum)
+    - Generate complementary surface and container colors
+    - _Requirements: 2.1, 2.3, 2.4_
+  - [x] 2.2 Implement palette switching
+    - Create JavaScript module for palette switching
+    - Update CSS custom properties dynamically
+    - Save selected palette to WordPress options
+    - Load saved palette on page load
+    - _Requirements: 2.2_
+  - [x] 2.3 Add dark mode palette adjustments
+    - Adjust palette brightness for dark mode
+    - Increase surface tint opacity in dark mode
+    - Modify shadow colors for dark backgrounds
+    - Test contrast ratios in dark mode
+    - _Requirements: 2.5, 20.1, 20.2, 20.3, 20.4, 20.5_
+
+- [x] 3. Artistic Template Card Redesign
+  - [x] 3.1 Create new template card structure
+    - Update HTML structure for template cards
+    - Add artistic header gradient container
+    - Create mini-preview elements (admin bar, menu items)
+    - Add template name and apply button
+    - _Requirements: 3.1, 3.3, 23.1, 23.2, 23.3, 23.4, 23.5_
+  - [x] 3.2 Implement template card CSS
+    - Create `assets/css/mase-md3-templates.css`
+    - Style cards with MD3 elevation and corners
+    - Add ellipse clip-path for header gradient
+    - Implement hover elevation transition
+    - Add active state border styling
+    - _Requirements: 3.1, 3.2, 3.4, 3.5_
+  - [x] 3.3 Add animated mini-preview elements
+    - Style mini admin bar with shimmer animation
+    - Create mini menu items with pulse animation
+    - Stagger menu item animations
+    - Add theme-specific colors to previews
+    - _Requirements: 23.2, 23.3, 23.4_
+  - [x] 3.4 Implement card hover effects
+    - Add translateY and scale transform on hover
+    - Elevate shadow from level-1 to level-3
+    - Use emphasized easing curve
+    - Add smooth transition timing
+    - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5_
+
+- [x] 4. Premium Form Control Redesign
+  - [x] 4.1 Create artistic color picker
+    - Create `assets/css/mase-md3-forms.css`
+    - Implement flowing rainbow gradient background
+    - Add animated gradient position (8s loop)
+    - Create white circular handle with shadow
+    - Add smooth handle position transition
+    - _Requirements: 4.1, 16.1, 16.2, 16.3, 16.4, 16.5_
+  - [x] 4.2 Implement MD3 toggle switches
+    - Style toggle track with surface-variant background
+    - Create animated toggle thumb
+    - Add ripple effect on interaction
+    - Implement active state styling
+    - Add smooth transitions for all states
+    - _Requirements: 4.2, 4.4, 4.5_
+  - [x] 4.3 Create outlined text fields
+    - Style input with outlined border
+    - Implement floating label animation
+    - Add focus state with primary color outline
+    - Create smooth label transition
+    - Add helper text styling
+    - _Requirements: 4.3, 4.4, 4.5_
+  - [x] 4.4 Add form control state layers
+    - Implement hover state layer (8% opacity)
+    - Implement focus state layer (12% opacity)
+    - Add disabled state styling (38% opacity)
+    - Create smooth state transitions
+    - _Requirements: 15.1, 15.2, 15.3, 15.4, 15.5_
+
+- [x] 5. Artistic Admin Header Design
+  - [x] 5.1 Create header HTML structure
+    - Update admin header markup
+    - Add title and subtitle elements
+    - Create container for floating orb animation
+    - _Requirements: 5.1, 5.3_
+  - [x] 5.2 Implement header CSS styling
+    - Create gradient background (primary to tertiary)
+    - Add organic rounded corners (24px top)
+    - Style title with large typography (28px)
+    - Add subtle text shadow for depth
+    - Style subtitle with appropriate opacity
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
+  - [x] 5.3 Add floating orb animation
+    - Create radial gradient orb element
+    - Implement floating animation (6s loop)
+    - Position orb in header background
+    - Add smooth easing for natural motion
+    - _Requirements: 5.2_
+
+- [x] 6. MD3 Navigation Tabs
+  - [x] 6.1 Create navigation tab structure
+    - Update tab container HTML
+    - Add individual tab button elements
+    - Include active state indicator
+    - _Requirements: 6.1_
+  - [x] 6.2 Implement tab CSS styling
+    - Style tab container with surface-variant background
+    - Add 4px padding to container
+    - Style individual tabs with pill shape
+    - Implement active tab styling (primary-container)
+    - Add smooth transitions for all states
+    - _Requirements: 6.1, 6.2, 6.4, 6.5_
+  - [x] 6.3 Add tab state layers
+    - Implement hover state layer (8% opacity)
+    - Add focus state layer (12% opacity)
+    - Create smooth opacity transitions
+    - Use emphasized easing curve
+    - _Requirements: 6.3, 6.5_
+  - [x] 6.4 Implement tab switching animation
+    - Add smooth transition when changing tabs
+    - Coordinate active state changes
+    - Update content with fade transition
+    - _Requirements: 6.5_
+
+- [x] 7. Sophisticated Button System
+  - [x] 7.1 Create button variants
+    - Implement filled button style (primary background)
+    - Implement outlined button style (transparent with border)
+    - Implement text button style (transparent, no border)
+    - Add appropriate colors for each variant
+    - _Requirements: 7.1, 7.3_
+  - [x] 7.2 Add button hover effects
+    - Elevate filled buttons on hover (translateY -1px)
+    - Add elevation-2 shadow on hover
+    - Add state layer to outlined and text buttons
+    - Use smooth transitions
+    - _Requirements: 7.4_
+  - [x] 7.3 Implement ripple effect system
+    - Create `assets/js/mase-md3-ripple.js`
+    - Track click position on buttons
+    - Generate ripple element at click point
+    - Animate ripple expansion (circular)
+    - Remove ripple element after animation
+    - _Requirements: 7.2, 7.5_
+  - [x] 7.4 Add button state layers
+    - Implement pressed state layer (12% opacity)
+    - Add disabled state styling
+    - Create smooth state transitions
+    - _Requirements: 7.5_
+
+- [x] 8. Artistic Loading States
+  - [x] 8.1 Create shimmer loading effect
+    - Implement gradient shimmer animation
+    - Use surface-variant colors
+    - Add 1.5s animation loop
+    - Create skeleton screen components
+    - _Requirements: 8.1, 8.2, 8.4_
+  - [x] 8.2 Implement circular progress indicator
+    - Create spinning circle with primary color
+    - Add smooth rotation animation
+    - Style with appropriate size (48px)
+    - _Requirements: 8.3_
+  - [x] 8.3 Add success animation
+    - Create scale animation for success state
+    - Add fade-in effect
+    - Use emphasized easing curve
+    - Implement checkmark icon animation
+    - _Requirements: 8.5_
+  - [x] 8.4 Create loading state transitions
+    - Add smooth fade-in for loaded content
+    - Coordinate loading to content transition
+    - Remove loading elements after transition
+    - _Requirements: 8.4_
+
+- [x] 9. Micro-interaction Choreography
+  - [x] 9.1 Implement icon hover animations
+    - Add scale animation on icon hover (1.1)
+    - Use 200ms duration
+    - Apply to all interactive icons
+    - Add smooth easing
+    - _Requirements: 9.1_
+  - [x] 9.2 Create card lift effect
+    - Add subtle lift on card hover
+    - Expand shadow smoothly
+    - Use emphasized easing curve
+    - Coordinate transform and shadow
+    - _Requirements: 9.2_
+  - [x] 9.3 Add color transitions
+    - Implement smooth color transitions for all interactive elements
+    - Use standard easing curve
+    - Set appropriate duration (200ms)
+    - _Requirements: 9.3_
+  - [x] 9.4 Create notification animations
+    - Add bounce animation for success notifications
+    - Implement slide-in from bottom
+    - Add fade-out on dismiss
+    - _Requirements: 9.4_
+  - [x] 9.5 Implement form submission animation
+    - Create expanding circle success animation
+    - Add scale effect on submit button
+    - Coordinate with loading state
+    - _Requirements: 9.5_
+
+- [x] 10. State Layer System
+  - [x] 10.1 Create state layer CSS
+    - Create `assets/js/mase-md3-state-layers.js`
+    - Implement hover state layer (8% opacity)
+    - Implement focus state layer (12% opacity)
+    - Implement pressed state layer (12% opacity)
+    - _Requirements: 15.1, 15.2, 15.3, 15.4_
+  - [x] 10.2 Apply state layers to components
+    - Add state layers to buttons
+    - Add state layers to tabs
+    - Add state layers to cards
+    - Add state layers to form controls
+    - _Requirements: 15.1, 15.2, 15.3, 15.5_
+  - [x] 10.3 Implement disabled states
+    - Style disabled elements with 38% opacity
+    - Remove state layers from disabled elements
+    - Prevent interactions on disabled elements
+    - _Requirements: 15.5_
+
+- [x] 11. Floating Action Button (FAB)
+  - [x] 11.1 Create FAB HTML structure
+    - Add FAB button element
+    - Position at bottom-right
+    - Add icon and optional label
+    - _Requirements: 25.1, 25.2_
+  - [x] 11.2 Implement FAB CSS styling
+    - Style with primary-container background
+    - Add elevation-3 shadow
+    - Use large corner radius (16px)
+    - Position fixed at bottom-right
+    - _Requirements: 25.2, 25.3_
+  - [x] 11.3 Add FAB hover effects
+    - Scale FAB on hover (1.05)
+    - Elevate shadow to level-4
+    - Add smooth transition
+    - _Requirements: 25.4_
+  - [x] 11.4 Implement FAB interactions
+    - Add ripple effect on click
+    - Trigger save action
+    - Show loading state during save
+    - Display success feedback
+    - _Requirements: 25.5_
+
+- [x] 12. Notification System Redesign
+  - [x] 12.1 Create snackbar HTML structure
+    - Add snackbar container element
+    - Create message and action areas
+    - Add close button
+    - _Requirements: 18.1_
+  - [x] 12.2 Implement snackbar CSS styling
+    - Style with inverse-surface background
+    - Add elevation-3 shadow
+    - Position at bottom center
+    - Add rounded corners
+    - _Requirements: 18.1, 18.5_
+  - [x] 12.3 Create snackbar variants
+    - Implement success variant (green)
+    - Implement error variant (red)
+    - Implement info variant (blue)
+    - _Requirements: 18.2_
+  - [x] 12.4 Add snackbar animations
+    - Implement slide-in from bottom (300ms)
+    - Add auto-dismiss after 4 seconds
+    - Implement fade-out animation
+    - _Requirements: 18.3, 18.4_
+
+- [x] 13. Responsive Design Optimization
+  - [x] 13.1 Implement mobile breakpoints
+    - Add media query for < 768px
+    - Adjust spacing tokens for mobile
+    - Reduce corner radius on mobile
+    - _Requirements: 19.1, 19.4_
+  - [x] 13.2 Optimize mobile navigation
+    - Stack navigation tabs vertically
+    - Increase touch target sizes (48px minimum)
+    - Adjust padding for mobile
+    - _Requirements: 19.2, 19.3_
+  - [x] 13.3 Simplify mobile animations
+    - Reduce animation complexity on mobile
+    - Disable expensive effects
+    - Maintain core functionality
+    - _Requirements: 19.5_
+  - [x] 13.4 Test responsive behavior
+    - Test on various screen sizes
+    - Verify touch interactions
+    - Check layout on mobile devices
+    - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5_
+
+- [x] 14. Dark Mode Excellence
+  - [x] 14.1 Implement dark mode color tokens
+    - Define dark surface colors
+    - Adjust primary, secondary, tertiary for dark mode
+    - Increase surface tint opacity
+    - Modify shadow colors
+    - _Requirements: 20.1, 20.2, 20.3_
+  - [x] 14.2 Test dark mode contrast
+    - Verify 4.5:1 contrast ratios
+    - Test all color combinations
+    - Adjust colors as needed
+    - _Requirements: 20.5_
+  - [x] 14.3 Optimize dark mode effects
+    - Adjust glow effects for dark backgrounds
+    - Modify gradient brightness
+    - Test glassmorphism on dark surfaces
+    - _Requirements: 20.3, 20.4_
+
+- [x] 15. Accessibility Implementation
+  - [x] 15.1 Implement focus indicators
+    - Add 3px outline for all interactive elements
+    - Use primary color for focus outline
+    - Add 2px outline offset
+    - Test visibility in all themes
+    - _Requirements: 21.2, 21.4_
+  - [x] 15.2 Verify color contrast
+    - Test all text on colored backgrounds
+    - Ensure 4.5:1 minimum contrast
+    - Document any issues
+    - Fix contrast problems
+    - _Requirements: 21.1_
+  - [x] 15.3 Implement keyboard navigation
+    - Ensure all interactive elements are keyboard accessible
+    - Test tab order
+    - Add skip links if needed
+    - _Requirements: 21.3_
+  - [x] 15.4 Add reduced motion support
+    - Detect prefers-reduced-motion preference
+    - Disable animations when requested
+    - Use instant transitions
+    - Maintain all functionality
+    - _Requirements: 21.4, 21.5_
+
+- [x] 16. Performance Optimization
+  - [x] 16.1 Implement GPU acceleration
+    - Add will-change for animated properties
+    - Use transform and opacity for animations
+    - Add translateZ(0) for GPU layer
+    - Remove will-change after animations
+    - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5_
+  - [x] 16.2 Optimize animation performance
+    - Use CSS transforms instead of position
+    - Avoid animating layout properties
+    - Use requestAnimationFrame for JS animations
+    - Profile animation performance
+    - _Requirements: 22.1, 22.5_
+  - [x] 16.3 Test performance metrics
+    - Measure FPS during animations (target: 60fps)
+    - Run Lighthouse performance audit
+    - Profile memory usage
+    - Optimize bottlenecks
+    - _Requirements: 22.1_
+
+- [x] 17. Settings Panel Redesign
+  - [x] 17.1 Create settings panel structure
+    - Organize settings into clear sections
+    - Add section dividers
+    - Create collapsible sections
+    - _Requirements: 24.1, 24.3_
+  - [x] 17.2 Style settings panel
+    - Use outlined cards for setting groups
+    - Add elevation-1 to cards
+    - Style section headers
+    - Add descriptive helper text
+    - _Requirements: 24.2, 24.4_
+  - [x] 17.3 Implement collapsible sections
+    - Add expand/collapse animation
+    - Use smooth transitions
+    - Save expanded state
+    - _Requirements: 24.3_
+  - [x] 17.4 Add settings save feedback
+    - Show success animation on save
+    - Display snackbar notification
+    - Update UI immediately
+    - _Requirements: 24.5_
+
+- [x] 18. Contextual Help System (Optional)
+  - [ ]* 18.1 Create tooltip component
+    - Design tooltip HTML structure
+    - Add help icon triggers
+    - Position tooltips intelligently
+    - _Requirements: 26.1, 26.4_
+  - [ ]* 18.2 Implement tooltip CSS
+    - Style with surface-variant background
+    - Add elevation-2 shadow
+    - Use appropriate typography
+    - Add rounded corners
+    - _Requirements: 26.1, 26.3_
+  - [ ]* 18.3 Add tooltip interactions
+    - Show tooltip on hover after 500ms delay
+    - Fade in smoothly (200ms)
+    - Hide on mouse leave
+    - Support keyboard focus
+    - _Requirements: 26.2, 26.5_
+
+- [x] 19. Search and Filter Enhancement (Optional)
+  - [x]* 19.1 Create search field
+    - Implement outlined search field
+    - Add leading search icon
+    - Style with MD3 tokens
+    - _Requirements: 27.1_
+  - [x]* 19.2 Implement real-time filtering
+    - Filter templates as user types
+    - Add fade-in animation for results
+    - Update results smoothly
+    - _Requirements: 27.2, 27.3_
+  - [x]* 19.3 Add empty state
+    - Create "no results" message
+    - Add helpful illustration
+    - Provide clear feedback
+    - _Requirements: 27.4_
+  - [x]* 19.4 Implement search clear
+    - Add clear button to search field
+    - Restore all templates smoothly
+    - Reset filter state
+    - _Requirements: 27.5_
+
+- [x] 20. Color Harmony Visualization (Optional)
+  - [x]* 20.1 Create color swatch display
+    - Display primary, secondary, tertiary swatches
+    - Show container color variants
+    - Add color labels
+    - _Requirements: 28.1, 28.2, 28.5_
+  - [x]* 20.2 Add contrast verification
+    - Display on-color text samples
+    - Show contrast ratios
+    - Highlight contrast issues
+    - _Requirements: 28.3_
+  - [x]* 20.3 Implement real-time updates
+    - Update swatches when colors change
+    - Refresh contrast calculations
+    - Animate color transitions
+    - _Requirements: 28.4_
+
+- [x] 21. WordPress Integration
+  - [x] 21.1 Enqueue MD3 assets
+    - Register all MD3 CSS files in `MASE_Admin::enqueue_admin_assets()`
+    - Register all MD3 JavaScript files
+    - Set proper dependencies
+    - Add version numbers for cache busting
+    - _Requirements: All_
+  - [x] 21.2 Localize JavaScript data
+    - Pass nonces for AJAX requests
+    - Pass ajaxurl
+    - Pass current settings
+    - Pass color palettes
+    - _Requirements: All_
+  - [x] 21.3 Update admin settings page
+    - Modify `includes/admin-settings-page.php` with new HTML structure
+    - Add MD3 component markup
+    - Maintain all form field names and IDs
+    - Preserve WordPress nonces
+    - _Requirements: All_
+  - [x] 21.4 Test WordPress compatibility
+    - Verify settings save correctly
+    - Test AJAX endpoints
+    - Check nonce verification
+    - Ensure no PHP errors
+    - _Requirements: All_
+
+- [ ] 22. Testing and Quality Assurance
+  - [ ] 22.1 Visual regression testing
+    - Capture screenshots of all components
+    - Test all color palettes
+    - Compare light and dark modes
+    - Verify responsive layouts
+    - _Requirements: All_
+  - [ ] 22.2 Cross-browser testing
+    - Test in Chrome
+    - Test in Firefox
+    - Test in Safari
+    - Test in Edge
+    - _Requirements: All_
+  - [ ] 22.3 Mobile device testing
+    - Test on iOS devices
+    - Test on Android devices
+    - Test various screen sizes
+    - Verify touch interactions
+    - _Requirements: 19.1, 19.2, 19.3, 19.4, 19.5_
+  - [ ] 22.4 Performance testing
+    - Measure FPS for all animations
+    - Run Lighthouse audits
+    - Test memory usage
+    - Verify load times
+    - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5_
+  - [ ] 22.5 Accessibility testing
+    - Run automated accessibility tests
+    - Test with screen readers
+    - Verify keyboard navigation
+    - Test with reduced motion
+    - Check color contrast
+    - _Requirements: 21.1, 21.2, 21.3, 21.4, 21.5_
+
+- [ ] 23. Documentation (Optional)
+  - [ ]* 23.1 Create user guide
+    - Document new Material Design 3 interface
+    - Explain color palette selection
+    - Document all new features
+    - Add screenshots
+    - _Requirements: All_
+  - [ ]* 23.2 Create developer documentation
+    - Document design token system
+    - Explain component architecture
+    - Provide code examples
+    - Document JavaScript APIs
+    - _Requirements: All_
+  - [ ]* 23.3 Update changelog
+    - List all new features
+    - Document visual changes
+    - Note any breaking changes
+    - Provide upgrade guide
+    - _Requirements: All_
+
+- [-] 24. Deployment
+  - [x] 24.1 Minify assets
+    - Minify all CSS files
+    - Minify all JavaScript files
+    - Optimize images
+    - Test minified versions
+    - _Requirements: All_
+  - [-] 24.2 Create backup
+    - Backup current version
+    - Document rollback procedure
+    - Test rollback process
+    - _Requirements: All_
+  - [ ] 24.3 Deploy to production
+    - Merge to main branch
+    - Deploy to production
+    - Monitor for issues
+    - Gather user feedback
+    - _Requirements: All_
